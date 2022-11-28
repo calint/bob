@@ -19,8 +19,9 @@ final class chdresp{
 	chdresp(final path p)throws Throwable{path=p;validate(System.currentTimeMillis(),null);}
 //	chdresp(final cacheable c,final String key){cacheable=c;this.key=key;dt=c.lastmodupdms();}
 	chdresp(final cacheable c,final String key){cacheable=c;this.key=key;}
-	public chdresp(final InputStream is)throws IOException{
+	public chdresp(final InputStream is,final String contentType)throws IOException{
 		isresource=true;
+		this.contentType=contentType;
 		final ByteArrayOutputStream os=new ByteArrayOutputStream();
 		b.cp(is,os);
 		final byte[]ba=os.toByteArray();
@@ -33,6 +34,10 @@ final class chdresp{
 		bb.put(req.h_last_modified).put(lastModified_s.getBytes());
 		bb.put(req.hkp_connection_keep_alive);
 		additional_headers_insertion_position=bb.position();
+		if(contentType!=null) {
+			bb.put(req.h_content_type);
+			bb.put(contentType.getBytes());
+		}
 		bb.put(req.ba_crlf2);
 		data_position=bb.position();
 		bb.put(ba);
@@ -58,7 +63,8 @@ final class chdresp{
 		bb=ByteBuffer.allocateDirect(hdrlencap+(int)path_len);
 		bb.put(req.h_http200);
 		bb.put(req.h_content_length).put(Long.toString(path_len).getBytes());
-		if(contentType!=null)bb.put(req.h_content_type).put(contentType.getBytes());
+		if(contentType!=null) // todo set content type depending on suffix
+			bb.put(req.h_content_type).put(contentType.getBytes());
 		lastModified_s=b.tolastmodstr(path_lastModified);
 		bb.put(req.h_last_modified).put(lastModified_s.getBytes());
 		bb.put(req.hkp_connection_keep_alive);
@@ -87,7 +93,9 @@ final class chdresp{
 		bb.put(req.h_http200);
 		bb.put(req.h_content_length).put(Long.toString(baos.size()).getBytes());
 		if(lastModified_s!=null)bb.put(req.h_last_modified).put(lastModified_s.getBytes());
-		if(contentType!=null)bb.put(req.h_content_type).put(contentType.getBytes());
+		if(contentType!=null) {
+			bb.put(req.h_content_type).put(contentType.getBytes());
+		}
 		bb.put(req.hkp_connection_keep_alive);
 		additional_headers_insertion_position=bb.position();
 		bb.put(req.ba_crlf2);

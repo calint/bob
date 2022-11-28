@@ -355,7 +355,9 @@ public final class req{
 		
 		final InputStream is=req.class.getResourceAsStream(rcpth);
 		if(is==null)return false;
-		final chdresp c=new chdresp(is);
+		// todo map of file suffix to content types
+		final String contentType = rcpth.endsWith(".js")?"application/javascript":null;
+		final chdresp c=new chdresp(is,contentType);
 		synchronized(cachef){cachef.put(path_s,c);}
 		reply(c);
 		return true;
@@ -635,7 +637,8 @@ public final class req{
 			}
 		}
 	}
-	@SuppressWarnings("unchecked") private void resp_page()throws Throwable{
+	@SuppressWarnings("unchecked")
+	private void resp_page()throws Throwable{
 		if(sesid!=null&&ses==null){//?? sessiongetandloadracing 
 			ses=session.all().get(sesid);
 			if(ses==null&&b.sessionfile_load){
@@ -748,6 +751,7 @@ public final class req{
 				b.log(t);
 				x.xalert(b.isempty(t.getTargetException().getMessage(),t.toString()));
 			}catch(NoSuchMethodException t){
+				tn.rollback();
 				x.xalert("method not found:\n"+e.getClass().getName()+".x_"+axfunc+"(xwriter,String)");
 			}finally{
 				Db.deinitCurrentTransaction();
