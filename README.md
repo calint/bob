@@ -1,2 +1,2 @@
 # bob
-experimental web application build using web application server b and object persistence dbo
+experimental web application built using web application server b and object persistence dbo
