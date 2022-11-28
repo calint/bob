@@ -52,7 +52,10 @@ final class chdresp{
 	String lastModified(){return lastModified_s;}
 	boolean validate(final long now,final String lm)throws Throwable{
 		if(isresource)return true;
-		if(cacheable!=null){validatecacheable(now,lm);return true;}
+		if(cacheable!=null){
+			validatecacheable(now,lm);
+			return true;
+		}
 		
 		if(now-ts<b.cache_files_validate_dt)return true;
 		ts=now;
@@ -78,7 +81,8 @@ final class chdresp{
 		return true;
 	}
 	private void validatecacheable(final long now,final String lm)throws Throwable{
-		if(isvalid(now))return;
+		if(isvalid(now))
+			return;
 		ts=now;
 		contentType=cacheable.contenttype();
 		lastModified_s=cacheable.lastmod();

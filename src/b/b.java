@@ -102,6 +102,11 @@ final public class b{
 	public static PrintStream out=System.out;
 	public static PrintStream err=System.err;
 	public static String bapp_class="c.Application";
+	public static String bapp_jdbc_db="dbo";
+	public static String bapp_jdbc_user="user";
+	public static String bapp_jdbc_password="password";
+	public static String bapp_jdbc_ncons="10";
+	
 	public static bapp bapp=null;
 	private final static LinkedList<req>pending_req=new LinkedList<req>();
 	public static void main(final String[]args)throws Throwable{

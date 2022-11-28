@@ -14,7 +14,7 @@ import db.test.User;
 public class Application implements bapp {
 	@Override
 	public void init() throws Throwable {
-		b.pl(getClass().getName()+": init");
+		b.pl(getClass().getName() + ": init");
 		Db.initInstance();
 		final Db db = Db.instance();
 		db.register(User.class);
@@ -25,11 +25,13 @@ public class Application implements bapp {
 		db.register(Game.class);
 		db.register(TestObj.class);
 //		db.init("jdbc:mysql://localhost:3306/testdb", "c", "password", 5);
-		db.init("jdbc:mysql://localhost:3306/testdb?allowPublicKeyRetrieval=true&useSSL=false", "c", "password", 10);
+		db.init("jdbc:mysql://localhost:3306/" + b.bapp_jdbc_db + "?allowPublicKeyRetrieval=true&useSSL=false",
+				b.bapp_jdbc_user, b.bapp_jdbc_password, Integer.parseInt(b.bapp_jdbc_ncons));
 	}
+
 	@Override
 	public void shutdown() throws Throwable {
-		b.pl(getClass().getName()+": shutdown");
+		b.pl(getClass().getName() + ": shutdown");
 		Db.instance().shutdown();
 	}
 }

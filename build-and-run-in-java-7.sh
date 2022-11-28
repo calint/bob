@@ -14,12 +14,11 @@ find src -type f | grep '\.java$' > sources.txt
 find src -type f | grep -v '\.java$' > resources.txt
 javac -verbose -d bin @sources.txt
 
-# assumes resources are only in package b ! fix
 cat resources.txt | while read f; do
-    CMD="cp $f bin/b"
+    CMD="cp $f bin/${f#*/}"
     echo $CMD
     $CMD
 done
 rm sources.txt
 rm resources.txt
-java -cp bin:lib/mysql-connector-java-5.1.49.jar b.b
+sh run.sh
