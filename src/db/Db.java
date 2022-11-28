@@ -29,6 +29,7 @@ public final class Db {
 
 	/** Called once to create the singleton instance. */
 	public static void initInstance() throws Throwable {
+		Db.log("dbo: init instance");
 		inst = new Db();
 		inst.register(DbObject.class);
 	}
@@ -45,6 +46,7 @@ public final class Db {
 	 * @return the created transaction
 	 */
 	public static DbTransaction initCurrentTransaction() {
+		Db.log("dbo: init transaction on " + Thread.currentThread());
 		Connection c = null;
 		synchronized (inst.conpool) {
 			while (inst.conpool.isEmpty()) { // spurious interrupt might happen
@@ -70,6 +72,7 @@ public final class Db {
 	 *         initCurrentTransaction().
 	 */
 	public static DbTransaction currentTransaction() {
+		Db.log("dbo: get current transaction on " + Thread.currentThread());
 		return tn.get();
 	}
 
@@ -78,6 +81,7 @@ public final class Db {
 	 * returned to the pool.
 	 */
 	public static void deinitCurrentTransaction() {
+		Db.log("dbo: deinit transaction on " + Thread.currentThread());
 		final DbTransaction t = tn.get();
 
 		// make sure statement is closed here. should be. // ? stmt.isClosed() is not in
@@ -344,6 +348,7 @@ public final class Db {
 
 	/** Sets singleton instance to null and closes the connections in the pool. */
 	public void shutdown() {
+		Db.log("dbo: shutdown");
 		Db.inst = null;
 		synchronized (conpool) {
 			for (final Connection c : conpool) {

@@ -1,9 +1,25 @@
 package a;
 
-import java.io.*;
-import java.text.*;
-import java.util.*;
-import b.*;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Locale;
+import java.util.Map;
+
+import b.a;
+import b.b;
+import b.path;
+import b.req;
+import b.xwriter;
+import db.Db;
+import db.test.Book;
 public class diro extends a{
 	private static final long serialVersionUID=1;
 	public final static int BIT_ALLOW_QUERY=1<<0;
@@ -74,6 +90,10 @@ public class diro extends a{
 			x.css(q,"float:right;background:yellow;border:1px dotted #555;text-align:right;width:10em;margin-left:1em");
 		x.style_();
 		x.style(selection,"display:table;padding-top:.5em;padding-bottom:.5em;margin-left:auto;margin-right:auto;background:#fefefe;text-align:center;box-shadow:0 0 .5em rgba(0,0,0,.5);");
+		
+		final int count=Db.currentTransaction().getCount(Book.class, null);
+//		x.p(count);
+		
 		x.table("f").nl();
 		x.tr().th();
 		if(hasbit(BIT_ALLOW_DIR_UP))

@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import b.b.conf;
+import db.Db;
+import db.DbTransaction;
 public final class req{
 	b.op parse()throws Throwable{while(true){
 		if(ba_rem==0){
@@ -737,12 +739,18 @@ public final class req{
 				os.finish();
 				return;
 			}
-			try{e.getClass().getMethod("x_"+axfunc,xwriter.class,String.class).invoke(e,x,axarg);}
-			catch(final InvocationTargetException t){
+			final DbTransaction tn=Db.initCurrentTransaction();
+			try{
+				e.getClass().getMethod("x_"+axfunc,xwriter.class,String.class).invoke(e,x,axarg);
+				tn.finishTransaction();
+			}catch(final InvocationTargetException t){
+				tn.rollback();
 				b.log(t);
 				x.xalert(b.isempty(t.getTargetException().getMessage(),t.toString()));
 			}catch(NoSuchMethodException t){
 				x.xalert("method not found:\n"+e.getClass().getName()+".x_"+axfunc+"(xwriter,String)");
+			}finally{
+				Db.deinitCurrentTransaction();
 			}
 			os.finish();
 			return;
@@ -768,7 +776,16 @@ public final class req{
 //			}
 //			os.write(ba_page_header_after_title);
 		}
-		try{e.to(x);}catch(final Throwable t){b.log(t);x.pre().p(b.stacktrace(t));}
+		final DbTransaction tn=Db.initCurrentTransaction();
+		try{
+			e.to(x);
+			tn.finishTransaction();
+		}catch(final Throwable t){
+			tn.rollback();
+			b.log(t);x.pre().p(b.stacktrace(t));
+		}finally{
+			Db.deinitCurrentTransaction();
+		}
 		os.finish();
 	}
 	// threaded done

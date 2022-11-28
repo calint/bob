@@ -33,6 +33,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.TimeZone;
+
+import db.Db;
 final public class b{
 	public final static String strenc="utf-8";
 	public final static String q=" ڀ ";
@@ -101,12 +103,12 @@ final public class b{
 	public static @conf String timeatloadstrhtp=tolastmodstr(timeatload);
 	public static PrintStream out=System.out;
 	public static PrintStream err=System.err;
+	public static String dboappClassName="c.Application";
 	private final static LinkedList<req>pending_req=new LinkedList<req>();
 	public static void main(final String[]args)throws Throwable{
 //		System.out.println(hello);
 		if(!class_init(b.class,args))return;
 		resources_lastmod=System.currentTimeMillis();
-
 		if(print_conf_at_startup){
 //			print_hr(out,64);
 //			try{out.println(InetAddress.getLocalHost());}catch(Throwable ignored){}
@@ -117,6 +119,10 @@ final public class b{
 			print_hr(out,64);
 		}
 		if(print_stats_at_startup)stats_to(out);
+		
+		// initiate dboapp
+		final application app=(application)Class.forName(dboappClassName).getConstructor().newInstance();
+		app.init();		
 
 		final ServerSocketChannel ssc=ServerSocketChannel.open();
 		ssc.configureBlocking(false);
