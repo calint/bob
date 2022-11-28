@@ -984,7 +984,7 @@ public final class req{
 	private final static byte[]hkp_transfer_encoding_chunked="\r\nTransfer-Encoding: chunked".getBytes();
 	private final static byte[]hkp_accept_ranges_byte="\r\nAccept-Ranges: bytes".getBytes();
 	private final static byte[]hk_content_range ="\r\nContent-Range: ".getBytes();
-	private final static byte[]hkv_cookie_append =";path=/;expires=Thu, 31-Dec-2099 00:00:00 GMT;".getBytes();
+	private final static byte[]hkv_cookie_append =";path=/;expires=Thu, 31-Dec-2099 00:00:00 GMT;SameSite=Strict".getBytes();
 	private final static String hk_connection="connection";
 	private final static String hk_content_length="content-length";
 	private final static String hk_content_type="content-type";

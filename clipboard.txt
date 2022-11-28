@@ -46,6 +46,7 @@ systemctl stop bob
 systemctl list-units --type=service | grep bob
 # to display the log
 journalctl -u bob -e
+journalctl -u bob -f
 service --status-all
 
 # dns add A record with domain name to ip

@@ -1,2 +1,3 @@
 [ ] fix "// todo" comments
 [ ]   content type for cached file from Map of suffix to content-type
+[ ] cookie: same-site, secure
