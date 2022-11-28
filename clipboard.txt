@@ -20,10 +20,7 @@ git pull https://github.com/calint/bob
 
 # on server
 cd /bob
-sh build-and-run.sh
-
-# on developer machine
-http://1.2.3.4/
+sh build.sh
 
 # to install as service edit /etc/systemd/system/bob.service 
 ######################################
@@ -51,3 +48,11 @@ journalctl -u bob -f
 service --status-all
 
 # dns add A record with domain name to ip
+
+MYSQL_HOST=db-mysql-ramvark-do-user-390543-0.b.db.ondigitalocean.com:25060
+MYSQL_DB=defaultdb
+MYSQL_USER=doadmin
+MYSQL_PASSWORD=AVNS_furxyXGuAI009gCpEjl
+MYSQL_NCONS=75
+B_NTHREADS=100
+PORT=8888

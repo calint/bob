@@ -29,16 +29,19 @@ final class RelRefNMeta {
 		}
 		rs.close();
 
+//		final StringBuilder sb = new StringBuilder(256);
+//		sb.append("create table ").append(tableName).append('(').append(fromColName).append(" int,").append(toColName)
+//				.append(" int)");
 		final StringBuilder sb = new StringBuilder(256);
-		sb.append("create table ").append(tableName).append('(').append(fromColName).append(" int,").append(toColName)
-				.append(" int)");
+		sb.append("create table ").append(tableName).append("(id int primary key auto_increment").append(',')
+				.append(fromColName).append(" int,").append(toColName).append(" int)");
 		final String sql = sb.toString();
 		Db.log(sql);
 		stmt.execute(sql);
 	}
 
 	void sql_addToTable(final StringBuilder sb, final int fromId, final int toId) {
-		sb.append("insert into ").append(tableName).append(" values(").append(fromId).append(',').append(toId)
+		sb.append("insert into ").append(tableName).append(" values(null,").append(fromId).append(',').append(toId)
 				.append(')');
 	}
 
