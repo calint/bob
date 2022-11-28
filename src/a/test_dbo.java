@@ -24,6 +24,5 @@ public class test_dbo extends a {
 		x.p(c.getTestName()).pl(" start").flush();
 		c.run();
 		x.p(c.getTestName()).pl(" done").flush();
-
 	}
 }

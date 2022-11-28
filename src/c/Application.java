@@ -14,7 +14,8 @@ import db.test.User;
 public class Application implements bapp {
 	@Override
 	public void init() throws Throwable {
-		b.pl(getClass().getName() + ": init");
+//		Db.enable_log = false;
+		Db.log(getClass().getName() + ": init");
 		Db.initInstance();
 		final Db db = Db.instance();
 		db.register(User.class);
@@ -31,7 +32,7 @@ public class Application implements bapp {
 
 	@Override
 	public void shutdown() throws Throwable {
-		b.pl(getClass().getName() + ": shutdown");
+		Db.log(getClass().getName() + ": shutdown");
 		Db.instance().shutdown();
 	}
 }

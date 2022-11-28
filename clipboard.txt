@@ -1,0 +1,47 @@
+# on server
+apt-get install default-jdk
+apt-get install default-mysql-server
+apt-get install git
+
+mysql
+	create user 'c'@'localhost' identified by 'password';
+	create database testdb;
+	grant all on testdb.* to c@localhost;
+
+# on developer machine
+cd ~/w/
+rsync -auv -e ssh --progress bob/ root@1.2.3.4:/bob
+
+# on server
+cd /bob
+# edit run.sh and change port to 80
+sh build-and-run.sh
+
+# on developer machine
+http://1.2.3.4/
+
+# to install as service edit /etc/systemd/system/bob.service 
+######################################
+[Unit]
+Description = bob
+After=mysql.service
+
+[Service]
+WorkingDirectory= /bob/
+ExecStart= /bob/run.sh
+
+[Install]
+WantedBy=multi-user.target
+######################################
+
+# to control service use
+systemctl enable bob
+systemctl start bob
+systemctl status bob
+systemctl stop bob
+systemctl list-units --type=service | grep bob
+# to display the log
+journalctl -u bob -e
+service --status-all
+
+# dns add A record with domain name to ip

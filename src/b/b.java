@@ -124,7 +124,7 @@ final public class b{
 			print_hr(out,64);
 		}
 		if(print_stats_at_startup)stats_to(out);
-		
+		b.pl("");
 		// initiate application
 		if(b.bapp_class!=null&&!b.bapp_class.isEmpty()){
 			b.bapp=(bapp)Class.forName(b.bapp_class).getConstructor().newInstance();
