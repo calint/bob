@@ -11,14 +11,15 @@ mysql
 # on server 
 cd /
 git clone https://github.com/calint/bob
+# to update from git with HEAD
+git pull https://github.com/calint/bob
 
-# alternative on developer machine
-cd ~/w/
-rsync -auv -e ssh --progress bob/ root@1.2.3.4:/bob
+	# alternative on developer machine
+	cd ~/w/
+	rsync -auv -e ssh --progress bob/ root@1.2.3.4:/bob
 
 # on server
 cd /bob
-# edit run.sh and change port to 80
 sh build-and-run.sh
 
 # on developer machine

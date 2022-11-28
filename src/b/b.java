@@ -103,6 +103,7 @@ final public class b{
 	public static PrintStream err=System.err;
 	
 	public static String bapp_class="c.Application";
+	public static String bapp_jdbc_host="localhost:3306";
 	public static String bapp_jdbc_db="dbo";
 	public static String bapp_jdbc_user="user";
 	public static String bapp_jdbc_password="password";
