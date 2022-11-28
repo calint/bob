@@ -9,6 +9,14 @@ import db.DbTransaction;
 import db.Query;
 
 public class test1 extends TestCase {
+	public test1() {
+		this(false);
+	}
+	
+	public test1(final boolean use_current_transaction) {
+		super(use_current_transaction);
+	}
+	
 	@Override
 	protected boolean isResetDatabase() {
 		return true;

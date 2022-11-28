@@ -11,12 +11,13 @@ import db.DbTransaction;
 //   download csv at https://www.kaggle.com/datasets/mohamedbakhet/amazon-books-reviews
 public class import_books extends TestCase {
 	final private String filePath;
-
-	public import_books() {
-		this("csv/books_data_sample.csv");
+	
+	public import_books(boolean use_current_transaction) {
+		this(use_current_transaction, "csv/books_data_sample.csv");
 	}
 
-	public import_books(final String path) {
+	public import_books(boolean use_current_transaction, final String path) {
+		super(use_current_transaction);
 		filePath = path;
 	}
 
@@ -26,7 +27,7 @@ public class import_books extends TestCase {
 	}
 
 	@Override
-	protected String getTestName() {
+	public String getTestName() {
 		return getClass().getName() + " " + filePath;
 	}
 

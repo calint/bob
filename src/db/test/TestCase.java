@@ -4,6 +4,16 @@ import db.Db;
 import db.DbTransaction;
 
 public abstract class TestCase implements Runnable {
+	private final boolean use_current_transaction;
+
+	public TestCase() {
+		this(false);
+	}
+
+	public TestCase(final boolean use_current_transaction) {
+		this.use_current_transaction = use_current_transaction;
+	}
+
 	public final void run() {
 		final boolean rst = isResetDatabase();
 
@@ -35,37 +45,37 @@ public abstract class TestCase implements Runnable {
 		return true;
 	}
 
-	protected String getTestName() {
+	public String getTestName() {
 		return getClass().getName();
 	}
 
 	private void doTest(final boolean cacheon) {
 		final DbTransaction tn;
-		final String cachests = cacheon ? " on" : "off";
-		try {
+		if (use_current_transaction) {
+			tn = Db.currentTransaction();
+		} else {
 			tn = Db.initCurrentTransaction();
-			tn.cache_enabled = cacheon;
-		} catch (Throwable t) {
-			throw new RuntimeException(t);
 		}
+		final String cachests = cacheon ? " on" : "off";
+		tn.cache_enabled = cacheon;
 		try {
 			final long t0 = System.currentTimeMillis();
 			doRun();
-			tn.finishTransaction();
+			tn.commit();
 			final long t1 = System.currentTimeMillis();
 			final long dt = t1 - t0;
 			final long dt_s = dt / 1000;
 			System.out.println(getTestName() + " [cache " + cachests + "]: passed (" + dt_s + "s)");
 		} catch (Throwable t1) {
-			try {
+			if (!use_current_transaction) {
 				tn.rollback();
-			} catch (Throwable t2) {
-				t2.printStackTrace();
 			}
 			System.out.println(getClass().getName() + " [cache " + cachests + "]: failed");
 			throw new RuntimeException(t1);
 		} finally {
-			Db.deinitCurrentTransaction();
+			if (!use_current_transaction) {
+				Db.deinitCurrentTransaction();
+			}
 		}
 	}
 

@@ -11,17 +11,18 @@ import db.DbTransaction;
 public class import_games extends TestCase {
 	final private String filePath;
 
-	public import_games() {
-		this("csv/steam_games_sample.csv");
+	public import_games(boolean user_current_transaction) {
+		this(user_current_transaction, "csv/steam_games_sample.csv");
+	}
+
+	public import_games(boolean user_current_transaction, final String path) {
+		super(user_current_transaction);
+		filePath = path;
 	}
 
 	@Override
-	protected String getTestName() {
+	public String getTestName() {
 		return getClass().getName() + " " + filePath;
-	}
-
-	public import_games(final String path) {
-		filePath = path;
 	}
 
 	@Override

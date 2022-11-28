@@ -9,6 +9,14 @@ import db.DbTransaction;
 import db.Query;
 
 public class test2 extends TestCase {
+	public test2() {
+		this(false);
+	}
+	
+	public test2(final boolean use_current_transaction) {
+		super(use_current_transaction);
+	}
+
 	@Override
 	public void doRun() throws Throwable {
 		final DbTransaction tn = Db.currentTransaction();
