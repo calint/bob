@@ -22,4 +22,4 @@ cat resources.txt | while read f; do
 done
 rm sources.txt
 rm resources.txt
-java -cp bin b.b
+java -cp bin:lib/mysql-connector-java-5.1.49.jar b.b

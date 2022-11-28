@@ -103,7 +103,8 @@ final public class b{
 	public static @conf String timeatloadstrhtp=tolastmodstr(timeatload);
 	public static PrintStream out=System.out;
 	public static PrintStream err=System.err;
-	public static String dboappClassName="c.Application";
+	public static String bapp_class="c.Application";
+	public static bapp bapp=null;
 	private final static LinkedList<req>pending_req=new LinkedList<req>();
 	public static void main(final String[]args)throws Throwable{
 //		System.out.println(hello);
@@ -121,8 +122,10 @@ final public class b{
 		if(print_stats_at_startup)stats_to(out);
 		
 		// initiate dboapp
-		final application app=(application)Class.forName(dboappClassName).getConstructor().newInstance();
-		app.init();		
+		if(b.bapp_class!=null&&!b.bapp_class.isEmpty()){
+			b.bapp=(bapp)Class.forName(b.bapp_class).getConstructor().newInstance();
+			b.bapp.init();
+		}
 
 		final ServerSocketChannel ssc=ServerSocketChannel.open();
 		ssc.configureBlocking(false);
