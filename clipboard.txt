@@ -49,10 +49,3 @@ service --status-all
 
 # dns add A record with domain name to ip
 
-MYSQL_HOST=db-mysql-ramvark-do-user-390543-0.b.db.ondigitalocean.com:25060
-MYSQL_DB=defaultdb
-MYSQL_USER=doadmin
-MYSQL_PASSWORD=AVNS_furxyXGuAI009gCpEjl
-MYSQL_NCONS=75
-B_NTHREADS=100
-PORT=8888

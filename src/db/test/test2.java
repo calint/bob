@@ -40,17 +40,18 @@ public class test2 extends TestCase {
 		final String s = to.getMd5();
 		if (!chs.equals(s))
 			throw new RuntimeException();
-//		ls2.add("!");
-//		tn.commit();
-//		final TestObj to8 = (TestObj) tn.get(TestObj.class, qid, null, null).get(0);
-//		final List<String> ls3 = to8.getList();
-//		ls.add("!");
-//		if (ls.size() != ls3.size())
-//			throw new RuntimeException();
-//		for (int i = 0; i < ls3.size(); i++) {
-//			if (!ls.get(i).equals(ls3.get(i)))
-//				throw new RuntimeException();
-//		}
+		ls2.add("!");
+		to2.setList(ls2);
+		tn.commit();
+		final TestObj to8 = (TestObj) tn.get(TestObj.class, qid, null, null).get(0);
+		final List<String> ls3 = to8.getList();
+		ls.add("!");
+		if (ls.size() != ls3.size())
+			throw new RuntimeException();
+		for (int i = 0; i < ls3.size(); i++) {
+			if (!ls.get(i).equals(ls3.get(i)))
+				throw new RuntimeException();
+		}
 				
 		final TestObj to3 = (TestObj) tn.get(TestObj.class, qid, null, null).get(0);
 		to3.setList(null);
