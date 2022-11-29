@@ -48,6 +48,7 @@ public final class req{
 			case state_uri:parse_uri();break;
 			case state_prot:parse_prot();break;
 			case state_header_name:parse_header_name();
+				// state might have changed after parse_header_name()->do_after_header()
 				if(state==state_transfer_buffers||state==state_transfer_file)
 					return b.op.write;
 				if(state==state_waiting_run_page||state==state_waiting_run_page_content){
@@ -98,8 +99,8 @@ public final class req{
 		while(ba_rem!=0){
 			final byte b=ba[ba_pos++];ba_rem--;
 			if(b!='\n')continue;
-			if(ba_pos>=3&&ba[ba_pos-3]=='1')connection_keep_alive=true;// cheapo to set keepalive for http/1.1\r\n
-			else if(ba_pos>=2&&ba[ba_pos-2]=='1')connection_keep_alive=true;// cheapo to set keepalive for 1\n
+			if(ba_pos>=3&&ba[ba_pos-3]=='1')connection_keep_alive=true;// ? cheapo to set keepalive for http/1.1\r\n
+			else if(ba_pos>=2&&ba[ba_pos-2]=='1')connection_keep_alive=true;// ? cheapo to set keepalive for 1\n
 			do_after_prot();
 			break;
 		}
@@ -119,7 +120,8 @@ public final class req{
 		}
 		hdrs.clear();
 		
-//		// set sesid and session to null, retrieve session at every request in case load balancer reuses an open connection for request from a different client
+		// set sesid and session to null
+		// retrieve session at every request in case load balancer reuses an open connection for request from a different client
 		sesid=null;
 		sesid_set=false;
 		ses=null;
@@ -167,13 +169,14 @@ public final class req{
 	public static @conf long abuse_content_len=1*b.M;
 	private void do_after_header()throws Throwable{
 //		assertaccess();
-		final String ka=hdrs.get(hk_connection);if(ka!=null)connection_keep_alive=hv_keep_alive.equalsIgnoreCase(ka);
+		final String ka=hdrs.get(hk_connection);
+		if(ka!=null)connection_keep_alive=hv_keep_alive.equalsIgnoreCase(ka);
 		content.clear();
 		contentType=hdrs.get(hk_content_type);
 		if(contentType!=null){
 			if(contentType.startsWith("dir;")||contentType.equals("dir")){
 				if(!b.enable_upload)throw new RuntimeException("uploadsdisabled");
-				if(!decodecookie())throw new RuntimeException("nocookie path:"+sb_path);
+				if(!decodecookie())throw new RuntimeException("nocookie at create dir. path:"+sb_path);
 				final String[]q=contentType.split(";");
 				final String lastmod_s=q[1];
 				final path p=b.path(b.sessions_dir).get(sesid).get(path_s);
@@ -188,7 +191,7 @@ public final class req{
 			if(contentType.startsWith("file;")||contentType.equals("file")){
 				if(!b.enable_upload)throw new RuntimeException("uploadsdisabled");
 //				System.out.println(path_s);
-				if(!decodecookie())throw new RuntimeException("nocookie path:"+sb_path);
+				if(!decodecookie())throw new RuntimeException("nocookie at create file from upload. path:"+sb_path);
 //				final String contentLength_s=hdrs.get(hk_content_length);
 				contentLength=Long.parseLong(hdrs.get(hk_content_length));
 				if(contentLength>abuse_upload_len){close();throw new RuntimeException("abuseuploadlen "+contentLength);}
@@ -205,9 +208,10 @@ public final class req{
 				return;
 			}
 		}
+		// assumes content type "text/plain; charset=utf-8" from an ajax post
 		final String contentLength_s=hdrs.get(hk_content_length);
 		if(contentLength_s!=null){
-			if(!decodecookie())throw new RuntimeException("nocookie path:"+sb_path);
+			if(!decodecookie())throw new RuntimeException("nocookie in request with content. path:"+sb_path);
 			contentLength=Long.parseLong(contentLength_s);
 			if(contentLength>abuse_content_len){close();throw new RuntimeException("abusecontentlen "+contentLength);}
 			bb_content=ByteBuffer.allocate((int)contentLength);
@@ -222,10 +226,11 @@ public final class req{
 		}
 		if(b.try_file&&try_file())return;
 		if(b.try_rc&&try_rc())return;
+		
 		state=state_waiting_run_page;
-		// try to get session and uri incase it is cacheable and valid reply on main thread
+		// try to get session and 'a' for uri in case it is cacheable and valid for reply on main thread
 		if(!decodecookie())
-			return;
+			return; // no cookie. create session in own thread and free main thread for new request.
 		if(!b.cache_uris)return;
 		if(hdrs.get("range")!=null)return; // ? make ranged response from cache
 
@@ -240,9 +245,10 @@ public final class req{
 //			b.pl("cookiechangeduringconnection. path: "+sb_path+" session id: '"+ses.id()+"' cookie id: '"+sesid+"'");
 //			ses=session.all().get(sesid);			
 //		}
+		// sesid is set by decode cookie
 		ses=session.all().get(sesid);			
 		if(ses==null)
-			return; // don't create session in the main thread. wait for run_page() and create there
+			return; // don't create session in the main thread. wait for run_page() and create there. free main thread for new request.
 		
 		
 		final a e=(a)ses.get(path_s);
@@ -283,7 +289,7 @@ public final class req{
 		return false;
 	}
 	private static String mkcookieid(){
-		final SimpleDateFormat sdf=new SimpleDateFormat("yyMMdd-hhmmss.SSS-");
+		final SimpleDateFormat sdf=new SimpleDateFormat("yyMMdd-HHmmss.SSS-");
 		final StringBuilder sb=new StringBuilder(sdf.format(new Date()));
 		final String alf="0123456789abcdef";
 		for(int n=0;n<8;n++)sb.append(alf.charAt(b.rndint(0,alf.length())));
@@ -408,10 +414,11 @@ public final class req{
 				bba[i++]=ByteBuffer.wrap(hk_content_range);
 				bba[i++]=ByteBuffer.wrap((s_bytes_+range_from_byte+s_minus+range_to_byte+s_slash+c.content_length_in_bytes()).getBytes());
 				if(sesid_set){
-					sesid_set=false;// set cookie
+					// set cookie
 					bba[i++]=ByteBuffer.wrap(hk_set_cookie);
 					bba[i++]=ByteBuffer.wrap(sesid.getBytes());
 					bba[i++]=ByteBuffer.wrap(hkv_set_cookie_append);
+					sesid_set=false;
 				}
 				bba[i++]=ByteBuffer.wrap(ba_crlf2);
 				final int d=c.data_position();
@@ -424,11 +431,12 @@ public final class req{
 			transferbuffers(new ByteBuffer[]{c.byteBuffer().slice()});
 			return;
 		}
-		sesid_set=false;// set cookie
+		// cookie to set
 		final ByteBuffer[]bba=new ByteBuffer[]{c.byteBuffer().slice(),ByteBuffer.wrap(hk_set_cookie),ByteBuffer.wrap(sesid.getBytes()),ByteBuffer.wrap(hkv_set_cookie_append),c.byteBuffer().slice()};
 		bba[0].limit(c.additional_headers_insertion_position());
 		bba[4].position(c.additional_headers_insertion_position());
 		transferbuffers(bba);
+		sesid_set=false;
 	}
 	private void reply(final byte[]firstline,final byte[]lastMod,final byte[]contentType,final byte[]content)throws Throwable{
 		final ByteBuffer[]bb=new ByteBuffer[16];
@@ -664,19 +672,28 @@ public final class req{
 		}
 	}
 	private void resp_page()throws Throwable{
-		if(sesid!=null&&ses==null){// ? sessiongetandloadracing 
-			ses=session.all().get(sesid);
-			if(ses==null&&b.sessionfile_load){
-				ses=load_session(sesid);
-				if(ses==null){
-					pl("could not load, new session with same id "+sesid);
-					ses=new session(sesid);					
-				}
-				ses.bits(b.get_session_bits_for_sessionid(sesid));
-				session.all().put(sesid,ses);
-				thdwatch.sessions++;
-			}
-		}else if(sesid==null){
+//		if(sesid!=null&&ses==null){// ? sessiongetandloadracing 
+//			ses=session.all().get(sesid);
+//			if(ses==null&&b.sessionfile_load){
+//				ses=load_session(sesid);
+//				if(ses==null){
+//					pl("could not load, new session with same id "+sesid);
+//					ses=new session(sesid);					
+//				}
+//				ses.bits(b.get_session_bits_for_sessionid(sesid));
+//				session.all().put(sesid,ses);
+//				thdwatch.sessions++;
+//			}
+//		}else if(sesid==null){
+//			sesid=mkcookieid();
+//			sesid_set=true;
+//			pl("new session "+sesid);
+//			ses=new session(sesid);
+//			ses.bits(b.get_session_bits_for_sessionid(sesid));
+//			session.all().put(sesid,ses);
+//			thdwatch.sessions++;
+//		}
+		if(sesid==null){
 			sesid=mkcookieid();
 			sesid_set=true;
 			pl("new session "+sesid);
@@ -684,6 +701,27 @@ public final class req{
 			ses.bits(b.get_session_bits_for_sessionid(sesid));
 			session.all().put(sesid,ses);
 			thdwatch.sessions++;
+		}
+		if(ses==null){// ? session get and load racing 
+			// session id retrieved from cookie. try to get session.
+			ses=session.all().get(sesid);
+			if(ses==null&&b.sessionfile_load){ // should try to load session from file
+				ses=load_session(sesid);
+				if(ses==null){
+					pl("could not load session. creating new with same id "+sesid);
+					ses=new session(sesid);
+				}
+				ses.bits(b.get_session_bits_for_sessionid(sesid));
+				session.all().put(sesid,ses);
+				thdwatch.sessions++;
+			}
+			// session may be null here if there is no session and no load from file
+			if(ses==null){
+				ses=new session(sesid);					
+				ses.bits(b.get_session_bits_for_sessionid(sesid));
+				session.all().put(sesid,ses);
+				thdwatch.sessions++;
+			}
 		}
 		ses.nreq++;
 		a e=(a)ses.get(path_s);
@@ -739,7 +777,8 @@ public final class req{
 				}
 				ee.set(me.getValue());
 			}
-			if(ax.length()==0)return;//? y
+			if(ax.length()==0)return;// ? y
+			// decode the field id, method name and parameters parameters
 			final String axid,axfunc,axarg;
 			final int i1=ax.indexOf(' ');
 			if(i1==-1){
@@ -1007,7 +1046,9 @@ public final class req{
 	final static byte[]h_http403="HTTP/1.1 403 Forbidden".getBytes();
 	private final static byte[]h_http404="HTTP/1.1 404 Not Found".getBytes();
 	private final static byte[]hk_set_cookie ="\r\nSet-Cookie: i=".getBytes();
-	private final static byte[]hkv_set_cookie_append =";path=/;expires=Thu, 31-Dec-2099 00:00:00 GMT;Secure;SameSite=Lax".getBytes();
+	// allow sites to run without ssl
+//	private final static byte[]hkv_set_cookie_append =";path=/;expires=Thu, 31-Dec-2099 00:00:00 GMT;Secure;SameSite=Lax".getBytes();
+	private final static byte[]hkv_set_cookie_append =";path=/;expires=Thu, 31-Dec-2099 00:00:00 GMT;SameSite=Lax".getBytes();
 	private final static byte[]hkp_transfer_encoding_chunked="\r\nTransfer-Encoding: chunked".getBytes();
 	private final static byte[]hkp_accept_ranges_byte="\r\nAccept-Ranges: bytes".getBytes();
 	private final static byte[]hk_content_range ="\r\nContent-Range: ".getBytes();
