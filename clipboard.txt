@@ -1,17 +1,21 @@
 # on server
 apt-get install default-jdk
-apt-get install default-mysql-server
+#apt-get install default-mysql-server
 apt-get install git
 
-mysql
-	create user 'c'@'localhost' identified by 'password';
-	create database testdb;
-	grant all on testdb.* to c@localhost;
+#mysql
+#	create user 'c'@'localhost' identified by 'password';
+#	create database testdb;
+#	grant all on testdb.* to c@localhost;
 
 # on server 
 cd /
 git clone https://github.com/calint/bob
+
 # to update from git with HEAD
+# if files have been changed locally
+git checkout -p stash .
+
 git pull https://github.com/calint/bob
 
 	# alternative on developer machine
