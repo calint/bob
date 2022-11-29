@@ -675,7 +675,7 @@ public final class req{
 			}catch(Throwable e2){
 				while(e1.getCause()!=null)e1=e1.getCause();
 				xwriter x=new xwriter().p(path_s).nl().nl().p(b.stacktraceline(e1)).nl().nl().p(b.stacktraceline(e2)).nl();
-				pl("classnotfound '"+path_s+"' tried '"+cn+"' and '"+cn2+"'");
+				pl("classnotfound for path '"+path_s+"' tried '"+cn+"' and '"+cn2+"'");
 				reply(h_http404,null,null,tobytes(x.toString()));
 				return;
 			}}
