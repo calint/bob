@@ -567,7 +567,7 @@ public final class req{
 			//				throw e;
 			final String msg=e.getMessage();
 			if(e instanceof IOException&&(
-					"Broken pipe".equals(msg)||
+					msg.startsWith("Broken pipe ")||
 					"Connection reset by peer".equals(msg)||
 					"sendfile failed: EPIPE (Broken pipe)".equals(msg)||//? android (when closing browser while transfering file)
 					"An existing connection was forcibly closed by the remote host".equals(msg)
@@ -637,7 +637,6 @@ public final class req{
 			}
 		}
 	}
-	@SuppressWarnings("unchecked")
 	private void resp_page()throws Throwable{
 		if(sesid!=null&&ses==null){//?? sessiongetandloadracing 
 			ses=session.all().get(sesid);
@@ -666,10 +665,10 @@ public final class req{
 			String cn=path_s.replace('/','.');
 			while(cn.startsWith("."))cn=cn.substring(1);
 			cn=b.webobjpkg+cn;
-			Class<? extends a>ecls;
-			try{ecls=(Class<? extends a>)Class.forName(cn);}catch(Throwable e1){try{
+			Class<?>ecls;
+			try{ecls=(Class<?>)Class.forName(cn);}catch(Throwable e1){try{
 				final String clsnm=cn+(cn.length()==0||cn.endsWith(".")?"":".")+b.default_package_class;
-				ecls=(Class<? extends a>)Class.forName(clsnm);
+				ecls=(Class<?>)Class.forName(clsnm);
 			}catch(Throwable e2){
 				while(e1.getCause()!=null)e1=e1.getCause();
 				final xwriter x=new xwriter().p(path_s).nl().nl().p(b.stacktraceline(e1)).nl().nl().p(b.stacktraceline(e2)).nl();
@@ -677,7 +676,7 @@ public final class req{
 				reply(h_http404,null,null,tobytes(x.toString()));
 				return;
 			}}
-			try{e=ecls.getConstructor().newInstance();}catch(Throwable ex){
+			try{e=(a)ecls.getConstructor().newInstance();}catch(Throwable ex){
 				while(ex.getCause()!=null)ex=ex.getCause();
 //				final xwriter x=new xwriter().p(path_s).nl().nl().p(b.stacktraceline(ex)).nl();
 				reply(h_http404,null,null,tobytes(stacktrace(ex)));

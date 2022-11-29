@@ -53,3 +53,14 @@ service --status-all
 
 # dns add A record with domain name to ip
 
+# change the run.sh with login for db
+MYSQL_HOST=localhost:3306
+MYSQL_DB=testdb
+MYSQL_USER=c
+MYSQL_PASSWORD=password
+MYSQL_NCONS=100
+B_NTHREADS=100
+PORT=8888
+
+
+

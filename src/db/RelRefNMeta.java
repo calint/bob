@@ -33,7 +33,7 @@ final class RelRefNMeta {
 //		sb.append("create table ").append(tableName).append('(').append(fromColName).append(" int,").append(toColName)
 //				.append(" int)");
 		
-		// note primary key added due to warning from mysql regarding performance in cluster at replication
+		// note primary key added due to warning from mysql regarding replication performance in cluster
 		final StringBuilder sb = new StringBuilder(256);
 		sb.append("create table ").append(tableName).append("(id int primary key auto_increment").append(',')
 				.append(fromColName).append(" int,").append(toColName).append(" int)");
