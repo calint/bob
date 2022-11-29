@@ -219,7 +219,7 @@ public final class req{
 		decodecookie();
 		state=state_waiting_run_page;
 		if(!b.cache_uris)return;
-		if(hdrs.get("range")!=null)return;//? mk ranged response from cache
+		if(hdrs.get("range")!=null)return; // ? mk ranged response from cache
 		if(ses==null)ses=session.all().get(sesid);
 		if(ses==null)return;
 		if(sesid!=null&&!sesid.equals(ses.id()))throw new Error("cookiechangeduringconnection. path: "+sb_path);
@@ -640,7 +640,7 @@ public final class req{
 		}
 	}
 	private void resp_page()throws Throwable{
-		if(sesid!=null&&ses==null){//?? sessiongetandloadracing 
+		if(sesid!=null&&ses==null){// ? sessiongetandloadracing 
 			ses=session.all().get(sesid);
 			if(ses==null&&b.sessionfile_load){
 				ses=load_session(sesid);
@@ -668,13 +668,14 @@ public final class req{
 			while(cn.startsWith("."))cn=cn.substring(1);
 			cn=b.webobjpkg+cn;
 			Class<?>ecls;
+			String cn2="";
 			try{ecls=(Class<?>)Class.forName(cn);}catch(Throwable e1){try{
-				final String clsnm=cn+(cn.length()==0||cn.endsWith(".")?"":".")+b.default_package_class;
-				ecls=(Class<?>)Class.forName(clsnm);
+				cn2=cn+(cn.length()==0||cn.endsWith(".")?"":".")+b.default_package_class;
+				ecls=(Class<?>)Class.forName(cn2);
 			}catch(Throwable e2){
 				while(e1.getCause()!=null)e1=e1.getCause();
-				final xwriter x=new xwriter().p(path_s).nl().nl().p(b.stacktraceline(e1)).nl().nl().p(b.stacktraceline(e2)).nl();
-				pl(x.toString());
+				xwriter x=new xwriter().p(path_s).nl().nl().p(b.stacktraceline(e1)).nl().nl().p(b.stacktraceline(e2)).nl();
+				pl("classnotfound '"+path_s+"' tried '"+cn+"' and '"+cn2+"'");
 				reply(h_http404,null,null,tobytes(x.toString()));
 				return;
 			}}

@@ -127,11 +127,11 @@ final public class b{
 		if(print_stats_at_startup)stats_to(out);
 		b.pl("");
 		// initiate application
-		if(b.bapp_class!=null&&!b.bapp_class.isEmpty()){
+		if(b.bapp_class!=null){
 			b.bapp=(bapp)Class.forName(b.bapp_class).getConstructor().newInstance();
 			b.bapp.init();
 		}
-
+		b.pl("opening port "+b.server_port);
 		final ServerSocketChannel ssc=ServerSocketChannel.open();
 		ssc.configureBlocking(false);
 		final InetSocketAddress isa=new InetSocketAddress(Integer.parseInt(server_port));
@@ -419,7 +419,8 @@ final public class b{
 	public static void cp(final InputStream in,final Writer out)throws Throwable{
 		cp(new InputStreamReader(in,strenc),out,null);
 	}
-	public static void pl(final String s){out.print("> ");out.println(s);}
+//	public static void pl(final String s){out.print("> ");out.println(s);}
+	public static void pl(final String s){out.println(s);}
 	public static void p(final String s){out.print(s);}
 	
 	//? safe quantity unit math
