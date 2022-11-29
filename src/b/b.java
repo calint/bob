@@ -44,9 +44,9 @@ final public class b{
 	public final static long P=K*T;
 	public final static String pathsep="/";
 	public static @conf String hello="public domain server #1";
-//	public static String id=""+(int)Math.floor(Math.random()*10000);//? fixedwidth
+	public static String id=""+(int)Math.floor(Math.random()*10000);//? fixedwidth
 	public static @conf String root_dir=".";
-	public static @conf(reboot=true)String server_port=ensure(System.getProperty("app.port"),"8888");
+	public static @conf(reboot=true)String server_port="8888";
 	public static @conf boolean print_requests=false;
 	public static @conf boolean print_reply_headers=false;
 	public static @conf boolean print_replies=false;
@@ -352,7 +352,7 @@ final public class b{
 		ps.println("          threads: "+thdreq.all.size());
 		ps.println("            cores: "+Runtime.getRuntime().availableProcessors());
 //		ps.println("            cloud: "+cloud_bees);
-//		ps.println("               id: "+id);
+		ps.println("               id: "+id);
 	}
 	public static int rndint(final int from,final int tonotincl){return (int)(Math.random()*(tonotincl-from)+from);}
 	public static String stacktrace(final Throwable e){final StringWriter sw=new StringWriter();final PrintWriter out=new PrintWriter(sw);e.printStackTrace(out);out.close();return sw.toString();}
@@ -412,10 +412,10 @@ final public class b{
 		return true;
 	}
 	static enum op{read,write,noop}
-	private static String ensure(final String s,final String def){
-		if(s==null||s.length()==0)return def;
-		return s;
-	}
+//	private static String ensure(final String s,final String def){
+//		if(s==null||s.length()==0)return def;
+//		return s;
+//	}
 	public static void cp(final InputStream in,final Writer out)throws Throwable{
 		cp(new InputStreamReader(in,strenc),out,null);
 	}

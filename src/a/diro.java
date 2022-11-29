@@ -92,7 +92,7 @@ public class diro extends a{
 		x.style(selection,"display:table;padding-top:.5em;padding-bottom:.5em;margin-left:auto;margin-right:auto;background:#fefefe;text-align:center;box-shadow:0 0 .5em rgba(0,0,0,.5);");
 		
 		final int count=Db.currentTransaction().getCount(Book.class, null);
-		x.p(count);
+		x.p(count).p(" server id: "+b.id);
 		
 		x.table("f").nl();
 		x.tr().th();
