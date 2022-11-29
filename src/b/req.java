@@ -760,7 +760,7 @@ public final class req{
 			ses.put(path_s,e);
 		}
 		if(!content.isEmpty()){
-			if(b.acl_on)b.acl_ensure_post(e);
+//			if(b.acl_on)b.acl_ensure_post(e);
 			String ax="";
 			for(final Map.Entry<String,String>me:content.entrySet()){
 				if(axfld.equals(me.getKey())){
@@ -846,6 +846,7 @@ public final class req{
 		}
 		final DbTransaction tn=Db.initCurrentTransaction();
 		try{
+			// ? extra mode: serialize, encode to text, write into tag <div id="--state"> that is posted with ajax request
 			e.to(x);
 			tn.finishTransaction();
 		}catch(final Throwable t){
@@ -857,6 +858,7 @@ public final class req{
 		os.finish();
 	}
 	// threaded done
+
 	private oschunked reply_chunked(final byte[]hdr,final String contentType,final String lastmod)throws Throwable{
 		final ByteBuffer[]bb_reply=new ByteBuffer[11];
 		int bbi=0;

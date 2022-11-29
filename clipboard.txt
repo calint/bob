@@ -1,7 +1,7 @@
 # on server
-apt-get install default-jdk
+apt-get install default-jdk git
 #apt-get install default-mysql-server
-apt-get install git
+#apt-get install git
 
 #mysql
 #	create user 'c'@'localhost' identified by 'password';
@@ -43,11 +43,15 @@ WantedBy=multi-user.target
 # to control service use
 systemctl enable bob
 systemctl start bob
+journalctl -u bob -e
+
+
+
 systemctl status bob
 systemctl stop bob
 systemctl list-units --type=service | grep bob
 # to display the log
-journalctl -u bob -e
+
 journalctl -u bob -f
 service --status-all
 

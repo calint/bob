@@ -40,10 +40,15 @@ public class Application implements bapp {
 //		db.init("jdbc:mysql://" + b.bapp_jdbc_host + "/" + b.bapp_jdbc_db
 //				+ "?allowPublicKeyRetrieval=true&useSSL=false", b.bapp_jdbc_user, b.bapp_jdbc_password,
 //				Integer.parseInt(b.bapp_jdbc_ncons));
+//		db.init("jdbc:mysql://" + b.bapp_jdbc_host + "/" + b.bapp_jdbc_db
+//				+ "?ssl-mode=REQUIRED", b.bapp_jdbc_user, b.bapp_jdbc_password,
+//				Integer.parseInt(b.bapp_jdbc_ncons));
 		db.init("jdbc:mysql://" + b.bapp_jdbc_host + "/" + b.bapp_jdbc_db
-				+ "?ssl-mode=REQUIRED", b.bapp_jdbc_user, b.bapp_jdbc_password,
+				+ "?verifyServerCertificate=false&useSSL=true&ssl-mode=REQUIRED", b.bapp_jdbc_user, b.bapp_jdbc_password,
 				Integer.parseInt(b.bapp_jdbc_ncons));
 		
+		
+// verifyServerCertificate=false&useSSL=true&ssl-mode=REQUIRED		
 //		ssl-mode=REQUIRED
 	}
 

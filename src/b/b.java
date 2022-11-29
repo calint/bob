@@ -82,7 +82,7 @@ final public class b{
 	public static @conf String datetimefmtstr="yyyy-MM-dd HH:mm:ss.sss";
 	public static @conf @unit(name="tms")long resources_lastmod=0;
 	public static @conf boolean resources_enable_any_path=false;
-	public static Set<String>resources_paths=new HashSet<String>(Arrays.asList("x.js","x.css","favicon.ico"));
+	public static HashSet<String>resources_paths=new HashSet<String>(Arrays.asList("x.js","x.css","favicon.ico"));
 	public static @conf boolean enable_upload=true;
 //	public static boolean enable_ssl=false;
 //	public static boolean enable_cluster=false;
@@ -92,7 +92,7 @@ final public class b{
 //	public static boolean cloud_bees=false;
 	public static @conf boolean print_conf_at_startup=true;
 	public static @conf boolean print_stats_at_startup=true;
-	public static @conf boolean acl_on=true;
+//	public static @conf boolean acl_on=true;
 	public static @conf boolean firewall_on=true;
 	public static @conf boolean firewall_paths_on=true;
 	public static @conf boolean log_client_disconnects=false;
@@ -447,26 +447,26 @@ final public class b{
 //		long to_long();
 //	}
 
-	static void acl_ensure_create(final a e){
-		final Class<? extends a>ecls=e.getClass();
-		final acl a=ecls.getAnnotation(acl.class);
-		if(a==null)return;
-		final long bits_c=a.create();
-		final req r=req.get();
-		final session ses=r.session();
-		if(ses.bits_hasany(bits_c))return;
-		throw new SecurityException("cannot create item of type "+ecls+" due to acl\n any:  0b"+Long.toBinaryString(ses.bits())+" vs 0b"+Long.toBinaryString(bits_c));
-	}
-	static void acl_ensure_post(final a e){
-		final Class<? extends a>ecls=e.getClass();
-		final acl a=ecls.getAnnotation(acl.class);
-		if(a==null)return;
-		final long bits_c=a.create();
-		final req r=req.get();
-		final session ses=r.session();
-		if(ses.bits_hasany(bits_c))return;
-		throw new SecurityException("cannot post to item of type "+ecls+" due to acl\n any:  0b"+Long.toBinaryString(ses.bits())+" vs 0b"+Long.toBinaryString(bits_c));
-	}
+//	static void acl_ensure_create(final a e){
+//		final Class<? extends a>ecls=e.getClass();
+//		final acl a=ecls.getAnnotation(acl.class);
+//		if(a==null)return;
+//		final long bits_c=a.create();
+//		final req r=req.get();
+//		final session ses=r.session();
+//		if(ses.bits_hasany(bits_c))return;
+//		throw new SecurityException("cannot create item of type "+ecls+" due to acl\n any:  0b"+Long.toBinaryString(ses.bits())+" vs 0b"+Long.toBinaryString(bits_c));
+//	}
+//	static void acl_ensure_post(final a e){
+//		final Class<? extends a>ecls=e.getClass();
+//		final acl a=ecls.getAnnotation(acl.class);
+//		if(a==null)return;
+//		final long bits_c=a.create();
+//		final req r=req.get();
+//		final session ses=r.session();
+//		if(ses.bits_hasany(bits_c))return;
+//		throw new SecurityException("cannot post to item of type "+ecls+" due to acl\n any:  0b"+Long.toBinaryString(ses.bits())+" vs 0b"+Long.toBinaryString(bits_c));
+//	}
 	public static void firewall_assert_access(final a e){
 		final Class<? extends a>cls=e.getClass();
 		if(cls.equals(a.class))return;
