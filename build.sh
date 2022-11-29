@@ -6,7 +6,7 @@ rm -rf bin
 mkdir bin
 find src -type f | grep '\.java$' > sources.txt
 find src -type f | grep -v '\.java$' > resources.txt
-javac -verbose -d bin @sources.txt
+javac -verbose -encoding UTF-8 -d bin @sources.txt
 
 cat resources.txt | while read f; do
     CMD="cp $f bin/${f#*/}"
