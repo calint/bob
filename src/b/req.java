@@ -222,7 +222,7 @@ public final class req{
 		if(hdrs.get("range")!=null)return; // ? mk ranged response from cache
 		if(ses==null)ses=session.all().get(sesid);
 		if(ses==null)return;
-		if(sesid!=null&&!sesid.equals(ses.id()))throw new RuntimeException("cookiechangeduringconnection. path: "+sb_path);
+		if(sesid!=null&&!sesid.equals(ses.id()))throw new RuntimeException("cookiechangeduringconnection. path: "+sb_path+" session id: '"+ses.id()+"' cookie id: '"+sesid+"'");
 		final a e=(a)ses.get(path_s);
 		if(e==null)return;
 		if(!(e instanceof cacheable))return;

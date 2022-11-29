@@ -67,3 +67,6 @@ journalctl -u bob | grep ClassNotFoundException | cut -c 1-200
 
 cd /bob && git pull https://github.com/calint/bob && ./build.sh && systemctl restart bob
 
+ssh root@<ip> 'cd /bob && git pull https://github.com/calint/bob && ./build.sh && systemctl restart bob'
+
+
