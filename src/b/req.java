@@ -243,14 +243,14 @@ public final class req{
 //			throw new Error("may only be accessed from localhost");
 //	}
 	private boolean decodecookie(){
-		sesid=hdrs.get(hk_cookie);
-		if(sesid==null)return false;
-		final String[]c1=sesid.split(";");
+		final String cookie=hdrs.get(hk_cookie);
+		if(cookie==null)return false;
+		final String[]c1=cookie.split(";");
 		for(String cc:c1){
 			cc=cc.trim();
 			if(cc.startsWith("i=")){
 				final String[]c2=cc.split("i=");
-				if(c2.length<2)throw new Error("invalidcookie: "+sesid);
+				if(c2.length<2)throw new Error("invalidcookie: "+cookie);
 				sesid=c2[1];
 				sesid_set=false;
 				return true;
@@ -306,7 +306,7 @@ public final class req{
 		if(sesid_set){
 			bb[i++]=ByteBuffer.wrap(hk_set_cookie);
 			bb[i++]=ByteBuffer.wrap(sesid.getBytes());
-			bb[i++]=ByteBuffer.wrap(hkv_cookie_append);
+			bb[i++]=ByteBuffer.wrap(hkv_set_cookie_append);
 			sesid_set=false;
 		}
 		if(connection_keep_alive)
@@ -387,7 +387,7 @@ public final class req{
 					sesid_set=false;// set cookie
 					bba[i++]=ByteBuffer.wrap(hk_set_cookie);
 					bba[i++]=ByteBuffer.wrap(sesid.getBytes());
-					bba[i++]=ByteBuffer.wrap(hkv_cookie_append);
+					bba[i++]=ByteBuffer.wrap(hkv_set_cookie_append);
 				}
 				bba[i++]=ByteBuffer.wrap(ba_crlf2);
 				final int d=c.data_position();
@@ -401,7 +401,7 @@ public final class req{
 			return;
 		}
 		sesid_set=false;// set cookie
-		final ByteBuffer[]bba=new ByteBuffer[]{c.byteBuffer().slice(),ByteBuffer.wrap(hk_set_cookie),ByteBuffer.wrap(sesid.getBytes()),ByteBuffer.wrap(hkv_cookie_append),c.byteBuffer().slice()};
+		final ByteBuffer[]bba=new ByteBuffer[]{c.byteBuffer().slice(),ByteBuffer.wrap(hk_set_cookie),ByteBuffer.wrap(sesid.getBytes()),ByteBuffer.wrap(hkv_set_cookie_append),c.byteBuffer().slice()};
 		bba[0].limit(c.additional_headers_insertion_position());
 		bba[4].position(c.additional_headers_insertion_position());
 		transferbuffers(bba);
@@ -413,7 +413,7 @@ public final class req{
 		if(sesid_set){
 			bb[bi++]=ByteBuffer.wrap(hk_set_cookie);
 			bb[bi++]=ByteBuffer.wrap(sesid.getBytes());
-			bb[bi++]=ByteBuffer.wrap(hkv_cookie_append);
+			bb[bi++]=ByteBuffer.wrap(hkv_set_cookie_append);
 			sesid_set=false;
 		}
 		if(lastMod!=null){
@@ -802,7 +802,7 @@ public final class req{
 		if(sesid_set){
 			bb_reply[bbi++]=ByteBuffer.wrap(hk_set_cookie);
 			bb_reply[bbi++]=ByteBuffer.wrap(sesid.getBytes());
-			bb_reply[bbi++]=ByteBuffer.wrap(hkv_cookie_append);
+			bb_reply[bbi++]=ByteBuffer.wrap(hkv_set_cookie_append);
 			sesid_set=false;
 		}
 		if(connection_keep_alive)
@@ -983,10 +983,10 @@ public final class req{
 	final static byte[]h_http403="HTTP/1.1 403 Forbidden".getBytes();
 	private final static byte[]h_http404="HTTP/1.1 404 Not Found".getBytes();
 	private final static byte[]hk_set_cookie ="\r\nSet-Cookie: i=".getBytes();
+	private final static byte[]hkv_set_cookie_append =";path=/;expires=Thu, 31-Dec-2099 00:00:00 GMT;Secure;SameSite=Lax".getBytes();
 	private final static byte[]hkp_transfer_encoding_chunked="\r\nTransfer-Encoding: chunked".getBytes();
 	private final static byte[]hkp_accept_ranges_byte="\r\nAccept-Ranges: bytes".getBytes();
 	private final static byte[]hk_content_range ="\r\nContent-Range: ".getBytes();
-	private final static byte[]hkv_cookie_append =";path=/;expires=Thu, 31-Dec-2099 00:00:00 GMT;Secure;SameSite=Strict".getBytes();
 	private final static String hk_connection="connection";
 	private final static String hk_content_length="content-length";
 	private final static String hk_content_type="content-type";
