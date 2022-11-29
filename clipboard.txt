@@ -29,12 +29,12 @@ sh build.sh
 # to install as service edit /etc/systemd/system/bob.service 
 ######################################
 [Unit]
-Description = bob
+Description=bob
 After=mysql.service
 
 [Service]
-WorkingDirectory= /bob/
-ExecStart= /bob/run.sh
+WorkingDirectory=/bob/
+ExecStart=/bob/run.sh
 
 [Install]
 WantedBy=multi-user.target
