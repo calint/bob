@@ -173,7 +173,7 @@ final public class b{
 				log(e);
 			}
 	}
-	private static void print_hr(final OutputStream os,final int width_in_chars)throws IOException{
+	private static void print_hr(final OutputStream os,final int width_in_chars)throws IOException{ // ? only used in b.main, remove?
 //		for(int i=0;i<width_in_chars;i++)
 //			os.write((byte)(Math.random()<.5?'~':' '));
 		float prob=1;

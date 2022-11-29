@@ -42,6 +42,7 @@ public class Application implements bapp {
 				Integer.parseInt(b.bapp_jdbc_ncons));
 	}
 
+	/** called by b at shutdown */
 	@Override
 	public void shutdown() throws Throwable {
 		Db.log(getClass().getName() + ": shutdown");

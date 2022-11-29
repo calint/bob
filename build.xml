@@ -1,0 +1,12 @@
+<project default="compile">
+	<path id="classpath">
+		<fileset dir="lib" includes="**/*.jar"/>
+	</path>
+	<target name="compile">
+		<mkdir dir="bin"/>
+		<javac includeantruntime="false" srcdir="src" destdir="bin" classpathref="classpath" encoding="utf-8" debug="true" debuglevel="source,lines,vars" />
+		<copy todir="bin">
+			<fileset dir="src" excludes="**/*.java" />
+		</copy>
+    </target>
+</project>

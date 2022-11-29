@@ -547,7 +547,7 @@ public final class req{
 		return true;
 	}
 	private boolean do_transfer_file()throws IOException{
-		//? heavy
+		// ? heavy
 		//		final long buf_size=this.sockch.socket().getSendBufferSize();
 		final int buf_size=b.transfer_file_write_size;
 		while(transfer_file_remaining!=0)try{
@@ -568,7 +568,7 @@ public final class req{
 			// todo add a meter to thdwatch for these exceptions
 			final String msg=e.getMessage();
 			if(e instanceof IOException&&(
-					msg.startsWith("Broken pipe ")||
+					msg.startsWith("Broken pipe")||
 					"Connection reset by peer".equals(msg)||
 					"sendfile failed: EPIPE (Broken pipe)".equals(msg)||//? android (when closing browser while transfering file)
 					"An existing connection was forcibly closed by the remote host".equals(msg)
