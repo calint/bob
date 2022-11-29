@@ -118,6 +118,12 @@ public final class req{
 			query_s=uriencoded.substring(i+1);
 		}
 		hdrs.clear();
+		
+//		// set sesid and session to null, retrieve session at every request in case load balancer reuses an open connection for request from a different client
+		sesid=null;
+		sesid_set=false;
+		ses=null;
+		
 		headernamelen=headerscount=0;
 		state=state_header_name;
 	}
@@ -216,22 +222,39 @@ public final class req{
 		}
 		if(b.try_file&&try_file())return;
 		if(b.try_rc&&try_rc())return;
-		decodecookie();
 		state=state_waiting_run_page;
+		// try to get session and uri incase it is cacheable and valid reply on main thread
+		if(!decodecookie())
+			return;
 		if(!b.cache_uris)return;
-		if(hdrs.get("range")!=null)return; // ? mk ranged response from cache
-		if(ses==null)ses=session.all().get(sesid);
-		if(ses==null)return;
-		if(sesid!=null&&!sesid.equals(ses.id()))throw new RuntimeException("cookiechangeduringconnection. path: "+sb_path+" session id: '"+ses.id()+"' cookie id: '"+sesid+"'");
+		if(hdrs.get("range")!=null)return; // ? make ranged response from cache
+
+//		if(ses==null)ses=session.all().get(sesid);
+//		if(ses==null)
+//			return; // don't create session in the main thread. wait for run_page() and create there
+//		
+//		// ? load balancer may reuse connection for a request from a different client. always get session for id?
+//		if(sesid!=null&&!sesid.equals(ses.id()))throw new RuntimeException("cookiechangeduringconnection. path: "+sb_path+" session id: '"+ses.id()+"' cookie id: '"+sesid+"'");
+//		//-----
+//		if(sesid!=null&&!sesid.equals(ses.id())){
+//			b.pl("cookiechangeduringconnection. path: "+sb_path+" session id: '"+ses.id()+"' cookie id: '"+sesid+"'");
+//			ses=session.all().get(sesid);			
+//		}
+		ses=session.all().get(sesid);			
+		if(ses==null)
+			return; // don't create session in the main thread. wait for run_page() and create there
+		
+		
 		final a e=(a)ses.get(path_s);
 		if(e==null)return;
 		if(!(e instanceof cacheable))return;
+
 		final cacheable ac=(cacheable)e;
 		final String ifmodsince=hdrs.get(hk_if_modified_since);
 		final String lastmod=ac.lastmod();
 		if(ifmodsince!=null&&ifmodsince.equals(lastmod)){reply(h_http304,null,null,null);return;}
 		String key=sb_path.toString();
-		if(ac.cacheforeachuser())key=req.get().session().id()+"~"+key;
+		if(ac.cacheforeachuser())key=req.get().session().id()+"~"+key; // ? why not this request
 		final chdresp c=cacheu.get(key);
 		if(c==null)return;
 		if(!c.isvalid(System.currentTimeMillis()))return;
@@ -827,7 +850,7 @@ public final class req{
 		if(ifmodsince!=null&&ifmodsince.equals(lastmod)){reply(h_http304,null,null,null);return;}
 		final long t=System.currentTimeMillis();
 		String key=sb_path.toString();
-		if(cw.cacheforeachuser())key=req.get().session().id()+"~"+key;
+		if(cw.cacheforeachuser())key=req.get().session().id()+"~"+key;// why not this request?
 		chdresp c=cacheu.get(key);
 		if(c==null){c=new chdresp(cw,key);cacheu.put(key,c);}
 		c.validate(t,ifmodsince);
