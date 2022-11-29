@@ -56,5 +56,8 @@ final class oschunked extends OutputStream{
 		write_blocking(bba);
 		bufi=0;
 	}
-	void finish()throws IOException{flush();write_blocking(new ByteBuffer[]{bb_eochunk.slice()});}
+	void finish()throws IOException{
+		flush();
+		write_blocking(new ByteBuffer[]{bb_eochunk.slice()});
+	}
 }

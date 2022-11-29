@@ -33,6 +33,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.TimeZone;
+
+import db.Db;
 final public class b{
 	public final static String strenc="utf-8";
 	public final static String q=" ڀ ";
@@ -126,11 +128,17 @@ final public class b{
 		}
 		if(print_stats_at_startup)stats_to(out);
 		b.pl("");
+
+		// initiate db
+		Db.initInstance();
+		Db.instance().register(dbpathelem.class);
 		// initiate application
 		if(b.bapp_class!=null){
 			b.bapp=(bapp)Class.forName(b.bapp_class).getConstructor().newInstance();
 			b.bapp.init();
 		}
+		Db.instance().init("jdbc:mysql://"+b.bapp_jdbc_host+"/"+b.bapp_jdbc_db+"?verifyServerCertificate=false&useSSL=true&ssl-mode=REQUIRED",b.bapp_jdbc_user,b.bapp_jdbc_password,Integer.parseInt(b.bapp_jdbc_ncons));
+
 		b.pl("opening port "+b.server_port);
 		final ServerSocketChannel ssc=ServerSocketChannel.open();
 		ssc.configureBlocking(false);
@@ -278,7 +286,7 @@ final public class b{
 		if(!uri.startsWith(sessionsdiruri+"/"))return;
 		try{
 			final req r=req.get();
-			final String sessionid=r.session().id();
+			final String sessionid=r.sessionid();
 			if(uri.startsWith(sessionsdiruri+"/"+sessionid))return;
 			throw new SecurityException("session "+sessionid+" cannot access "+uri);
 		}catch(ClassCastException ignored){}

@@ -4,11 +4,9 @@ import static b.b.pl;
 import static b.b.stacktrace;
 import static b.b.tobytes;
 import static b.b.tostr;
-import java.io.File;
-import java.io.FileInputStream;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
@@ -21,10 +19,14 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+
 import b.b.conf;
 import db.Db;
+import db.DbObject;
 import db.DbTransaction;
+import db.Query;
 public final class req{
 	b.op parse()throws Throwable{while(true){
 		if(ba_rem==0){
@@ -120,12 +122,10 @@ public final class req{
 		}
 		hdrs.clear();
 		
-		// set sesid and session to null
 		// retrieve session at every request in case load balancer reuses an open connection for requests from a different client
+		// set sesid and session to null
 		sesid=null;
 		sesid_set=false; // ? setting this might not be necessary
-		ses=null;
-		
 		headernamelen=headerscount=0;
 		state=state_header_name;
 	}
@@ -153,7 +153,10 @@ public final class req{
 			if(b=='\n'){
 				hdrs.put(sb_header_name.toString().trim().toLowerCase(),sb_header_value.toString().trim());
 				headerscount++;
-				if(headerscount>abuse_header_count){close();throw new RuntimeException("abuseheaderscount "+headerscount);}
+				if(headerscount>abuse_header_count){
+					close();
+					throw new RuntimeException("abuseheaderscount "+headerscount);
+				}
 				sb_header_name.setLength(0);
 				sb_header_value.setLength(0);
 				headernamelen=0;
@@ -167,6 +170,9 @@ public final class req{
 	}
 	public static @conf long abuse_upload_len=16*b.G;
 	public static @conf long abuse_content_len=1*b.M;
+	
+//	private a rootElem;
+//	dbpathelem rootElemDbo;
 	private void do_after_header()throws Throwable{
 //		assertaccess();
 		final String ka=hdrs.get(hk_connection);
@@ -227,50 +233,27 @@ public final class req{
 		if(b.try_file&&try_file())return;
 		if(b.try_rc&&try_rc())return;
 		
+		decodecookie();
 		state=state_waiting_run_page;
-		// try to get session and 'a' for uri in case it is cacheable and valid for reply on main thread
-		if(!decodecookie())
-			return; // no cookie. create session in own thread and free main thread for new request.
-		if(!b.cache_uris)return;
-		if(hdrs.get("range")!=null)return; // ? make ranged response from cache
-
-//		if(ses==null)ses=session.all().get(sesid);
-//		if(ses==null)
-//			return; // don't create session in the main thread. wait for run_page() and create there
-//		
-//		// ? load balancer may reuse connection for a request from a different client. always get session for id?
-//		if(sesid!=null&&!sesid.equals(ses.id()))throw new RuntimeException("cookiechangeduringconnection. path: "+sb_path+" session id: '"+ses.id()+"' cookie id: '"+sesid+"'");
-//		//-----
-//		if(sesid!=null&&!sesid.equals(ses.id())){
-//			b.pl("cookiechangeduringconnection. path: "+sb_path+" session id: '"+ses.id()+"' cookie id: '"+sesid+"'");
-//			ses=session.all().get(sesid);			
-//		}
-		// sesid is set by decode cookie
-		ses=session.all().get(sesid);			
-		if(ses==null)
-			return; // don't create session in the main thread. wait for run_page() and create there. free main thread for new request.
+		return;
 		
+		// ? what about cacheable elements?
 		
-		final a e=(a)ses.get(path_s);
-		if(e==null)return;
-		if(!(e instanceof cacheable))return;
-
-		final cacheable ac=(cacheable)e;
-		final String ifmodsince=hdrs.get(hk_if_modified_since);
-		final String lastmod=ac.lastmod();
-		if(ifmodsince!=null&&ifmodsince.equals(lastmod)){reply(h_http304,null,null,null);return;}
-		String key=sb_path.toString();
-		if(ac.cacheforeachuser())key=req.get().session().id()+"~"+key; // ? why not this request
-		final chdresp c=cacheu.get(key);
-		if(c==null)return;
-		if(!c.isvalid(System.currentTimeMillis()))return;
-		reply(c);
-		thdwatch.cacheu++;
+//		if(rootElem==null)return;
+//		if(!(rootElem instanceof cacheable))return;
+//
+//		final cacheable ac=(cacheable)rootElem;
+//		final String ifmodsince=hdrs.get(hk_if_modified_since);
+//		final String lastmod=ac.lastmod();
+//		if(ifmodsince!=null&&ifmodsince.equals(lastmod)){reply(h_http304,null,null,null);return;}
+//		String key=sb_path.toString();
+//		if(ac.cacheforeachuser())key=sesid+"~"+key; // ? why not this request
+//		final chdresp c=cacheu.get(key);
+//		if(c==null)return;
+//		if(!c.isvalid(System.currentTimeMillis()))return;
+//		reply(c);
+//		thdwatch.cacheu++;
 	}
-//	private void assertaccess(){
-//		if(path_s.startsWith("/localhost")&&!sockch.socket().getRemoteSocketAddress().toString().startsWith("/0:0:0:0:0:0:0:1"))
-//			throw new Error("may only be accessed from localhost");
-//	}
 	private boolean decodecookie(){
 		final String cookie=hdrs.get(hk_cookie);
 		if(cookie==null)return false;
@@ -278,9 +261,6 @@ public final class req{
 		for(String cc:c1){
 			cc=cc.trim();
 			if(cc.startsWith("i=")){
-//				final String[]c2=cc.split("i="); // ? sesid=cc.substring()?
-//				if(c2.length<2)throw new Error("invalidcookie: "+cookie);
-//				sesid=c2[1];
 				sesid=cc.substring("i=".length());
 				sesid_set=false;
 				return true;
@@ -481,22 +461,6 @@ public final class req{
 		if(c!=tosend)b.log(new RuntimeException("sent "+c+" of "+tosend+" bytes"));//? throwerror
 		return n;
 	}
-//	private void reply2(final chdresp c)throws Throwable{
-//		final ByteBuffer bb=ByteBuffer.allocate(512+c.byteBuffer().limit());
-//		//? bba
-//		bb.put(h_http200);
-//		bb.put(h_content_length).put(Long.toString(c.byteBuffer().limit()).getBytes());
-//		if(c.lastModified()!=null)bb.put(h_last_modified).put(c.lastModified().getBytes());
-//		if(c.contentType()!=null)bb.put(h_content_type).put(c.contentType().getBytes());
-//		bb.put(hkp_connection_keep_alive);
-//		if(sesid_set){
-//			for(final ByteBuffer b:new ByteBuffer[]{ByteBuffer.wrap(hk_set_cookie),ByteBuffer.wrap(sesid.getBytes()),ByteBuffer.wrap(hkv_cookie_append)})bb.put(b);
-//			sesid_set=false;
-//		}
-//		bb.put(req.ba_crlf2);
-//		bb.flip();
-//		transferbuffers(new ByteBuffer[]{bb,c.byteBuffer().slice()});
-//	}
 	private void transferbuffers(final ByteBuffer[]bba)throws Throwable{
 		if(b.print_reply_headers){
 			for(final ByteBuffer bb:bba){
@@ -657,205 +621,156 @@ public final class req{
 		if(state==state_sock){thdwatch.socks++;return;}
 		if(state==state_run_page)state=state_nextreq;
 	}
-	static private session load_session(final String session_id)throws IOException{
-		final File serfile=new File(b.root_dir+'/'+b.sessions_dir+'/'+session_id+'/'+b.sessionfile);
-		pl("session load "+serfile);
-		if(!serfile.exists())return null;
-		try(final InputStream is=new FileInputStream(serfile)){
-			try(final ObjectInputStream ois=new ObjectInputStream(is)){
-				return (session)ois.readObject();
-			}catch(final Throwable t){
-				b.pl("while loading session "+session_id+": "+t);
-				return null;
-			}
-		}
-	}
 	private void resp_page()throws Throwable{
-//		if(sesid!=null&&ses==null){// ? sessiongetandloadracing 
-//			ses=session.all().get(sesid);
-//			if(ses==null&&b.sessionfile_load){
-//				ses=load_session(sesid);
-//				if(ses==null){
-//					pl("could not load, new session with same id "+sesid);
-//					ses=new session(sesid);					
-//				}
-//				ses.bits(b.get_session_bits_for_sessionid(sesid));
-//				session.all().put(sesid,ses);
-//				thdwatch.sessions++;
-//			}
-//		}else if(sesid==null){
-//			sesid=mkcookieid();
-//			sesid_set=true;
-//			pl("new session "+sesid);
-//			ses=new session(sesid);
-//			ses.bits(b.get_session_bits_for_sessionid(sesid));
-//			session.all().put(sesid,ses);
-//			thdwatch.sessions++;
-//		}
 		if(sesid==null){
 			sesid=mkcookieid();
 			sesid_set=true;
 			pl("new session "+sesid);
-			ses=new session(sesid);
-			ses.bits(b.get_session_bits_for_sessionid(sesid));
-			session.all().put(sesid,ses);
 			thdwatch.sessions++;
 		}
-		if(ses==null){// ? session get and load racing 
-			// session id retrieved from cookie. try to get session.
-			ses=session.all().get(sesid);
-			if(ses==null&&b.sessionfile_load){ // should try to load session from file
-				ses=load_session(sesid);
-				if(ses==null){
-					pl("could not load session. creating new with same id "+sesid);
-					ses=new session(sesid);
-				}
-				ses.bits(b.get_session_bits_for_sessionid(sesid));
-				session.all().put(sesid,ses);
-				thdwatch.sessions++;
-			}
-			// session may be null here if there is no session and no load from file
-			if(ses==null){
-				ses=new session(sesid);					
-				ses.bits(b.get_session_bits_for_sessionid(sesid));
-				session.all().put(sesid,ses);
-				thdwatch.sessions++;
-			}
-		}
-		ses.nreq++;
-		a e=(a)ses.get(path_s);
-		if(e==null){
-			String cn=path_s.replace('/','.');
-			while(cn.startsWith("."))cn=cn.substring(1);
-			cn=b.webobjpkg+cn;
-			Class<?>ecls;
-			String cn2="";
-			try{ecls=(Class<?>)Class.forName(cn);}catch(Throwable e1){try{
-				cn2=cn+(cn.length()==0||cn.endsWith(".")?"":".")+b.default_package_class;
-				ecls=(Class<?>)Class.forName(cn2);
-			}catch(Throwable e2){
-				while(e1.getCause()!=null)e1=e1.getCause();
-				xwriter x=new xwriter().p(path_s).nl().nl().p(b.stacktraceline(e1)).nl().nl().p(b.stacktraceline(e2)).nl();
-				pl("classnotfound for path '"+path_s+"' tried '"+cn+"' and '"+cn2+"'");
-				reply(h_http404,null,null,tobytes(x.toString()));
-				return;
-			}}
-			try{e=(a)ecls.getConstructor().newInstance();}catch(Throwable ex){
-				while(ex.getCause()!=null)ex=ex.getCause();
-//				final xwriter x=new xwriter().p(path_s).nl().nl().p(b.stacktraceline(ex)).nl();
-				reply(h_http404,null,null,tobytes(stacktrace(ex)));
-				return;
-			}
-			if(e instanceof sock){
-				state=state_sock;
-				sck=(sock)e;
-				switch(sck.sockinit(hdrs,new sockio(sockch,selkey,ByteBuffer.wrap(ba,ba_pos,ba_rem)))){default:throw new IllegalStateException();
-				case read:selkey.interestOps(SelectionKey.OP_READ);selkey.selector().wakeup();break;
-				case write:selkey.interestOps(SelectionKey.OP_WRITE);selkey.selector().wakeup();break;
-				case close:sockch.close();break;
-				case wait:selkey.interestOps(0);break;
-				}
-				return;
-			}
-			ses.put(path_s,e);
-		}
-		if(!content.isEmpty()){
-//			if(b.acl_on)b.acl_ensure_post(e);
-			String ax="";
-			for(final Map.Entry<String,String>me:content.entrySet()){
-				if(axfld.equals(me.getKey())){
-					ax=me.getValue();
-					continue;
-				}
-				//? indexofloop
-				final String[]pth=me.getKey().split(req.field_path_separator);
-				a ee=e;
-				for(int n=1;n<pth.length;n++){
-					ee=ee.chld(pth[n]);
-					if(ee==null)throw new RuntimeException("not found: "+me.getKey());
-				}
-				ee.set(me.getValue());
-			}
-			if(ax.length()==0)return;// ? y
-			// decode the field id, method name and parameters parameters
-			final String axid,axfunc,axarg;
-			final int i1=ax.indexOf(' ');
-			if(i1==-1){
-				axid=ax;
-				axfunc=axarg="";
+		final DbTransaction tn=Db.initCurrentTransaction();
+		a rootElem;
+		final dbpathelem rootElemDbo;
+		try{
+			final List<DbObject>ls=tn.get(dbpathelem.class,new Query(dbpathelem.sessionId,Query.EQ,sesid).and(dbpathelem.path,Query.EQ,path_s),null,null);
+			if(ls.isEmpty()){
+				rootElem=null;
+				rootElemDbo=(dbpathelem)tn.create(dbpathelem.class);
+				rootElemDbo.setSessionId(sesid);
+				rootElemDbo.setPath(path_s);
 			}else{
-				axid=ax.substring(0,i1);
-				final int i2=ax.indexOf(' ',i1+1);
-				if(i2==-1){
-					axfunc=ax.substring(i1+1);
-					axarg="";
-				}else{
-					axfunc=ax.substring(i1+1,i2);
-					axarg=ax.substring(i2+1);
+				rootElemDbo=(dbpathelem)ls.get(0);
+				rootElem=rootElemDbo.getElem();
+			}
+			if(rootElem==null){
+				String cn=path_s.replace('/','.');
+				while(cn.startsWith("."))cn=cn.substring(1);
+				cn=b.webobjpkg+cn;
+				Class<?>ecls;
+				String cn2="";
+				try{ecls=(Class<?>)Class.forName(cn);}catch(Throwable e1){try{
+					cn2=cn+(cn.length()==0||cn.endsWith(".")?"":".")+b.default_package_class;
+					ecls=(Class<?>)Class.forName(cn2);
+				}catch(Throwable e2){
+					while(e1.getCause()!=null)e1=e1.getCause();
+					xwriter x=new xwriter().p(path_s).nl().nl().p(b.stacktraceline(e1)).nl().nl().p(b.stacktraceline(e2)).nl();
+					pl("classnotfound for path '"+path_s+"' tried '"+cn+"' and '"+cn2+"'");
+					reply(h_http404,null,null,tobytes(x.toString()));
+					return;
+				}}
+				try{rootElem=(a)ecls.getConstructor().newInstance();}catch(Throwable ex){
+					while(ex.getCause()!=null)ex=ex.getCause();
+	//				final xwriter x=new xwriter().p(path_s).nl().nl().p(b.stacktraceline(ex)).nl();
+					reply(h_http404,null,null,tobytes(stacktrace(ex)));
+					return;
 				}
+				if(rootElem instanceof sock){
+					state=state_sock;
+					sck=(sock)rootElem;
+					switch(sck.sockinit(hdrs,new sockio(sockch,selkey,ByteBuffer.wrap(ba,ba_pos,ba_rem)))){default:throw new IllegalStateException();
+					case read:selkey.interestOps(SelectionKey.OP_READ);selkey.selector().wakeup();break;
+					case write:selkey.interestOps(SelectionKey.OP_WRITE);selkey.selector().wakeup();break;
+					case close:sockch.close();break;
+					case wait:selkey.interestOps(0);break;
+					}
+					rootElemDbo.setElem(rootElem);
+					return;
+				}
+//				ses.put(path_s,e);
 			}
-			final String[]pth=axid.split(req.field_path_separator);//? indexofloop
-			for(int n=1;n<pth.length;n++){
-				e=e.chld(pth[n]);
-				if(e==null)break;
-			}
-			final oschunked os=reply_chunked(h_http200,text_html_utf8,null);
-			final xwriter x=new xwriter(os);
-			if(e==null){
-				x.xalert("element not found:\n"+axid);
+			if(!content.isEmpty()){
+				// ajax post
+				String ax="";
+				for(final Map.Entry<String,String>me:content.entrySet()){
+					if(axfld.equals(me.getKey())){
+						ax=me.getValue();
+						continue;
+					}
+					//? indexofloop
+					final String[]pth=me.getKey().split(req.field_path_separator);
+					a ee=rootElem;
+					for(int n=1;n<pth.length;n++){
+						ee=ee.chld(pth[n]);
+						if(ee==null)throw new RuntimeException("not found: "+me.getKey());
+					}
+					ee.set(me.getValue());
+				}
+				if(ax.length()==0)throw new RuntimeException("expectedax");
+				
+				// decode the field id, method name and parameters parameters
+				final String axid,axfunc,axarg;
+				final int i1=ax.indexOf(' ');
+				if(i1==-1){
+					axid=ax;
+					axfunc=axarg="";
+				}else{
+					axid=ax.substring(0,i1);
+					final int i2=ax.indexOf(' ',i1+1);
+					if(i2==-1){
+						axfunc=ax.substring(i1+1);
+						axarg="";
+					}else{
+						axfunc=ax.substring(i1+1,i2);
+						axarg=ax.substring(i2+1);
+					}
+				}
+				final String[]pth=axid.split(req.field_path_separator);//? indexofloop
+				a axe=rootElem;
+				for(int n=1;n<pth.length;n++){
+					axe=axe.chld(pth[n]);
+					if(axe==null)break;
+				}
+				final oschunked os=reply_chunked(h_http200,text_html_utf8,null);
+				final xwriter x=new xwriter(os);
+				if(axe==null){
+					x.xalert("element not found:\n"+axid);
+					os.finish();
+					return;
+				}
+				try{
+					axe.getClass().getMethod("x_"+axfunc,xwriter.class,String.class).invoke(axe,x,axarg);
+				}catch(final InvocationTargetException t){
+					b.log(t.getTargetException());
+					x.xalert(b.isempty(t.getTargetException().getMessage(),t.toString()));
+				}catch(NoSuchMethodException t){
+					x.xalert("method not found:\n"+axe.getClass().getName()+".x_"+axfunc+"(xwriter,String)");
+				}
+				// ! cluster: write session to db !!! racing condition if element does xwriter.xreload()
+				rootElemDbo.setElem(rootElem);
+				tn.finishTransaction();
+				x.finish();
 				os.finish();
 				return;
 			}
-			final DbTransaction tn=Db.initCurrentTransaction();
-			try{
-				e.getClass().getMethod("x_"+axfunc,xwriter.class,String.class).invoke(e,x,axarg);
-				tn.finishTransaction();
-			}catch(final InvocationTargetException t){
-				tn.rollback();
-				b.log(t);
-				x.xalert(b.isempty(t.getTargetException().getMessage(),t.toString()));
-			}catch(NoSuchMethodException t){
-				tn.rollback();
-				x.xalert("method not found:\n"+e.getClass().getName()+".x_"+axfunc+"(xwriter,String)");
-			}finally{
-				Db.deinitCurrentTransaction();
-			}
-			os.finish();
-			return;
-		}
-		if(b.cache_uris){
-			if(e instanceof cacheable){
-				final cacheable cw=(cacheable)e;
+			if(b.cache_uris&&rootElem instanceof cacheable){
+				final cacheable cw=(cacheable)rootElem;
 				reply(cw);
 				thdwatch.cacheu++;
 				return;
 			}
-		}
-		final boolean isbin=e instanceof bin;
-		final oschunked os=reply_chunked(h_http200,isbin?((bin)e).contenttype():text_html_utf8,null);
-		final xwriter x=new xwriter(os);
-		if(!isbin){
-			os.write(ba_page_header_pre_title);
-//			if(e instanceof a.titled){
-//				((a.titled)e).title_to(x);
-//			}else{
-//				final String cn=e.getClass().getName();
-//				x.p(cn.substring(cn.lastIndexOf('.')+1));
-//			}
-//			os.write(ba_page_header_after_title);
-		}
-		final DbTransaction tn=Db.initCurrentTransaction();
-		try{
-			// ? extra mode: serialize, encode to text, write into tag <div id="--state"> that is posted with ajax request
-			e.to(x);
+			final boolean isbin=rootElem instanceof bin;
+			final oschunked os=reply_chunked(h_http200,isbin?((bin)rootElem).contenttype():text_html_utf8,null);
+			final xwriter x=new xwriter(os);
+			if(!isbin){
+				os.write(ba_page_header_pre_title);
+			}
+			try{
+				// ? extra mode: serialize, encode to text, write into tag <div id="--state"> that is posted with ajax request
+				rootElem.to(x);
+			}catch(Throwable t){
+				b.log(t);x.pre().p(b.stacktrace(t));
+			}
+			rootElemDbo.setElem(rootElem);
 			tn.finishTransaction();
-		}catch(final Throwable t){
+			x.finish();
+			os.finish();
+		}catch(Throwable t){
 			tn.rollback();
-			b.log(t);x.pre().p(b.stacktrace(t));
+			while(t.getCause()!=null)t=t.getCause();
+			throw new RuntimeException(t);
 		}finally{
 			Db.deinitCurrentTransaction();
 		}
-		os.finish();
 	}
 	// threaded done
 
@@ -890,7 +805,8 @@ public final class req{
 		if(ifmodsince!=null&&ifmodsince.equals(lastmod)){reply(h_http304,null,null,null);return;}
 		final long t=System.currentTimeMillis();
 		String key=sb_path.toString();
-		if(cw.cacheforeachuser())key=req.get().session().id()+"~"+key;// why not this request?
+//		if(cw.cacheforeachuser())key=req.get().session().id()+"~"+key;// why not this request?
+		if(cw.cacheforeachuser())key=sesid+"~"+key;// why not this request?
 		chdresp c=cacheu.get(key);
 		if(c==null){c=new chdresp(cw,key);cacheu.put(key,c);}
 		c.validate(t,ifmodsince);
@@ -966,7 +882,7 @@ public final class req{
 	public int port(){final String h=hdrs.get("host");final String[]ha=h.split(":");if(ha.length<2)return 80;return Integer.parseInt(ha[1]);}
 	public String path(){return path_s;}
 	public String query(){return query_s;}
-	public session session(){return ses;}
+//	public session session(){return ses;}
 	public String toString(){return new String(ba,ba_pos,ba_rem)+(bb_content==null?"":new String(bb_content.slice().array()));}
 	public Map<String,String>headers(){return hdrs;}
 	
@@ -989,6 +905,8 @@ public final class req{
 		}
 		return k;
 	}
+	
+	public String sessionid(){return sesid;}
 
 	private int state=state_method;
 	private final ByteBuffer bb=ByteBuffer.allocate(b.reqinbuf_B);
@@ -1008,7 +926,7 @@ public final class req{
 //	private final ByteBuffer bb_header_value=ByteBuffer.allocate(128);
 	private final Map<String,String>hdrs=new HashMap<String,String>();
 	private String sesid;
-	private session ses;
+//	private session ses;
 	private boolean sesid_set;
 	private String contentType;
 	private long contentLength;
@@ -1083,4 +1001,5 @@ public final class req{
 	private final static String text_html_utf8="text/html;charset=utf-8";
 	private final static String text_plain="text/plain";
 //	private final static String text_plain_utf8="text/plain;charset=utf-8";
+
 }

@@ -1,6 +1,5 @@
 package c;
 
-import b.b;
 import b.bapp;
 import db.Db;
 import db.test.Book;
@@ -27,7 +26,6 @@ public class Application implements bapp {
 	public void init() throws Throwable {
 //		Db.enable_log = false;
 		Db.log(getClass().getName() + ": init");
-		Db.initInstance();
 		final Db db = Db.instance();
 		db.register(User.class);
 		db.register(File.class);
@@ -43,9 +41,9 @@ public class Application implements bapp {
 //		db.init("jdbc:mysql://" + b.bapp_jdbc_host + "/" + b.bapp_jdbc_db
 //				+ "?ssl-mode=REQUIRED", b.bapp_jdbc_user, b.bapp_jdbc_password,
 //				Integer.parseInt(b.bapp_jdbc_ncons));
-		db.init("jdbc:mysql://" + b.bapp_jdbc_host + "/" + b.bapp_jdbc_db
-				+ "?verifyServerCertificate=false&useSSL=true&ssl-mode=REQUIRED", b.bapp_jdbc_user, b.bapp_jdbc_password,
-				Integer.parseInt(b.bapp_jdbc_ncons));
+//		db.init("jdbc:mysql://" + b.bapp_jdbc_host + "/" + b.bapp_jdbc_db
+//				+ "?verifyServerCertificate=false&useSSL=true&ssl-mode=REQUIRED", b.bapp_jdbc_user, b.bapp_jdbc_password,
+//				Integer.parseInt(b.bapp_jdbc_ncons));
 		
 		
 // verifyServerCertificate=false&useSSL=true&ssl-mode=REQUIRED		

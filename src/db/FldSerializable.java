@@ -1,12 +1,8 @@
-package db.test;
+package db;
 
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-
-import db.DbField;
-import db.DbObject;
-import db.FldBlob;
 
 public final class FldSerializable extends DbField {
 	public FldSerializable() {

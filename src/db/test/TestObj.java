@@ -7,6 +7,7 @@ import java.util.List;
 
 import db.DbObject;
 import db.FldDateTime;
+import db.FldSerializable;
 import db.FldStr;
 
 public final class TestObj extends DbObject {

@@ -268,7 +268,19 @@ public final class xwriter{
 	public xwriter xhide(final a e){return xhide(e,true);}
 	public xwriter xshow(final a e){return xhide(e,false);}
 	public xwriter xalert(final String s){return p("ui.alert('").jsstr(s).pl("');");}
-	public xwriter xreload(){return pl("location.reload(true);");}
+
+	// reload page races with element serialization to db
+	private boolean xreload_requested=false;
+	public xwriter xreload(){
+		xreload_requested=true;
+		return this;
+	}
+	// called after element has been written to db
+	public void finish(){
+		if(xreload_requested)
+			pl("location.reload(true);");
+		xreload_requested=false;
+	}
 	public xwriter xfocus(final a e){return p("$f('").p(e.id()).pl("');");}
 	public xwriter xfocus(final String id){return p("$f('").p(id).pl("');");}
 	public xwriter xtitle(final String s){return p("$t('").jsstr(b.isempty(s,"")).pl("');");}

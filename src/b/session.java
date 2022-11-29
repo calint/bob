@@ -81,12 +81,12 @@ public final class session implements Serializable{
 			return "";
 		return fn.substring(href.length()+1);
 	}
-	// acl
-	private long bits;
-	public long bits(){return bits;}
-	public void bits(final long bs){bits=bs;}
-	public boolean bits_hasany(final long b){return (bits&b)!=0;}
-	public boolean bits_hasall(final long b){return (bits&b)==b;}
+//	// acl
+//	private long bits;
+//	public long bits(){return bits;}
+//	public void bits(final long bs){bits=bs;}
+//	public boolean bits_hasany(final long b){return (bits&b)!=0;}
+//	public boolean bits_hasall(final long b){return (bits&b)==b;}
 
 //	public boolean bits_hasanyorisnone(final long b){if(bits==0)return true;return (bits&b)!=0;}
 }

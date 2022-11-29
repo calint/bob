@@ -11,12 +11,12 @@ public class websock extends a implements sock{static final long serialVersionUI
 	private final byte[]maskkey=new byte[4];
 	private int payloadlendec;
 	private ByteBuffer[]bbos;
-	private session session;
+//	private session session;
 	private boolean firstpak;
 	final public op sockinit(final Map<String,String>hdrs,final sockio so)throws Throwable{
 		this.so=so;
 		bbi=so.inbuf();
-		session=req.get().session();
+//		session=req.get().session();
 		st=state.handshake;
 		// rfc6455#section-1.3
 		// Opening Handshake
@@ -161,7 +161,7 @@ public class websock extends a implements sock{static final long serialVersionUI
 		bbos=null;
 		return op.read;
 	}
-	final protected session session(){return session;}
+//	final protected session session(){return session;}
 	final public void send_binary(final String s)throws Throwable{
 		final ByteBuffer bb=ByteBuffer.wrap(b.tobytes(s));
 		send(bb,false);
