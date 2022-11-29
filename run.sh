@@ -4,7 +4,7 @@ DIR=$(dirname "$0")
 cd $DIR
 
 if [ -f $1 ]; then
-	CFG=run-dev.cfg
+	CFG=run.cfg
 else
 	CFG=$1
 fi
