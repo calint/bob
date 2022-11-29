@@ -1,4 +1,4 @@
 [ ] fix "// todo" comments
 [ ]   content type for cached file from Map of suffix to content-type?
-[x] cookie: same-site, secure
-
+[x] cookie: same-site
+[ ] fix for client that makes a threaded request and stalling it. ddos
