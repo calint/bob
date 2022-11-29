@@ -44,7 +44,7 @@ final public class b{
 	public final static long P=K*T;
 	public final static String pathsep="/";
 	public static @conf String hello="public domain server #1";
-	public static String id=""+(int)Math.floor(Math.random()*10000);//? fixedwidth
+//	public static String id=""+(int)Math.floor(Math.random()*10000);//? fixedwidth
 	public static @conf String root_dir=".";
 	public static @conf(reboot=true)String server_port=ensure(System.getProperty("app.port"),"8888");
 	public static @conf boolean print_requests=false;
@@ -89,7 +89,7 @@ final public class b{
 	public static @conf int max_pending_connections=20000;// when overrun causes SYN flood warning
 	public static @conf boolean tcpnodelay=true;
 	public static @conf boolean sessions_save_at_shutdown=true;
-	public static boolean cloud_bees=false;
+//	public static boolean cloud_bees=false;
 	public static @conf boolean print_conf_at_startup=true;
 	public static @conf boolean print_stats_at_startup=true;
 	public static @conf boolean acl_on=true;
@@ -351,8 +351,8 @@ final public class b{
 		ps.println("         ram free: "+(m2>>10)+" KB");
 		ps.println("          threads: "+thdreq.all.size());
 		ps.println("            cores: "+Runtime.getRuntime().availableProcessors());
-		ps.println("            cloud: "+cloud_bees);
-		ps.println("               id: "+id);
+//		ps.println("            cloud: "+cloud_bees);
+//		ps.println("               id: "+id);
 	}
 	public static int rndint(final int from,final int tonotincl){return (int)(Math.random()*(tonotincl-from)+from);}
 	public static String stacktrace(final Throwable e){final StringWriter sw=new StringWriter();final PrintWriter out=new PrintWriter(sw);e.printStackTrace(out);out.close();return sw.toString();}

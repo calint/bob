@@ -121,9 +121,9 @@ public final class req{
 		hdrs.clear();
 		
 		// set sesid and session to null
-		// retrieve session at every request in case load balancer reuses an open connection for request from a different client
+		// retrieve session at every request in case load balancer reuses an open connection for requests from a different client
 		sesid=null;
-		sesid_set=false;
+		sesid_set=false; // ? setting this might not be necessary
 		ses=null;
 		
 		headernamelen=headerscount=0;
@@ -414,11 +414,10 @@ public final class req{
 				bba[i++]=ByteBuffer.wrap(hk_content_range);
 				bba[i++]=ByteBuffer.wrap((s_bytes_+range_from_byte+s_minus+range_to_byte+s_slash+c.content_length_in_bytes()).getBytes());
 				if(sesid_set){
-					// set cookie
 					bba[i++]=ByteBuffer.wrap(hk_set_cookie);
 					bba[i++]=ByteBuffer.wrap(sesid.getBytes());
 					bba[i++]=ByteBuffer.wrap(hkv_set_cookie_append);
-					sesid_set=false;
+					sesid_set=false;// set cookie
 				}
 				bba[i++]=ByteBuffer.wrap(ba_crlf2);
 				final int d=c.data_position();

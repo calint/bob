@@ -37,9 +37,14 @@ public class Application implements bapp {
 		db.register(Game.class);
 		db.register(TestObj.class);
 //		db.init("jdbc:mysql://localhost:3306/testdb", "c", "password", 5);
+//		db.init("jdbc:mysql://" + b.bapp_jdbc_host + "/" + b.bapp_jdbc_db
+//				+ "?allowPublicKeyRetrieval=true&useSSL=false", b.bapp_jdbc_user, b.bapp_jdbc_password,
+//				Integer.parseInt(b.bapp_jdbc_ncons));
 		db.init("jdbc:mysql://" + b.bapp_jdbc_host + "/" + b.bapp_jdbc_db
-				+ "?allowPublicKeyRetrieval=true&useSSL=false", b.bapp_jdbc_user, b.bapp_jdbc_password,
+				+ "?ssl-mode=REQUIRED", b.bapp_jdbc_user, b.bapp_jdbc_password,
 				Integer.parseInt(b.bapp_jdbc_ncons));
+		
+//		ssl-mode=REQUIRED
 	}
 
 	/** called by b at shutdown */
