@@ -62,5 +62,4 @@ MYSQL_NCONS=100
 B_NTHREADS=100
 PORT=8888
 
-
-
+journalctl -u bob | grep ClassNotFoundException | cut -c 1-200

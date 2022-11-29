@@ -34,6 +34,7 @@ final class RelRefNMeta {
 //				.append(" int)");
 		
 		// note primary key added due to warning from mysql regarding replication performance in cluster
+		// ? ADD CONSTRAINT PK PRIMARY KEY (fromId,toId); 
 		final StringBuilder sb = new StringBuilder(256);
 		sb.append("create table ").append(tableName).append("(id int primary key auto_increment").append(',')
 				.append(fromColName).append(" int,").append(toColName).append(" int)");

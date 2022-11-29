@@ -75,7 +75,7 @@ public final class req{
 			if(b==' '){state=state_uri;sb_path.setLength(0);urilen=0;break;}
 		}
 		methodlen+=(ba_pos-ba_pos_prev);
-		if(methodlen>abuse_method_len){close();throw new Error("abusemethodlen"+methodlen);}
+		if(methodlen>abuse_method_len){close();throw new Error("abusemethodlen "+methodlen);}
 	}
 	private int urilen;
 	public static @conf int abuse_uri_len=512;
@@ -89,7 +89,7 @@ public final class req{
 		}
 		urilen+=(ba_pos-ba_pos_prev);
 		if(urilen>abuse_uri_len)
-			{close();throw new Error("abuseurilen"+urilen);}
+			{close();throw new Error("abuseurilen "+urilen);}
 	}
 	private int protlen;
 	public static @conf int abuse_prot_len=11;
@@ -104,7 +104,7 @@ public final class req{
 			break;
 		}
 		protlen+=(ba_pos-ba_pos_prev);
-		if(protlen>abuse_prot_len){close();throw new Error("abuseprotlen"+protlen);}
+		if(protlen>abuse_prot_len){close();throw new Error("abuseprotlen "+protlen);}
 	}
 	private void do_after_prot(){
 		thdwatch.reqs++;
@@ -132,7 +132,7 @@ public final class req{
 			else{sb_header_name.append((char)b);}
 		}
 		headernamelen+=(ba_pos-ba_pos_prev);
-		if(headernamelen>abuse_header_name_len){close();throw new Error("abuseheadernamelen"+headernamelen);}
+		if(headernamelen>abuse_header_name_len){close();throw new Error("abuseheadernamelen "+headernamelen);}
 	}
 	private @conf int headervaluelen;
 	public static @conf int abuse_header_value_len=256;
@@ -145,7 +145,7 @@ public final class req{
 			if(b=='\n'){
 				hdrs.put(sb_header_name.toString().trim().toLowerCase(),sb_header_value.toString().trim());
 				headerscount++;
-				if(headerscount>abuse_header_count){close();throw new Error("abuseheaderscount"+headerscount);}
+				if(headerscount>abuse_header_count){close();throw new Error("abuseheaderscount "+headerscount);}
 				sb_header_name.setLength(0);
 				sb_header_value.setLength(0);
 				headernamelen=0;
@@ -155,7 +155,7 @@ public final class req{
 			sb_header_value.append((char)b);
 		}
 		headervaluelen+=(ba_pos-ba_pos_prev);
-		if(headervaluelen>abuse_header_value_len){close();throw new Error("abuseheadervaluelen"+headervaluelen);}
+		if(headervaluelen>abuse_header_value_len){close();throw new Error("abuseheadervaluelen "+headervaluelen);}
 	}
 	public static @conf long abuse_upload_len=16*b.G;
 	public static @conf long abuse_content_len=1*b.M;
@@ -167,7 +167,7 @@ public final class req{
 		if(contentType!=null){
 			if(contentType.startsWith("dir;")||contentType.equals("dir")){
 				if(!b.enable_upload)throw new Error("uploadsdisabled");
-				if(!decodecookie())throw new Error("nocookie");
+				if(!decodecookie())throw new Error("nocookie path:"+sb_path);
 				final String[]q=contentType.split(";");
 				final String lastmod_s=q[1];
 				final path p=b.path(b.sessions_dir).get(sesid).get(path_s);
@@ -182,10 +182,10 @@ public final class req{
 			if(contentType.startsWith("file;")||contentType.equals("file")){
 				if(!b.enable_upload)throw new Error("uploadsdisabled");
 //				System.out.println(path_s);
-				if(!decodecookie())throw new Error("nocookie");
+				if(!decodecookie())throw new Error("nocookie path:"+sb_path);
 //				final String contentLength_s=hdrs.get(hk_content_length);
 				contentLength=Long.parseLong(hdrs.get(hk_content_length));
-				if(contentLength>abuse_upload_len){close();throw new Error("abuseuploadlen"+contentLength);}
+				if(contentLength>abuse_upload_len){close();throw new Error("abuseuploadlen "+contentLength);}
 				final String[]q=contentType.split(";");
 				upload_lastmod_s=q.length>1?q[1]:new SimpleDateFormat("yyyy-MM-dd--HH:mm:ss.SSS").format(new Date());
 	//				final String time=q[1];
@@ -201,9 +201,9 @@ public final class req{
 		}
 		final String contentLength_s=hdrs.get(hk_content_length);
 		if(contentLength_s!=null){
-			if(!decodecookie())throw new Error("nocookie");
+			if(!decodecookie())throw new Error("nocookie path:"+sb_path);
 			contentLength=Long.parseLong(contentLength_s);
-			if(contentLength>abuse_content_len){close();throw new Error("abusecontentlen"+contentLength);}
+			if(contentLength>abuse_content_len){close();throw new Error("abusecontentlen "+contentLength);}
 			bb_content=ByteBuffer.allocate((int)contentLength);
 			state=state_content_read;parse_content_read();
 			return;
@@ -222,7 +222,7 @@ public final class req{
 		if(hdrs.get("range")!=null)return;//? mk ranged response from cache
 		if(ses==null)ses=session.all().get(sesid);
 		if(ses==null)return;
-		if(sesid!=null&&!sesid.equals(ses.id()))throw new Error("cookiechangeduringconnection");
+		if(sesid!=null&&!sesid.equals(ses.id()))throw new Error("cookiechangeduringconnection. path: "+sb_path);
 		final a e=(a)ses.get(path_s);
 		if(e==null)return;
 		if(!(e instanceof cacheable))return;
@@ -565,6 +565,7 @@ public final class req{
 			//					return false;
 			//				}
 			//				throw e;
+			// todo add a meter to thdwatch for these exceptions
 			final String msg=e.getMessage();
 			if(e instanceof IOException&&(
 					msg.startsWith("Broken pipe ")||
@@ -572,6 +573,7 @@ public final class req{
 					"sendfile failed: EPIPE (Broken pipe)".equals(msg)||//? android (when closing browser while transfering file)
 					"An existing connection was forcibly closed by the remote host".equals(msg)
 					)
+					
 			){
 				close();
 				return false;
@@ -983,7 +985,7 @@ public final class req{
 	private final static byte[]hkp_transfer_encoding_chunked="\r\nTransfer-Encoding: chunked".getBytes();
 	private final static byte[]hkp_accept_ranges_byte="\r\nAccept-Ranges: bytes".getBytes();
 	private final static byte[]hk_content_range ="\r\nContent-Range: ".getBytes();
-	private final static byte[]hkv_cookie_append =";path=/;expires=Thu, 31-Dec-2099 00:00:00 GMT;SameSite=Strict".getBytes();
+	private final static byte[]hkv_cookie_append =";path=/;expires=Thu, 31-Dec-2099 00:00:00 GMT;Secure;SameSite=Strict".getBytes();
 	private final static String hk_connection="connection";
 	private final static String hk_content_length="content-length";
 	private final static String hk_content_type="content-type";
