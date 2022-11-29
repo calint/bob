@@ -249,9 +249,10 @@ public final class req{
 		for(String cc:c1){
 			cc=cc.trim();
 			if(cc.startsWith("i=")){
-				final String[]c2=cc.split("i=");
-				if(c2.length<2)throw new Error("invalidcookie: "+cookie);
-				sesid=c2[1];
+//				final String[]c2=cc.split("i="); // ? sesid=cc.substring()?
+//				if(c2.length<2)throw new Error("invalidcookie: "+cookie);
+//				sesid=c2[1];
+				sesid=cc.substring("i=".length());
 				sesid_set=false;
 				return true;
 			}
