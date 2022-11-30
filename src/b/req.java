@@ -300,9 +300,15 @@ public final class req{
 			if(range_to==-1)range_to=path_len;
 			bb[i++]=ByteBuffer.wrap(h_http206);
 			bb[i++]=ByteBuffer.wrap(h_content_length);
-			bb[i++]=ByteBuffer.wrap(Long.toString(range_to-range_from+1).getBytes());// zero index and inclusive
+			long content_length=range_to-range_from;
+			if(range_to<path_len)// if it is not the special case
+				content_length++;
+			bb[i++]=ByteBuffer.wrap(Long.toString(content_length).getBytes());// zero index and inclusive
 			bb[i++]=ByteBuffer.wrap(hk_content_range_bytes);
-			bb[i++]=ByteBuffer.wrap((range_from+s_minus+range_to+s_slash+path_len).getBytes());
+			long rngto=range_to;
+			if(rngto==path_len)// check the special case
+				rngto--;
+			bb[i++]=ByteBuffer.wrap((range_from+s_minus+rngto+s_slash+path_len).getBytes());
 		}else{
 			range_from=0;
 			range_to=path_len;
@@ -326,7 +332,8 @@ public final class req{
 		thdwatch.output+=n;
 		transfer_file_channel=pth.fileinputstream().getChannel();
 		transfer_file_position=range_from;
-		transfer_file_remaining=range_to-range_from+(range_to==path_len?0:1); // ranged request are zero indexed inclusive
+		// ranged request are zero indexed inclusive, compensate for the special case
+		transfer_file_remaining=range_to-range_from+(range_to==path_len?0:1); 
 		
 		state=state_transfer_file;
 		do_transfer_file();
@@ -384,7 +391,7 @@ public final class req{
 			reply(h_http304,null,null,null);
 			return;
 		}
-		if(b.allow_partial_content_from_cache){
+		if(b.allow_partial_content_from_cache){ // ! review
 			final int content_len=c.content_length_in_bytes();
 			final String range_s=hdrs.get("range");
 			int range_from=0;
@@ -404,7 +411,7 @@ public final class req{
 				bba[i++]=ByteBuffer.wrap(h_content_length);
 				bba[i++]=ByteBuffer.wrap(Integer.toString(range_to-range_from+(range_to==content_len?0:1)).getBytes()); // 0 indexed and inclusive
 				bba[i++]=ByteBuffer.wrap(hk_content_range_bytes);
-				bba[i++]=ByteBuffer.wrap((range_from+s_minus+range_to+s_slash+content_len).getBytes());
+				bba[i++]=ByteBuffer.wrap((range_from+s_minus+(range_to+(range_to==content_len?-1:0))+s_slash+content_len).getBytes());
 				if(session_id_set){
 					bba[i++]=ByteBuffer.wrap(hk_set_cookie);
 					bba[i++]=ByteBuffer.wrap(session_id.getBytes());
