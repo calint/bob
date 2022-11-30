@@ -236,7 +236,7 @@ public final class req{
 		}
 		if(b.cache_files&&try_cache())return;
 		if(b.try_file&&try_file())return;
-		if(b.try_rc&&try_rc())return;
+		if(b.try_rc&&try_resource())return;
 		
 		// try creating an instance of 'a' on a separate thread
 		state=state_waiting_run_page;
@@ -366,7 +366,7 @@ public final class req{
 		return true;
 	}
 	/** @return true if resource was cached and sent. */
-	private boolean try_rc()throws Throwable{
+	private boolean try_resource()throws Throwable{
 		final String p=pth.name();//? path
 		if(!b.resources_enable_any_path&&!b.resources_paths.contains(p))return false;
 		final String rcpth;
@@ -433,18 +433,18 @@ public final class req{
 			}else{
 				bb[i++]=(ByteBuffer)c.byte_buffer().slice().position((int)(from_position+range_from)).limit((int)(from_position+range_to+1)); // 0 indexed and inclusive
 			}
-			transferbuffers(bb);
+			transfer_buffers(bb);
 			return;
 		}
 		if(!session_id_set){// no cookie to set
-			transferbuffers(new ByteBuffer[]{c.byte_buffer().slice()});
+			transfer_buffers(new ByteBuffer[]{c.byte_buffer().slice()});
 			return;
 		}
 		// cookie to set
 		final ByteBuffer[]bba=new ByteBuffer[]{c.byte_buffer().slice(),ByteBuffer.wrap(hk_set_cookie),ByteBuffer.wrap(session_id.getBytes()),ByteBuffer.wrap(hkv_set_cookie_append),c.byte_buffer().slice()};
 		bba[0].limit(c.additional_headers_insertion_position()); // limit the first slice to the location where additional headers can be inserted
 		bba[4].position(c.additional_headers_insertion_position()); // position the buffer (same as bb[0]) to the start of the remaining data, which is additional_headers_insertion_position
-		transferbuffers(bba);
+		transfer_buffers(bba);
 		session_id_set=false;
 	}
 	private void reply(final byte[]firstline,final byte[]lastMod,final byte[]contentType,final byte[]content)throws Throwable{
@@ -491,7 +491,7 @@ public final class req{
 		if(c!=tosend)b.log(new RuntimeException("sent "+c+" of "+tosend+" bytes"));//? throwerror
 		return n;
 	}
-	private void transferbuffers(final ByteBuffer[]bba)throws Throwable{
+	private void transfer_buffers(final ByteBuffer[]bba)throws Throwable{
 		if(b.print_reply_headers){
 			for(final ByteBuffer bb:bba){
 				final byte[]ba;
@@ -878,8 +878,8 @@ public final class req{
 	}
 	// socks
 	boolean is_sock(){return state==state_sock;}
-	sock.op sockread()throws Throwable{return sck.read();}
-	sock.op sockwrite()throws Throwable{return sck.write();}
+	sock.op sock_read()throws Throwable{return sck.read();}
+	sock.op sock_write()throws Throwable{return sck.write();}
 	// threaded socks
 	boolean is_sock_thread(){return sck instanceof threadedsock;}
 	private boolean waiting_sock_thread_read;
@@ -891,7 +891,7 @@ public final class req{
 		if(waiting_sock_thread_write){waiting_sock_thread_write=false;sock_thread_write();}
 	}
 	private void sock_thread_read()throws Throwable{
-		switch(sockread()){default:throw new RuntimeException();
+		switch(sock_read()){default:throw new RuntimeException();
 		case read:selkey.interestOps(SelectionKey.OP_READ);selkey.selector().wakeup();return;
 		case write:selkey.interestOps(SelectionKey.OP_WRITE);selkey.selector().wakeup();return;
 		case close:close();thdwatch.socks--;return;
@@ -900,7 +900,7 @@ public final class req{
 		}
 	}
 	private void sock_thread_write()throws Throwable{
-		switch(sockwrite()){default:throw new RuntimeException();
+		switch(sock_write()){default:throw new RuntimeException();
 		case read:selkey.interestOps(SelectionKey.OP_READ);selkey.selector().wakeup();break;
 		case write:selkey.interestOps(SelectionKey.OP_WRITE);selkey.selector().wakeup();break;
 		case close:close();thdwatch.socks--;break;

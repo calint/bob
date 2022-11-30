@@ -186,7 +186,7 @@ final public class b{
 				thread(r);
 				return;
 			}
-			switch(r.sockread()){default:throw new Error();
+			switch(r.sock_read()){default:throw new Error();
 			case read:r.selkey.interestOps(SelectionKey.OP_READ);return;
 			case write:r.selkey.interestOps(SelectionKey.OP_WRITE);return;
 			case close:r.close();thdwatch.socks--;return;
@@ -207,7 +207,7 @@ final public class b{
 				thread(r);
 				return;
 			}
-			switch(r.sockwrite()){default:throw new Error();
+			switch(r.sock_write()){default:throw new Error();
 			case read:r.selkey.interestOps(SelectionKey.OP_READ);break;
 			case write:r.selkey.interestOps(SelectionKey.OP_WRITE);break;
 			case close:r.close();thdwatch.socks--;break;
