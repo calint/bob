@@ -64,7 +64,7 @@ final public class b{
 	public static @conf(reboot=true)int cache_files_hashlen=K;
 	public static @conf @unit(name="B")int cache_files_maxsize=64*K;
 	public static @conf @unit(name="ms")long cache_files_validate_dt=1000;
-	public static @conf boolean allow_partial_content_from_cache=true;
+//	public static @conf boolean allow_partial_content_from_cache=true;
 	public static @conf @unit(name="B")int transfer_file_write_size=256*K;
 	public static @conf @unit(name="B")int io_buf_B=64*K;
 	public static @conf @unit(name="B")int chunk_B=4*K;

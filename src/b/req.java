@@ -271,12 +271,6 @@ public final class req{
 		}
 		thdwatch.files++;
 		final long lastmod_l=pth.lastmod();
-//		final String lastmod_s=b.tolastmodstr(lastmod_l);
-//		final String ifModSince=hdrs.get(hk_if_modified_since);
-//		if(ifModSince!=null&&ifModSince.equals(lastmod_s)){ // ? check if ifModSince is after or equal to lastmod
-//			reply(h_http304,null,null,null);
-//			return true;
-//		}
 		final String etag="\""+lastmod_l+"\"";
 		final String client_etag=hdrs.get(hk_if_none_match);
 		if(etag.equals(client_etag)) {
@@ -284,37 +278,42 @@ public final class req{
 			return true;
 		}
 		
-		final long path_len=pth.size();
+		final long len=pth.size();
+
 		final String range_s=hdrs.get(s_range);
-		final ByteBuffer[]bb=new ByteBuffer[16];
-		int i=0;
 		long range_from;
 		long range_to;
-		if(range_s!=null){ // ! review this
+		final ByteBuffer[]bb=new ByteBuffer[16];
+		int i=0;
+		if(range_s!=null){
 			final String[]s=range_s.split(s_eq);
 			final String[]ss=s[1].split(s_minus);
+			
 			try{range_from=Long.parseLong(ss[0]);}catch(NumberFormatException e){range_from=-1;}
-			if(range_from==-1)range_from=0;
+			if(range_from==-1) // invalid or not specified
+				range_from=0;
+				
 			if(ss.length>1)try{range_to=Long.parseLong(ss[1]);}catch(NumberFormatException e){range_to=-1;}
-			else range_to=path_len;
-			if(range_to==-1)range_to=path_len;
+			else range_to=-1;
+			
 			bb[i++]=ByteBuffer.wrap(h_http206);
 			bb[i++]=ByteBuffer.wrap(h_content_length);
-			long content_length=range_to-range_from;
-			if(range_to<path_len)// if it is not the special case
-				content_length++;
-			bb[i++]=ByteBuffer.wrap(Long.toString(content_length).getBytes());// zero index and inclusive
-			bb[i++]=ByteBuffer.wrap(hk_content_range_bytes);
-			long rngto=range_to;
-			if(rngto==path_len)// check the special case
-				rngto--;
-			bb[i++]=ByteBuffer.wrap((range_from+s_minus+rngto+s_slash+path_len).getBytes());
+			
+			if(range_to==-1){ // invalid or not specified
+				bb[i++]=ByteBuffer.wrap(Long.toString(len-range_from).getBytes());
+				bb[i++]=ByteBuffer.wrap(hk_content_range_bytes);
+				bb[i++]=ByteBuffer.wrap((range_from+s_minus+(len-1)+s_slash+len).getBytes());// zero index and inclusive adjustment
+			}else { // range_to specified
+				bb[i++]=ByteBuffer.wrap(Long.toString(range_to+1).getBytes());// zero index inclusive adjustment
+				bb[i++]=ByteBuffer.wrap(hk_content_range_bytes);
+				bb[i++]=ByteBuffer.wrap((range_from+s_minus+range_to+s_slash+len).getBytes());				
+			}
 		}else{
 			range_from=0;
-			range_to=path_len;
+			range_to=-1;
 			bb[i++]=ByteBuffer.wrap(h_http200);
 			bb[i++]=ByteBuffer.wrap(h_content_length);
-			bb[i++]=ByteBuffer.wrap(Long.toString(path_len).getBytes());
+			bb[i++]=ByteBuffer.wrap(Long.toString(len).getBytes());
 		}
 		bb[i++]=ByteBuffer.wrap(h_etag);
 		bb[i++]=ByteBuffer.wrap(etag.getBytes());
@@ -332,9 +331,11 @@ public final class req{
 		thdwatch.output+=n;
 		transfer_file_channel=pth.fileinputstream().getChannel();
 		transfer_file_position=range_from;
-		// ranged request are zero indexed inclusive, compensate for the special case
-		transfer_file_remaining=range_to-range_from+(range_to==path_len?0:1); 
-		
+		if(range_to==-1) // unspecified, use content_length
+			transfer_file_remaining=len-range_from; 
+		else
+			transfer_file_remaining=range_to-range_from+1; // zero indexed inclusive adjustment 
+			
 		state=state_transfer_file;
 		do_transfer_file();
 		return true;
@@ -391,39 +392,49 @@ public final class req{
 			reply(h_http304,null,null,null);
 			return;
 		}
-		if(b.allow_partial_content_from_cache){ // ! review
-			final int content_len=c.content_length_in_bytes();
-			final String range_s=hdrs.get("range");
-			int range_from=0;
-			int range_to=content_len;
-			if(range_s!=null){ // ! range_to can be bigger than len
-				final String[]s=range_s.split(s_eq);
-				final String[]ss=s[1].split(s_minus);
-				try{range_from=Integer.parseInt(ss[0]);}catch(NumberFormatException e){range_from=-1;}
-				if(range_from==-1)range_from=0;
-				if(ss.length>1)try{range_to=Integer.parseInt(ss[1]);}catch(NumberFormatException e){range_to=-1;}
-				else range_to=content_len;
-				if(range_to==-1)range_to=content_len;
+		final String range_s=hdrs.get("range");
+		if(range_s!=null){
+			final long len=c.content_length_in_bytes();
+			long range_from;
+			long range_to;
+			final String[]s=range_s.split(s_eq);
+			final String[]ss=s[1].split(s_minus);
+			
+			try{range_from=Long.parseLong(ss[0]);}catch(NumberFormatException e){range_from=-1;}
+			if(range_from==-1) // invalid or not specified
+				range_from=0;
 				
-				final ByteBuffer[]bba=new ByteBuffer[session_id_set?10:7];
-				int i=0;
-				bba[i++]=ByteBuffer.wrap(h_http206);
-				bba[i++]=ByteBuffer.wrap(h_content_length);
-				bba[i++]=ByteBuffer.wrap(Integer.toString(range_to-range_from+(range_to==content_len?0:1)).getBytes()); // 0 indexed and inclusive
-				bba[i++]=ByteBuffer.wrap(hk_content_range_bytes);
-				bba[i++]=ByteBuffer.wrap((range_from+s_minus+(range_to+(range_to==content_len?-1:0))+s_slash+content_len).getBytes());
-				if(session_id_set){
-					bba[i++]=ByteBuffer.wrap(hk_set_cookie);
-					bba[i++]=ByteBuffer.wrap(session_id.getBytes());
-					bba[i++]=ByteBuffer.wrap(hkv_set_cookie_append);
-					session_id_set=false;// set cookie
-				}
-				bba[i++]=ByteBuffer.wrap(ba_crlf2);
-				final int d=c.content_position();
-				bba[i++]=(ByteBuffer)c.byte_buffer().slice().position(d+range_from).limit(d+range_to+(range_to==content_len?0:1)); // 0 indexed and inclusive
-				transferbuffers(bba);
-				return;
+			if(ss.length>1)try{range_to=Long.parseLong(ss[1]);}catch(NumberFormatException e){range_to=-1;}
+			else range_to=-1;
+			
+			final ByteBuffer[]bb=new ByteBuffer[session_id_set?10:7];
+			int i=0;
+			bb[i++]=ByteBuffer.wrap(h_http206);
+			bb[i++]=ByteBuffer.wrap(h_content_length);
+			if(range_to==-1){ // invalid or not specified
+				bb[i++]=ByteBuffer.wrap(Long.toString(len-range_from).getBytes());
+				bb[i++]=ByteBuffer.wrap(hk_content_range_bytes);
+				bb[i++]=ByteBuffer.wrap((range_from+s_minus+(len-1)+s_slash+len).getBytes());// zero index and inclusive adjustment
+			}else { // range_to specified
+				bb[i++]=ByteBuffer.wrap(Long.toString(range_to+1).getBytes());// zero index inclusive adjustment
+				bb[i++]=ByteBuffer.wrap(hk_content_range_bytes);
+				bb[i++]=ByteBuffer.wrap((range_from+s_minus+range_to+s_slash+len).getBytes());				
 			}
+			if(session_id_set){
+				bb[i++]=ByteBuffer.wrap(hk_set_cookie);
+				bb[i++]=ByteBuffer.wrap(session_id.getBytes());
+				bb[i++]=ByteBuffer.wrap(hkv_set_cookie_append);
+				session_id_set=false;// cookie will be set
+			}
+			bb[i++]=ByteBuffer.wrap(ba_crlf2);
+			final long from_position=c.content_position();
+			if(range_to==-1){
+				bb[i++]=(ByteBuffer)c.byte_buffer().slice().position((int)(from_position+range_from)).limit((int)(from_position+len));					
+			}else{
+				bb[i++]=(ByteBuffer)c.byte_buffer().slice().position((int)(from_position+range_from)).limit((int)(from_position+range_to+1)); // 0 indexed and inclusive
+			}
+			transferbuffers(bb);
+			return;
 		}
 		if(!session_id_set){// no cookie to set
 			transferbuffers(new ByteBuffer[]{c.byte_buffer().slice()});
