@@ -24,7 +24,7 @@ final class chdresp_resource extends chdresp{ // ? mixes concerns. try interface
 		}
 		additional_headers_insertion_position=bb.position();
 		bb.put(req.ba_crlf2);
-		data_position=bb.position();
+		content_position=bb.position();
 		bb.put(ba);
 		bb.flip();
 	}

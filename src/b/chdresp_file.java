@@ -35,9 +35,8 @@ final class chdresp_file extends chdresp{
 		bb.put(req.hkp_connection_keep_alive);
 		additional_headers_insertion_position=bb.position();
 		bb.put(req.ba_crlf2);
-		data_position=bb.position();
+		content_position=bb.position();
 		path.to(bb);
-//		content_length_in_bytes=bb.position()-i0;
 		bb.flip();
 		lastModified=path_lastModified;
 		return true;

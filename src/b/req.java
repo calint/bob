@@ -174,7 +174,13 @@ public final class req{
 //	private a rootElem;
 //	dbpathelem rootElemDbo;
 	private void do_after_header()throws Throwable{
-//		assertaccess();
+
+//		if(!decodecookie()){
+//			sesid=mkcookieid();
+//			sesid_set=true;
+//			pl("new session "+sesid);
+//			thdwatch.sessions++;
+//		}
 		final String ka=hdrs.get(hk_connection);
 		if(ka!=null)connection_keep_alive=hv_keep_alive.equalsIgnoreCase(ka);
 		content.clear();
@@ -182,7 +188,7 @@ public final class req{
 		if(contentType!=null){
 			if(contentType.startsWith("dir;")||contentType.equals("dir")){
 				if(!b.enable_upload)throw new RuntimeException("uploadsdisabled");
-				if(!decodecookie())throw new RuntimeException("nocookie at create dir. path:"+sb_path);
+				if(!get_session_id_from_cookie())throw new RuntimeException("nocookie at create dir. path:"+sb_path);
 				final String[]q=contentType.split(";");
 				final String lastmod_s=q[1];
 				final path p=b.path(b.sessions_dir).get(sesid).get(path_s);
@@ -197,7 +203,7 @@ public final class req{
 			if(contentType.startsWith("file;")||contentType.equals("file")){
 				if(!b.enable_upload)throw new RuntimeException("uploadsdisabled");
 //				System.out.println(path_s);
-				if(!decodecookie())throw new RuntimeException("nocookie at create file from upload. path:"+sb_path);
+				if(!get_session_id_from_cookie())throw new RuntimeException("nocookie at create file from upload. path:"+sb_path);
 //				final String contentLength_s=hdrs.get(hk_content_length);
 				contentLength=Long.parseLong(hdrs.get(hk_content_length));
 				if(contentLength>abuse_upload_len){close();throw new RuntimeException("abuseuploadlen "+contentLength);}
@@ -217,7 +223,7 @@ public final class req{
 		// assumes content type "text/plain; charset=utf-8" from an ajax post
 		final String contentLength_s=hdrs.get(hk_content_length);
 		if(contentLength_s!=null){
-			if(!decodecookie())throw new RuntimeException("nocookie in request with content. path:"+sb_path);
+			if(!get_session_id_from_cookie())throw new RuntimeException("nocookie in request with content. path:"+sb_path);
 			contentLength=Long.parseLong(contentLength_s);
 			if(contentLength>abuse_content_len){close();throw new RuntimeException("abusecontentlen "+contentLength);}
 			bb_content=ByteBuffer.allocate((int)contentLength);
@@ -236,7 +242,7 @@ public final class req{
 		state=state_waiting_run_page;
 		return;
 	}
-	private boolean decodecookie(){
+	private boolean get_session_id_from_cookie(){
 		final String cookie=hdrs.get(hk_cookie);
 		if(cookie==null)return false;
 		final String[]c1=cookie.split(";");
@@ -250,7 +256,7 @@ public final class req{
 		}
 		return false;
 	}
-	private static String mkcookieid(){
+	private static String make_new_session_id(){
 		final SimpleDateFormat sdf=new SimpleDateFormat("yyMMdd-HHmmss.SSS-");
 		final StringBuilder sb=new StringBuilder(sdf.format(new Date()));
 		final String alf="0123456789abcdef";
@@ -327,7 +333,7 @@ public final class req{
 			// file to big to cache
 			return false;
 		}
-		// validate that the cached file is up to date
+		// validate that the cached response is up to date
 		if(!cachedresp.validate(System.currentTimeMillis())){
 			cachef.remove(path_s);
 			thdwatch._cachef--;
@@ -384,18 +390,18 @@ public final class req{
 					sesid_set=false;// set cookie
 				}
 				bba[i++]=ByteBuffer.wrap(ba_crlf2);
-				final int d=c.data_position();
-				bba[i++]=(ByteBuffer)c.byteBuffer().slice().position(d+range_from_byte).limit(d+range_to_byte+1);		
+				final int d=c.content_position();
+				bba[i++]=(ByteBuffer)c.byte_buffer().slice().position(d+range_from_byte).limit(d+range_to_byte+1);		
 				transferbuffers(bba);
 				return;
 			}
 		}
 		if(!sesid_set){// no cookie to set
-			transferbuffers(new ByteBuffer[]{c.byteBuffer().slice()});
+			transferbuffers(new ByteBuffer[]{c.byte_buffer().slice()});
 			return;
 		}
 		// cookie to set
-		final ByteBuffer[]bba=new ByteBuffer[]{c.byteBuffer().slice(),ByteBuffer.wrap(hk_set_cookie),ByteBuffer.wrap(sesid.getBytes()),ByteBuffer.wrap(hkv_set_cookie_append),c.byteBuffer().slice()};
+		final ByteBuffer[]bba=new ByteBuffer[]{c.byte_buffer().slice(),ByteBuffer.wrap(hk_set_cookie),ByteBuffer.wrap(sesid.getBytes()),ByteBuffer.wrap(hkv_set_cookie_append),c.byte_buffer().slice()};
 		bba[0].limit(c.additional_headers_insertion_position()); // limit the first slice to the location where additional headers can be inserted
 		bba[4].position(c.additional_headers_insertion_position()); // position the buffer (same as bb[0]) to the start of the remaining data, which is additional_headers_insertion_position
 		transferbuffers(bba);
@@ -636,8 +642,8 @@ public final class req{
 	}
 
 	private void resp_page()throws Throwable{
-		if(!decodecookie()){
-			sesid=mkcookieid();
+		if(!get_session_id_from_cookie()){
+			sesid=make_new_session_id();
 			sesid_set=true;
 			pl("new session "+sesid);
 			thdwatch.sessions++;
@@ -648,136 +654,134 @@ public final class req{
 		}catch(Throwable t){
 			tn.rollback();
 			while(t.getCause()!=null)t=t.getCause();
+			if(t instanceof RuntimeException)throw(RuntimeException)t;
 			throw new RuntimeException(t);
 		}finally{
 			Db.deinitCurrentTransaction();
 		}
 	}
-	// threaded done
+
 	private void resp_page_do(final DbTransaction tn)throws Throwable{
-		final sessionpath rootElemDbo=get_session_path(path_s);
-		a rootElem=rootElemDbo.getElem();
-		if(rootElem==null){
-			String cn=path_s.replace('/','.');
-			while(cn.startsWith("."))cn=cn.substring(1);
-			cn=b.webobjpkg+cn;
-			Class<?>ecls;
-			String cn2="";
-			try{ecls=(Class<?>)Class.forName(cn);}catch(Throwable e1){try{
-				cn2=cn+(cn.length()==0||cn.endsWith(".")?"":".")+b.default_package_class;
-				ecls=(Class<?>)Class.forName(cn2);
+		final sessionpath root_elem_dbo=get_session_path(path_s);
+		a root_elem=root_elem_dbo.getElem();
+		if(root_elem==null){// no root element, try to make new instance
+			String class_name=path_s.replace('/','.');
+			while(class_name.startsWith("."))class_name=class_name.substring(1);
+			class_name=b.webobjpkg+class_name;
+			Class<?>element_class;
+			String class_name_ext="";
+			try{element_class=(Class<?>)Class.forName(class_name);}catch(Throwable e1){try{
+				class_name_ext=class_name+(class_name.length()==0||class_name.endsWith(".")?"":".")+b.default_package_class;
+				element_class=(Class<?>)Class.forName(class_name_ext);
 			}catch(Throwable e2){
 				while(e1.getCause()!=null)e1=e1.getCause();
 				xwriter x=new xwriter().p(path_s).nl().nl().p(b.stacktraceline(e1)).nl().nl().p(b.stacktraceline(e2)).nl();
-				pl("classnotfound for path '"+path_s+"' tried '"+cn+"' and '"+cn2+"'");
+				pl("classnotfound for path '"+path_s+"' tried '"+class_name+"' and '"+class_name_ext+"'");
 				reply(h_http404,null,null,tobytes(x.toString()));
 				return;
 			}}
-			try{rootElem=(a)ecls.getConstructor().newInstance();}catch(Throwable ex){
-				while(ex.getCause()!=null)ex=ex.getCause();
+			try{root_elem=(a)element_class.getConstructor().newInstance();}catch(Throwable t){
+				while(t.getCause()!=null)t=t.getCause();
 //				final xwriter x=new xwriter().p(path_s).nl().nl().p(b.stacktraceline(ex)).nl();
-				reply(h_http404,null,null,tobytes(stacktrace(ex)));
+				reply(h_http404,null,null,tobytes(stacktrace(t)));
 				return;
 			}
-			if(rootElem instanceof sock){
+			if(root_elem instanceof sock){
 				state=state_sock;
-				sck=(sock)rootElem;
+				sck=(sock)root_elem;
 				switch(sck.sockinit(hdrs,new sockio(sockch,selkey,ByteBuffer.wrap(ba,ba_pos,ba_rem)))){default:throw new IllegalStateException();
 				case read:selkey.interestOps(SelectionKey.OP_READ);selkey.selector().wakeup();break;
 				case write:selkey.interestOps(SelectionKey.OP_WRITE);selkey.selector().wakeup();break;
 				case close:sockch.close();break;
 				case wait:selkey.interestOps(0);break;
 				}
-				rootElemDbo.setElem(rootElem);
+				root_elem_dbo.setElem(root_elem);
 				return;
 			}
 		}
 		if(!content.isEmpty()){
 			// ajax post
-			String ax="";
+			String ajax_command_string="";
 			for(final Map.Entry<String,String>me:content.entrySet()){
 				if(axfld.equals(me.getKey())){
-					ax=me.getValue();
+					ajax_command_string=me.getValue();
 					continue;
 				}
 				//? indexofloop
-				final String[]pth=me.getKey().split(req.field_path_separator);
-				a ee=rootElem;
-				for(int n=1;n<pth.length;n++){
-					ee=ee.chld(pth[n]);
-					if(ee==null)throw new RuntimeException("not found: "+me.getKey());
+				final String[]paths=me.getKey().split(req.field_path_separator);
+				a e=root_elem;
+				for(int n=1;n<paths.length;n++){
+					e=e.chld(paths[n]);
+					if(e==null)throw new RuntimeException("not found: "+me.getKey());
 				}
-				ee.set(me.getValue());
+				e.set(me.getValue());
 			}
-			if(ax.length()==0)throw new RuntimeException("expectedax");
+			if(ajax_command_string.length()==0)throw new RuntimeException("expectedax");
 			
 			// decode the field id, method name and parameters parameters
-			final String axid,axfunc,axarg;
-			final int i1=ax.indexOf(' ');
+			final String target_elem_id,target_elem_method,target_elem_method_args;
+			final int i1=ajax_command_string.indexOf(' ');
 			if(i1==-1){
-				axid=ax;
-				axfunc=axarg="";
+				target_elem_id=ajax_command_string;
+				target_elem_method=target_elem_method_args="";
 			}else{
-				axid=ax.substring(0,i1);
-				final int i2=ax.indexOf(' ',i1+1);
+				target_elem_id=ajax_command_string.substring(0,i1);
+				final int i2=ajax_command_string.indexOf(' ',i1+1);
 				if(i2==-1){
-					axfunc=ax.substring(i1+1);
-					axarg="";
+					target_elem_method=ajax_command_string.substring(i1+1);
+					target_elem_method_args="";
 				}else{
-					axfunc=ax.substring(i1+1,i2);
-					axarg=ax.substring(i2+1);
+					target_elem_method=ajax_command_string.substring(i1+1,i2);
+					target_elem_method_args=ajax_command_string.substring(i2+1);
 				}
 			}
-			final String[]pth=axid.split(req.field_path_separator);//? indexofloop
-			a axe=rootElem;
-			for(int n=1;n<pth.length;n++){
-				axe=axe.chld(pth[n]);
-				if(axe==null)break;
+			// navigate to the target element
+			final String[]path=target_elem_id.split(req.field_path_separator);//? indexofloop
+			a target_elem=root_elem;
+			for(int n=1;n<path.length;n++){
+				target_elem=target_elem.chld(path[n]);
+				if(target_elem==null)break;
 			}
 			final oschunked os=reply_chunked(h_http200,text_html_utf8,null);
 			final xwriter x=new xwriter(os);
-			if(axe==null){
-				x.xalert("element not found:\n"+axid);
+			if(target_elem==null){
+				x.xalert("element not found:\n"+target_elem_id);
 				os.finish();
 				return;
 			}
 			try{
-				axe.getClass().getMethod("x_"+axfunc,xwriter.class,String.class).invoke(axe,x,axarg);
+				target_elem.getClass().getMethod("x_"+target_elem_method,xwriter.class,String.class).invoke(target_elem,x,target_elem_method_args);
 			}catch(final InvocationTargetException t){
 				b.log(t.getTargetException());
 				x.xalert(b.isempty(t.getTargetException().getMessage(),t.toString()));
 			}catch(NoSuchMethodException t){
-				x.xalert("method not found:\n"+axe.getClass().getName()+".x_"+axfunc+"(xwriter,String)");
+				x.xalert("method not found:\n"+target_elem.getClass().getName()+".x_"+target_elem_method+"(xwriter,String)");
 			}
-			rootElemDbo.setElem(rootElem);
+			root_elem_dbo.setElem(root_elem);
 			tn.flush();
 			x.finish();
 			os.finish();
 			return;
 		}
-//		if(b.cache_uris&&rootElem instanceof cacheable){
-//			final cacheable cw=(cacheable)rootElem;
-//			reply(cw);
-//			thdwatch.cacheu++;
-//			return;
-//		}
-		final boolean isbin=rootElem instanceof bin;
-		final oschunked os=reply_chunked(h_http200,isbin?((bin)rootElem).contenttype():text_html_utf8,null);
+		final boolean is_binary_producing_elem=root_elem instanceof bin;
+		final oschunked os=reply_chunked(h_http200,is_binary_producing_elem?((bin)root_elem).contenttype():text_html_utf8,null);
 		final xwriter x=new xwriter(os);
-		if(!isbin){
+		if(!is_binary_producing_elem){
 			os.write(ba_page_header_pre_title);
 		}
 		try{
 			// ? extra mode: serialize, encode to text, write into tag <div id="--state"> that is posted with ajax request
-			rootElem.to(x);
+			root_elem.to(x);
 		}catch(Throwable t){
-			b.log(t);x.pre().p(b.stacktrace(t));
+			b.log(t);
+			x.pre().p(b.stacktrace(t));
 		}
-		rootElemDbo.setElem(rootElem);
+		root_elem_dbo.setElem(root_elem);
 		x.finish();
 		os.finish();
 	}
-
+	// threaded done
+	
 	private oschunked reply_chunked(final byte[]hdr,final String contentType,final String lastmod)throws Throwable{
 		final ByteBuffer[]bb_reply=new ByteBuffer[11];
 		int bbi=0;
@@ -883,7 +887,7 @@ public final class req{
 		if(cachef==null)return 0;
 		long k=0;
 		//? sync(cachef)
-		for(final chdresp e:cachef.values())k+=e.byteBuffer().capacity();
+		for(final chdresp e:cachef.values())k+=e.byte_buffer().capacity();
 		return k;
 	}
 	public static long cacheu_size(){
@@ -891,8 +895,8 @@ public final class req{
 		//? sync(cacheu)
 		long k=0;
 		for(final chdresp e:cacheu.values()){
-			if(e.byteBuffer()==null)continue;
-			k+=e.byteBuffer().capacity();
+			if(e.byte_buffer()==null)continue;
+			k+=e.byte_buffer().capacity();
 		}
 		return k;
 	}
