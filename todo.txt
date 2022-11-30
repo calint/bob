@@ -2,4 +2,7 @@
 [ ]   content type for cached file from Map of suffix to content-type?
 [x] cookie: same-site
 [ ] fix for client that makes many threaded requests and then stalls them to starve server of threads or create too many. ddos.
-[o] etag instead of last-modified
+[x] etag instead of last-modified
+[ ] review ranged requests
+[ ]   file
+[ ]   cache

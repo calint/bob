@@ -3,7 +3,6 @@ import static b.b.p;
 import static b.b.pl;
 import static b.b.stacktrace;
 import static b.b.tobytes;
-import static b.b.tostr;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -239,6 +238,7 @@ public final class req{
 		if(b.try_file&&try_file())return;
 		if(b.try_rc&&try_rc())return;
 		
+		// try creating an instance of 'a' on a separate thread
 		state=state_waiting_run_page;
 		return;
 	}
@@ -271,34 +271,47 @@ public final class req{
 		}
 		thdwatch.files++;
 		final long lastmod_l=pth.lastmod();
-		final String lastmod_s=b.tolastmodstr(lastmod_l);
-		final String ifModSince=hdrs.get(hk_if_modified_since);
-		if(ifModSince!=null&&ifModSince.equals(lastmod_s)){ // ? check if ifModSince is after or equal to lastmod
+//		final String lastmod_s=b.tolastmodstr(lastmod_l);
+//		final String ifModSince=hdrs.get(hk_if_modified_since);
+//		if(ifModSince!=null&&ifModSince.equals(lastmod_s)){ // ? check if ifModSince is after or equal to lastmod
+//			reply(h_http304,null,null,null);
+//			return true;
+//		}
+		final String etag="\""+lastmod_l+"\"";
+		final String client_etag=hdrs.get(hk_if_none_match);
+		if(etag.equals(client_etag)) {
 			reply(h_http304,null,null,null);
 			return true;
 		}
+		
 		final long path_len=pth.size();
 		final String range_s=hdrs.get(s_range);
 		final ByteBuffer[]bb=new ByteBuffer[16];
 		int i=0;
-		final long range_from;
-		if(range_s!=null){
+		long range_from;
+		long range_to;
+		if(range_s!=null){ // ! review this
 			final String[]s=range_s.split(s_eq);
 			final String[]ss=s[1].split(s_minus);
-			range_from=Long.parseLong(ss[0]);
+			try{range_from=Long.parseLong(ss[0]);}catch(NumberFormatException e){range_from=-1;}
+			if(range_from==-1)range_from=0;
+			if(ss.length>1)try{range_to=Long.parseLong(ss[1]);}catch(NumberFormatException e){range_to=-1;}
+			else range_to=path_len;
+			if(range_to==-1)range_to=path_len;
 			bb[i++]=ByteBuffer.wrap(h_http206);
 			bb[i++]=ByteBuffer.wrap(h_content_length);
-			bb[i++]=ByteBuffer.wrap(Long.toString(path_len-range_from).getBytes());
-			bb[i++]=ByteBuffer.wrap(hk_content_range);
-			bb[i++]=ByteBuffer.wrap((s_bytes_+range_from+s_minus+path_len+s_slash+path_len).getBytes());
+			bb[i++]=ByteBuffer.wrap(Long.toString(range_to-range_from+1).getBytes());// zero index and inclusive
+			bb[i++]=ByteBuffer.wrap(hk_content_range_bytes);
+			bb[i++]=ByteBuffer.wrap((range_from+s_minus+range_to+s_slash+path_len).getBytes());
 		}else{
 			range_from=0;
+			range_to=path_len;
 			bb[i++]=ByteBuffer.wrap(h_http200);
 			bb[i++]=ByteBuffer.wrap(h_content_length);
 			bb[i++]=ByteBuffer.wrap(Long.toString(path_len).getBytes());
 		}
-		bb[i++]=ByteBuffer.wrap(h_last_modified);
-		bb[i++]=ByteBuffer.wrap(lastmod_s.getBytes());
+		bb[i++]=ByteBuffer.wrap(h_etag);
+		bb[i++]=ByteBuffer.wrap(etag.getBytes());
 		bb[i++]=ByteBuffer.wrap(hkp_accept_ranges_byte);
 		if(session_id_set){
 			bb[i++]=ByteBuffer.wrap(hk_set_cookie);
@@ -313,8 +326,10 @@ public final class req{
 		thdwatch.output+=n;
 		transfer_file_channel=pth.fileinputstream().getChannel();
 		transfer_file_position=range_from;
-		transfer_file_remaining=path_len-range_from;
-		state=state_transfer_file;do_transfer_file();
+		transfer_file_remaining=range_to-range_from+(range_to==path_len?0:1); // ranged request are zero indexed inclusive
+		
+		state=state_transfer_file;
+		do_transfer_file();
 		return true;
 	}
 	/** @return true if the file or resource has been cached. */
@@ -370,19 +385,26 @@ public final class req{
 			return;
 		}
 		if(b.allow_partial_content_from_cache){
-			final String range=hdrs.get("range");
-			if(range!=null){
-				int i=0;
-				final String from_to_in_bytes=range.split("=")[1];
-				final String[]ft=from_to_in_bytes.split("-");
-				final int range_from_byte=Integer.parseInt(tostr(ft[0],"0"));
-				final int range_to_byte=Integer.parseInt(tostr(ft[1],"0"));
+			final int content_len=c.content_length_in_bytes();
+			final String range_s=hdrs.get("range");
+			int range_from=0;
+			int range_to=content_len;
+			if(range_s!=null){ // ! range_to can be bigger than len
+				final String[]s=range_s.split(s_eq);
+				final String[]ss=s[1].split(s_minus);
+				try{range_from=Integer.parseInt(ss[0]);}catch(NumberFormatException e){range_from=-1;}
+				if(range_from==-1)range_from=0;
+				if(ss.length>1)try{range_to=Integer.parseInt(ss[1]);}catch(NumberFormatException e){range_to=-1;}
+				else range_to=content_len;
+				if(range_to==-1)range_to=content_len;
+				
 				final ByteBuffer[]bba=new ByteBuffer[session_id_set?10:7];
+				int i=0;
 				bba[i++]=ByteBuffer.wrap(h_http206);
 				bba[i++]=ByteBuffer.wrap(h_content_length);
-				bba[i++]=ByteBuffer.wrap(Integer.toString(1+range_to_byte-range_from_byte).getBytes());
-				bba[i++]=ByteBuffer.wrap(hk_content_range);
-				bba[i++]=ByteBuffer.wrap((s_bytes_+range_from_byte+s_minus+range_to_byte+s_slash+c.content_length_in_bytes()).getBytes());
+				bba[i++]=ByteBuffer.wrap(Integer.toString(range_to-range_from+(range_to==content_len?0:1)).getBytes()); // 0 indexed and inclusive
+				bba[i++]=ByteBuffer.wrap(hk_content_range_bytes);
+				bba[i++]=ByteBuffer.wrap((range_from+s_minus+range_to+s_slash+content_len).getBytes());
 				if(session_id_set){
 					bba[i++]=ByteBuffer.wrap(hk_set_cookie);
 					bba[i++]=ByteBuffer.wrap(session_id.getBytes());
@@ -391,7 +413,7 @@ public final class req{
 				}
 				bba[i++]=ByteBuffer.wrap(ba_crlf2);
 				final int d=c.content_position();
-				bba[i++]=(ByteBuffer)c.byte_buffer().slice().position(d+range_from_byte).limit(d+range_to_byte+1);		
+				bba[i++]=(ByteBuffer)c.byte_buffer().slice().position(d+range_from).limit(d+range_to+(range_to==content_len?0:1)); // 0 indexed and inclusive
 				transferbuffers(bba);
 				return;
 			}
@@ -541,7 +563,8 @@ public final class req{
 		//		final long buf_size=this.sockch.socket().getSendBufferSize();
 		final int buf_size=b.transfer_file_write_size;
 		while(transfer_file_remaining!=0)try{
-			final long c=transfer_file_channel.transferTo(transfer_file_position,buf_size,sockch);
+			final long n=transfer_file_remaining>buf_size?buf_size:transfer_file_remaining;
+			final long c=transfer_file_channel.transferTo(transfer_file_position,n,sockch);
 			if(c==0)return false;
 			transfer_file_position+=c;
 			transfer_file_remaining-=c;
@@ -970,15 +993,15 @@ public final class req{
 	private final static byte[]hkv_set_cookie_append =";path=/;expires=Thu, 31-Dec-2099 00:00:00 GMT;SameSite=Lax".getBytes();
 	private final static byte[]hkp_transfer_encoding_chunked="\r\nTransfer-Encoding: chunked".getBytes();
 	private final static byte[]hkp_accept_ranges_byte="\r\nAccept-Ranges: bytes".getBytes();
-	private final static byte[]hk_content_range ="\r\nContent-Range: ".getBytes();
+	private final static byte[]hk_content_range_bytes ="\r\nContent-Range: bytes ".getBytes();
 	private final static String hk_connection="connection";
 	private final static String hk_content_length="content-length";
 	private final static String hk_content_type="content-type";
 	private final static String hk_cookie="cookie";
-	private final static String hk_if_modified_since="if-modified-since";
+//	private final static String hk_if_modified_since="if-modified-since";
 	private final static String hk_if_none_match="if-none-match";
 	private final static String hv_keep_alive="keep-alive";
-	private final static String s_bytes_="bytes ";
+//	private final static String s_bytes_="bytes ";
 	private final static String s_eq="=";
 	private final static String s_minus="-";
 	private final static String s_range="range";
