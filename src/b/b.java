@@ -86,15 +86,11 @@ final public class b{
 	public static @conf boolean resources_enable_any_path=false;
 	public static HashSet<String>resources_paths=new HashSet<String>(Arrays.asList("x.js","x.css","favicon.ico"));
 	public static @conf boolean enable_upload=true;
-//	public static boolean enable_ssl=false;
-//	public static boolean enable_cluster=false;
 	public static @conf int max_pending_connections=20000;// when overrun causes SYN flood warning
 	public static @conf boolean tcpnodelay=true;
 	public static @conf boolean sessions_save_at_shutdown=true;
-//	public static boolean cloud_bees=false;
 	public static @conf boolean print_conf_at_startup=true;
 	public static @conf boolean print_stats_at_startup=true;
-//	public static @conf boolean acl_on=true;
 	public static @conf boolean firewall_on=true;
 	public static @conf boolean firewall_paths_on=true;
 	public static @conf boolean log_client_disconnects=false;
