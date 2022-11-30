@@ -16,10 +16,9 @@ final class thdreq extends Thread{
 		final long t0=System.currentTimeMillis();
 		proc();
 		while(b.thread_pool){
-			final LinkedList<req>ls=b.pendingreqls();
-			synchronized(ls){
+			synchronized(b.pendingreqls()){
 				thdwatch.freethds++;
-				while((r=ls.poll())==null)try{ls.wait();}catch(InterruptedException ok){}
+				while((r=b.pendingreqls().poll())==null)try{b.pendingreqls().wait();}catch(InterruptedException ok){}
 				thdwatch.freethds--;
 			}
 			proc();

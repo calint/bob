@@ -235,23 +235,6 @@ public final class req{
 		
 		state=state_waiting_run_page;
 		return;
-		
-		// ? what about cacheable elements?
-		
-//		if(rootElem==null)return;
-//		if(!(rootElem instanceof cacheable))return;
-//
-//		final cacheable ac=(cacheable)rootElem;
-//		final String ifmodsince=hdrs.get(hk_if_modified_since);
-//		final String lastmod=ac.lastmod();
-//		if(ifmodsince!=null&&ifmodsince.equals(lastmod)){reply(h_http304,null,null,null);return;}
-//		String key=sb_path.toString();
-//		if(ac.cacheforeachuser())key=sesid+"~"+key; // ? why not this request
-//		final chdresp c=cacheu.get(key);
-//		if(c==null)return;
-//		if(!c.isvalid(System.currentTimeMillis()))return;
-//		reply(c);
-//		thdwatch.cacheu++;
 	}
 	private boolean decodecookie(){
 		final String cookie=hdrs.get(hk_cookie);
@@ -820,28 +803,9 @@ public final class req{
 		thdwatch.output+=sendpacket(bb_reply,bbi);//? sends2packs
 		return new oschunked(this,b.chunk_B);     //?
 	}
-//	private void reply(final cacheable cw)throws Throwable{
-////		final String ifmodsince=hdrs.get(hk_if_modified_since);
-////		final String lastmod=cw.lastmod();
-////		if(ifmodsince!=null&&ifmodsince.equals(lastmod)){reply(h_http304,null,null,null);return;}
-//		final String ifNoneMatch=hdrs.get(hk_if_none_match);
-//		if(ifNoneMatch!=null&&ifNoneMatch.equals(cw.etag())){
-//			reply(h_http304,null,null,null);
-//			return;
-//		}
-//		final long t=System.currentTimeMillis();
-//		String key=sb_path.toString();
-////		if(cw.cacheforeachuser())key=req.get().session().id()+"~"+key;// why not this request?
-//		if(cw.cacheforeachuser())key=sesid+"~"+key;// why not this request?
-//		chdresp c=cacheu.get(key);
-//		if(c==null){c=new chdresp(cw,key);cacheu.put(key,c);}
-////		c.validate(t,ifmodsince);
-//		c.validate(t,ifNoneMatch);
-//		reply(c);
-//	}
 	void run_page_content()throws Throwable{
 		state=state_run_page_content;
-		if(!contentType.startsWith(text_plain))throw new RuntimeException("only "+text_plain+" post allowed");
+		if(!contentType.startsWith(text_plain))throw new RuntimeException("postedcontent only "+text_plain+" allowed");
 		parse_content();
 		resp_page();
 		if(state==state_run_page_content)state=state_nextreq;
