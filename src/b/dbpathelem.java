@@ -6,20 +6,10 @@ import java.io.ObjectInputStream;
 import db.DbObject;
 import db.FldSerializable;
 import db.FldStr;
-import db.test.FldChars;
 
 public class dbpathelem extends DbObject {
-	public final static FldChars sessionId = new FldChars(32, "");
 	public final static FldStr path=new FldStr(255,"");
 	public final static FldSerializable elem = new FldSerializable();
-
-	public String getSessionId() {
-		return getStr(sessionId);
-	}
-
-	public void setSessionId(String v) {
-		set(sessionId, v);
-	}
 
 	public String getPath() {
 		return getStr(path);

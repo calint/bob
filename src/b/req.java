@@ -233,7 +233,6 @@ public final class req{
 		if(b.try_file&&try_file())return;
 		if(b.try_rc&&try_rc())return;
 		
-		decodecookie();
 		state=state_waiting_run_page;
 		return;
 		
@@ -621,27 +620,47 @@ public final class req{
 		if(state==state_sock){thdwatch.socks++;return;}
 		if(state==state_run_page)state=state_nextreq;
 	}
+	
+	private dbsession get_session(){
+		final DbTransaction tn=Db.currentTransaction();
+		final List<DbObject>lsses=tn.get(dbsession.class,new Query(dbsession.sessionId,Query.EQ,sesid),null,null);
+		final dbsession dbses;
+		if(lsses.isEmpty()){
+			dbses=(dbsession)tn.create(dbsession.class);
+			dbses.setSessionId(sesid);
+		}else {
+			if(lsses.size()>1) {
+				b.log(new RuntimeException("found more than one dbsession for id "+sesid));
+			}
+			dbses=(dbsession)lsses.get(0);
+		}
+		return dbses;
+	}
+
+	private dbpathelem get_session_path(final String p){
+		final DbTransaction tn=Db.currentTransaction();
+		final List<DbObject>ls=tn.get(dbpathelem.class,new Query(dbsession.sessionId,Query.EQ,sesid).and(dbsession.paths).and(dbpathelem.path,Query.EQ,p),null,null);
+		if(ls.isEmpty()){
+			return get_session().getPath(p);
+		}else {
+			if(ls.size()>1) {
+				b.log(new RuntimeException("found "+ls.size()+" paths for session "+sesid+" path "+p));
+			}
+			return (dbpathelem)ls.get(0);
+		}
+	}
+
 	private void resp_page()throws Throwable{
-		if(sesid==null){
+		if(!decodecookie()){
 			sesid=mkcookieid();
 			sesid_set=true;
 			pl("new session "+sesid);
 			thdwatch.sessions++;
 		}
 		final DbTransaction tn=Db.initCurrentTransaction();
-		a rootElem;
-		final dbpathelem rootElemDbo;
 		try{
-			final List<DbObject>ls=tn.get(dbpathelem.class,new Query(dbpathelem.sessionId,Query.EQ,sesid).and(dbpathelem.path,Query.EQ,path_s),null,null);
-			if(ls.isEmpty()){
-				rootElem=null;
-				rootElemDbo=(dbpathelem)tn.create(dbpathelem.class);
-				rootElemDbo.setSessionId(sesid);
-				rootElemDbo.setPath(path_s);
-			}else{
-				rootElemDbo=(dbpathelem)ls.get(0);
-				rootElem=rootElemDbo.getElem();
-			}
+			final dbpathelem rootElemDbo=get_session_path(path_s);
+			a rootElem=rootElemDbo.getElem();
 			if(rootElem==null){
 				String cn=path_s.replace('/','.');
 				while(cn.startsWith("."))cn=cn.substring(1);

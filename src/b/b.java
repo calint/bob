@@ -131,6 +131,7 @@ final public class b{
 
 		// initiate db
 		Db.initInstance();
+		Db.instance().register(dbsession.class);
 		Db.instance().register(dbpathelem.class);
 		// initiate application
 		if(b.bapp_class!=null){
@@ -492,6 +493,6 @@ final public class b{
 		final String u3=u2.replace(' ','+');
 		return u3;
 	}
-	public static session session(final String id){return session.all().get(id);}
+//	public static session session(final String id){return session.all().get(id);}
 	public static String uri_to(final Class<? extends a>cls){return"/"+cls.getName().substring(webobjpkg.length());}
 }
