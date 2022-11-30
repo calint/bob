@@ -72,31 +72,21 @@ final public class b{
 	public static @conf String default_directory_file="index.html";
 	public static @conf String default_package_class="$";
 	public static @conf boolean gc_before_stats=false;
-	public static @conf int hash_size_session_values=32;
-	public static @conf int hash_size_sessions_store=4*K;
-	public static @conf String sessionfile="session.ser";
-	public static @conf boolean sessionfile_load=true;
-	public static @conf String sessions_dir="u";
-	public static @conf boolean cacheu_tofile=true;
-	public static @conf String cacheu_dir="/cache/";
 	public static @conf final String webobjpkg="a.";
 	public static @conf String datetimefmtstr="yyyy-MM-dd HH:mm:ss.sss";
-//	public static @conf @unit(name="tms")long resources_lastmod=0;
 	public static @conf String resources_etag="\"b.3\"";
 	public static @conf boolean resources_enable_any_path=false;
 	public static HashSet<String>resources_paths=new HashSet<String>(Arrays.asList("x.js","x.css","favicon.ico"));
 	public static @conf boolean enable_upload=true;
 	public static @conf int max_pending_connections=20000;// when overrun causes SYN flood warning
 	public static @conf boolean tcpnodelay=true;
-	public static @conf boolean sessions_save_at_shutdown=true;
 	public static @conf boolean print_conf_at_startup=true;
 	public static @conf boolean print_stats_at_startup=true;
 	public static @conf boolean firewall_on=true;
 	public static @conf boolean firewall_paths_on=true;
-	public static @conf boolean log_client_disconnects=false;
+	public static @conf boolean log_client_disconnects=true;
+	public static @conf String sessions_dir="u";
 	
-	public static @conf @unit(name="tms")long timeatload=System.currentTimeMillis();
-	public static @conf String timeatloadstrhtp=tolastmodstr(timeatload);
 	public static PrintStream out=System.out;
 	public static PrintStream err=System.err;
 	
@@ -277,17 +267,6 @@ final public class b{
 		return p;
 	}
 	static void firewall_ensure_path_access(final String uri){
-		//. cleanup
-//		final path sessionsdir=new path(new File(root_dir,sessions_dir));//? cache
-		final String sessionsdiruri=b.file_to_uri(new File(b.root_dir,b.sessions_dir));
-		if(!uri.startsWith(sessionsdiruri+"/"))return;
-		try{
-			final req r=req.get();
-			final String sessionid=r.sessionid();
-			if(uri.startsWith(sessionsdiruri+"/"+sessionid))return;
-			throw new SecurityException("session "+sessionid+" cannot access "+uri);
-		}catch(ClassCastException ignored){}
-		// allow access to any file, sessionid in path is passphrase
 	}
 //	static path path_ommit_firewall_check(final String path){
 //		ensure_path_ok(path);
@@ -344,7 +323,7 @@ final public class b{
 		ps.println("       throughput: "+throughput_qty+throughput_unit);
 //		ps.println("         sessions: "+session.all().size());
 		ps.println("        downloads: "+new File(root_dir).getCanonicalPath());
-		ps.println("     sessions dir: "+new File(root_dir,sessions_dir).getCanonicalPath());
+		ps.println("     sessions dir: "+new File(sessions_dir).getCanonicalPath());
 		ps.println("     cached files: "+(req.cachef_size()>>10)+" KB");
 		ps.println("      cached uris: "+(req.cacheu_size()>>10)+" KB");
 		ps.println("        classpath: "+System.getProperty("java.class.path"));
@@ -367,7 +346,6 @@ final public class b{
 	public static String urlencode(final String s){try{return URLEncoder.encode(s,strenc);}catch(UnsupportedEncodingException e){throw new Error(e);}}
 	public static String tostr(final Object object,final String def){return object==null?def:object.toString();}
 	public static byte[]tobytes(final String v){try{return v.getBytes(strenc);}catch(UnsupportedEncodingException e){throw new Error(e);}}
-	public static String sessionhref(final String sessionid){return sessions_dir+"/"+sessionid+"/";}
 	public static boolean isempty(final String s){return s==null||s.length()==0;}
 	public static String isempty(final String o,final String def){return isempty(o)?def:o;}
 //	public static Set<String>sessionsids(){return Collections.unmodifiableSet(session.all().keySet());}//?

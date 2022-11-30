@@ -224,12 +224,12 @@ public final class req{
 			state=state_content_read;parse_content_read();
 			return;
 		}
-		//. firewall path
 		try{pth=b.path(path_s);}catch(final Throwable t){
 			reply(h_http404,null,null,tobytes(b.stacktrace(t)));
 			close();
 			throw t;
 		}
+		if(b.cache_files&&try_cache())return;
 		if(b.try_file&&try_file())return;
 		if(b.try_rc&&try_rc())return;
 		
@@ -275,9 +275,6 @@ public final class req{
 		return sb.toString();
 	}
 	private boolean try_file()throws Throwable{
-		if(cachef!=null)
-			if(try_cache())
-				return true;
 		if(!pth.exists())return false;
 		if(pth.isdir()){
 			pth=pth.get(b.default_directory_file);
@@ -323,7 +320,7 @@ public final class req{
 		if(connection_keep_alive)
 			bb[i++]=ByteBuffer.wrap(hkp_connection_keep_alive);
 		bb[i++]=ByteBuffer.wrap(ba_crlf2);
-		final long n=sendpacket(bb,i);
+		final long n=sendpacket(bb,i); // ? is send complete?
 		thdwatch.output+=n;
 		transfer_file_channel=pth.fileinputstream().getChannel();
 		transfer_file_position=range_from;
@@ -333,14 +330,13 @@ public final class req{
 	}
 	/** @return true if the file or resource has been cached. */
 	private boolean try_cache()throws Throwable{
-		chdresp cachedresp;
-		synchronized(cachef){cachedresp=cachef.get(path_s);}
+		chdresp cachedresp=cachef.get(path_s);
 		if(cachedresp==null){ // not in cache, try to cache a file
 			if(pth.isdir())pth=pth.get(b.default_directory_file);
 			if(!pth.exists())return false;
 			if(pth.size()<=b.cache_files_maxsize){
-				cachedresp=new chdresp(pth);
-				synchronized(cachef){cachef.put(path_s,cachedresp);}
+				cachedresp=new chdresp_file(pth);
+				cachef.put(path_s,cachedresp);
 				reply(cachedresp);
 				thdwatch._cachef++;
 				return true;
@@ -350,13 +346,14 @@ public final class req{
 		}
 		// validate that the cached file is up to date
 		if(!cachedresp.validate(System.currentTimeMillis())){
-			synchronized(cachef){cachef.remove(path_s);}
+			cachef.remove(path_s);
 			thdwatch._cachef--;
 			return false;
 		}
 		reply(cachedresp); // send the cached response
 		return true;
 	}
+	/** @return true if resource was cached and sent. */
 	private boolean try_rc()throws Throwable{
 		final String p=pth.name();//? path
 		if(!b.resources_enable_any_path&&!b.resources_paths.contains(p))return false;
@@ -371,20 +368,15 @@ public final class req{
 		if(is==null)return false;
 		// todo map of file suffix to content types
 		final String contentType = rcpth.endsWith(".js")?"application/javascript":null;
-		final chdresp c=new chdresp(is,contentType);
-		synchronized(cachef){cachef.put(path_s,c);}
+		final chdresp c=new chdresp_resource(is,contentType);
+		cachef.put(path_s,c);
 		reply(c);
 		return true;
 	}
 	private void reply(final chdresp c)throws Throwable{
 		thdwatch.cachef++;
-//		final String ifModSince=hdrs.get(hk_if_modified_since);
-//		if(ifModSince!=null&&c.ifnotmodsince(ifModSince)){
-//			reply(h_http304,null,null,null);
-//			return;
-//		}
-		final String ifNoneMatch=hdrs.get(hk_if_none_match);
-		if(ifNoneMatch!=null&&c.etag_matches(ifNoneMatch)){
+		final String clientetag=hdrs.get(hk_if_none_match);
+		if(clientetag!=null&&c.etag_matches(clientetag)){
 			reply(h_http304,null,null,null);
 			return;
 		}
@@ -421,8 +413,8 @@ public final class req{
 		}
 		// cookie to set
 		final ByteBuffer[]bba=new ByteBuffer[]{c.byteBuffer().slice(),ByteBuffer.wrap(hk_set_cookie),ByteBuffer.wrap(sesid.getBytes()),ByteBuffer.wrap(hkv_set_cookie_append),c.byteBuffer().slice()};
-		bba[0].limit(c.additional_headers_insertion_position());
-		bba[4].position(c.additional_headers_insertion_position());
+		bba[0].limit(c.additional_headers_insertion_position()); // limit the first slice to the location where additional headers can be inserted
+		bba[4].position(c.additional_headers_insertion_position()); // position the buffer (same as bb[0]) to the start of the remaining data, which is additional_headers_insertion_position
 		transferbuffers(bba);
 		sesid_set=false;
 	}
