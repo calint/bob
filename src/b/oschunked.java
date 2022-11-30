@@ -37,17 +37,22 @@ final class oschunked extends OutputStream{
 		}
 	}
 	private void write_blocking(final ByteBuffer[]bba)throws IOException{
-		long remaining=0;for(final ByteBuffer bb:bba)remaining+=bb.remaining();
+		long remaining=0;
+		for(ByteBuffer bb:bba)
+			remaining+=bb.remaining();
 		while(remaining!=0){
 			final long c=r.socket_channel.write(bba,0,bba.length);//?
-			if(c==0)synchronized(r){
-				r.waiting_write(true);
-				r.selection_key.interestOps(SelectionKey.OP_WRITE);
-				r.selection_key.selector().wakeup();//?? racing
+			if(c==0) {
+				synchronized(r){
+					r.waiting_write(true);
+					r.selection_key.interestOps(SelectionKey.OP_WRITE);
+					r.selection_key.selector().wakeup();//?? racing
 					/*;;*/try{r.wait();}catch(final InterruptedException ok){}
-				r.waiting_write(false);
+					r.waiting_write(false);
+				}
 			}
-			remaining-=c;thdwatch.output+=c;
+			remaining-=c;
+			thdwatch.output+=c;
 		}
 	}
 	public void flush()throws IOException{

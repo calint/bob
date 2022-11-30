@@ -33,7 +33,7 @@ final class thdreq extends Thread{
 		if(r.is_sock()){r.sock_thread_run();return;}
 		thdwatch.pages++;
 		if(r.is_waiting_run_page())r.run_page();
-		else if(r.is_waiting_run_page_content())r.run_page_content();
+//		else if(r.is_waiting_run_page_content())r.run_page_content();
 		else throw new IllegalStateException();
 		if(r.is_sock())return;
 		if(r.is_transfer()){r.selection_key.interestOps(SelectionKey.OP_WRITE);r.selection_key.selector().wakeup();return;}

@@ -52,14 +52,14 @@ public final class req{
 				// state might have changed after parse_header_name()->do_after_header()
 				if(state==state_transfer_buffers||state==state_transfer_file)
 					return b.op.write;
-				if(state==state_waiting_run_page||state==state_waiting_run_page_content){
+				if(state==state_waiting_run_page){
 					b.thread(this);
 					return b.op.noop;
 				}
 				break;
 			case state_header_value:parse_header_value();break;
 			case state_content_read:parse_content_read();
-				if(state==state_waiting_run_page_content){
+				if(state==state_waiting_run_page){
 					b.thread(this);
 					return b.op.noop;
 				}
@@ -74,12 +74,12 @@ public final class req{
 		final int ba_pos_prev=ba_pos;
 		while(ba_rem!=0){
 			final byte b=ba[ba_pos++];ba_rem--;
-			if(b==' '){state=state_uri;sb_path.setLength(0);urilen=0;break;}
+			if(b==' '){state=state_uri;sb_path.setLength(0);uri_len=0;break;}
 		}
 		methodlen+=(ba_pos-ba_pos_prev);
 		if(methodlen>abuse_method_len){close();throw new RuntimeException("abusemethodlen "+methodlen);}
 	}
-	private int urilen;
+	private int uri_len;
 	public static @conf int abuse_uri_len=512;
 	private void parse_uri(){
 		final int ba_pos_prev=ba_pos;
@@ -89,9 +89,9 @@ public final class req{
 			if(b=='\n'){do_after_prot();break;}// ie: '. index.html\n' //todo allow white space in request line
 			sb_path.append((char)b);
 		}
-		urilen+=(ba_pos-ba_pos_prev);
-		if(urilen>abuse_uri_len)
-			{close();throw new RuntimeException("abuseurilen "+urilen);}
+		uri_len+=(ba_pos-ba_pos_prev);
+		if(uri_len>abuse_uri_len)
+			{close();throw new RuntimeException("abuseurilen "+uri_len);}
 	}
 	private int protlen;
 	public static @conf int abuse_prot_len=11;
@@ -110,39 +110,39 @@ public final class req{
 	}
 	private void do_after_prot(){
 		thdwatch.reqs++;
-		final String uriencoded=sb_path.toString().trim();
-		final int i=uriencoded.indexOf('?');
+		final String uri_encoded=sb_path.toString().trim();
+		final int i=uri_encoded.indexOf('?');
 		if(i==-1){
-			path_s=b.urldecode(uriencoded);
+			path_s=b.urldecode(uri_encoded);
 			query_s="";
 		}else{
-			path_s=b.urldecode(uriencoded.substring(0,i));
-			query_s=uriencoded.substring(i+1);
+			path_s=b.urldecode(uri_encoded.substring(0,i));
+			query_s=uri_encoded.substring(i+1);
 		}
 		headers.clear();
 		// retrieve session at every request in case load balancer reuses an open connection for requests from a different client
 		// set sesid and session to null
 		session_id=null;
 		session_id_set=false; // ? setting this might not be necessary
-		headernamelen=headerscount=0;
+		header_name_len=headers_count=0;
 		state=state_header_name;
 	}
-	private int headernamelen;
+	private int header_name_len;
 	public static @conf int abuse_header_name_len=32;
 	private void parse_header_name()throws Throwable{
 		final int ba_pos_prev=ba_pos;
 		while(ba_rem!=0){
 			final byte b=ba[ba_pos++];ba_rem--;
-			if(b==':'){state=state_header_value;headervaluelen=0;break;}
+			if(b==':'){state=state_header_value;header_value_length=0;break;}
 			else if(b=='\n'){do_after_header();return;}
 			else{sb_header_name.append((char)b);}
 		}
-		headernamelen+=(ba_pos-ba_pos_prev);
-		if(headernamelen>abuse_header_name_len){close();throw new RuntimeException("abuseheadernamelen "+headernamelen);}
+		header_name_len+=(ba_pos-ba_pos_prev);
+		if(header_name_len>abuse_header_name_len){close();throw new RuntimeException("abuseheadernamelen "+header_name_len);}
 	}
-	private @conf int headervaluelen;
+	private @conf int header_value_length;
 	public static @conf int abuse_header_value_len=256;
-	private int headerscount;
+	private int headers_count;
 	public static @conf int abuse_header_count=32;
 	
 	private void parse_header_value(){
@@ -151,21 +151,21 @@ public final class req{
 			final byte b=ba[ba_pos++];ba_rem--;
 			if(b=='\n'){
 				headers.put(sb_header_name.toString().trim().toLowerCase(),sb_header_value.toString().trim());
-				headerscount++;
-				if(headerscount>abuse_header_count){
+				headers_count++;
+				if(headers_count>abuse_header_count){
 					close();
-					throw new RuntimeException("abuseheaderscount "+headerscount);
+					throw new RuntimeException("abuseheaderscount "+headers_count);
 				}
 				sb_header_name.setLength(0);
 				sb_header_value.setLength(0);
-				headernamelen=0;
+				header_name_len=0;
 				state=state_header_name;
 				break;
 			}
 			sb_header_value.append((char)b);
 		}
-		headervaluelen+=(ba_pos-ba_pos_prev);
-		if(headervaluelen>abuse_header_value_len){close();throw new RuntimeException("abuseheadervaluelen "+headervaluelen);}
+		header_value_length+=(ba_pos-ba_pos_prev);
+		if(header_value_length>abuse_header_value_len){close();throw new RuntimeException("abuseheadervaluelen "+header_value_length);}
 	}
 	public static @conf long abuse_upload_len=16*b.G;
 	public static @conf long abuse_content_len=1*b.M;
@@ -181,8 +181,12 @@ public final class req{
 //		}
 		final String ka=headers.get(hk_connection);
 		if(ka!=null)connection_keep_alive=hv_keep_alive.equalsIgnoreCase(ka);
+		
 		content.clear();
+		content_bb=null;
+		content_remaining_to_read=0;
 		content_type=headers.get(hk_content_type);
+		
 		if(content_type!=null){
 			if(content_type.startsWith("dir;")||content_type.equals("dir")){
 				if(!b.enable_upload)throw new RuntimeException("uploadsdisabled");
@@ -203,8 +207,8 @@ public final class req{
 //				System.out.println(path_s);
 				if(!set_session_id_from_cookie())throw new RuntimeException("nocookie at create file from upload. path:"+sb_path);
 //				final String contentLength_s=hdrs.get(hk_content_length);
-				content_length=Long.parseLong(headers.get(hk_content_length));
-				if(content_length>abuse_upload_len){close();throw new RuntimeException("abuseuploadlen "+content_length);}
+				content_remaining_to_read=Long.parseLong(headers.get(hk_content_length));
+				if(content_remaining_to_read>abuse_upload_len){close();throw new RuntimeException("abuseuploadlen "+content_remaining_to_read);}
 				final String[]q=content_type.split(";");
 				upload_lastmod_s=q.length>1?q[1]:new SimpleDateFormat("yyyy-MM-dd--HH:mm:ss.SSS").format(new Date());
 	//				final String time=q[1];
@@ -222,9 +226,9 @@ public final class req{
 		final String contentLength_s=headers.get(hk_content_length);
 		if(contentLength_s!=null){
 			if(!set_session_id_from_cookie())throw new RuntimeException("nocookie in request with content. path:"+sb_path);
-			content_length=Long.parseLong(contentLength_s);
-			if(content_length>abuse_content_len){close();throw new RuntimeException("abusecontentlen "+content_length);}
-			bb_content=ByteBuffer.allocate((int)content_length);
+			content_remaining_to_read=Long.parseLong(contentLength_s);
+			if(content_remaining_to_read>abuse_content_len){close();throw new RuntimeException("abusecontentlen "+content_remaining_to_read);}
+			content_bb=ByteBuffer.allocate((int)content_remaining_to_read);
 			state=state_content_read;
 			parse_content_read();
 			return;
@@ -487,12 +491,6 @@ public final class req{
 	}
 	
 	private int send_packet(final ByteBuffer[]bba,final int n)throws Throwable{
-		if(b.print_reply_headers){
-			for(int i=0;i<n;i++){
-				final ByteBuffer bb=bba[i];
-				b.p(new String(bb.array(),bb.position(),bb.limit()));
-			}
-		}
 		long tosend=0;
 		for(int i=0;i<n;i++)tosend+=bba[i].remaining();
 		final long c=socket_channel.write(bba,0,n);//? while
@@ -561,31 +559,37 @@ public final class req{
 	}
 	
 	private void parse_content_read(){
-		final int c=(int)(ba_rem>content_length?content_length:ba_rem);
-		bb_content.put(ba,ba_pos,c);
-		content_length-=c;ba_pos+=c;ba_rem-=c;
-		if(content_length==0){
-			bb_content.flip();
-			state=state_waiting_run_page_content;
+		// content might span over several buffer reads
+		final int c=(int)(ba_rem>content_remaining_to_read?content_remaining_to_read:ba_rem);
+		content_bb.put(ba,ba_pos,c);
+		content_remaining_to_read-=c;
+		ba_pos+=c;
+		ba_rem-=c;
+		if(content_remaining_to_read==0){
+			content_bb.flip();
+			state=state_waiting_run_page;
 		}
 	}
 	
 	private void parse_content_upload()throws Throwable{
 //		System.out.println(path_s+"   content upload");
-		final long diff=content_length-ba_rem;
+		final long diff=content_remaining_to_read-ba_rem;
 		final int c;
 		if(diff<0){
 			final int lim=bb.limit();
-			bb.limit(ba_pos+(int)content_length);
+			bb.limit(ba_pos+(int)content_remaining_to_read);
 			c=upload_channel.write(bb);
 			bb.limit(lim);
 		}else{
 			c=upload_channel.write(bb);
 		}
-		content_length-=c;ba_pos+=c;ba_rem-=c;thdwatch.input+=c;
-		if(content_length<0)//?
+		content_remaining_to_read-=c;
+		ba_pos+=c;
+		ba_rem-=c;
+		thdwatch.input+=c;
+		if(content_remaining_to_read<0)//?
 			throw new RuntimeException();
-		if(content_length==0){
+		if(content_remaining_to_read==0){
 			upload_channel.close();
 			final SimpleDateFormat df=new SimpleDateFormat("yyyy-MM-dd--HH:mm:ss.SSS");
 			try{upload_path.lastmod(df.parse(upload_lastmod_s).getTime());}
@@ -628,24 +632,9 @@ public final class req{
 	/** Called from the request thread. */
 	void run_page()throws Throwable{
 		state=state_run_page;
-		run_page_do();
-		if(state==state_sock){thdwatch.socks++;return;}
-		if(state==state_run_page)state=state_nextreq;
-	}
-
-	
-	/** Called from the request thread when request has received content. */
-	void run_page_content()throws Throwable{
-		state=state_run_page_content;
-		if(!content_type.startsWith(text_plain))throw new RuntimeException("postedcontent only "+text_plain+" allowed");
-		populate_content_map_from_buffer();
-		run_page_do();
-		if(state==state_run_page_content)state=state_nextreq;
-		thdwatch.posts++;
-	}
-
-	/** Called from run_page() and run_page_content() to process the uri and content. */
-	private void run_page_do()throws Throwable{
+		if(content_bb!=null)
+			populate_content_map_from_buffer();
+		
 		if(!set_session_id_from_cookie()){
 			session_id=make_new_session_id();
 			session_id_set=true;
@@ -654,7 +643,7 @@ public final class req{
 		}
 		final DbTransaction tn=Db.initCurrentTransaction();
 		try{
-			run_page_do_transaction(tn);
+			run_page_do(tn);
 		}catch(Throwable t){
 			tn.rollback();
 			while(t.getCause()!=null)t=t.getCause();
@@ -663,10 +652,17 @@ public final class req{
 		}finally{
 			Db.deinitCurrentTransaction();
 		}
+		
+		if(state==state_sock){
+			thdwatch.socks++;
+			return;
+		}
+
+		state=state_nextreq;
 	}
 
-	/** Called from run_page_do().*/
-	private void run_page_do_transaction(final DbTransaction tn)throws Throwable{
+	/** Called from run_page().*/
+	private void run_page_do(final DbTransaction tn)throws Throwable{
 		final sessionpath dbo_root_elem=get_session_path(path_s);
 		a root_elem=dbo_root_elem.getElem();
 		if(root_elem==null){// no root element, try to make new instance
@@ -747,7 +743,7 @@ public final class req{
 				target_elem=target_elem.chld(path[n]);
 				if(target_elem==null)break;
 			}
-			final oschunked os=reply_chunked(h_http200,text_html_utf8,null);
+			final oschunked os=reply_chunked(h_http200,text_html_utf8);
 			final xwriter x=new xwriter(os);
 			if(target_elem==null){
 				x.xalert("element not found:\n"+target_elem_id);
@@ -770,7 +766,7 @@ public final class req{
 			return;
 		}
 		final boolean is_binary_producing_elem=root_elem instanceof bin;
-		final oschunked os=reply_chunked(h_http200,is_binary_producing_elem?((bin)root_elem).contenttype():text_html_utf8,null);
+		final oschunked os=reply_chunked(h_http200,is_binary_producing_elem?((bin)root_elem).contenttype():text_html_utf8);
 		final xwriter x=new xwriter(os);
 		if(!is_binary_producing_elem){
 			os.write(ba_page_header_pre_title);
@@ -789,7 +785,7 @@ public final class req{
 	}
 	// threaded done
 	
-	private oschunked reply_chunked(final byte[]hdr,final String contentType,final String lastmod)throws Throwable{
+	private oschunked reply_chunked(final byte[]hdr,final String contentType)throws Throwable{
 		final ByteBuffer[]bb_reply=new ByteBuffer[11];
 		int bbi=0;
 		bb_reply[bbi++]=ByteBuffer.wrap(hdr);
@@ -805,18 +801,15 @@ public final class req{
 			bb_reply[bbi++]=ByteBuffer.wrap(h_content_type);
 			bb_reply[bbi++]=ByteBuffer.wrap(contentType.getBytes());
 		}
-		if(lastmod!=null){
-			bb_reply[bbi++]=ByteBuffer.wrap(h_last_modified);
-			bb_reply[bbi++]=ByteBuffer.wrap(lastmod.getBytes());
-		}
 		bb_reply[bbi++]=ByteBuffer.wrap(hkp_transfer_encoding_chunked);
 		bb_reply[bbi++]=ByteBuffer.wrap(ba_crlf2);
 		thdwatch.output+=send_packet(bb_reply,bbi);//? sends2packs
 		return new oschunked(this,b.chunk_B);     //?
 	}
 	
-	private void populate_content_map_from_buffer()throws IOException{
-		byte[]ba=bb_content.array();
+	private void populate_content_map_from_buffer()throws Throwable{
+		if(!content_type.startsWith(text_plain))throw new RuntimeException("postedcontent only "+text_plain+" allowed");
+		byte[]ba=content_bb.array();
 		int i=0;
 		String name="";
 		int s=0;
@@ -842,7 +835,6 @@ public final class req{
 			}
 			k++;
 		}
-		bb_content=null;
 	}
 	
 	// socks
@@ -881,8 +873,8 @@ public final class req{
 	boolean is_connection_keepalive(){return connection_keep_alive;}
 	boolean is_transfer(){return state==state_transfer_file||state==state_transfer_buffers;}
 	boolean is_waiting_run_page(){return state==state_waiting_run_page;}
-	boolean is_waiting_run_page_content(){return state==state_waiting_run_page_content;}
-	boolean is_waiting_run(){return is_waiting_run_page()||is_waiting_run_page_content();}
+//	boolean is_waiting_run_page_content(){return state==state_waiting_run_page_content;}
+//	boolean is_waiting_run(){return is_waiting_run_page()||is_waiting_run_page_content();}
 	void close(){
 		try{if(is_sock())sck.onconnectionlost();}catch(final Throwable t){b.log(t);}
 		try{socket_channel.close();}catch(final Throwable t){b.log(t);}
@@ -896,7 +888,7 @@ public final class req{
 	public String path(){return path_s;}
 	public String query(){return query_s;}
 //	public session session(){return ses;}
-	public String toString(){return new String(ba,ba_pos,ba_rem)+(bb_content==null?"":new String(bb_content.slice().array()));}
+	public String toString(){return new String(ba,ba_pos,ba_rem)+(content_bb==null?"":new String(content_bb.slice().array()));}
 	public Map<String,String>headers(){return headers;}
 	
 	
@@ -924,7 +916,7 @@ public final class req{
 
 	private int state=state_method;
 	private final ByteBuffer bb=ByteBuffer.allocate(b.reqinbuf_B);
-	private ByteBuffer bb_content;
+	private ByteBuffer content_bb;
 	private byte[]ba;
 	private int ba_rem;
 	private int ba_pos;
@@ -939,8 +931,8 @@ public final class req{
 	private String session_id;
 	private boolean session_id_set;
 	private String content_type;
-	private long content_length;
-	private final Map<String,String>content=new HashMap<String,String>();
+	private long content_remaining_to_read;
+	private final HashMap<String,String>content=new HashMap<String,String>();
 	private ByteBuffer[]transfer_buffers;
 	private long transfer_buffers_remaining;
 	private FileChannel transfer_file_channel;
@@ -1006,9 +998,7 @@ public final class req{
 	private final static int state_transfer_file=7;
 	private final static int state_transfer_buffers=8;
 	private final static int state_waiting_run_page=9;
-	private final static int state_waiting_run_page_content=10;
 	private final static int state_run_page=11;
-	private final static int state_run_page_content=12;
 	private final static int state_content_upload=13;
 	private final static int state_sock=15;
 	private final static String text_html_utf8="text/html;charset=utf-8";

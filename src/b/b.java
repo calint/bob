@@ -222,7 +222,7 @@ final public class b{
 			read(r);//?? bug stackrain
 			return;
 		}
-		if(r.is_waiting_run())
+		if(r.is_waiting_run_page())
 			thread(r);
 		throw new Error();
 	}
