@@ -3,7 +3,7 @@ package b;
 public interface cacheable{
 	String filetype();
 	String contenttype();
-	String lastmod();
+	String etag();
 	long lastmodupdms();
 	boolean cacheforeachuser();
 }

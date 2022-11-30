@@ -285,7 +285,7 @@ public final class req{
 		final long lastmod_l=pth.lastmod();
 		final String lastmod_s=b.tolastmodstr(lastmod_l);
 		final String ifModSince=hdrs.get(hk_if_modified_since);
-		if(ifModSince!=null&&ifModSince.equals(lastmod_s)){
+		if(ifModSince!=null&&ifModSince.equals(lastmod_s)){ // ? check if ifModSince is after or equal to lastmod
 			reply(h_http304,null,null,null);
 			return true;
 		}
@@ -373,8 +373,13 @@ public final class req{
 	}
 	private void reply(final chdresp c)throws Throwable{
 		thdwatch.cachef++;
-		final String ifModSince=hdrs.get(hk_if_modified_since);
-		if(ifModSince!=null&&c.ifnotmodsince(ifModSince)){
+//		final String ifModSince=hdrs.get(hk_if_modified_since);
+//		if(ifModSince!=null&&c.ifnotmodsince(ifModSince)){
+//			reply(h_http304,null,null,null);
+//			return;
+//		}
+		final String ifNoneMatch=hdrs.get(hk_if_none_match);
+		if(ifNoneMatch!=null&&c.ifNoneMatch(ifNoneMatch)){
 			reply(h_http304,null,null,null);
 			return;
 		}
@@ -621,32 +626,32 @@ public final class req{
 		if(state==state_run_page)state=state_nextreq;
 	}
 	
-	private dbsession get_session(){
+	private session get_session(){
 		final DbTransaction tn=Db.currentTransaction();
-		final List<DbObject>lsses=tn.get(dbsession.class,new Query(dbsession.sessionId,Query.EQ,sesid),null,null);
-		final dbsession dbses;
+		final List<DbObject>lsses=tn.get(session.class,new Query(session.sessionId,Query.EQ,sesid),null,null);
+		final session dbses;
 		if(lsses.isEmpty()){
-			dbses=(dbsession)tn.create(dbsession.class);
+			dbses=(session)tn.create(session.class);
 			dbses.setSessionId(sesid);
 		}else {
 			if(lsses.size()>1) {
 				b.log(new RuntimeException("found more than one dbsession for id "+sesid));
 			}
-			dbses=(dbsession)lsses.get(0);
+			dbses=(session)lsses.get(0);
 		}
 		return dbses;
 	}
 
-	private dbpathelem get_session_path(final String p){
+	private sessionpath get_session_path(final String p){
 		final DbTransaction tn=Db.currentTransaction();
-		final List<DbObject>ls=tn.get(dbpathelem.class,new Query(dbsession.sessionId,Query.EQ,sesid).and(dbsession.paths).and(dbpathelem.path,Query.EQ,p),null,null);
+		final List<DbObject>ls=tn.get(sessionpath.class,new Query(session.sessionId,Query.EQ,sesid).and(session.paths).and(sessionpath.path,Query.EQ,p),null,null);
 		if(ls.isEmpty()){
 			return get_session().getPath(p);
 		}else {
 			if(ls.size()>1) {
 				b.log(new RuntimeException("found "+ls.size()+" paths for session "+sesid+" path "+p));
 			}
-			return (dbpathelem)ls.get(0);
+			return (sessionpath)ls.get(0);
 		}
 	}
 
@@ -670,7 +675,7 @@ public final class req{
 	}
 	// threaded done
 	private void resp_page_do(final DbTransaction tn)throws Throwable{
-		final dbpathelem rootElemDbo=get_session_path(path_s);
+		final sessionpath rootElemDbo=get_session_path(path_s);
 		a rootElem=rootElemDbo.getElem();
 		if(rootElem==null){
 			String cn=path_s.replace('/','.');
@@ -819,16 +824,22 @@ public final class req{
 		return new oschunked(this,b.chunk_B);     //?
 	}
 	private void reply(final cacheable cw)throws Throwable{
-		final String ifmodsince=hdrs.get(hk_if_modified_since);
-		final String lastmod=cw.lastmod();
-		if(ifmodsince!=null&&ifmodsince.equals(lastmod)){reply(h_http304,null,null,null);return;}
+//		final String ifmodsince=hdrs.get(hk_if_modified_since);
+//		final String lastmod=cw.lastmod();
+//		if(ifmodsince!=null&&ifmodsince.equals(lastmod)){reply(h_http304,null,null,null);return;}
+		final String ifNoneMatch=hdrs.get(hk_if_none_match);
+		if(ifNoneMatch!=null&&ifNoneMatch.equals(cw.etag())){
+			reply(h_http304,null,null,null);
+			return;
+		}
 		final long t=System.currentTimeMillis();
 		String key=sb_path.toString();
 //		if(cw.cacheforeachuser())key=req.get().session().id()+"~"+key;// why not this request?
 		if(cw.cacheforeachuser())key=sesid+"~"+key;// why not this request?
 		chdresp c=cacheu.get(key);
 		if(c==null){c=new chdresp(cw,key);cacheu.put(key,c);}
-		c.validate(t,ifmodsince);
+//		c.validate(t,ifmodsince);
+		c.validate(t,ifNoneMatch);
 		reply(c);
 	}
 	void run_page_content()throws Throwable{
@@ -974,6 +985,8 @@ public final class req{
 	final static byte[]h_http200="HTTP/1.1 200 OK".getBytes();
 	final static byte[]h_content_length="\r\nContent-Length: ".getBytes();
 	final static byte[]h_last_modified="\r\nLast-Modified: ".getBytes();
+	final static byte[]h_etag="\r\nETag: ".getBytes();
+//	final static byte[]h_etag_after="\"".getBytes();
 	final static byte[]h_content_type="\r\nContent-Type: ".getBytes();
 	final static byte[]hkp_connection_keep_alive="\r\nConnection: Keep-Alive".getBytes();
 	final static byte[]ba_crlf2="\r\n\r\n".getBytes();
@@ -995,6 +1008,7 @@ public final class req{
 	private final static String hk_content_type="content-type";
 	private final static String hk_cookie="cookie";
 	private final static String hk_if_modified_since="if-modified-since";
+	private final static String hk_if_none_match="if-none-match";
 	private final static String hv_keep_alive="keep-alive";
 	private final static String s_bytes_="bytes ";
 	private final static String s_eq="=";

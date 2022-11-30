@@ -6,11 +6,13 @@ import java.io.ObjectInputStream;
 import db.DbObject;
 import db.FldSerializable;
 import db.FldStr;
+import db.Index;
 
-public class dbpathelem extends DbObject {
+public class sessionpath extends DbObject {
 	public final static FldStr path=new FldStr(255,"");
 	public final static FldSerializable elem = new FldSerializable();
-
+	public final static Index ixPath=new Index(path);
+	
 	public String getPath() {
 		return getStr(path);
 	}

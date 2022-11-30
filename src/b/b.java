@@ -31,7 +31,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Set;
 import java.util.TimeZone;
 
 import db.Db;
@@ -131,8 +130,8 @@ final public class b{
 
 		// initiate db
 		Db.initInstance();
-		Db.instance().register(dbsession.class);
-		Db.instance().register(dbpathelem.class);
+		Db.instance().register(session.class);
+		Db.instance().register(sessionpath.class);
 		// initiate application
 		if(b.bapp_class!=null){
 			b.bapp=(bapp)Class.forName(b.bapp_class).getConstructor().newInstance();
@@ -346,7 +345,7 @@ final public class b{
 		ps.println("            input: "+(thdwatch.input>>10)+" KB");
 		ps.println("           output: "+(thdwatch.output>>10)+" KB");
 		ps.println("       throughput: "+throughput_qty+throughput_unit);
-		ps.println("         sessions: "+session.all().size());
+//		ps.println("         sessions: "+session.all().size());
 		ps.println("        downloads: "+new File(root_dir).getCanonicalPath());
 		ps.println("     sessions dir: "+new File(root_dir,sessions_dir).getCanonicalPath());
 		ps.println("     cached files: "+(req.cachef_size()>>10)+" KB");
@@ -374,7 +373,7 @@ final public class b{
 	public static String sessionhref(final String sessionid){return sessions_dir+"/"+sessionid+"/";}
 	public static boolean isempty(final String s){return s==null||s.length()==0;}
 	public static String isempty(final String o,final String def){return isempty(o)?def:o;}
-	public static Set<String>sessionsids(){return Collections.unmodifiableSet(session.all().keySet());}//?
+//	public static Set<String>sessionsids(){return Collections.unmodifiableSet(session.all().keySet());}//?
 	public static long get_session_bits_for_sessionid(final String sesid){// ? dubious function
 		//? file(system){sha1(sessionid),bits}
 		if("".equals(sesid))return 0;

@@ -6,7 +6,8 @@ final class chdresp{
 	private path path;
 	private cacheable cacheable;
 	private long lastModified;
-	private String lastModified_s;
+//	private String lastModified_s;
+	private String etag;
 	private long ts;
 //	private long dt;
 	private ByteBuffer bb;
@@ -26,12 +27,14 @@ final class chdresp{
 		b.cp(is,os);
 		final byte[]ba=os.toByteArray();
 		content_length_in_bytes=ba.length;
-		lastModified=b.resources_lastmod;
 		bb=ByteBuffer.allocateDirect(hdrlencap+content_length_in_bytes);
 		bb.put(req.h_http200);
 		bb.put(req.h_content_length).put(Integer.toString(content_length_in_bytes).getBytes());
-		lastModified_s=b.tolastmodstr(lastModified);
-		bb.put(req.h_last_modified).put(lastModified_s.getBytes());
+		lastModified=b.resources_lastmod;
+		etag="\""+lastModified+"\"";
+//		lastModified_s=b.tolastmodstr(lastModified);
+//		bb.put(req.h_last_modified).put(lastModified_s.getBytes());
+		bb.put(req.h_etag).put(etag.getBytes());
 		bb.put(req.hkp_connection_keep_alive);
 		additional_headers_insertion_position=bb.position();
 		if(contentType!=null) {
@@ -43,23 +46,30 @@ final class chdresp{
 		bb.put(ba);
 		bb.flip();
 	}
-	boolean ifnotmodsince(final String ifModSince){
-		return ifModSince.equals(lastModified_s); // ? check lastModified before ifModSince
+//	boolean ifnotmodsince(final String ifModSince){
+//		return ifModSince.equals(lastModified_s); // ? check lastModified before ifModSince
+//	}
+	boolean ifNoneMatch(final String ifNoneMatch) {
+//		b.pl("*"+ifNoneMatch+"*");
+//		b.pl("*"+etag+"*");
+		return ifNoneMatch.equals(etag);
 	}
 	ByteBuffer byteBuffer(){return bb;}
 	int additional_headers_insertion_position(){return additional_headers_insertion_position;}
 	int data_position(){return data_position;}
 	int content_length_in_bytes(){return content_length_in_bytes;}
 	String contentType(){return contentType;}
-	String lastModified(){return lastModified_s;}
-	boolean validate(final long now,final String lm)throws Throwable{
-		if(isresource)return true;
+//	String lastModified(){return lastModified_s;}
+	boolean validate(final long now,final String clientetag)throws Throwable{
+		if(isresource)
+			return true;
 		if(cacheable!=null){
-			validatecacheable(now,lm);
+			validatecacheable(now,clientetag);
 			return true;
 		}
 		
-		if(now-ts<b.cache_files_validate_dt)return true;
+		if(now-ts<b.cache_files_validate_dt) // only check once every cache_files_validate_dt ms
+			return true;
 		ts=now;
 		if(!path.exists())return false;
 		final long path_lastModified=path.lastmod();
@@ -70,8 +80,10 @@ final class chdresp{
 		bb.put(req.h_content_length).put(Long.toString(path_len).getBytes());
 		if(contentType!=null) // todo set content type depending on suffix
 			bb.put(req.h_content_type).put(contentType.getBytes());
-		lastModified_s=b.tolastmodstr(path_lastModified);
-		bb.put(req.h_last_modified).put(lastModified_s.getBytes());
+//		lastModified_s=b.tolastmodstr(path_lastModified);
+//		bb.put(req.h_last_modified).put(lastModified_s.getBytes());
+		etag="\""+path_lastModified+"\"";
+		bb.put(req.h_etag).put(etag.getBytes());
 		bb.put(req.hkp_connection_keep_alive);
 		additional_headers_insertion_position=bb.position();
 		bb.put(req.ba_crlf2);
@@ -82,14 +94,17 @@ final class chdresp{
 		lastModified=path_lastModified;
 		return true;
 	}
-	private void validatecacheable(final long now,final String lm)throws Throwable{
+	private void validatecacheable(final long now,final String clientetag)throws Throwable{
 		if(isvalid(now))
 			return;
 		ts=now;
 		contentType=cacheable.contenttype();
-		lastModified_s=cacheable.lastmod();
+//		lastModified_s=cacheable.lastmod();
 //		if(lastModified_s==lm)return;
-		if(lastModified_s!=null&&lastModified_s.equals(lm))return;
+//		if(lastModified_s!=null&&lastModified_s.equals(lm))return;
+		etag=cacheable.etag();
+		if(etag!=null&&etag.equals(clientetag))
+			return;
 		final ByteArrayOutputStream baos=new ByteArrayOutputStream(b.io_buf_B);
 		((a)cacheable).to(new xwriter(baos));
 		final byte[]ba=baos.toByteArray();
@@ -98,7 +113,9 @@ final class chdresp{
 		bb=ByteBuffer.allocate(256+ba.length);//? calcsize
 		bb.put(req.h_http200);
 		bb.put(req.h_content_length).put(Long.toString(baos.size()).getBytes());
-		if(lastModified_s!=null)bb.put(req.h_last_modified).put(lastModified_s.getBytes());
+//		if(lastModified_s!=null)
+//			bb.put(req.h_last_modified).put(lastModified_s.getBytes());
+		bb.put(req.h_etag).put(etag.getBytes());
 		if(contentType!=null) {
 			bb.put(req.h_content_type).put(contentType.getBytes());
 		}
