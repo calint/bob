@@ -228,7 +228,7 @@ final public class b{
 	}
 	static void thread(final req r){
 		r.selkey.interestOps(0);//? must?
-		if(!b.thread_pool||thdreq.all.size()<thread_pool_size){new thdreq(r);return;}
+		if(!b.thread_pool||thdreq.all_request_threads.size()<thread_pool_size){new thdreq(r);return;}
 		synchronized(pending_req){pending_req.addLast(r);pending_req.notify();}
 	}
 	public static int cp(final InputStream in,final OutputStream out) throws IOException{//?. sts
@@ -275,7 +275,7 @@ final public class b{
 	private static void ensure_path_ok(final String path) throws Error{
 		if(path.contains(".."))throw new Error("illegalpath "+path+": containing '..'");
 	}
-	static LinkedList<req>pendingreqls(){return pending_req;}
+	static LinkedList<req>pending_requests_list(){return pending_req;}
 
 	private static long stats_last_t_ms;
 	private static long stats_last_io_B;
@@ -333,7 +333,7 @@ final public class b{
 		final long m2=rt.freeMemory();
 		ps.println("         ram used: "+((m1-m2)>>10)+" KB");
 		ps.println("         ram free: "+(m2>>10)+" KB");
-		ps.println("          threads: "+thdreq.all.size());
+		ps.println("          threads: "+thdreq.all_request_threads.size());
 		ps.println("            cores: "+Runtime.getRuntime().availableProcessors());
 //		ps.println("            cloud: "+cloud_bees);
 		ps.println("               id: "+id);

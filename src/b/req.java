@@ -124,8 +124,8 @@ public final class req{
 		
 		// retrieve session at every request in case load balancer reuses an open connection for requests from a different client
 		// set sesid and session to null
-		sesid=null;
-		sesid_set=false; // ? setting this might not be necessary
+		session_id=null;
+		session_id_set=false; // ? setting this might not be necessary
 		headernamelen=headerscount=0;
 		state=state_header_name;
 	}
@@ -184,14 +184,14 @@ public final class req{
 		final String ka=hdrs.get(hk_connection);
 		if(ka!=null)connection_keep_alive=hv_keep_alive.equalsIgnoreCase(ka);
 		content.clear();
-		contentType=hdrs.get(hk_content_type);
-		if(contentType!=null){
-			if(contentType.startsWith("dir;")||contentType.equals("dir")){
+		content_type=hdrs.get(hk_content_type);
+		if(content_type!=null){
+			if(content_type.startsWith("dir;")||content_type.equals("dir")){
 				if(!b.enable_upload)throw new RuntimeException("uploadsdisabled");
 				if(!get_session_id_from_cookie())throw new RuntimeException("nocookie at create dir. path:"+sb_path);
-				final String[]q=contentType.split(";");
+				final String[]q=content_type.split(";");
 				final String lastmod_s=q[1];
-				final path p=b.path(b.sessions_dir).get(sesid).get(path_s);
+				final path p=b.path(b.sessions_dir).get(session_id).get(path_s);
 				if(!p.exists())p.mkdirs();
 				if(!p.isdir())throw new RuntimeException("isnotdir: "+p);
 				final SimpleDateFormat df=new SimpleDateFormat("yyyy-MM-dd--HH:mm:ss.SSS");
@@ -200,20 +200,20 @@ public final class req{
 				state=state_nextreq;
 				return;
 			}
-			if(contentType.startsWith("file;")||contentType.equals("file")){
+			if(content_type.startsWith("file;")||content_type.equals("file")){
 				if(!b.enable_upload)throw new RuntimeException("uploadsdisabled");
 //				System.out.println(path_s);
 				if(!get_session_id_from_cookie())throw new RuntimeException("nocookie at create file from upload. path:"+sb_path);
 //				final String contentLength_s=hdrs.get(hk_content_length);
-				contentLength=Long.parseLong(hdrs.get(hk_content_length));
-				if(contentLength>abuse_upload_len){close();throw new RuntimeException("abuseuploadlen "+contentLength);}
-				final String[]q=contentType.split(";");
+				content_length=Long.parseLong(hdrs.get(hk_content_length));
+				if(content_length>abuse_upload_len){close();throw new RuntimeException("abuseuploadlen "+content_length);}
+				final String[]q=content_type.split(";");
 				upload_lastmod_s=q.length>1?q[1]:new SimpleDateFormat("yyyy-MM-dd--HH:mm:ss.SSS").format(new Date());
 	//				final String time=q[1];
 	//				final String size=q[2];
 	//				final String md5=q[3];
 	//				final String range=q[4];
-				try{upload_path=b.path(b.sessions_dir).get(sesid).get(path_s);}catch(final Throwable t){close();throw t;}
+				try{upload_path=b.path(b.sessions_dir).get(session_id).get(path_s);}catch(final Throwable t){close();throw t;}
 				upload_channel=upload_path.filechannel();
 				bb.position(ba_pos);
 				state=state_content_upload;parse_content_upload();
@@ -224,9 +224,9 @@ public final class req{
 		final String contentLength_s=hdrs.get(hk_content_length);
 		if(contentLength_s!=null){
 			if(!get_session_id_from_cookie())throw new RuntimeException("nocookie in request with content. path:"+sb_path);
-			contentLength=Long.parseLong(contentLength_s);
-			if(contentLength>abuse_content_len){close();throw new RuntimeException("abusecontentlen "+contentLength);}
-			bb_content=ByteBuffer.allocate((int)contentLength);
+			content_length=Long.parseLong(contentLength_s);
+			if(content_length>abuse_content_len){close();throw new RuntimeException("abusecontentlen "+content_length);}
+			bb_content=ByteBuffer.allocate((int)content_length);
 			state=state_content_read;parse_content_read();
 			return;
 		}
@@ -249,8 +249,8 @@ public final class req{
 		for(String cc:c1){
 			cc=cc.trim();
 			if(cc.startsWith("i=")){
-				sesid=cc.substring("i=".length());
-				sesid_set=false;
+				session_id=cc.substring("i=".length());
+				session_id_set=false;
 				return true;
 			}
 		}
@@ -300,11 +300,11 @@ public final class req{
 		bb[i++]=ByteBuffer.wrap(h_last_modified);
 		bb[i++]=ByteBuffer.wrap(lastmod_s.getBytes());
 		bb[i++]=ByteBuffer.wrap(hkp_accept_ranges_byte);
-		if(sesid_set){
+		if(session_id_set){
 			bb[i++]=ByteBuffer.wrap(hk_set_cookie);
-			bb[i++]=ByteBuffer.wrap(sesid.getBytes());
+			bb[i++]=ByteBuffer.wrap(session_id.getBytes());
 			bb[i++]=ByteBuffer.wrap(hkv_set_cookie_append);
-			sesid_set=false;
+			session_id_set=false;
 		}
 		if(connection_keep_alive)
 			bb[i++]=ByteBuffer.wrap(hkp_connection_keep_alive);
@@ -377,17 +377,17 @@ public final class req{
 				final String[]ft=from_to_in_bytes.split("-");
 				final int range_from_byte=Integer.parseInt(tostr(ft[0],"0"));
 				final int range_to_byte=Integer.parseInt(tostr(ft[1],"0"));
-				final ByteBuffer[]bba=new ByteBuffer[sesid_set?10:7];
+				final ByteBuffer[]bba=new ByteBuffer[session_id_set?10:7];
 				bba[i++]=ByteBuffer.wrap(h_http206);
 				bba[i++]=ByteBuffer.wrap(h_content_length);
 				bba[i++]=ByteBuffer.wrap(Integer.toString(1+range_to_byte-range_from_byte).getBytes());
 				bba[i++]=ByteBuffer.wrap(hk_content_range);
 				bba[i++]=ByteBuffer.wrap((s_bytes_+range_from_byte+s_minus+range_to_byte+s_slash+c.content_length_in_bytes()).getBytes());
-				if(sesid_set){
+				if(session_id_set){
 					bba[i++]=ByteBuffer.wrap(hk_set_cookie);
-					bba[i++]=ByteBuffer.wrap(sesid.getBytes());
+					bba[i++]=ByteBuffer.wrap(session_id.getBytes());
 					bba[i++]=ByteBuffer.wrap(hkv_set_cookie_append);
-					sesid_set=false;// set cookie
+					session_id_set=false;// set cookie
 				}
 				bba[i++]=ByteBuffer.wrap(ba_crlf2);
 				final int d=c.content_position();
@@ -396,26 +396,26 @@ public final class req{
 				return;
 			}
 		}
-		if(!sesid_set){// no cookie to set
+		if(!session_id_set){// no cookie to set
 			transferbuffers(new ByteBuffer[]{c.byte_buffer().slice()});
 			return;
 		}
 		// cookie to set
-		final ByteBuffer[]bba=new ByteBuffer[]{c.byte_buffer().slice(),ByteBuffer.wrap(hk_set_cookie),ByteBuffer.wrap(sesid.getBytes()),ByteBuffer.wrap(hkv_set_cookie_append),c.byte_buffer().slice()};
+		final ByteBuffer[]bba=new ByteBuffer[]{c.byte_buffer().slice(),ByteBuffer.wrap(hk_set_cookie),ByteBuffer.wrap(session_id.getBytes()),ByteBuffer.wrap(hkv_set_cookie_append),c.byte_buffer().slice()};
 		bba[0].limit(c.additional_headers_insertion_position()); // limit the first slice to the location where additional headers can be inserted
 		bba[4].position(c.additional_headers_insertion_position()); // position the buffer (same as bb[0]) to the start of the remaining data, which is additional_headers_insertion_position
 		transferbuffers(bba);
-		sesid_set=false;
+		session_id_set=false;
 	}
 	private void reply(final byte[]firstline,final byte[]lastMod,final byte[]contentType,final byte[]content)throws Throwable{
 		final ByteBuffer[]bb=new ByteBuffer[16];
 		int bi=0;
 		bb[bi++]=ByteBuffer.wrap(firstline);
-		if(sesid_set){
+		if(session_id_set){
 			bb[bi++]=ByteBuffer.wrap(hk_set_cookie);
-			bb[bi++]=ByteBuffer.wrap(sesid.getBytes());
+			bb[bi++]=ByteBuffer.wrap(session_id.getBytes());
 			bb[bi++]=ByteBuffer.wrap(hkv_set_cookie_append);
-			sesid_set=false;
+			session_id_set=false;
 		}
 		if(lastMod!=null){
 			bb[bi++]=ByteBuffer.wrap(h_last_modified);
@@ -576,30 +576,30 @@ public final class req{
 		return true;
 	}
 	private void parse_content_read(){
-		final int c=(int)(ba_rem>contentLength?contentLength:ba_rem);
+		final int c=(int)(ba_rem>content_length?content_length:ba_rem);
 		bb_content.put(ba,ba_pos,c);
-		contentLength-=c;ba_pos+=c;ba_rem-=c;
-		if(contentLength==0){
+		content_length-=c;ba_pos+=c;ba_rem-=c;
+		if(content_length==0){
 			bb_content.flip();
 			state=state_waiting_run_page_content;
 		}
 	}
 	private void parse_content_upload()throws Throwable{
 //		System.out.println(path_s+"   content upload");
-		final long diff=contentLength-ba_rem;
+		final long diff=content_length-ba_rem;
 		final int c;
 		if(diff<0){
 			final int lim=bb.limit();
-			bb.limit(ba_pos+(int)contentLength);
+			bb.limit(ba_pos+(int)content_length);
 			c=upload_channel.write(bb);
 			bb.limit(lim);
 		}else{
 			c=upload_channel.write(bb);
 		}
-		contentLength-=c;ba_pos+=c;ba_rem-=c;thdwatch.input+=c;
-		if(contentLength<0)//?
+		content_length-=c;ba_pos+=c;ba_rem-=c;thdwatch.input+=c;
+		if(content_length<0)//?
 			throw new RuntimeException();
-		if(contentLength==0){
+		if(content_length==0){
 			upload_channel.close();
 			final SimpleDateFormat df=new SimpleDateFormat("yyyy-MM-dd--HH:mm:ss.SSS");
 			try{upload_path.lastmod(df.parse(upload_lastmod_s).getTime());}
@@ -619,14 +619,14 @@ public final class req{
 	
 	private session get_session(){
 		final DbTransaction tn=Db.currentTransaction();
-		final List<DbObject>lsses=tn.get(session.class,new Query(session.sessionId,Query.EQ,sesid),null,null);
+		final List<DbObject>lsses=tn.get(session.class,new Query(session.sessionId,Query.EQ,session_id),null,null);
 		final session dbses;
 		if(lsses.isEmpty()){
 			dbses=(session)tn.create(session.class);
-			dbses.setSessionId(sesid);
+			dbses.setSessionId(session_id);
 		}else {
 			if(lsses.size()>1) {
-				b.log(new RuntimeException("found more than one dbsession for id "+sesid));
+				b.log(new RuntimeException("found more than one dbsession for id "+session_id));
 			}
 			dbses=(session)lsses.get(0);
 		}
@@ -635,12 +635,12 @@ public final class req{
 
 	private sessionpath get_session_path(final String p){
 		final DbTransaction tn=Db.currentTransaction();
-		final List<DbObject>ls=tn.get(sessionpath.class,new Query(session.sessionId,Query.EQ,sesid).and(session.paths).and(sessionpath.path,Query.EQ,p),null,null);
+		final List<DbObject>ls=tn.get(sessionpath.class,new Query(session.sessionId,Query.EQ,session_id).and(session.paths).and(sessionpath.path,Query.EQ,p),null,null);
 		if(ls.isEmpty()){
 			return get_session().getPath(p);
 		}else {
 			if(ls.size()>1) {
-				b.log(new RuntimeException("found "+ls.size()+" paths for session "+sesid+" path "+p));
+				b.log(new RuntimeException("found "+ls.size()+" paths for session "+session_id+" path "+p));
 			}
 			return (sessionpath)ls.get(0);
 		}
@@ -648,9 +648,9 @@ public final class req{
 
 	private void resp_page()throws Throwable{
 		if(!get_session_id_from_cookie()){
-			sesid=make_new_session_id();
-			sesid_set=true;
-			pl("new session "+sesid);
+			session_id=make_new_session_id();
+			session_id_set=true;
+			pl("new session "+session_id);
 			thdwatch.sessions++;
 		}
 		final DbTransaction tn=Db.initCurrentTransaction();
@@ -793,11 +793,11 @@ public final class req{
 		final ByteBuffer[]bb_reply=new ByteBuffer[11];
 		int bbi=0;
 		bb_reply[bbi++]=ByteBuffer.wrap(hdr);
-		if(sesid_set){
+		if(session_id_set){
 			bb_reply[bbi++]=ByteBuffer.wrap(hk_set_cookie);
-			bb_reply[bbi++]=ByteBuffer.wrap(sesid.getBytes());
+			bb_reply[bbi++]=ByteBuffer.wrap(session_id.getBytes());
 			bb_reply[bbi++]=ByteBuffer.wrap(hkv_set_cookie_append);
-			sesid_set=false;
+			session_id_set=false;
 		}
 		if(connection_keep_alive)
 			bb_reply[bbi++]=ByteBuffer.wrap(hkp_connection_keep_alive);
@@ -816,7 +816,7 @@ public final class req{
 	}
 	void run_page_content()throws Throwable{
 		state=state_run_page_content;
-		if(!contentType.startsWith(text_plain))throw new RuntimeException("postedcontent only "+text_plain+" allowed");
+		if(!content_type.startsWith(text_plain))throw new RuntimeException("postedcontent only "+text_plain+" allowed");
 		parse_content();
 		resp_page();
 		if(state==state_run_page_content)state=state_nextreq;
@@ -908,7 +908,7 @@ public final class req{
 		return k;
 	}
 	
-	public String sessionid(){return sesid;}
+	public String session_id(){return session_id;}
 
 	private int state=state_method;
 	private final ByteBuffer bb=ByteBuffer.allocate(b.reqinbuf_B);
@@ -918,20 +918,16 @@ public final class req{
 	private int ba_pos;
 	private boolean connection_keep_alive;
 	private final StringBuilder sb_path=new StringBuilder(128);
-//	private final ByteBuffer bb_path=ByteBuffer.allocate(128);
 	private String path_s;
 	private String query_s;
 	private path pth;
 	private final StringBuilder sb_header_name=new StringBuilder(32);
 	private final StringBuilder sb_header_value=new StringBuilder(128);
-//	private final ByteBuffer bb_header_name=ByteBuffer.allocate(32);
-//	private final ByteBuffer bb_header_value=ByteBuffer.allocate(128);
 	private final Map<String,String>hdrs=new HashMap<String,String>();
-	private String sesid;
-//	private session ses;
-	private boolean sesid_set;
-	private String contentType;
-	private long contentLength;
+	private String session_id;
+	private boolean session_id_set;
+	private String content_type;
+	private long content_length;
 	private final Map<String,String>content=new HashMap<String,String>();
 	private ByteBuffer[]transfer_buffers;
 	private long transfer_buffers_remaining;

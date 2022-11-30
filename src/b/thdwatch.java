@@ -47,11 +47,11 @@ final public class thdwatch extends Thread{
 				_out.println();
 				print_fieldnames_to(_out,"\n");
 			}
-			_threads=thdreq.all.size();
+			_threads=thdreq.all_request_threads.size();
 			final Runtime rt=Runtime.getRuntime();
 			_memfree=rt.freeMemory();
 			mem=rt.totalMemory()-_memfree;//? doesnotmatchjprofiler
-			que=b.pendingreqls().size();
+			que=b.pending_requests_list().size();
 			print_fields_to(_out,"\r");
 		}catch(final Throwable t){t.printStackTrace();}
 	}
