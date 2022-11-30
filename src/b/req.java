@@ -659,130 +659,7 @@ public final class req{
 		}
 		final DbTransaction tn=Db.initCurrentTransaction();
 		try{
-			final dbpathelem rootElemDbo=get_session_path(path_s);
-			a rootElem=rootElemDbo.getElem();
-			if(rootElem==null){
-				String cn=path_s.replace('/','.');
-				while(cn.startsWith("."))cn=cn.substring(1);
-				cn=b.webobjpkg+cn;
-				Class<?>ecls;
-				String cn2="";
-				try{ecls=(Class<?>)Class.forName(cn);}catch(Throwable e1){try{
-					cn2=cn+(cn.length()==0||cn.endsWith(".")?"":".")+b.default_package_class;
-					ecls=(Class<?>)Class.forName(cn2);
-				}catch(Throwable e2){
-					while(e1.getCause()!=null)e1=e1.getCause();
-					xwriter x=new xwriter().p(path_s).nl().nl().p(b.stacktraceline(e1)).nl().nl().p(b.stacktraceline(e2)).nl();
-					pl("classnotfound for path '"+path_s+"' tried '"+cn+"' and '"+cn2+"'");
-					reply(h_http404,null,null,tobytes(x.toString()));
-					return;
-				}}
-				try{rootElem=(a)ecls.getConstructor().newInstance();}catch(Throwable ex){
-					while(ex.getCause()!=null)ex=ex.getCause();
-	//				final xwriter x=new xwriter().p(path_s).nl().nl().p(b.stacktraceline(ex)).nl();
-					reply(h_http404,null,null,tobytes(stacktrace(ex)));
-					return;
-				}
-				if(rootElem instanceof sock){
-					state=state_sock;
-					sck=(sock)rootElem;
-					switch(sck.sockinit(hdrs,new sockio(sockch,selkey,ByteBuffer.wrap(ba,ba_pos,ba_rem)))){default:throw new IllegalStateException();
-					case read:selkey.interestOps(SelectionKey.OP_READ);selkey.selector().wakeup();break;
-					case write:selkey.interestOps(SelectionKey.OP_WRITE);selkey.selector().wakeup();break;
-					case close:sockch.close();break;
-					case wait:selkey.interestOps(0);break;
-					}
-					rootElemDbo.setElem(rootElem);
-					return;
-				}
-//				ses.put(path_s,e);
-			}
-			if(!content.isEmpty()){
-				// ajax post
-				String ax="";
-				for(final Map.Entry<String,String>me:content.entrySet()){
-					if(axfld.equals(me.getKey())){
-						ax=me.getValue();
-						continue;
-					}
-					//? indexofloop
-					final String[]pth=me.getKey().split(req.field_path_separator);
-					a ee=rootElem;
-					for(int n=1;n<pth.length;n++){
-						ee=ee.chld(pth[n]);
-						if(ee==null)throw new RuntimeException("not found: "+me.getKey());
-					}
-					ee.set(me.getValue());
-				}
-				if(ax.length()==0)throw new RuntimeException("expectedax");
-				
-				// decode the field id, method name and parameters parameters
-				final String axid,axfunc,axarg;
-				final int i1=ax.indexOf(' ');
-				if(i1==-1){
-					axid=ax;
-					axfunc=axarg="";
-				}else{
-					axid=ax.substring(0,i1);
-					final int i2=ax.indexOf(' ',i1+1);
-					if(i2==-1){
-						axfunc=ax.substring(i1+1);
-						axarg="";
-					}else{
-						axfunc=ax.substring(i1+1,i2);
-						axarg=ax.substring(i2+1);
-					}
-				}
-				final String[]pth=axid.split(req.field_path_separator);//? indexofloop
-				a axe=rootElem;
-				for(int n=1;n<pth.length;n++){
-					axe=axe.chld(pth[n]);
-					if(axe==null)break;
-				}
-				final oschunked os=reply_chunked(h_http200,text_html_utf8,null);
-				final xwriter x=new xwriter(os);
-				if(axe==null){
-					x.xalert("element not found:\n"+axid);
-					os.finish();
-					return;
-				}
-				try{
-					axe.getClass().getMethod("x_"+axfunc,xwriter.class,String.class).invoke(axe,x,axarg);
-				}catch(final InvocationTargetException t){
-					b.log(t.getTargetException());
-					x.xalert(b.isempty(t.getTargetException().getMessage(),t.toString()));
-				}catch(NoSuchMethodException t){
-					x.xalert("method not found:\n"+axe.getClass().getName()+".x_"+axfunc+"(xwriter,String)");
-				}
-				// ! cluster: write session to db !!! racing condition if element does xwriter.xreload()
-				rootElemDbo.setElem(rootElem);
-				tn.finishTransaction();
-				x.finish();
-				os.finish();
-				return;
-			}
-			if(b.cache_uris&&rootElem instanceof cacheable){
-				final cacheable cw=(cacheable)rootElem;
-				reply(cw);
-				thdwatch.cacheu++;
-				return;
-			}
-			final boolean isbin=rootElem instanceof bin;
-			final oschunked os=reply_chunked(h_http200,isbin?((bin)rootElem).contenttype():text_html_utf8,null);
-			final xwriter x=new xwriter(os);
-			if(!isbin){
-				os.write(ba_page_header_pre_title);
-			}
-			try{
-				// ? extra mode: serialize, encode to text, write into tag <div id="--state"> that is posted with ajax request
-				rootElem.to(x);
-			}catch(Throwable t){
-				b.log(t);x.pre().p(b.stacktrace(t));
-			}
-			rootElemDbo.setElem(rootElem);
-			tn.finishTransaction();
-			x.finish();
-			os.finish();
+			resp_page_do(tn);
 		}catch(Throwable t){
 			tn.rollback();
 			while(t.getCause()!=null)t=t.getCause();
@@ -792,6 +669,129 @@ public final class req{
 		}
 	}
 	// threaded done
+	private void resp_page_do(final DbTransaction tn)throws Throwable{
+		final dbpathelem rootElemDbo=get_session_path(path_s);
+		a rootElem=rootElemDbo.getElem();
+		if(rootElem==null){
+			String cn=path_s.replace('/','.');
+			while(cn.startsWith("."))cn=cn.substring(1);
+			cn=b.webobjpkg+cn;
+			Class<?>ecls;
+			String cn2="";
+			try{ecls=(Class<?>)Class.forName(cn);}catch(Throwable e1){try{
+				cn2=cn+(cn.length()==0||cn.endsWith(".")?"":".")+b.default_package_class;
+				ecls=(Class<?>)Class.forName(cn2);
+			}catch(Throwable e2){
+				while(e1.getCause()!=null)e1=e1.getCause();
+				xwriter x=new xwriter().p(path_s).nl().nl().p(b.stacktraceline(e1)).nl().nl().p(b.stacktraceline(e2)).nl();
+				pl("classnotfound for path '"+path_s+"' tried '"+cn+"' and '"+cn2+"'");
+				reply(h_http404,null,null,tobytes(x.toString()));
+				return;
+			}}
+			try{rootElem=(a)ecls.getConstructor().newInstance();}catch(Throwable ex){
+				while(ex.getCause()!=null)ex=ex.getCause();
+//				final xwriter x=new xwriter().p(path_s).nl().nl().p(b.stacktraceline(ex)).nl();
+				reply(h_http404,null,null,tobytes(stacktrace(ex)));
+				return;
+			}
+			if(rootElem instanceof sock){
+				state=state_sock;
+				sck=(sock)rootElem;
+				switch(sck.sockinit(hdrs,new sockio(sockch,selkey,ByteBuffer.wrap(ba,ba_pos,ba_rem)))){default:throw new IllegalStateException();
+				case read:selkey.interestOps(SelectionKey.OP_READ);selkey.selector().wakeup();break;
+				case write:selkey.interestOps(SelectionKey.OP_WRITE);selkey.selector().wakeup();break;
+				case close:sockch.close();break;
+				case wait:selkey.interestOps(0);break;
+				}
+				rootElemDbo.setElem(rootElem);
+				return;
+			}
+		}
+		if(!content.isEmpty()){
+			// ajax post
+			String ax="";
+			for(final Map.Entry<String,String>me:content.entrySet()){
+				if(axfld.equals(me.getKey())){
+					ax=me.getValue();
+					continue;
+				}
+				//? indexofloop
+				final String[]pth=me.getKey().split(req.field_path_separator);
+				a ee=rootElem;
+				for(int n=1;n<pth.length;n++){
+					ee=ee.chld(pth[n]);
+					if(ee==null)throw new RuntimeException("not found: "+me.getKey());
+				}
+				ee.set(me.getValue());
+			}
+			if(ax.length()==0)throw new RuntimeException("expectedax");
+			
+			// decode the field id, method name and parameters parameters
+			final String axid,axfunc,axarg;
+			final int i1=ax.indexOf(' ');
+			if(i1==-1){
+				axid=ax;
+				axfunc=axarg="";
+			}else{
+				axid=ax.substring(0,i1);
+				final int i2=ax.indexOf(' ',i1+1);
+				if(i2==-1){
+					axfunc=ax.substring(i1+1);
+					axarg="";
+				}else{
+					axfunc=ax.substring(i1+1,i2);
+					axarg=ax.substring(i2+1);
+				}
+			}
+			final String[]pth=axid.split(req.field_path_separator);//? indexofloop
+			a axe=rootElem;
+			for(int n=1;n<pth.length;n++){
+				axe=axe.chld(pth[n]);
+				if(axe==null)break;
+			}
+			final oschunked os=reply_chunked(h_http200,text_html_utf8,null);
+			final xwriter x=new xwriter(os);
+			if(axe==null){
+				x.xalert("element not found:\n"+axid);
+				os.finish();
+				return;
+			}
+			try{
+				axe.getClass().getMethod("x_"+axfunc,xwriter.class,String.class).invoke(axe,x,axarg);
+			}catch(final InvocationTargetException t){
+				b.log(t.getTargetException());
+				x.xalert(b.isempty(t.getTargetException().getMessage(),t.toString()));
+			}catch(NoSuchMethodException t){
+				x.xalert("method not found:\n"+axe.getClass().getName()+".x_"+axfunc+"(xwriter,String)");
+			}
+			rootElemDbo.setElem(rootElem);
+			tn.flush();
+			x.finish();
+			os.finish();
+			return;
+		}
+		if(b.cache_uris&&rootElem instanceof cacheable){
+			final cacheable cw=(cacheable)rootElem;
+			reply(cw);
+			thdwatch.cacheu++;
+			return;
+		}
+		final boolean isbin=rootElem instanceof bin;
+		final oschunked os=reply_chunked(h_http200,isbin?((bin)rootElem).contenttype():text_html_utf8,null);
+		final xwriter x=new xwriter(os);
+		if(!isbin){
+			os.write(ba_page_header_pre_title);
+		}
+		try{
+			// ? extra mode: serialize, encode to text, write into tag <div id="--state"> that is posted with ajax request
+			rootElem.to(x);
+		}catch(Throwable t){
+			b.log(t);x.pre().p(b.stacktrace(t));
+		}
+		rootElemDbo.setElem(rootElem);
+		x.finish();
+		os.finish();
+	}
 
 	private oschunked reply_chunked(final byte[]hdr,final String contentType,final String lastmod)throws Throwable{
 		final ByteBuffer[]bb_reply=new ByteBuffer[11];

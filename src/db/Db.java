@@ -72,7 +72,7 @@ public final class Db {
 	 *         initCurrentTransaction().
 	 */
 	public static DbTransaction currentTransaction() {
-		Db.log("dbo: get current transaction on " + Thread.currentThread());
+//		Db.log("dbo: get current transaction on " + Thread.currentThread());
 		return tn.get();
 	}
 
@@ -82,8 +82,15 @@ public final class Db {
 	 */
 	public static void deinitCurrentTransaction() {
 		Db.log("dbo: deinit transaction on " + Thread.currentThread());
-		final DbTransaction t = tn.get();
-
+		final DbTransaction tx = tn.get();
+		try {
+			if (!tx.rollbacked) {
+				tx.commit();
+			}
+			tx.stmt.close();
+		} catch (final Throwable t) {
+			t.printStackTrace();
+		}
 		// make sure statement is closed here. should be. // ? stmt.isClosed() is not in
 		// java 1.5
 //		final boolean stmtIsClosed;
@@ -95,9 +102,9 @@ public final class Db {
 //		if (!stmtIsClosed)
 //			throw new RuntimeException(
 //					"Statement should be closed here. DbTransaction.finishTransaction() not called?");
-//
+
 		synchronized (inst.conpool) {
-			inst.conpool.add(t.con);
+			inst.conpool.add(tx.con);
 			inst.conpool.notify();
 		}
 

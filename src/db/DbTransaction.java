@@ -16,6 +16,7 @@ public final class DbTransaction {
 	final HashSet<DbObject> dirtyObjects = new HashSet<DbObject>();
 	final Cache cache = new Cache();
 	public boolean cache_enabled = true;
+	boolean rollbacked = false;
 
 	static final class Cache {
 		final HashMap<Class<? extends DbObject>, HashMap<Integer, DbObject>> clsToIdObjMap = new HashMap<Class<? extends DbObject>, HashMap<Integer, DbObject>>();
@@ -99,7 +100,7 @@ public final class DbTransaction {
 
 	public void delete(final DbObject o) {
 		flush();
-		
+
 		final DbClass dbcls = Db.instance().dbClassForJavaClass(o.getClass());
 		if (dbcls.cascadeDelete) {
 			for (final DbRelation r : dbcls.allRelations) {
@@ -242,14 +243,29 @@ public final class DbTransaction {
 		con.commit();
 	}
 
+	public void rollback() {
+		Db.log("*** rollback transaction");
+		rollbacked = true;
+//		if (cache_enabled)
+//			cache.clear();
+		try {
+			con.rollback();
+			Db.log("*** rollback done");
+		} catch (Throwable t) {
+			throw new RuntimeException(t);
+		}
+	}
+
 	/** called when done with the transaction */
 	public void finishTransaction() throws Throwable {
-		commit();
+		if (!rollbacked) {
+			commit();
+		}
 		stmt.close();
 	}
 
 	/** writes changed objects to database */
-	private void flush() { // ? public?
+	public void flush() { // ? public?
 		if (dirtyObjects.isEmpty())
 			return;
 		Db.log("*** flushing " + dirtyObjects.size() + " objects");
@@ -277,19 +293,6 @@ public final class DbTransaction {
 		sb.append(" where id=").append(o.id());
 		execSql(sb);
 		o.dirtyFields.clear();
-	}
-
-	public void rollback() {
-		Db.log("*** rollback transaction");
-		if (cache_enabled)
-			cache.clear();
-		try {
-			con.rollback();
-			stmt.close();
-			Db.log("*** rollback done");
-		} catch (Throwable t) {
-			throw new RuntimeException(t);
-		}
 	}
 
 	void execSql(final StringBuilder sb) {

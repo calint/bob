@@ -278,7 +278,8 @@ public final class xwriter{
 	// called after element has been written to db
 	public void finish(){
 		if(xreload_requested)
-			pl("location.reload(true);");
+//			pl("location.reload(true);");
+			pl("location.href=location.href");
 		xreload_requested=false;
 	}
 	public xwriter xfocus(final a e){return p("$f('").p(e.id()).pl("');");}
