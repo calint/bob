@@ -174,7 +174,7 @@ public final class req{
 //	private a rootElem;
 //	dbpathelem rootElemDbo;
 	private void do_after_header()throws Throwable{
-
+//		 this would trigger set-cookie on files and resources
 //		if(!decodecookie()){
 //			sesid=mkcookieid();
 //			sesid_set=true;
@@ -516,11 +516,14 @@ public final class req{
 				return-1;
 		}
 	}
+	/** @return true if if transfer is done, more writes are needed. */
 	boolean do_transfer()throws Throwable{
 		if(state==state_transfer_file)return do_transfer_file();
 		else if(state==state_transfer_buffers)return do_transfer_buffers();
 		else throw new IllegalStateException();
 	}
+	
+	/** @return true if if transfer is done, more writes are needed. */
 	private boolean do_transfer_buffers()throws Throwable{
 		while(transfer_buffers_remaining!=0){
 			final long c=sockch.write(transfer_buffers);
@@ -531,6 +534,8 @@ public final class req{
 		state=state_nextreq;
 		return true;
 	}
+	
+	/** @return true if if transfer is done, more writes are needed. */
 	private boolean do_transfer_file()throws IOException{
 		// ? heavy
 		//		final long buf_size=this.sockch.socket().getSendBufferSize();
@@ -749,6 +754,7 @@ public final class req{
 				os.finish();
 				return;
 			}
+			// invoke method on target element with arguments
 			try{
 				target_elem.getClass().getMethod("x_"+target_elem_method,xwriter.class,String.class).invoke(target_elem,x,target_elem_method_args);
 			}catch(final InvocationTargetException t){
@@ -757,7 +763,7 @@ public final class req{
 			}catch(NoSuchMethodException t){
 				x.xalert("method not found:\n"+target_elem.getClass().getName()+".x_"+target_elem_method+"(xwriter,String)");
 			}
-			root_elem_dbo.setElem(root_elem);
+			root_elem_dbo.setElem(root_elem);// dbo element is now dirty 
 			tn.flush();
 			x.finish();
 			os.finish();
@@ -777,6 +783,7 @@ public final class req{
 			x.pre().p(b.stacktrace(t));
 		}
 		root_elem_dbo.setElem(root_elem);
+		tn.flush();
 		x.finish();
 		os.finish();
 	}
