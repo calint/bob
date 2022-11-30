@@ -5,9 +5,10 @@ import db.Db;
 import db.test.Book;
 
 public class $ extends a {
-	static final long serialVersionUID = 1;
+	static final long serialVersionUID = 3;
 	private int counter = 0;
 	public a txt;
+	public a_ajaxsts ajaxsts;
 //	public diro d;
 
 	public $() {
@@ -22,6 +23,8 @@ public class $ extends a {
 		x.p(count).p(" server id: ").p(b.id).p("  counter:").p(++counter).nl();
 		x.inptxt(txt);
 		x.ax(this, "clk", "click me");
+		x.pl().pl();
+		ajaxsts.to(x);
 //		d.to(x);
 	}
 

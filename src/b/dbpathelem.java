@@ -30,11 +30,15 @@ public class dbpathelem extends DbObject {
 		// convert from sql representation
 		final byte[] ba = getBytesArray(elem);
 		try {
-			final ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(ba));
-			final a e = (a) ois.readObject();
-			ois.close();
-			put(elem, e); // put without marking field dirty
-			return e;
+			try {
+				final ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(ba));
+				final a e = (a) ois.readObject();
+				ois.close();
+				put(elem, e); // put without marking field dirty
+				return e;
+			}catch(Throwable t) {
+				return null; // ? what to do?
+			}
 		} catch (Throwable t) {
 			throw new RuntimeException(t);
 		}

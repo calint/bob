@@ -43,7 +43,9 @@ final class chdresp{
 		bb.put(ba);
 		bb.flip();
 	}
-	boolean ifnotmodsince(final String ifModSince){return ifModSince.equals(lastModified_s);}
+	boolean ifnotmodsince(final String ifModSince){
+		return ifModSince.equals(lastModified_s); // ? check lastModified before ifModSince
+	}
 	ByteBuffer byteBuffer(){return bb;}
 	int additional_headers_insertion_position(){return additional_headers_insertion_position;}
 	int data_position(){return data_position;}

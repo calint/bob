@@ -74,3 +74,5 @@ cd /bob && git pull https://github.com/calint/bob && ./build.sh && systemctl res
 ssh root@<ip> 'cd /bob && git pull https://github.com/calint/bob && ./build.sh && systemctl restart bob'
 
 
+Wed, 30 Nov 2022 02:21:45 GMT
+
