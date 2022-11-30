@@ -152,10 +152,10 @@ final public class b{
 				if(sk.isAcceptable()){
 					thdwatch.iocon++;
 					final req r=new req();
-					r.sockch=ssc.accept();
-					r.sockch.configureBlocking(false);
-					if(tcpnodelay)r.sockch.setOption(StandardSocketOptions.TCP_NODELAY,true);
-					r.selkey=r.sockch.register(sel,0,r);
+					r.socket_channel=ssc.accept();
+					r.socket_channel.configureBlocking(false);
+					if(tcpnodelay)r.socket_channel.setOption(StandardSocketOptions.TCP_NODELAY,true);
+					r.selection_key=r.socket_channel.register(sel,0,r);
 					read(r);
 					continue;
 				}
@@ -187,16 +187,16 @@ final public class b{
 				return;
 			}
 			switch(r.sock_read()){default:throw new Error();
-			case read:r.selkey.interestOps(SelectionKey.OP_READ);return;
-			case write:r.selkey.interestOps(SelectionKey.OP_WRITE);return;
+			case read:r.selection_key.interestOps(SelectionKey.OP_READ);return;
+			case write:r.selection_key.interestOps(SelectionKey.OP_WRITE);return;
 			case close:r.close();thdwatch.socks--;return;
-			case wait:r.selkey.interestOps(0);return;
+			case wait:r.selection_key.interestOps(0);return;
 			case noop:return;
 			}
 		}
 		while(true)switch(r.parse()){default:throw new Error();
-			case read:r.selkey.interestOps(SelectionKey.OP_READ);return;
-			case write:r.selkey.interestOps(SelectionKey.OP_WRITE);return;
+			case read:r.selection_key.interestOps(SelectionKey.OP_READ);return;
+			case write:r.selection_key.interestOps(SelectionKey.OP_WRITE);return;
 			case noop:return;
 		}
 	}
@@ -208,17 +208,17 @@ final public class b{
 				return;
 			}
 			switch(r.sock_write()){default:throw new Error();
-			case read:r.selkey.interestOps(SelectionKey.OP_READ);break;
-			case write:r.selkey.interestOps(SelectionKey.OP_WRITE);break;
+			case read:r.selection_key.interestOps(SelectionKey.OP_READ);break;
+			case write:r.selection_key.interestOps(SelectionKey.OP_WRITE);break;
 			case close:r.close();thdwatch.socks--;break;
 			}
 			return;
 		}
 		if(r.is_waiting_write()){synchronized(r){r.notify();}return;}
 		if(r.is_transfer()){
-			if(!r.do_transfer()){r.selkey.interestOps(SelectionKey.OP_WRITE);return;}
+			if(!r.do_transfer()){r.selection_key.interestOps(SelectionKey.OP_WRITE);return;}
 			if(!r.is_connection_keepalive()){r.close();return;}
-			if(r.is_buf_empty()){r.selkey.interestOps(SelectionKey.OP_READ);return;}
+			if(r.is_buf_empty()){r.selection_key.interestOps(SelectionKey.OP_READ);return;}
 			read(r);//?? bug stackrain
 			return;
 		}
@@ -227,8 +227,11 @@ final public class b{
 		throw new Error();
 	}
 	static void thread(final req r){
-		r.selkey.interestOps(0);//? must?
-		if(!b.thread_pool||thdreq.all_request_threads.size()<thread_pool_size){new thdreq(r);return;}
+		r.selection_key.interestOps(0);//? must?
+		if(!b.thread_pool||thdreq.all_request_threads.size()<thread_pool_size){
+			new thdreq(r);
+			return;
+		}
 		synchronized(pending_req){pending_req.addLast(r);pending_req.notify();}
 	}
 	public static int cp(final InputStream in,final OutputStream out) throws IOException{//?. sts
@@ -324,8 +327,8 @@ final public class b{
 //		ps.println("         sessions: "+session.all().size());
 		ps.println("        downloads: "+new File(root_dir).getCanonicalPath());
 		ps.println("     sessions dir: "+new File(sessions_dir).getCanonicalPath());
-		ps.println("     cached files: "+(req.cachef_size()>>10)+" KB");
-		ps.println("      cached uris: "+(req.cacheu_size()>>10)+" KB");
+		ps.println("     cached files: "+(req.file_and_resource_cache_size_B()>>10)+" KB");
+//		ps.println("      cached uris: "+(req.cacheu_size()>>10)+" KB");
 		ps.println("        classpath: "+System.getProperty("java.class.path"));
 		final Runtime rt=Runtime.getRuntime();
 		if(gc_before_stats)rt.gc();

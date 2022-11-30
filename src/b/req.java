@@ -30,7 +30,7 @@ public final class req{
 	b.op parse()throws Throwable{while(true){
 		if(ba_rem==0){
 			bb.clear();
-			final int c=sockch.read(bb);
+			final int c=socket_channel.read(bb);
 			if(c==0)return b.op.read;//? infloop
 			if(c==-1){close();return b.op.noop;}
 			thdwatch.input+=c;
@@ -119,8 +119,7 @@ public final class req{
 			path_s=b.urldecode(uriencoded.substring(0,i));
 			query_s=uriencoded.substring(i+1);
 		}
-		hdrs.clear();
-		
+		headers.clear();
 		// retrieve session at every request in case load balancer reuses an open connection for requests from a different client
 		// set sesid and session to null
 		session_id=null;
@@ -145,12 +144,13 @@ public final class req{
 	public static @conf int abuse_header_value_len=256;
 	private int headerscount;
 	public static @conf int abuse_header_count=32;
+	
 	private void parse_header_value(){
 		final int ba_pos_prev=ba_pos;
 		while(ba_rem!=0){
 			final byte b=ba[ba_pos++];ba_rem--;
 			if(b=='\n'){
-				hdrs.put(sb_header_name.toString().trim().toLowerCase(),sb_header_value.toString().trim());
+				headers.put(sb_header_name.toString().trim().toLowerCase(),sb_header_value.toString().trim());
 				headerscount++;
 				if(headerscount>abuse_header_count){
 					close();
@@ -170,8 +170,7 @@ public final class req{
 	public static @conf long abuse_upload_len=16*b.G;
 	public static @conf long abuse_content_len=1*b.M;
 	
-//	private a rootElem;
-//	dbpathelem rootElemDbo;
+
 	private void do_after_header()throws Throwable{
 //		 this would trigger set-cookie on files and resources
 //		if(!decodecookie()){
@@ -180,14 +179,14 @@ public final class req{
 //			pl("new session "+sesid);
 //			thdwatch.sessions++;
 //		}
-		final String ka=hdrs.get(hk_connection);
+		final String ka=headers.get(hk_connection);
 		if(ka!=null)connection_keep_alive=hv_keep_alive.equalsIgnoreCase(ka);
 		content.clear();
-		content_type=hdrs.get(hk_content_type);
+		content_type=headers.get(hk_content_type);
 		if(content_type!=null){
 			if(content_type.startsWith("dir;")||content_type.equals("dir")){
 				if(!b.enable_upload)throw new RuntimeException("uploadsdisabled");
-				if(!get_session_id_from_cookie())throw new RuntimeException("nocookie at create dir. path:"+sb_path);
+				if(!set_session_id_from_cookie())throw new RuntimeException("nocookie at create dir. path:"+sb_path);
 				final String[]q=content_type.split(";");
 				final String lastmod_s=q[1];
 				final path p=b.path(b.sessions_dir).get(session_id).get(path_s);
@@ -202,9 +201,9 @@ public final class req{
 			if(content_type.startsWith("file;")||content_type.equals("file")){
 				if(!b.enable_upload)throw new RuntimeException("uploadsdisabled");
 //				System.out.println(path_s);
-				if(!get_session_id_from_cookie())throw new RuntimeException("nocookie at create file from upload. path:"+sb_path);
+				if(!set_session_id_from_cookie())throw new RuntimeException("nocookie at create file from upload. path:"+sb_path);
 //				final String contentLength_s=hdrs.get(hk_content_length);
-				content_length=Long.parseLong(hdrs.get(hk_content_length));
+				content_length=Long.parseLong(headers.get(hk_content_length));
 				if(content_length>abuse_upload_len){close();throw new RuntimeException("abuseuploadlen "+content_length);}
 				final String[]q=content_type.split(";");
 				upload_lastmod_s=q.length>1?q[1]:new SimpleDateFormat("yyyy-MM-dd--HH:mm:ss.SSS").format(new Date());
@@ -220,13 +219,14 @@ public final class req{
 			}
 		}
 		// assumes content type "text/plain; charset=utf-8" from an ajax post
-		final String contentLength_s=hdrs.get(hk_content_length);
+		final String contentLength_s=headers.get(hk_content_length);
 		if(contentLength_s!=null){
-			if(!get_session_id_from_cookie())throw new RuntimeException("nocookie in request with content. path:"+sb_path);
+			if(!set_session_id_from_cookie())throw new RuntimeException("nocookie in request with content. path:"+sb_path);
 			content_length=Long.parseLong(contentLength_s);
 			if(content_length>abuse_content_len){close();throw new RuntimeException("abusecontentlen "+content_length);}
 			bb_content=ByteBuffer.allocate((int)content_length);
-			state=state_content_read;parse_content_read();
+			state=state_content_read;
+			parse_content_read();
 			return;
 		}
 		try{pth=b.path(path_s);}catch(final Throwable t){
@@ -242,8 +242,9 @@ public final class req{
 		state=state_waiting_run_page;
 		return;
 	}
-	private boolean get_session_id_from_cookie(){
-		final String cookie=hdrs.get(hk_cookie);
+	
+	private boolean set_session_id_from_cookie(){
+		final String cookie=headers.get(hk_cookie);
 		if(cookie==null)return false;
 		final String[]c1=cookie.split(";");
 		for(String cc:c1){
@@ -256,6 +257,7 @@ public final class req{
 		}
 		return false;
 	}
+	
 	private static String make_new_session_id(){
 		final SimpleDateFormat sdf=new SimpleDateFormat("yyMMdd-HHmmss.SSS-");
 		final StringBuilder sb=new StringBuilder(sdf.format(new Date()));
@@ -263,6 +265,7 @@ public final class req{
 		for(int n=0;n<8;n++)sb.append(alf.charAt(b.rndint(0,alf.length())));
 		return sb.toString();
 	}
+	
 	private boolean try_file()throws Throwable{
 		if(!pth.exists())return false;
 		if(pth.isdir()){
@@ -272,7 +275,7 @@ public final class req{
 		thdwatch.files++;
 		final long lastmod_l=pth.lastmod();
 		final String etag="\""+lastmod_l+"\"";
-		final String client_etag=hdrs.get(hk_if_none_match);
+		final String client_etag=headers.get(hk_if_none_match);
 		if(etag.equals(client_etag)) {
 			reply(h_http304,null,null,null);
 			return true;
@@ -280,13 +283,13 @@ public final class req{
 		
 		final long len=pth.size();
 
-		final String range_s=hdrs.get(s_range);
+		final String range_s=headers.get(s_range);
 		long range_from;
 		long range_to;
 		final ByteBuffer[]bb=new ByteBuffer[16];
 		int i=0;
 		if(range_s!=null){
-			final String[]s=range_s.split(s_eq);
+			final String[]s=range_s.split(s_equals);
 			final String[]ss=s[1].split(s_minus);
 			
 			try{range_from=Long.parseLong(ss[0]);}catch(NumberFormatException e){range_from=-1;}
@@ -327,7 +330,7 @@ public final class req{
 		if(connection_keep_alive)
 			bb[i++]=ByteBuffer.wrap(hkp_connection_keep_alive);
 		bb[i++]=ByteBuffer.wrap(ba_crlf2);
-		final long n=sendpacket(bb,i); // ? is send complete?
+		final long n=send_packet(bb,i); // ? is send complete?
 		thdwatch.output+=n;
 		transfer_file_channel=pth.fileinputstream().getChannel();
 		transfer_file_position=range_from;
@@ -340,15 +343,16 @@ public final class req{
 		do_transfer_file();
 		return true;
 	}
+	
 	/** @return true if the file or resource has been cached. */
 	private boolean try_cache()throws Throwable{
-		chdresp cachedresp=cachef.get(path_s);
+		chdresp cachedresp=file_and_resource_cache.get(path_s);
 		if(cachedresp==null){ // not in cache, try to cache a file
 			if(pth.isdir())pth=pth.get(b.default_directory_file);
 			if(!pth.exists())return false;
 			if(pth.size()<=b.cache_files_maxsize){
 				cachedresp=new chdresp_file(pth);
-				cachef.put(path_s,cachedresp);
+				file_and_resource_cache.put(path_s,cachedresp);
 				reply(cachedresp);
 				thdwatch._cachef++;
 				return true;
@@ -358,13 +362,14 @@ public final class req{
 		}
 		// validate that the cached response is up to date
 		if(!cachedresp.validate(System.currentTimeMillis())){
-			cachef.remove(path_s);
+			file_and_resource_cache.remove(path_s);
 			thdwatch._cachef--;
 			return false;
 		}
 		reply(cachedresp); // send the cached response
 		return true;
 	}
+	
 	/** @return true if resource was cached and sent. */
 	private boolean try_resource()throws Throwable{
 		final String p=pth.name();//? path
@@ -381,23 +386,24 @@ public final class req{
 		// todo map of file suffix to content types
 		final String contentType = rcpth.endsWith(".js")?"application/javascript":null;
 		final chdresp c=new chdresp_resource(is,contentType);
-		cachef.put(path_s,c);
+		file_and_resource_cache.put(path_s,c);
 		reply(c);
 		return true;
 	}
-	private void reply(final chdresp c)throws Throwable{
+	
+	private void reply(chdresp c)throws Throwable{
 		thdwatch.cachef++;
-		final String clientetag=hdrs.get(hk_if_none_match);
+		final String clientetag=headers.get(hk_if_none_match);
 		if(clientetag!=null&&c.etag_matches(clientetag)){
 			reply(h_http304,null,null,null);
 			return;
 		}
-		final String range_s=hdrs.get("range");
+		final String range_s=headers.get("range");
 		if(range_s!=null){
 			final long len=c.content_length_in_bytes();
 			long range_from;
 			long range_to;
-			final String[]s=range_s.split(s_eq);
+			final String[]s=range_s.split(s_equals);
 			final String[]ss=s[1].split(s_minus);
 			
 			try{range_from=Long.parseLong(ss[0]);}catch(NumberFormatException e){range_from=-1;}
@@ -447,6 +453,7 @@ public final class req{
 		transfer_buffers(bba);
 		session_id_set=false;
 	}
+	
 	private void reply(final byte[]firstline,final byte[]lastMod,final byte[]contentType,final byte[]content)throws Throwable{
 		final ByteBuffer[]bb=new ByteBuffer[16];
 		int bi=0;
@@ -474,11 +481,12 @@ public final class req{
 		bb[bi++]=ByteBuffer.wrap(ba_crlf2);
 		if(content!=null)
 			bb[bi++]=ByteBuffer.wrap(content);
-		final long n=sendpacket(bb,bi);
+		final long n=send_packet(bb,bi);
 		thdwatch.output+=n;
 		state=state_nextreq;
 	}
-	private int sendpacket(final ByteBuffer[]bba,final int n)throws Throwable{
+	
+	private int send_packet(final ByteBuffer[]bba,final int n)throws Throwable{
 		if(b.print_reply_headers){
 			for(int i=0;i<n;i++){
 				final ByteBuffer bb=bba[i];
@@ -487,76 +495,22 @@ public final class req{
 		}
 		long tosend=0;
 		for(int i=0;i<n;i++)tosend+=bba[i].remaining();
-		final long c=sockch.write(bba,0,n);//? while
+		final long c=socket_channel.write(bba,0,n);//? while
 		if(c!=tosend)b.log(new RuntimeException("sent "+c+" of "+tosend+" bytes"));//? throwerror
 		return n;
 	}
+	
 	private void transfer_buffers(final ByteBuffer[]bba)throws Throwable{
-		if(b.print_reply_headers){
-			for(final ByteBuffer bb:bba){
-				final byte[]ba;
-				if(bb.hasArray()){
-					ba=bb.array();
-					final int header_len=find_end_of_header(ba);
-					if(header_len==-1)
-						p(new String(bb.array(),bb.position(),bb.remaining()));
-					else{
-						p(new String(bb.array(),bb.position(),header_len));
-						break;
-					}
-				}else{
-					ba=new byte[bb.remaining()];
-					bb.get(ba);
-					bb.position(bb.position()-ba.length);
-					final int header_len=find_end_of_header(ba);
-					if(header_len==-1)
-						p(new String(ba));
-					else{
-						p(new String(ba,0,header_len));
-						break;
-					}
-				}
-			}
-		}else if(b.print_replies){
-			for(final ByteBuffer bb:bba)
-				if(bb.hasArray())
-					p(new String(bb.array(),bb.position(),bb.remaining()));
-				else{
-//					pl("pos:"+bb.position());
-					final byte[]ba=new byte[bb.remaining()];
-					bb.get(ba);
-//					pl("posa:"+bb.position());
-					bb.position(bb.position()-ba.length);
-					p(new String(ba));
-				}
-		}
-		
-		long n=0;for(final ByteBuffer b:bba)n+=b.remaining();
+		long n=0;
+		for(ByteBuffer b:bba)
+			n+=b.remaining();
 		transfer_buffers=bba;
 		transfer_buffers_remaining=n;
-		state=state_transfer_buffers;do_transfer_buffers();
+		state=state_transfer_buffers;
+		do_transfer_buffers();
 	}
-	private int find_end_of_header(final byte[]ba){
-		final byte[]match=ba_crlf2;
-		final int match_len=match.length;
-		int match_i=0;
-		int i=0;
-//		final String bastr=new String(ba);
-		while(true){
-			final byte b=ba[i];
-			if(b==match[match_i]){
-				match_i++;
-				if(match_i==match_len)
-					return i;
-			}else{
-				match_i=0;
-			}
-			i++;
-			if(i==ba.length)
-				return-1;
-		}
-	}
-	/** @return true if if transfer is done, more writes are needed. */
+
+	/** @return true if transfer is done, false if more writes are needed. */
 	boolean do_transfer()throws Throwable{
 		if(state==state_transfer_file)return do_transfer_file();
 		else if(state==state_transfer_buffers)return do_transfer_buffers();
@@ -566,7 +520,7 @@ public final class req{
 	/** @return true if if transfer is done, more writes are needed. */
 	private boolean do_transfer_buffers()throws Throwable{
 		while(transfer_buffers_remaining!=0){
-			final long c=sockch.write(transfer_buffers);
+			final long c=socket_channel.write(transfer_buffers);
 			if(c==0)return false;
 			transfer_buffers_remaining-=c;
 			thdwatch.output+=c;
@@ -582,40 +536,30 @@ public final class req{
 		final int buf_size=b.transfer_file_write_size;
 		while(transfer_file_remaining!=0)try{
 			final long n=transfer_file_remaining>buf_size?buf_size:transfer_file_remaining;
-			final long c=transfer_file_channel.transferTo(transfer_file_position,n,sockch);
+			final long c=transfer_file_channel.transferTo(transfer_file_position,n,socket_channel);
 			if(c==0)return false;
 			transfer_file_position+=c;
 			transfer_file_remaining-=c;
 			thdwatch.output+=c;
 		}catch(final IOException e){
-			//?
-			//? differingmessagedependingonplatform
-			//				if("sendfile failed: EAGAIN (Try again)".equals(e.getMessage())){
-			//					thdwatch.eagain++;
-			//					b.log(e);
-			//					return false;
-			//				}
-			//				throw e;
-			// todo add a meter to thdwatch for these exceptions
 			final String msg=e.getMessage();
 			if(e instanceof IOException&&(
-					msg.startsWith("Broken pipe")||
-					"Connection reset by peer".equals(msg)||
-					"sendfile failed: EPIPE (Broken pipe)".equals(msg)||//? android (when closing browser while transfering file)
-					"An existing connection was forcibly closed by the remote host".equals(msg)
-					)
-					
-			){
+				msg.startsWith("Broken pipe")||
+				"Connection reset by peer".equals(msg)||
+				"sendfile failed: EPIPE (Broken pipe)".equals(msg)||//? android (when closing browser while transfering file)
+				"An existing connection was forcibly closed by the remote host".equals(msg)
+			)){
 				close();
 				return false;
 			}
-			thdwatch.eagain++;//? assuming. eventually bug
+			thdwatch.eagain++; //? assuming. eventually bug
 			return false;
 		}
 		transfer_file_channel.close();
 		state=state_nextreq;
 		return true;
 	}
+	
 	private void parse_content_read(){
 		final int c=(int)(ba_rem>content_length?content_length:ba_rem);
 		bb_content.put(ba,ba_pos,c);
@@ -625,6 +569,7 @@ public final class req{
 			state=state_waiting_run_page_content;
 		}
 	}
+	
 	private void parse_content_upload()throws Throwable{
 //		System.out.println(path_s+"   content upload");
 		final long diff=content_length-ba_rem;
@@ -649,13 +594,6 @@ public final class req{
 			reply(h_http204,null,null,null);
 			state=state_nextreq;
 		}
-	}
-	// threaded
-	void run_page()throws Throwable{
-		state=state_run_page;
-		resp_page();
-		if(state==state_sock){thdwatch.socks++;return;}
-		if(state==state_run_page)state=state_nextreq;
 	}
 	
 	private session get_session(){
@@ -686,9 +624,29 @@ public final class req{
 			return (sessionpath)ls.get(0);
 		}
 	}
+	
+	/** Called from the request thread. */
+	void run_page()throws Throwable{
+		state=state_run_page;
+		run_page_do();
+		if(state==state_sock){thdwatch.socks++;return;}
+		if(state==state_run_page)state=state_nextreq;
+	}
 
-	private void resp_page()throws Throwable{
-		if(!get_session_id_from_cookie()){
+	
+	/** Called from the request thread when request has received content. */
+	void run_page_content()throws Throwable{
+		state=state_run_page_content;
+		if(!content_type.startsWith(text_plain))throw new RuntimeException("postedcontent only "+text_plain+" allowed");
+		populate_content_map_from_buffer();
+		run_page_do();
+		if(state==state_run_page_content)state=state_nextreq;
+		thdwatch.posts++;
+	}
+
+	/** Called from run_page() and run_page_content() to process the uri and content. */
+	private void run_page_do()throws Throwable{
+		if(!set_session_id_from_cookie()){
 			session_id=make_new_session_id();
 			session_id_set=true;
 			pl("new session "+session_id);
@@ -696,7 +654,7 @@ public final class req{
 		}
 		final DbTransaction tn=Db.initCurrentTransaction();
 		try{
-			resp_page_do(tn);
+			run_page_do_transaction(tn);
 		}catch(Throwable t){
 			tn.rollback();
 			while(t.getCause()!=null)t=t.getCause();
@@ -707,9 +665,10 @@ public final class req{
 		}
 	}
 
-	private void resp_page_do(final DbTransaction tn)throws Throwable{
-		final sessionpath root_elem_dbo=get_session_path(path_s);
-		a root_elem=root_elem_dbo.getElem();
+	/** Called from run_page_do().*/
+	private void run_page_do_transaction(final DbTransaction tn)throws Throwable{
+		final sessionpath dbo_root_elem=get_session_path(path_s);
+		a root_elem=dbo_root_elem.getElem();
 		if(root_elem==null){// no root element, try to make new instance
 			String class_name=path_s.replace('/','.');
 			while(class_name.startsWith("."))class_name=class_name.substring(1);
@@ -732,16 +691,16 @@ public final class req{
 				reply(h_http404,null,null,tobytes(stacktrace(t)));
 				return;
 			}
-			if(root_elem instanceof sock){
+			if(root_elem instanceof sock){// if it is a socket switch mode
 				state=state_sock;
 				sck=(sock)root_elem;
-				switch(sck.sockinit(hdrs,new sockio(sockch,selkey,ByteBuffer.wrap(ba,ba_pos,ba_rem)))){default:throw new IllegalStateException();
-				case read:selkey.interestOps(SelectionKey.OP_READ);selkey.selector().wakeup();break;
-				case write:selkey.interestOps(SelectionKey.OP_WRITE);selkey.selector().wakeup();break;
-				case close:sockch.close();break;
-				case wait:selkey.interestOps(0);break;
+				switch(sck.sockinit(headers,new sockio(socket_channel,selection_key,ByteBuffer.wrap(ba,ba_pos,ba_rem)))){default:throw new IllegalStateException();
+				case read:selection_key.interestOps(SelectionKey.OP_READ);selection_key.selector().wakeup();break;
+				case write:selection_key.interestOps(SelectionKey.OP_WRITE);selection_key.selector().wakeup();break;
+				case close:socket_channel.close();break;
+				case wait:selection_key.interestOps(0);break;
 				}
-				root_elem_dbo.setElem(root_elem);
+				dbo_root_elem.setElem(root_elem);
 				return;
 			}
 		}
@@ -804,7 +763,7 @@ public final class req{
 			}catch(NoSuchMethodException t){
 				x.xalert("method not found:\n"+target_elem.getClass().getName()+".x_"+target_elem_method+"(xwriter,String)");
 			}
-			root_elem_dbo.setElem(root_elem);// dbo element is now dirty 
+			dbo_root_elem.setElem(root_elem);// dbo element is now dirty 
 			tn.flush();
 			x.finish();
 			os.finish();
@@ -823,7 +782,7 @@ public final class req{
 			b.log(t);
 			x.pre().p(b.stacktrace(t));
 		}
-		root_elem_dbo.setElem(root_elem);
+		dbo_root_elem.setElem(root_elem);
 		tn.flush();
 		x.finish();
 		os.finish();
@@ -852,30 +811,40 @@ public final class req{
 		}
 		bb_reply[bbi++]=ByteBuffer.wrap(hkp_transfer_encoding_chunked);
 		bb_reply[bbi++]=ByteBuffer.wrap(ba_crlf2);
-		thdwatch.output+=sendpacket(bb_reply,bbi);//? sends2packs
+		thdwatch.output+=send_packet(bb_reply,bbi);//? sends2packs
 		return new oschunked(this,b.chunk_B);     //?
 	}
-	void run_page_content()throws Throwable{
-		state=state_run_page_content;
-		if(!content_type.startsWith(text_plain))throw new RuntimeException("postedcontent only "+text_plain+" allowed");
-		parse_content();
-		resp_page();
-		if(state==state_run_page_content)state=state_nextreq;
-		thdwatch.posts++;
-	}
-	private void parse_content()throws IOException{//? ycopyfrombb
-		final byte[]ba=bb_content.array();
+	
+	private void populate_content_map_from_buffer()throws IOException{
+		byte[]ba=bb_content.array();
 		int i=0;
 		String name="";
 		int s=0;
-		int k=0;for(final byte c:ba){
+		int k=0;
+		for(byte c:ba){
 			switch(s){default:throw new RuntimeException();
-			case 0:if(c=='='){name=new String(ba,i,(k-i),b.strenc);i=k+1;s=1;}break;
-			case 1:if(c=='\r'){final String value=new String(ba,i,(k-i),b.strenc);content.put(name,value);i=k+1;s=0;}break;
+			case 0:
+				if(c=='='){
+					name=new String(ba,i,(k-i),b.strenc);
+					i=k+1;
+					s=1;
+				}
+				break;
+
+			case 1:
+				if(c=='\r'){
+					final String value=new String(ba,i,(k-i),b.strenc);
+					content.put(name,value);
+					i=k+1;
+					s=0;
+				}
+				break;
+			}
+			k++;
 		}
-		k++;}
 		bb_content=null;
 	}
+	
 	// socks
 	boolean is_sock(){return state==state_sock;}
 	sock.op sock_read()throws Throwable{return sck.read();}
@@ -892,17 +861,17 @@ public final class req{
 	}
 	private void sock_thread_read()throws Throwable{
 		switch(sock_read()){default:throw new RuntimeException();
-		case read:selkey.interestOps(SelectionKey.OP_READ);selkey.selector().wakeup();return;
-		case write:selkey.interestOps(SelectionKey.OP_WRITE);selkey.selector().wakeup();return;
+		case read:selection_key.interestOps(SelectionKey.OP_READ);selection_key.selector().wakeup();return;
+		case write:selection_key.interestOps(SelectionKey.OP_WRITE);selection_key.selector().wakeup();return;
 		case close:close();thdwatch.socks--;return;
-		case wait:selkey.interestOps(0);return;
+		case wait:selection_key.interestOps(0);return;
 		case noop:return;
 		}
 	}
 	private void sock_thread_write()throws Throwable{
 		switch(sock_write()){default:throw new RuntimeException();
-		case read:selkey.interestOps(SelectionKey.OP_READ);selkey.selector().wakeup();break;
-		case write:selkey.interestOps(SelectionKey.OP_WRITE);selkey.selector().wakeup();break;
+		case read:selection_key.interestOps(SelectionKey.OP_READ);selection_key.selector().wakeup();break;
+		case write:selection_key.interestOps(SelectionKey.OP_WRITE);selection_key.selector().wakeup();break;
 		case close:close();thdwatch.socks--;break;
 		}
 	}
@@ -916,38 +885,40 @@ public final class req{
 	boolean is_waiting_run(){return is_waiting_run_page()||is_waiting_run_page_content();}
 	void close(){
 		try{if(is_sock())sck.onconnectionlost();}catch(final Throwable t){b.log(t);}
-		try{sockch.close();}catch(final Throwable t){b.log(t);}
+		try{socket_channel.close();}catch(final Throwable t){b.log(t);}
 	}
 	boolean is_buf_empty(){return ba_rem ==0;}
 
-	public InetAddress ip(){return sockch.socket().getInetAddress();}
-	public String host(){final String h=hdrs.get("host");final String[]ha=h.split(":");return ha[0];}
-	public int port(){final String h=hdrs.get("host");final String[]ha=h.split(":");if(ha.length<2)return 80;return Integer.parseInt(ha[1]);}
+	public InetAddress ip(){return socket_channel.socket().getInetAddress();}
+	public String host(){final String h=headers.get("host");final String[]ha=h.split(":");return ha[0];}
+	// ? default is port 80?
+	public int port(){final String h=headers.get("host");final String[]ha=h.split(":");if(ha.length<2)return 80;return Integer.parseInt(ha[1]);}
 	public String path(){return path_s;}
 	public String query(){return query_s;}
 //	public session session(){return ses;}
 	public String toString(){return new String(ba,ba_pos,ba_rem)+(bb_content==null?"":new String(bb_content.slice().array()));}
-	public Map<String,String>headers(){return hdrs;}
+	public Map<String,String>headers(){return headers;}
 	
 	
 	public static req get(){return((thdreq)Thread.currentThread()).r;}
-	public static long cachef_size(){
-		if(cachef==null)return 0;
+	public static long file_and_resource_cache_size_B(){
+		if(file_and_resource_cache==null)return 0;
 		long k=0;
 		//? sync(cachef)
-		for(final chdresp e:cachef.values())k+=e.byte_buffer().capacity();
-		return k;
-	}
-	public static long cacheu_size(){
-		if(cacheu==null)return 0;
-		//? sync(cacheu)
-		long k=0;
-		for(final chdresp e:cacheu.values()){
-			if(e.byte_buffer()==null)continue;
+		for(final chdresp e:file_and_resource_cache.values())
 			k+=e.byte_buffer().capacity();
-		}
 		return k;
 	}
+//	public static long cacheu_size(){
+//		if(cacheu==null)return 0;
+//		//? sync(cacheu)
+//		long k=0;
+//		for(final chdresp e:cacheu.values()){
+//			if(e.byte_buffer()==null)continue;
+//			k+=e.byte_buffer().capacity();
+//		}
+//		return k;
+//	}
 	
 	public String session_id(){return session_id;}
 
@@ -964,7 +935,7 @@ public final class req{
 	private path pth;
 	private final StringBuilder sb_header_name=new StringBuilder(32);
 	private final StringBuilder sb_header_value=new StringBuilder(128);
-	private final Map<String,String>hdrs=new HashMap<String,String>();
+	private final Map<String,String>headers=new HashMap<String,String>();
 	private String session_id;
 	private boolean session_id_set;
 	private String content_type;
@@ -976,19 +947,19 @@ public final class req{
 	private long transfer_file_position;
 	private long transfer_file_remaining;
 	private boolean waiting_write;
-	SelectionKey selkey;
-	SocketChannel sockch;
+	SelectionKey selection_key;
+	SocketChannel socket_channel;
 	private path upload_path;
 	private FileChannel upload_channel;
 	private String upload_lastmod_s;
 	private sock sck;
 	final public static String field_path_separator="-";
 
-	private static Map<String,chdresp>cachef;
-	private static Map<String,chdresp>cacheu;
+	private static Map<String,chdresp>file_and_resource_cache;
+//	private static Map<String,chdresp>cacheu;
 	static void init_static(){
-		if(b.cache_files)cachef=Collections.synchronizedMap(new LinkedHashMap<String,chdresp>(b.cache_files_hashlen));
-		if(b.cache_uris)cacheu=Collections.synchronizedMap(new LinkedHashMap<String,chdresp>());
+		if(b.cache_files)file_and_resource_cache=Collections.synchronizedMap(new LinkedHashMap<String,chdresp>(b.cache_files_hashlen));
+//		if(b.cache_uris)cacheu=Collections.synchronizedMap(new LinkedHashMap<String,chdresp>());
 	}
 
 	final static byte[]h_http200="HTTP/1.1 200 OK".getBytes();
@@ -1020,7 +991,7 @@ public final class req{
 	private final static String hk_if_none_match="if-none-match";
 	private final static String hv_keep_alive="keep-alive";
 //	private final static String s_bytes_="bytes ";
-	private final static String s_eq="=";
+	private final static String s_equals="=";
 	private final static String s_minus="-";
 	private final static String s_range="range";
 	private final static String s_slash="/";
@@ -1041,7 +1012,7 @@ public final class req{
 	private final static int state_content_upload=13;
 	private final static int state_sock=15;
 	private final static String text_html_utf8="text/html;charset=utf-8";
-	private final static String text_plain="text/plain";
+	private final static String text_plain="text/plain";// ? utf8 encoding?
 //	private final static String text_plain_utf8="text/plain;charset=utf-8";
 
 }

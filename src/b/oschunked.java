@@ -39,11 +39,11 @@ final class oschunked extends OutputStream{
 	private void write_blocking(final ByteBuffer[]bba)throws IOException{
 		long remaining=0;for(final ByteBuffer bb:bba)remaining+=bb.remaining();
 		while(remaining!=0){
-			final long c=r.sockch.write(bba,0,bba.length);//?
+			final long c=r.socket_channel.write(bba,0,bba.length);//?
 			if(c==0)synchronized(r){
 				r.waiting_write(true);
-				r.selkey.interestOps(SelectionKey.OP_WRITE);
-				r.selkey.selector().wakeup();//?? racing
+				r.selection_key.interestOps(SelectionKey.OP_WRITE);
+				r.selection_key.selector().wakeup();//?? racing
 					/*;;*/try{r.wait();}catch(final InterruptedException ok){}
 				r.waiting_write(false);
 			}
