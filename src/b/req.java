@@ -275,7 +275,9 @@ public final class req{
 		return sb.toString();
 	}
 	private boolean try_file()throws Throwable{
-		if(cachef!=null)if(try_cache())return true;
+		if(cachef!=null)
+			if(try_cache())
+				return true;
 		if(!pth.exists())return false;
 		if(pth.isdir()){
 			pth=pth.get(b.default_directory_file);
@@ -379,7 +381,7 @@ public final class req{
 //			return;
 //		}
 		final String ifNoneMatch=hdrs.get(hk_if_none_match);
-		if(ifNoneMatch!=null&&c.ifNoneMatch(ifNoneMatch)){
+		if(ifNoneMatch!=null&&c.etag_matches(ifNoneMatch)){
 			reply(h_http304,null,null,null);
 			return;
 		}
@@ -775,12 +777,12 @@ public final class req{
 			os.finish();
 			return;
 		}
-		if(b.cache_uris&&rootElem instanceof cacheable){
-			final cacheable cw=(cacheable)rootElem;
-			reply(cw);
-			thdwatch.cacheu++;
-			return;
-		}
+//		if(b.cache_uris&&rootElem instanceof cacheable){
+//			final cacheable cw=(cacheable)rootElem;
+//			reply(cw);
+//			thdwatch.cacheu++;
+//			return;
+//		}
 		final boolean isbin=rootElem instanceof bin;
 		final oschunked os=reply_chunked(h_http200,isbin?((bin)rootElem).contenttype():text_html_utf8,null);
 		final xwriter x=new xwriter(os);
@@ -823,25 +825,25 @@ public final class req{
 		thdwatch.output+=sendpacket(bb_reply,bbi);//? sends2packs
 		return new oschunked(this,b.chunk_B);     //?
 	}
-	private void reply(final cacheable cw)throws Throwable{
-//		final String ifmodsince=hdrs.get(hk_if_modified_since);
-//		final String lastmod=cw.lastmod();
-//		if(ifmodsince!=null&&ifmodsince.equals(lastmod)){reply(h_http304,null,null,null);return;}
-		final String ifNoneMatch=hdrs.get(hk_if_none_match);
-		if(ifNoneMatch!=null&&ifNoneMatch.equals(cw.etag())){
-			reply(h_http304,null,null,null);
-			return;
-		}
-		final long t=System.currentTimeMillis();
-		String key=sb_path.toString();
-//		if(cw.cacheforeachuser())key=req.get().session().id()+"~"+key;// why not this request?
-		if(cw.cacheforeachuser())key=sesid+"~"+key;// why not this request?
-		chdresp c=cacheu.get(key);
-		if(c==null){c=new chdresp(cw,key);cacheu.put(key,c);}
-//		c.validate(t,ifmodsince);
-		c.validate(t,ifNoneMatch);
-		reply(c);
-	}
+//	private void reply(final cacheable cw)throws Throwable{
+////		final String ifmodsince=hdrs.get(hk_if_modified_since);
+////		final String lastmod=cw.lastmod();
+////		if(ifmodsince!=null&&ifmodsince.equals(lastmod)){reply(h_http304,null,null,null);return;}
+//		final String ifNoneMatch=hdrs.get(hk_if_none_match);
+//		if(ifNoneMatch!=null&&ifNoneMatch.equals(cw.etag())){
+//			reply(h_http304,null,null,null);
+//			return;
+//		}
+//		final long t=System.currentTimeMillis();
+//		String key=sb_path.toString();
+////		if(cw.cacheforeachuser())key=req.get().session().id()+"~"+key;// why not this request?
+//		if(cw.cacheforeachuser())key=sesid+"~"+key;// why not this request?
+//		chdresp c=cacheu.get(key);
+//		if(c==null){c=new chdresp(cw,key);cacheu.put(key,c);}
+////		c.validate(t,ifmodsince);
+//		c.validate(t,ifNoneMatch);
+//		reply(c);
+//	}
 	void run_page_content()throws Throwable{
 		state=state_run_page_content;
 		if(!contentType.startsWith(text_plain))throw new RuntimeException("only "+text_plain+" post allowed");

@@ -81,7 +81,8 @@ final public class b{
 	public static @conf String cacheu_dir="/cache/";
 	public static @conf final String webobjpkg="a.";
 	public static @conf String datetimefmtstr="yyyy-MM-dd HH:mm:ss.sss";
-	public static @conf @unit(name="tms")long resources_lastmod=0;
+//	public static @conf @unit(name="tms")long resources_lastmod=0;
+	public static @conf String resources_etag="\"b.2\"";
 	public static @conf boolean resources_enable_any_path=false;
 	public static HashSet<String>resources_paths=new HashSet<String>(Arrays.asList("x.js","x.css","favicon.ico"));
 	public static @conf boolean enable_upload=true;
@@ -115,7 +116,7 @@ final public class b{
 	public static void main(final String[]args)throws Throwable{
 //		System.out.println(hello);
 		if(!class_init(b.class,args))return;
-		resources_lastmod=System.currentTimeMillis();
+//		resources_lastmod=System.currentTimeMillis(); // ! doesn't work in cluster due to different startup times
 		if(print_conf_at_startup){
 //			print_hr(out,64);
 //			try{out.println(InetAddress.getLocalHost());}catch(Throwable ignored){}
