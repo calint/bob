@@ -81,16 +81,16 @@ public final class Db {
 	 * returned to the pool.
 	 */
 	public static void deinitCurrentTransaction() {
-		Db.log("dbo: deinit transaction on " + Thread.currentThread());
 		final DbTransaction tx = tn.get();
 		try {
 			if (!tx.rollbacked) {
 				tx.commit();
 			}
-			tx.stmt.close();
+			tx.stmt.close(); // ! might not be called when exception
 		} catch (final Throwable t) {
 			t.printStackTrace();
 		}
+		Db.log("dbo: deinit transaction on " + Thread.currentThread());
 		// make sure statement is closed here. should be. // ? stmt.isClosed() is not in
 		// java 1.5
 //		final boolean stmtIsClosed;
