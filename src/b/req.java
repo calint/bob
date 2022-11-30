@@ -44,7 +44,7 @@ public final class req{
 			}
 		}
 		while(ba_rem>0){switch(state){default:throw new RuntimeException();
-			case state_nextreq:methodlen=0;state=state_method;
+			case state_nextreq:method_len=0;state=state_method;
 			case state_method:parse_method();break;
 			case state_uri:parse_uri();break;
 			case state_prot:parse_prot();break;
@@ -68,7 +68,7 @@ public final class req{
 		}}
 		if(state==state_nextreq&&!is_connection_keepalive()){close();return b.op.noop;}
 	}}
-	private int methodlen;
+	private int method_len;
 	public static @conf int abuse_method_len=5;
 	private void parse_method(){
 		final int ba_pos_prev=ba_pos;
@@ -76,8 +76,8 @@ public final class req{
 			final byte b=ba[ba_pos++];ba_rem--;
 			if(b==' '){state=state_uri;sb_path.setLength(0);uri_len=0;break;}
 		}
-		methodlen+=(ba_pos-ba_pos_prev);
-		if(methodlen>abuse_method_len){close();throw new RuntimeException("abusemethodlen "+methodlen);}
+		method_len+=(ba_pos-ba_pos_prev);
+		if(method_len>abuse_method_len){close();throw new RuntimeException("abusemethodlen "+method_len);}
 	}
 	private int uri_len;
 	public static @conf int abuse_uri_len=512;
@@ -122,8 +122,6 @@ public final class req{
 		headers.clear();
 		// retrieve session at every request in case load balancer reuses an open connection for requests from a different client
 		// set sesid and session to null
-		session_id=null;
-		session_id_set=false; // ? setting this might not be necessary
 		header_name_len=headers_count=0;
 		state=state_header_name;
 	}
@@ -172,15 +170,20 @@ public final class req{
 	
 
 	private void do_after_header()throws Throwable{
-//		 this would trigger set-cookie on files and resources
-//		if(!decodecookie()){
-//			sesid=mkcookieid();
-//			sesid_set=true;
-//			pl("new session "+sesid);
+		session_id=null;
+		session_id_set=false;
+
+//		// this would trigger set-cookie on files and resources
+//		if(!set_session_id_from_cookie()){
+//			session_id=make_new_session_id();
+//			session_id_set=true;
+//			pl("new session "+session_id);
 //			thdwatch.sessions++;
 //		}
+		
 		final String ka=headers.get(hk_connection);
-		if(ka!=null)connection_keep_alive=hv_keep_alive.equalsIgnoreCase(ka);
+		if(ka!=null)
+			connection_keep_alive=hv_keep_alive.equalsIgnoreCase(ka);
 		
 		content.clear();
 		content_bb=null;
