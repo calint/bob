@@ -3,4 +3,3 @@
 [x] cookie: same-site
 [ ] fix for client that makes a threaded request and stalling it. ddos
 [o] etag instead of last-modified
-

@@ -331,27 +331,30 @@ public final class req{
 		state=state_transfer_file;do_transfer_file();
 		return true;
 	}
+	/** @return true if the file or resource has been cached. */
 	private boolean try_cache()throws Throwable{
 		chdresp cachedresp;
-		boolean validated=false;
-		cachedresp=cachef.get(path_s);
-		if(cachedresp==null){
+		synchronized(cachef){cachedresp=cachef.get(path_s);}
+		if(cachedresp==null){ // not in cache, try to cache a file
 			if(pth.isdir())pth=pth.get(b.default_directory_file);
 			if(!pth.exists())return false;
 			if(pth.size()<=b.cache_files_maxsize){
 				cachedresp=new chdresp(pth);
-				validated=true;
-				cachef.put(path_s,cachedresp);
+				synchronized(cachef){cachef.put(path_s,cachedresp);}
+				reply(cachedresp);
 				thdwatch._cachef++;
+				return true;
 			}
+			// file to big to cache
+			return false;
 		}
-		if(cachedresp==null)return false;
-		if(!validated&&!cachedresp.validate(System.currentTimeMillis(),null)){
+		// validate that the cached file is up to date
+		if(!cachedresp.validate(System.currentTimeMillis())){
 			synchronized(cachef){cachef.remove(path_s);}
 			thdwatch._cachef--;
-			return true;
+			return false;
 		}
-		reply(cachedresp);
+		reply(cachedresp); // send the cached response
 		return true;
 	}
 	private boolean try_rc()throws Throwable{
