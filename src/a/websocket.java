@@ -2,15 +2,10 @@ package a;
 
 import java.nio.ByteBuffer;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
-import b.req;
-import b.threadedsock;
 import b.websock;
 
 final public class websocket extends websock {
-	static final long serialVersionUID = 1;
 
 	synchronized final @Override protected void onopened() throws Throwable {
 		System.out.println("onopened");

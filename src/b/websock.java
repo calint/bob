@@ -3,7 +3,7 @@ import java.nio.*;
 import java.security.*;
 import java.util.*;
 import static b.b.*;
-public class websock implements sock{static final long serialVersionUID=1;
+public class websock implements sock{
 	private sockio so;
 	private ByteBuffer bbi;
 	private static enum state{closed,handshake,read_next_frame,read_continue}

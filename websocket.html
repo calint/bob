@@ -34,6 +34,9 @@ function start(){
 	ws.onerror=function(e){
 		p("web socket: onerror "+e.data);
 	};
+	ws.onclose=function(e){
+		p("web socket: onclose "+e.data);
+	};
 }
 function stop(){
 	ws.close();

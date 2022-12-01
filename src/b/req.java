@@ -699,10 +699,8 @@ public final class req{
 				state=state_sock;
 				return;
 			}
-			root_elem=(a)path_obj;
-		}else {
-			root_elem=(a)path_obj;
 		}
+		root_elem=(a)path_obj;
 		if(!content.isEmpty()){
 			// ajax post
 			String ajax_command_string="";
