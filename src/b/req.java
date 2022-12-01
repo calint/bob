@@ -1,7 +1,6 @@
 package b;
 import static b.b.p;
 import static b.b.pl;
-import static b.b.stacktrace;
 import static b.b.tobytes;
 
 import java.io.IOException;
@@ -648,19 +647,41 @@ public final class req{
 	/** Called from the request thread. */
 	void run_page()throws Throwable{
 		state=state_run_page;
+		
+		final Class<?>cls=b.get_class_for_path(path_s);
+		if(cls==null){
+			xwriter x=new xwriter().p(path_s).nl().nl().pl("Resource not found.");
+			reply(h_http404,null,null,tobytes(x.toString()));
+			state=state_nextreq;
+			return;
+		}
+
+		if(websock.class.isAssignableFrom(cls)){
+			System.out.println("websocket at "+path_s);
+			sck=(sock)cls.getConstructor().newInstance();
+			switch(sck.sockinit(headers,new sockio(socket_channel,selection_key,ByteBuffer.wrap(ba,ba_pos,ba_rem)))){default:throw new IllegalStateException();
+			case read:selection_key.interestOps(SelectionKey.OP_READ);selection_key.selector().wakeup();break;
+			case write:selection_key.interestOps(SelectionKey.OP_WRITE);selection_key.selector().wakeup();break;
+			case close:socket_channel.close();break;
+			case wait:selection_key.interestOps(0);break;
+			}
+			state=state_sock;
+			return;
+		}
+
 		if(content_bb!=null)
 			populate_content_map_from_buffer();
-		
+
 		if(!set_session_id_from_cookie()){
 			session_id=make_new_session_id();
 			session_id_set=true;
 			pl("new session "+session_id);
 			thdwatch.sessions++;
 		}
-		
+
 		final DbTransaction tn=Db.initCurrentTransaction();
 		try{
-			run_page_do(tn);
+			run_page_do(tn,cls);
 		}catch(Throwable t){
 			tn.rollback();
 			while(t.getCause()!=null)t=t.getCause();
@@ -679,28 +700,12 @@ public final class req{
 	}
 
 	/** Called from run_page().*/
-	private void run_page_do(final DbTransaction tn)throws Throwable{
+	private void run_page_do(final DbTransaction tn,final Class<?>cls)throws Throwable{
 		final sessionpath dbo_root_elem=get_session_path(path_s);
-		Object path_obj=dbo_root_elem.getElem();
-		final a root_elem;
-		if(path_obj==null){// no root element, try to make new instance
-			path_obj=create_instance_for_path(this,path_s);
-			if(path_obj==null)
-				return;
-			if(path_obj instanceof sock){// if it is a socket switch mode
-				System.out.println("websocket at "+path_s);
-				sck=(sock)path_obj;
-				switch(sck.sockinit(headers,new sockio(socket_channel,selection_key,ByteBuffer.wrap(ba,ba_pos,ba_rem)))){default:throw new IllegalStateException();
-				case read:selection_key.interestOps(SelectionKey.OP_READ);selection_key.selector().wakeup();break;
-				case write:selection_key.interestOps(SelectionKey.OP_WRITE);selection_key.selector().wakeup();break;
-				case close:socket_channel.close();break;
-				case wait:selection_key.interestOps(0);break;
-				}
-				state=state_sock;
-				return;
-			}
+		a root_elem=dbo_root_elem.getElem();
+		if(root_elem==null){
+			root_elem=(a)cls.getConstructor().newInstance();
 		}
-		root_elem=(a)path_obj;
 		if(!content.isEmpty()){
 			// ajax post
 			String ajax_command_string="";
@@ -784,32 +789,32 @@ public final class req{
 		x.finish();
 		os.finish();
 	}
-	
-	private static Object create_instance_for_path(req r,String p)throws Throwable{
-		String class_name=p.replace('/','.');
-		while(class_name.startsWith("."))class_name=class_name.substring(1);
-		class_name=b.webobjpkg+class_name;
-		Class<?>element_class;
-		String class_name_ext="";
-		try{element_class=(Class<?>)Class.forName(class_name);}catch(Throwable e1){try{
-			class_name_ext=class_name+(class_name.length()==0||class_name.endsWith(".")?"":".")+b.default_package_class;
-			element_class=(Class<?>)Class.forName(class_name_ext);
-		}catch(Throwable e2){
-			while(e1.getCause()!=null)e1=e1.getCause();
-			xwriter x=new xwriter().p(p).nl().nl().p(b.stacktraceline(e1)).nl().nl().p(b.stacktraceline(e2)).nl();
-			pl("classnotfound for path '"+p+"' tried '"+class_name+"' and '"+class_name_ext+"'");
-			r.reply(h_http404,null,null,tobytes(x.toString()));
-			return null;
-		}}
-		Object elem;
-		try{elem=element_class.getConstructor().newInstance();}catch(Throwable t){
-			while(t.getCause()!=null)t=t.getCause();
-//			final xwriter x=new xwriter().p(path_s).nl().nl().p(b.stacktraceline(ex)).nl();
-			r.reply(h_http404,null,null,tobytes(stacktrace(t)));
-			return null;
-		}
-		return elem;
-	}
+//	
+//	private static Object create_instance_for_path(req r,String p)throws Throwable{
+//		String class_name=p.replace('/','.');
+//		while(class_name.startsWith("."))class_name=class_name.substring(1);
+//		class_name=b.webobjpkg+class_name;
+//		Class<?>element_class;
+//		String class_name_ext="";
+//		try{element_class=(Class<?>)Class.forName(class_name);}catch(Throwable e1){try{
+//			class_name_ext=class_name+(class_name.length()==0||class_name.endsWith(".")?"":".")+b.default_package_class;
+//			element_class=(Class<?>)Class.forName(class_name_ext);
+//		}catch(Throwable e2){
+//			while(e1.getCause()!=null)e1=e1.getCause();
+//			xwriter x=new xwriter().p(p).nl().nl().p(b.stacktraceline(e1)).nl().nl().p(b.stacktraceline(e2)).nl();
+//			pl("classnotfound for path '"+p+"' tried '"+class_name+"' and '"+class_name_ext+"'");
+//			r.reply(h_http404,null,null,tobytes(x.toString()));
+//			return null;
+//		}}
+//		Object elem;
+//		try{elem=element_class.getConstructor().newInstance();}catch(Throwable t){
+//			while(t.getCause()!=null)t=t.getCause();
+////			final xwriter x=new xwriter().p(path_s).nl().nl().p(b.stacktraceline(ex)).nl();
+//			r.reply(h_http404,null,null,tobytes(stacktrace(t)));
+//			return null;
+//		}
+//		return elem;
+//	}
 	
 	private oschunked reply_chunked(final byte[]hdr,final String contentType)throws Throwable{
 		final ByteBuffer[]bb_reply=new ByteBuffer[11];
@@ -865,7 +870,7 @@ public final class req{
 		}
 	}
 	
-	// socks
+	// ? separation of concerns, this request is either a sock or a 'a'
 	boolean is_sock(){return state==state_sock;}
 	sock.op sock_read()throws Throwable{return sck.read();}
 	sock.op sock_write()throws Throwable{return sck.write();}

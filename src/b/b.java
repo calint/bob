@@ -28,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -98,6 +99,7 @@ final public class b{
 	public static String bapp_jdbc_ncons="10";
 	public static bapp bapp=null;
 	
+	private final static HashMap<String,Class<?>>path_to_class_map=new HashMap<String,Class<?>>();
 	private final static LinkedList<req>pending_req=new LinkedList<req>();
 	public static void main(final String[]args)throws Throwable{
 //		System.out.println(hello);
@@ -175,6 +177,13 @@ final public class b{
 			}}catch(final Throwable e){
 				log(e);
 			}
+	}
+	/** Registers in a map of paths to class. */
+	public static void register(final String path,final Class<?>cls){
+		path_to_class_map.put(path,cls);
+	}
+	public static Class<?>get_class_for_path(final String path){
+		return path_to_class_map.get(path);
 	}
 	private static void print_hr(final OutputStream os,final int width_in_chars)throws IOException{ // ? only used in b.main, remove?
 //		for(int i=0;i<width_in_chars;i++)

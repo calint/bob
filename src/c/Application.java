@@ -34,6 +34,9 @@ public class Application implements bapp {
 		db.register(Book.class);
 		db.register(Game.class);
 		db.register(TestObj.class);
+		
+		b.b.register("/",a.$.class);
+		b.b.register("/websocket",a.websocket.class);
 //		db.init("jdbc:mysql://localhost:3306/testdb", "c", "password", 5);
 //		db.init("jdbc:mysql://" + b.bapp_jdbc_host + "/" + b.bapp_jdbc_db
 //				+ "?allowPublicKeyRetrieval=true&useSSL=false", b.bapp_jdbc_user, b.bapp_jdbc_password,
