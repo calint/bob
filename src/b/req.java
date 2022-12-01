@@ -685,6 +685,8 @@ public final class req{
 		final a root_elem;
 		if(path_obj==null){// no root element, try to make new instance
 			path_obj=create_instance_for_path(this,path_s);
+			if(path_obj==null)
+				return;
 			if(path_obj instanceof sock){// if it is a socket switch mode
 				System.out.println("websocket at "+path_s);
 				sck=(sock)path_obj;
