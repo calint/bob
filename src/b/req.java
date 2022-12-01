@@ -875,6 +875,7 @@ public final class req{
 	private boolean waiting_sock_thread_write;
 	void set_waiting_sock_thread_read(){waiting_sock_thread_read=true;}
 	void set_waiting_sock_thread_write(){waiting_sock_thread_write=true;}
+	/** Called from thread when the running in threaded mode. */
 	void sock_thread_run()throws Throwable{
 		if(waiting_sock_thread_read){waiting_sock_thread_read=false;sock_thread_read();}
 		if(waiting_sock_thread_write){waiting_sock_thread_write=false;sock_thread_write();}
