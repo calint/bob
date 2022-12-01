@@ -686,6 +686,7 @@ public final class req{
 		if(path_obj==null){// no root element, try to make new instance
 			path_obj=create_instance_for_path(this,path_s);
 			if(path_obj instanceof sock){// if it is a socket switch mode
+				System.out.println("websocket at "+path_s);
 				sck=(sock)path_obj;
 				switch(sck.sockinit(headers,new sockio(socket_channel,selection_key,ByteBuffer.wrap(ba,ba_pos,ba_rem)))){default:throw new IllegalStateException();
 				case read:selection_key.interestOps(SelectionKey.OP_READ);selection_key.selector().wakeup();break;
