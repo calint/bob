@@ -621,7 +621,7 @@ public final class req{
 		final session dbses;
 		if(lsses.isEmpty()){
 			dbses=(session)tn.create(session.class);
-			dbses.setSessionId(session_id);
+			dbses.session_id(session_id);
 		}else {
 			if(lsses.size()>1) {
 				b.log(new RuntimeException("found more than one dbsession for id "+session_id));
@@ -635,7 +635,7 @@ public final class req{
 		final DbTransaction tn=Db.currentTransaction();
 		final List<DbObject>ls=tn.get(sessionpath.class,new Query(session.sessionId,Query.EQ,session_id).and(session.paths).and(sessionpath.path,Query.EQ,p),null,null);
 		if(ls.isEmpty()){
-			return get_session().getPath(p);
+			return get_session().path(p);
 		}else {
 			if(ls.size()>1) {
 				b.log(new RuntimeException("found "+ls.size()+" paths for session "+session_id+" path "+p));
@@ -702,7 +702,7 @@ public final class req{
 	/** Called from run_page().*/
 	private void run_page_do(final DbTransaction tn,final Class<?>cls)throws Throwable{
 		final sessionpath dbo_root_elem=get_session_path(path_s);
-		a root_elem=dbo_root_elem.getElem();
+		a root_elem=dbo_root_elem.elem();
 		if(root_elem==null){
 			root_elem=(a)cls.getConstructor().newInstance();
 		}
@@ -765,7 +765,7 @@ public final class req{
 			}catch(NoSuchMethodException t){
 				x.xalert("method not found:\n"+target_elem.getClass().getName()+".x_"+target_elem_method+"(xwriter,String)");
 			}
-			dbo_root_elem.setElem(root_elem);// dbo element is now dirty 
+			dbo_root_elem.elem(root_elem);// dbo element is now dirty 
 			tn.flush();
 			x.finish();
 			os.finish();
@@ -784,7 +784,7 @@ public final class req{
 			b.log(t);
 			x.pre().p(b.stacktrace(t));
 		}
-		dbo_root_elem.setElem(root_elem);
+		dbo_root_elem.elem(root_elem);
 		tn.flush();
 		x.finish();
 		os.finish();

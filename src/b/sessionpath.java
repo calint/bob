@@ -8,20 +8,20 @@ import db.FldSerializable;
 import db.FldStr;
 import db.Index;
 
-public class sessionpath extends DbObject {
+public final class sessionpath extends DbObject {
 	public final static FldStr path=new FldStr(255,"");
 	public final static FldSerializable elem = new FldSerializable();
 	public final static Index ixPath=new Index(path);
 	
-	public String getPath() {
+	public String path() {
 		return getStr(path);
 	}
 
-	public void setPath(String v) {
+	public void path(String v) {
 		set(path, v);
 	}
 
-	public a getElem() {
+	public a elem() {
 		final Object v = get(elem);
 		if (v == null)
 			return null;
@@ -46,7 +46,7 @@ public class sessionpath extends DbObject {
 		}
 	}
 
-	public void setElem(a v) {
+	public void elem(a v) {
 		set(elem, v);
 	}
 

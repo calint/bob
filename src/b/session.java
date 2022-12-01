@@ -8,25 +8,25 @@ import db.Query;
 import db.RelAggN;
 import db.test.FldChars;
 
-public class session extends DbObject {
+public final class session extends DbObject {
 	public final static FldChars sessionId = new FldChars(32, "");
 	public final static RelAggN paths = new RelAggN(sessionpath.class);
 	public final static Index ixSessionId=new Index(sessionId);
 
-	public String getSessionId() {
+	public String session_id() {
 		return getStr(sessionId);
 	}
 
-	public void setSessionId(String v) {
+	public void session_id(String v) {
 		set(sessionId, v);
 	}
 
-	public sessionpath getPath(final String p) {
+	public sessionpath path(final String p) {
 		final Query q = new Query(sessionpath.path, Query.EQ, p);
 		final List<DbObject> ls = paths.get(this, q, null, null);
 		if (ls.isEmpty()) {
 			final sessionpath e = (sessionpath) paths.create(this);
-			e.setPath(p);
+			e.path(p);
 			return e;
 		}
 		if (ls.size() > 1) {
