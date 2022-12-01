@@ -834,7 +834,9 @@ public final class req{
 	}
 	
 	private void populate_content_map_from_buffer()throws Throwable{
-		if(!content_type.startsWith(text_plain))throw new RuntimeException("postedcontent only "+text_plain+" allowed");
+		System.out.println("*** content type: "+content_type);
+		System.out.println(new String(content_bb.array(),0,content_bb.limit()));
+		if(content_type!=null&&!content_type.startsWith(text_plain))throw new RuntimeException("postedcontent only "+text_plain+" allowed");
 		byte[]ba=content_bb.array();
 		int i=0;
 		String name="";
