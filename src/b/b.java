@@ -218,7 +218,7 @@ final public class b{
 		if(r.is_transfer()){
 			if(!r.do_transfer()){r.selection_key.interestOps(SelectionKey.OP_WRITE);return;}
 			if(!r.is_connection_keepalive()){r.close();return;}
-			if(r.is_buf_empty()){r.selection_key.interestOps(SelectionKey.OP_READ);return;}
+			if(r.is_buffer_empty()){r.selection_key.interestOps(SelectionKey.OP_READ);return;}
 			read(r);//?? bug stackrain
 			return;
 		}

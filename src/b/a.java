@@ -48,8 +48,8 @@ public class a implements Serializable{
 	public final String id(){
 		String s=nm;
 		for(a p=this;p.pt!=null;p=p.pt)
-			s=tostr(p.pt.nm,"")+req.field_path_separator+s;
-		return tostr(s,req.field_path_separator);
+			s=tostr(p.pt.nm,"")+req.ajax_field_path_separator+s;
+		return tostr(s,req.ajax_field_path_separator);
 	}
 	public final String nm(){return nm;}
 //	public final a nm(final String nm){this.nm=nm;return this;}

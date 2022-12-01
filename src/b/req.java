@@ -44,7 +44,38 @@ public final class req{
 			}
 		}
 		while(ba_rem>0){switch(state){default:throw new RuntimeException();
-			case state_nextreq:method_len=0;state=state_method;
+			case state_nextreq:
+				method_length=0;
+				uri_sb.setLength(0);
+				uri_length=0;
+				path_s=null;
+				path=null;
+				query_s=null;
+				prot_length=0;
+				header_name_length=0;
+				header_name_sb.setLength(0);
+				header_value_length=0;
+				header_value_sb.setLength(0);
+				headers_count=0;
+				headers.clear();
+				session_id=null;
+				session_id_set=false;
+				content_bb=null;
+				content_type=null;
+				content_remaining_to_read=0;
+				content.clear();
+				transfer_buffers=null;
+				transfer_buffers_remaining=0;
+				transfer_file_channel=null;
+				transfer_file_position=0;
+				transfer_file_remaining=0;
+				waiting_write=false;
+				upload_path=null;
+				upload_channel=null;
+				upload_lastmod_s=null;
+				
+				state=state_method;// fallthrough
+				
 			case state_method:parse_method();break;
 			case state_uri:parse_uri();break;
 			case state_prot:parse_prot();break;
@@ -68,33 +99,30 @@ public final class req{
 		}}
 		if(state==state_nextreq&&!is_connection_keepalive()){close();return b.op.noop;}
 	}}
-	private int method_len;
-	public static @conf int abuse_method_len=5;
+
 	private void parse_method(){
 		final int ba_pos_prev=ba_pos;
 		while(ba_rem!=0){
 			final byte b=ba[ba_pos++];ba_rem--;
-			if(b==' '){state=state_uri;sb_path.setLength(0);uri_len=0;break;}
+			if(b==' '){state=state_uri;break;}
 		}
-		method_len+=(ba_pos-ba_pos_prev);
-		if(method_len>abuse_method_len){close();throw new RuntimeException("abusemethodlen "+method_len);}
+		method_length+=(ba_pos-ba_pos_prev);
+		if(method_length>abuse_method_len){close();throw new RuntimeException("abusemethodlen "+method_length);}
 	}
-	private int uri_len;
-	public static @conf int abuse_uri_len=512;
+
 	private void parse_uri(){
 		final int ba_pos_prev=ba_pos;
 		while(ba_rem!=0){
 			final byte b=ba[ba_pos++];ba_rem--;
-			if(b==' '){state=state_prot;protlen=0;break;}
+			if(b==' '){state=state_prot;break;}
 			if(b=='\n'){do_after_prot();break;}// ie: '. index.html\n' //todo allow white space in request line
-			sb_path.append((char)b);
+			uri_sb.append((char)b);
 		}
-		uri_len+=(ba_pos-ba_pos_prev);
-		if(uri_len>abuse_uri_len)
-			{close();throw new RuntimeException("abuseurilen "+uri_len);}
+		uri_length+=(ba_pos-ba_pos_prev);
+		if(uri_length>abuse_uri_len)
+			{close();throw new RuntimeException("abuseurilen "+uri_length);}
 	}
-	private int protlen;
-	public static @conf int abuse_prot_len=11;
+
 	private void parse_prot()throws Throwable{
 		final int ba_pos_prev=ba_pos;
 		while(ba_rem!=0){
@@ -105,12 +133,13 @@ public final class req{
 			do_after_prot();
 			break;
 		}
-		protlen+=(ba_pos-ba_pos_prev);
-		if(protlen>abuse_prot_len){close();throw new RuntimeException("abuseprotlen "+protlen);}
+		prot_length+=(ba_pos-ba_pos_prev);
+		if(prot_length>abuse_prot_len){close();throw new RuntimeException("abuseprotlen "+prot_length);}
 	}
+
 	private void do_after_prot(){
 		thdwatch.reqs++;
-		final String uri_encoded=sb_path.toString().trim();
+		final String uri_encoded=uri_sb.toString().trim();
 		final int i=uri_encoded.indexOf('?');
 		if(i==-1){
 			path_s=b.urldecode(uri_encoded);
@@ -119,60 +148,49 @@ public final class req{
 			path_s=b.urldecode(uri_encoded.substring(0,i));
 			query_s=uri_encoded.substring(i+1);
 		}
-		headers.clear();
-		// retrieve session at every request in case load balancer reuses an open connection for requests from a different client
-		// set sesid and session to null
-		header_name_len=headers_count=0;
 		state=state_header_name;
 	}
-	private int header_name_len;
-	public static @conf int abuse_header_name_len=32;
+	
 	private void parse_header_name()throws Throwable{
 		final int ba_pos_prev=ba_pos;
 		while(ba_rem!=0){
 			final byte b=ba[ba_pos++];ba_rem--;
-			if(b==':'){state=state_header_value;header_value_length=0;break;}
+			if(b==':'){
+				header_value_sb.setLength(0);
+				header_value_length=0;
+				state=state_header_value;
+				break;
+			}
 			else if(b=='\n'){do_after_header();return;}
-			else{sb_header_name.append((char)b);}
+			else{header_name_sb.append((char)b);}
 		}
-		header_name_len+=(ba_pos-ba_pos_prev);
-		if(header_name_len>abuse_header_name_len){close();throw new RuntimeException("abuseheadernamelen "+header_name_len);}
+		header_name_length+=(ba_pos-ba_pos_prev);
+		if(header_name_length>abuse_header_name_len){close();throw new RuntimeException("abuseheadernamelen "+header_name_length);}
 	}
-	private @conf int header_value_length;
-	public static @conf int abuse_header_value_len=256;
-	private int headers_count;
-	public static @conf int abuse_header_count=32;
 	
 	private void parse_header_value(){
 		final int ba_pos_prev=ba_pos;
 		while(ba_rem!=0){
 			final byte b=ba[ba_pos++];ba_rem--;
 			if(b=='\n'){
-				headers.put(sb_header_name.toString().trim().toLowerCase(),sb_header_value.toString().trim());
+				headers.put(header_name_sb.toString().trim().toLowerCase(),header_value_sb.toString().trim());
 				headers_count++;
 				if(headers_count>abuse_header_count){
 					close();
 					throw new RuntimeException("abuseheaderscount "+headers_count);
 				}
-				sb_header_name.setLength(0);
-				sb_header_value.setLength(0);
-				header_name_len=0;
+				header_name_sb.setLength(0);
+				header_name_length=0;
 				state=state_header_name;
 				break;
 			}
-			sb_header_value.append((char)b);
+			header_value_sb.append((char)b);
 		}
 		header_value_length+=(ba_pos-ba_pos_prev);
 		if(header_value_length>abuse_header_value_len){close();throw new RuntimeException("abuseheadervaluelen "+header_value_length);}
 	}
-	public static @conf long abuse_upload_len=16*b.G;
-	public static @conf long abuse_content_len=1*b.M;
-	
 
 	private void do_after_header()throws Throwable{
-		session_id=null;
-		session_id_set=false;
-
 //		// this would trigger set-cookie on files and resources
 //		if(!set_session_id_from_cookie()){
 //			session_id=make_new_session_id();
@@ -185,15 +203,11 @@ public final class req{
 		if(ka!=null)
 			connection_keep_alive=hv_keep_alive.equalsIgnoreCase(ka);
 		
-		content.clear();
-		content_bb=null;
-		content_remaining_to_read=0;
-		content_type=headers.get(hk_content_type);
-		
+		content_type=headers.get(hk_content_type);		
 		if(content_type!=null){
 			if(content_type.startsWith("dir;")||content_type.equals("dir")){
 				if(!b.enable_upload)throw new RuntimeException("uploadsdisabled");
-				if(!set_session_id_from_cookie())throw new RuntimeException("nocookie at create dir. path:"+sb_path);
+				if(!set_session_id_from_cookie())throw new RuntimeException("nocookie at create dir. path:"+uri_sb);
 				final String[]q=content_type.split(";");
 				final String lastmod_s=q[1];
 				final path p=b.path(b.sessions_dir).get(session_id).get(path_s);
@@ -208,7 +222,7 @@ public final class req{
 			if(content_type.startsWith("file;")||content_type.equals("file")){
 				if(!b.enable_upload)throw new RuntimeException("uploadsdisabled");
 //				System.out.println(path_s);
-				if(!set_session_id_from_cookie())throw new RuntimeException("nocookie at create file from upload. path:"+sb_path);
+				if(!set_session_id_from_cookie())throw new RuntimeException("nocookie at create file from upload. path:"+uri_sb);
 //				final String contentLength_s=hdrs.get(hk_content_length);
 				content_remaining_to_read=Long.parseLong(headers.get(hk_content_length));
 				if(content_remaining_to_read>abuse_upload_len){close();throw new RuntimeException("abuseuploadlen "+content_remaining_to_read);}
@@ -228,7 +242,7 @@ public final class req{
 		// assumes content type "text/plain; charset=utf-8" from an ajax post
 		final String contentLength_s=headers.get(hk_content_length);
 		if(contentLength_s!=null){
-			if(!set_session_id_from_cookie())throw new RuntimeException("nocookie in request with content. path:"+sb_path);
+			if(!set_session_id_from_cookie())throw new RuntimeException("nocookie in request with content. path:"+uri_sb);
 			content_remaining_to_read=Long.parseLong(contentLength_s);
 			if(content_remaining_to_read>abuse_content_len){close();throw new RuntimeException("abusecontentlen "+content_remaining_to_read);}
 			content_bb=ByteBuffer.allocate((int)content_remaining_to_read);
@@ -236,7 +250,7 @@ public final class req{
 			parse_content_read();
 			return;
 		}
-		try{pth=b.path(path_s);}catch(final Throwable t){
+		try{path=b.path(path_s);}catch(final Throwable t){
 			reply(h_http404,null,null,tobytes(b.stacktrace(t)));
 			close();
 			throw t;
@@ -274,13 +288,13 @@ public final class req{
 	}
 	
 	private boolean try_file()throws Throwable{
-		if(!pth.exists())return false;
-		if(pth.isdir()){
-			pth=pth.get(b.default_directory_file);
-			if(!pth.exists()||!pth.isfile())return false;
+		if(!path.exists())return false;
+		if(path.isdir()){
+			path=path.get(b.default_directory_file);
+			if(!path.exists()||!path.isfile())return false;
 		}
 		thdwatch.files++;
-		final long lastmod_l=pth.lastmod();
+		final long lastmod_l=path.lastmod();
 		final String etag="\""+lastmod_l+"\"";
 		final String client_etag=headers.get(hk_if_none_match);
 		if(etag.equals(client_etag)) {
@@ -288,7 +302,7 @@ public final class req{
 			return true;
 		}
 		
-		final long len=pth.size();
+		final long len=path.size();
 
 		final String range_s=headers.get(s_range);
 		long range_from;
@@ -339,7 +353,7 @@ public final class req{
 		bb[i++]=ByteBuffer.wrap(ba_crlf2);
 		final long n=send_packet(bb,i); // ? is send complete?
 		thdwatch.output+=n;
-		transfer_file_channel=pth.fileinputstream().getChannel();
+		transfer_file_channel=path.fileinputstream().getChannel();
 		transfer_file_position=range_from;
 		if(range_to==-1) // unspecified, use content_length
 			transfer_file_remaining=len-range_from; 
@@ -355,10 +369,10 @@ public final class req{
 	private boolean try_cache()throws Throwable{
 		chdresp cachedresp=file_and_resource_cache.get(path_s);
 		if(cachedresp==null){ // not in cache, try to cache a file
-			if(pth.isdir())pth=pth.get(b.default_directory_file);
-			if(!pth.exists())return false;
-			if(pth.size()<=b.cache_files_maxsize){
-				cachedresp=new chdresp_file(pth);
+			if(path.isdir())path=path.get(b.default_directory_file);
+			if(!path.exists())return false;
+			if(path.size()<=b.cache_files_maxsize){
+				cachedresp=new chdresp_file(path);
 				file_and_resource_cache.put(path_s,cachedresp);
 				reply(cachedresp);
 				thdwatch._cachef++;
@@ -379,13 +393,13 @@ public final class req{
 	
 	/** @return true if resource was cached and sent. */
 	private boolean try_resource()throws Throwable{
-		final String p=pth.name();//? path
+		final String p=path.name();//? path
 		if(!b.resources_enable_any_path&&!b.resources_paths.contains(p))return false;
 		final String rcpth;
 		if(b.resources_paths.contains(p))
 			rcpth="/"+req.class.getPackage().getName()+"/"+p;
 		else if(b.resources_enable_any_path)
-			rcpth="/"+b.webobjpkg.replace('.','/')+pth;
+			rcpth="/"+b.webobjpkg.replace('.','/')+path;
 		else return false;
 		
 		final InputStream is=req.class.getResourceAsStream(rcpth);
@@ -575,7 +589,6 @@ public final class req{
 	}
 	
 	private void parse_content_upload()throws Throwable{
-//		System.out.println(path_s+"   content upload");
 		final long diff=content_remaining_to_read-ba_rem;
 		final int c;
 		if(diff<0){
@@ -644,6 +657,7 @@ public final class req{
 			pl("new session "+session_id);
 			thdwatch.sessions++;
 		}
+		
 		final DbTransaction tn=Db.initCurrentTransaction();
 		try{
 			run_page_do(tn);
@@ -712,7 +726,7 @@ public final class req{
 					continue;
 				}
 				//? indexofloop
-				final String[]paths=me.getKey().split(req.field_path_separator);
+				final String[]paths=me.getKey().split(req.ajax_field_path_separator);
 				a e=root_elem;
 				for(int n=1;n<paths.length;n++){
 					e=e.chld(paths[n]);
@@ -740,7 +754,7 @@ public final class req{
 				}
 			}
 			// navigate to the target element
-			final String[]path=target_elem_id.split(req.field_path_separator);//? indexofloop
+			final String[]path=target_elem_id.split(req.ajax_field_path_separator);//? indexofloop
 			a target_elem=root_elem;
 			for(int n=1;n<path.length;n++){
 				target_elem=target_elem.chld(path[n]);
@@ -786,7 +800,6 @@ public final class req{
 		x.finish();
 		os.finish();
 	}
-	// threaded done
 	
 	private oschunked reply_chunked(final byte[]hdr,final String contentType)throws Throwable{
 		final ByteBuffer[]bb_reply=new ByteBuffer[11];
@@ -876,13 +889,12 @@ public final class req{
 	boolean is_connection_keepalive(){return connection_keep_alive;}
 	boolean is_transfer(){return state==state_transfer_file||state==state_transfer_buffers;}
 	boolean is_waiting_run_page(){return state==state_waiting_run_page;}
-//	boolean is_waiting_run_page_content(){return state==state_waiting_run_page_content;}
-//	boolean is_waiting_run(){return is_waiting_run_page()||is_waiting_run_page_content();}
+
 	void close(){
 		try{if(is_sock())sck.onconnectionlost();}catch(final Throwable t){b.log(t);}
 		try{socket_channel.close();}catch(final Throwable t){b.log(t);}
 	}
-	boolean is_buf_empty(){return ba_rem ==0;}
+	boolean is_buffer_empty(){return ba_rem ==0;}
 
 	public InetAddress ip(){return socket_channel.socket().getInetAddress();}
 	public String host(){final String h=headers.get("host");final String[]ha=h.split(":");return ha[0];}
@@ -891,9 +903,9 @@ public final class req{
 	public String path(){return path_s;}
 	public String query(){return query_s;}
 //	public session session(){return ses;}
-	public String toString(){return new String(ba,ba_pos,ba_rem)+(content_bb==null?"":new String(content_bb.slice().array()));}
 	public Map<String,String>headers(){return headers;}
 	
+	public String toString(){return new String(ba,ba_pos,ba_rem)+(content_bb==null?"":new String(content_bb.slice().array()));}
 	
 	public static req get(){return((thdreq)Thread.currentThread()).r;}
 	public static long file_and_resource_cache_size_B(){
@@ -917,22 +929,30 @@ public final class req{
 	
 	public String session_id(){return session_id;}
 
+	SelectionKey selection_key;
+	SocketChannel socket_channel;
 	private int state=state_method;
 	private final ByteBuffer bb=ByteBuffer.allocate(b.reqinbuf_B);
-	private ByteBuffer content_bb;
 	private byte[]ba;
 	private int ba_rem;
 	private int ba_pos;
 	private boolean connection_keep_alive;
-	private final StringBuilder sb_path=new StringBuilder(128);
+	private int method_length;
+	private final StringBuilder uri_sb=new StringBuilder(128);
+	private int uri_length;
 	private String path_s;
 	private String query_s;
-	private path pth;
-	private final StringBuilder sb_header_name=new StringBuilder(32);
-	private final StringBuilder sb_header_value=new StringBuilder(128);
+	private path path;
+	private int prot_length;
+	private int header_name_length;
+	private final StringBuilder header_name_sb=new StringBuilder(32);
+	private @conf int header_value_length;
+	private final StringBuilder header_value_sb=new StringBuilder(128);
+	private int headers_count;
 	private final Map<String,String>headers=new HashMap<String,String>();
 	private String session_id;
 	private boolean session_id_set;
+	private ByteBuffer content_bb;
 	private String content_type;
 	private long content_remaining_to_read;
 	private final HashMap<String,String>content=new HashMap<String,String>();
@@ -942,14 +962,23 @@ public final class req{
 	private long transfer_file_position;
 	private long transfer_file_remaining;
 	private boolean waiting_write;
-	SelectionKey selection_key;
-	SocketChannel socket_channel;
 	private path upload_path;
 	private FileChannel upload_channel;
 	private String upload_lastmod_s;
-	private sock sck;
-	final public static String field_path_separator="-";
 
+	private sock sck;
+	
+	public final static String ajax_field_path_separator="-";
+
+	public static @conf int abuse_method_len=5;
+	public static @conf int abuse_uri_len=512;
+	public static @conf int abuse_prot_len=11;
+	public static @conf int abuse_header_name_len=32;
+	public static @conf int abuse_header_value_len=256;
+	public static @conf int abuse_header_count=32;
+	public static @conf long abuse_upload_len=16*b.G;
+	public static @conf long abuse_content_len=1*b.M;
+	
 	private static Map<String,chdresp>file_and_resource_cache;
 //	private static Map<String,chdresp>cacheu;
 	static void init_static(){
@@ -1007,5 +1036,4 @@ public final class req{
 	private final static String text_html_utf8="text/html;charset=utf-8";
 	private final static String text_plain="text/plain";// ? utf8 encoding?
 //	private final static String text_plain_utf8="text/plain;charset=utf-8";
-
 }
