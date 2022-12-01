@@ -191,7 +191,8 @@ public class websock implements sock{
 	final public void send_binary(final String...sa)throws Throwable{
 		final ByteBuffer[]bba=new ByteBuffer[sa.length];
 		int i=0;
-		for(String s:sa)bba[i++]=ByteBuffer.wrap(tobytes(s));
+		for(String s:sa)
+			bba[i++]=ByteBuffer.wrap(tobytes(s));
 		send(bba,false);
 	}
 	final public void send(final ByteBuffer[]bba,final boolean textmode)throws Throwable{

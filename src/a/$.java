@@ -1,6 +1,14 @@
 package a;
 
-import b.*;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.util.Enumeration;
+
+import b.a;
+import b.a_ajaxsts;
+import b.b;
+import b.req;
+import b.xwriter;
 import db.Db;
 import db.test.Book;
 
@@ -27,11 +35,27 @@ public class $ extends a {
 		x.ax(this, "clk", "click me");
 		x.pl().pl();
 		ajaxsts.to(x);
+		x.pl().pl();
+		x.pl("ip addresses:");
+		Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+		while (interfaces.hasMoreElements()) {
+			NetworkInterface iface = interfaces.nextElement();
+			// filters out 127.0.0.1 and inactive interfaces
+			if (iface.isLoopback() || !iface.isUp())
+				continue;
+
+			Enumeration<InetAddress> addresses = iface.getInetAddresses();
+			while (addresses.hasMoreElements()) {
+				InetAddress addr = addresses.nextElement();
+				String ip = addr.getHostAddress();
+				x.pl(iface.getDisplayName() + " " + ip);
+			}
+		}
 //		d.to(x);
 	}
 
-	public void x_clk(xwriter x,String s) {
-		counter+=10;
+	public void x_clk(xwriter x, String s) {
+		counter += 10;
 		x.xreload();
 	}
 }
