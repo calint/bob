@@ -35,6 +35,7 @@ public class $ extends a {
 		x.ax(this, "clk", "click me");
 		x.pl().pl();
 		ajaxsts.to(x);
+		x.pl("cookie: "+req.get().headers().get("cookie"));
 		x.pl().pl();
 		x.pl("ip addresses:");
 		Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
