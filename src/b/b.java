@@ -174,10 +174,11 @@ final public class b{
 				log(e);
 			}
 	}
-	/** Registers in a map of paths to class. */
-	public static void register(final String path,final Class<?>cls){
+	/** Called during initiation stage. */
+	public static void map_class_to_path(final String path,final Class<?>cls){
 		path_to_class_map.put(path,cls);
 	}
+	/** Called by req. */
 	public static Class<?>get_class_for_path(final String path){
 		return path_to_class_map.get(path);
 	}
