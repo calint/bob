@@ -1,8 +1,7 @@
 package b;
-import java.nio.*;
-import java.security.*;
-import java.util.*;
-import static b.b.*;
+import java.nio.ByteBuffer;
+import java.security.MessageDigest;
+import java.util.Map;
 public class websock implements sock{
 	private sockio so;
 	private ByteBuffer bbi;
@@ -13,6 +12,8 @@ public class websock implements sock{
 	private ByteBuffer[]bbos;
 //	private session session;
 	private boolean firstpak;
+	private int maskc;
+	private ByteBuffer bbrq;
 	final public op sockinit(final Map<String,String>hdrs,final sockio so)throws Throwable{
 		this.so=so;
 		bbi=so.inbuf();
@@ -65,8 +66,10 @@ public class websock implements sock{
 	@Override public void onconnectionlost()throws Throwable{
 		onclosed();
 	}
+	
+	/** Called when the web socket has been closed. */
 	protected void onclosed()throws Throwable{}
-	private int maskc;
+	
 	final private op dobbi()throws Throwable{
 		switch(st){default:throw new Error();
 		case read_next_frame:
@@ -107,9 +110,9 @@ public class websock implements sock{
 			firstpak=true;
 			maskc=0;
 			st=state.read_continue;
-			// fallthrough
+			// fall through
 		case read_continue:
-			//demask
+			// unmask
 			final byte[]bbia=bbi.array();
 			final int pos=bbi.position();
 			final int limn=bbi.remaining()>payloadlendec?pos+payloadlendec:bbi.limit();
@@ -130,11 +133,11 @@ public class websock implements sock{
 			onpayload(bbii,ndata,payloadlendec,firstpak,payloadlendec==0);
 			bbi.position(limn);
 			firstpak=false;
-			return bbos==null?op.read:op.write;
+			return bbos==null?op.read:op.write; // onmessage might have set buffer to be sent
 		}
 	}
-	private ByteBuffer bbrq;
-	final private void onpayload(final ByteBuffer bb,final int nbytes,final int payloadlenlft,final boolean firstpak,final boolean lastpak)throws Throwable{
+	
+	final private void onpayload(ByteBuffer bb,int nbytes,int payloadlenlft,boolean firstpak,boolean lastpak)throws Throwable{
 		if(firstpak&&!lastpak){
 			bbrq=ByteBuffer.allocate(nbytes+payloadlenlft);
 			bbrq.put(bb);
@@ -151,11 +154,14 @@ public class websock implements sock{
 		if(firstpak&&lastpak){
 			bbrq=bb;
 		}
-		onmessage(bbrq);//? wrap so position is 0
+		onmessage(bbrq);
 		bbrq=null;
 	}
-	/** Called when a message has been arrived. ByteBuffer position is at start of data. ByteBuffer limit marks the end of data. */
+	
+	/** Called when a message has been decoded. ByteBuffer position is at start of data. ByteBuffer limit marks the end of data.
+	 *  Note that it is assumed that client does not send a new message prior to receive a full reply. */
 	protected void onmessage(ByteBuffer bb)throws Throwable{}
+
 	final public op write()throws Throwable{
 		if(bbos==null){
 			System.out.println("bbos is null");
@@ -166,77 +172,85 @@ public class websock implements sock{
 			System.out.println("bbos is null 2");
 			return op.read;
 		}
-		for(final ByteBuffer b:bbos){
+		for(ByteBuffer b:bbos){ // check if the write is complete.
 			if(b==null){
 				System.out.println("b is null");
 				return op.read;
 			}
 			if(b.hasRemaining()){
 //				System.out.println("incomplete write");
-				return op.write;
+				return op.write; // ! test this
 			}
 		}
 		bbos=null;
 		return op.read;
 	}
 //	final protected session session(){return session;}
-	final public void send_binary(final String s)throws Throwable{
-		final ByteBuffer bb=ByteBuffer.wrap(b.tobytes(s));
-		send(bb,false);
+//	final public void send_binary(String s)throws Throwable{
+//		final ByteBuffer bb=ByteBuffer.wrap(b.tobytes(s));
+//		send(bb,false);
+//	}
+	
+	final public void send(String s)throws Throwable{
+		send(new ByteBuffer[]{ByteBuffer.wrap(s.getBytes())},true);
 	}
-	final public void send(final ByteBuffer bb)throws Throwable{send(bb,true);}
-	final public void send(final ByteBuffer bb,final boolean textmode)throws Throwable{
+	
+//	final public void send(ByteBuffer bb)throws Throwable{send(bb,true);}
+	
+	final public void send(ByteBuffer bb,final boolean textmode)throws Throwable{
 		if(bbos!=null)throw new Error("overwrite");//?
 		// rfc6455#section-5.2
 		// Base Framing Protocol
 		final int ndata=bb.remaining();
-		bbos=new ByteBuffer[]{hdr(ndata,textmode),bb};
+		bbos=new ByteBuffer[]{make_header(ndata,textmode),bb};
 		if(write()==op.write)
 			so.reqwrite();
 	}
 
-	final public void send(final ByteBuffer[]bba)throws Throwable{send(bba,true);}
-	final public void send_binary(final ByteBuffer...bba)throws Throwable{
-		send(bba,false);
-	}
-	final public void send_binary(final byte[]...bb)throws Throwable{
-		final ByteBuffer[]bba=new ByteBuffer[bb.length];
-		int i=0;
-		for(byte[]ba:bb)bba[i++]=ByteBuffer.wrap(ba);
-		send(bba,false);
-	}
-	final public void send_binary(final String...sa)throws Throwable{
-		final ByteBuffer[]bba=new ByteBuffer[sa.length];
-		int i=0;
-		for(String s:sa)
-			bba[i++]=ByteBuffer.wrap(tobytes(s));
-		send(bba,false);
-	}
+//	final public void send(final ByteBuffer[]bba)throws Throwable{send(bba,true);}
+	
+//	final public void send_binary(final ByteBuffer...bba)throws Throwable{
+//		send(bba,false);
+//	}
+	
+//	final public void send_binary(final byte[]...bb)throws Throwable{
+//		final ByteBuffer[]bba=new ByteBuffer[bb.length];
+//		int i=0;
+//		for(byte[]ba:bb)bba[i++]=ByteBuffer.wrap(ba);
+//		send(bba,false);
+//	}
+//	final public void send_binary(final String...sa)throws Throwable{
+//		final ByteBuffer[]bba=new ByteBuffer[sa.length];
+//		int i=0;
+//		for(String s:sa)
+//			bba[i++]=ByteBuffer.wrap(tobytes(s));
+//		send(bba,false);
+//	}
 	final public void send(final ByteBuffer[]bba,final boolean textmode)throws Throwable{
 		if(bbos!=null)throw new Error("overwrite"); // ? is the buffer size enough for most use cases?
 		int ndata=0;
 		for(final ByteBuffer b:bba)
 			ndata+=b.remaining();
 		bbos=new ByteBuffer[bba.length+1];
-		bbos[0]=hdr(ndata,textmode);
+		bbos[0]=make_header(ndata,textmode);
 		for(int i=1;i<bbos.length;i++)
 			bbos[i]=bba[i-1];
 		if(write()==op.write)
 			so.reqwrite();
 	}
-	private ByteBuffer hdr(final int ndata,final boolean textmode){
+	private ByteBuffer make_header(final int size_of_data_to_send,final boolean text_mode){
 		// rfc6455#section-5.2
 		// Base Framing Protocol
 		int nhdr;
 		final byte[]hdr=new byte[10];
-		hdr[0]=(byte)((textmode?1:2)|128);
-		if(ndata<=125){
-			hdr[1]=(byte)ndata;
+		hdr[0]=(byte)((text_mode?1:2)|128);
+		if(size_of_data_to_send<=125){
+			hdr[1]=(byte)size_of_data_to_send;
 			nhdr=2;
-		}else if(ndata<=65535){
+		}else if(size_of_data_to_send<=65535){
 			hdr[1]=126;
-			hdr[2]=(byte)((ndata>>8)&255);
-			hdr[3]=(byte)( ndata    &255);
+			hdr[2]=(byte)((size_of_data_to_send>>8)&255);
+			hdr[3]=(byte)( size_of_data_to_send    &255);
 			nhdr=4;
 		}else{
 			hdr[1]=127;
@@ -244,10 +258,10 @@ public class websock implements sock{
 //			hdr[3]=(byte)((ndata>>48)&255);
 //			hdr[4]=(byte)((ndata>>40)&255);
 //			hdr[5]=(byte)((ndata>>32)&255);
-			hdr[6]=(byte)((ndata>>24)&255);
-			hdr[7]=(byte)((ndata>>16)&255);
-			hdr[8]=(byte)((ndata>> 8)&255);
-			hdr[9]=(byte)( ndata     &255);
+			hdr[6]=(byte)((size_of_data_to_send>>24)&255);
+			hdr[7]=(byte)((size_of_data_to_send>>16)&255);
+			hdr[8]=(byte)((size_of_data_to_send>> 8)&255);
+			hdr[9]=(byte)( size_of_data_to_send     &255);
 			nhdr=10;
 		}
 		return ByteBuffer.wrap(hdr,0,nhdr);
