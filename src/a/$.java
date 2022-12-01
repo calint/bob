@@ -20,7 +20,9 @@ public class $ extends a {
 	public void to(final xwriter x) throws Throwable {
 		x.style().css("body", "padding:0 10em 0 4em").style_();
 		final int count = Db.currentTransaction().getCount(Book.class, null);
-		x.p(count).p(" server id: ").p(b.id).p("  counter:").p(++counter).nl();
+		x.p("sql count: ").p(count).nl();
+		x.p(" server id: ").p(b.id).p(" ").p(req.get().ip().toString()).nl();
+		x.p("  counter:").p(++counter).nl();
 		x.inptxt(txt);
 		x.ax(this, "clk", "click me");
 		x.pl().pl();

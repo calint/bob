@@ -7,7 +7,7 @@
 
 Web Socket
 <output id=outp></output>
-<input id=inp> <input type=button value="send" onclick="ws.send($.inp.value),$.inp.value=''">
+<input id=inp> <input type=button value="send" onclick="ws.send($.inp.value);$.inp.value=''">
 
 <script>
 $=document.all;
@@ -28,14 +28,13 @@ function start(){
 		ws.send("ping");
 	}
 	ws.onmessage=function(e){
-		p("web socket: onmessage: ");
-		pl(e.data);
+		pl("web socket: onmessage "+e+" data:"+e.data);
 	};
 	ws.onerror=function(e){
-		p("web socket: onerror "+e.data);
+		pl("web socket: onerror "+e+" data:"+e.data);
 	};
 	ws.onclose=function(e){
-		p("web socket: onclose "+e.data);
+		pl("web socket: onclose "+e);
 	};
 }
 function stop(){
