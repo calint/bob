@@ -20,7 +20,9 @@ function pl(txt){
 }
 start();
 function start(){
-	ws=new WebSocket("ws://"+location.host+"/websocket");
+	var is_ssl=location.protocol=='https:'
+	console.log(location.protocol);
+	ws=new WebSocket("ws"+(is_ssl?"s":"")+"://"+location.host+"/websocket");
 	ws.onopen=function(e){
 		pl("web socket: onopen");
 		ws.send("ping");

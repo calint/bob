@@ -23,3 +23,5 @@ curl -s $QA_HOST/$URI_FILES/$FILE > res
 if ! cmp -s $DIR_FILES/$FILE res; then exit 1; fi
 echo " ok"
 #--------------------------------------------------------
+
+rm res
