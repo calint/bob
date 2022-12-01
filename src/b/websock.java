@@ -92,7 +92,10 @@ public class websock implements sock{
 				final int by1= ((int)bbi.get()&0xff);
 				payloadlen=by2|by1;
 			}else if(payloadlen==127){
-				bbi.get();bbi.get();bbi.get();bbi.get();
+				bbi.get();// skip the bytes that encode a length >4G
+				bbi.get();
+				bbi.get();
+				bbi.get();
 				final int by4=(((int)bbi.get()&0xff)<<24);
 				final int by3=(((int)bbi.get()&0xff)<<16);
 				final int by2=(((int)bbi.get()&0xff)<<8);
@@ -102,8 +105,9 @@ public class websock implements sock{
 			bbi.get(maskkey);
 			payloadlendec=payloadlen;
 			firstpak=true;
-			st=state.read_continue;
 			maskc=0;
+			st=state.read_continue;
+			// fallthrough
 		case read_continue:
 			//demask
 			final byte[]bbia=bbi.array();
@@ -121,7 +125,7 @@ public class websock implements sock{
 			payloadlendec-=ndata;
 			if(payloadlendec==0)
 				st=state.read_next_frame;
-			final ByteBuffer bbii=ByteBuffer.wrap(bbi.array(),pos,ndata);//bbi.slice();
+			final ByteBuffer bbii=ByteBuffer.wrap(bbi.array(),pos,ndata);// bbi position is start of data
 			//bbii.limit(ndata);
 			onpayload(bbii,ndata,payloadlendec,firstpak,payloadlendec==0);
 			bbi.position(limn);
@@ -131,14 +135,27 @@ public class websock implements sock{
 	}
 	private ByteBuffer bbrq;
 	final private void onpayload(final ByteBuffer bb,final int nbytes,final int payloadlenlft,final boolean firstpak,final boolean lastpak)throws Throwable{
-		if(firstpak&&!lastpak){bbrq=ByteBuffer.allocate(nbytes+payloadlenlft);bbrq.put(bb);return;}
-		if(!firstpak&&!lastpak){bbrq.put(bb);return;}
-		if(!firstpak&&lastpak){bbrq.put(bb);bbrq.flip();}
-		if(firstpak&&lastpak){bbrq=bb;}
+		if(firstpak&&!lastpak){
+			bbrq=ByteBuffer.allocate(nbytes+payloadlenlft);
+			bbrq.put(bb);
+			return;
+		}
+		if(!firstpak&&!lastpak){
+			bbrq.put(bb);
+			return;
+		}
+		if(!firstpak&&lastpak){
+			bbrq.put(bb);
+			bbrq.flip();
+		}
+		if(firstpak&&lastpak){
+			bbrq=bb;
+		}
 		onmessage(bbrq);//? wrap so position is 0
 		bbrq=null;
 	}
-	protected void onmessage(final ByteBuffer bb)throws Throwable{}
+	/** Called when a message has been arrived. ByteBuffer position is at start of data. ByteBuffer limit marks the end of data. */
+	protected void onmessage(ByteBuffer bb)throws Throwable{}
 	final public op write()throws Throwable{
 		if(bbos==null){
 			System.out.println("bbos is null");

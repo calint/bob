@@ -17,9 +17,10 @@ final public class websocket extends websock implements threadedsock{
 		System.out.println("onclosed");
 	}
 
+	@Override
 	synchronized protected void onmessage(final ByteBuffer bb) throws Throwable {
 		System.out.println("onmessage");
-		String msg=new String(bb.array(),0,bb.limit());
+		String msg=new String(bb.array(),bb.position(),bb.remaining());
 		System.out.println(msg);
 		Timestamp ts=new Timestamp(System.currentTimeMillis());
 		String send=ts.toString()+" "+req.get().ip()+" "+msg;

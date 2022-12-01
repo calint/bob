@@ -39,6 +39,7 @@ final class thdreq extends Thread{
 			if(r.is_waiting_run_page())
 				r.run_page();
 			else throw new IllegalStateException();
+			// the state of the page may have changed to socket
 			if(r.is_sock())
 				return;	
 			if(r.is_transfer()){
