@@ -3,6 +3,6 @@
 [x] cookie: same-site
 [ ] fix for client that makes many threaded requests and then stalls them to starve server of threads or create too many. ddos.
 [x] etag instead of last-modified
-[ ] review ranged requests
-[ ]   file
-[ ]   cache
+[x] review ranged requests
+[x]   file
+[x]   cache

@@ -46,7 +46,7 @@ final class oschunked extends OutputStream{
 				synchronized(r){
 					r.waiting_write(true);
 					r.selection_key.interestOps(SelectionKey.OP_WRITE);
-					r.selection_key.selector().wakeup();//?? racing
+					r.selection_key.selector().wakeup(); //?? racing?
 					/*;;*/try{r.wait();}catch(final InterruptedException ok){}
 					r.waiting_write(false);
 				}

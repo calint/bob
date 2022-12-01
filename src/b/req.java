@@ -114,7 +114,7 @@ public final class req{
 		while(ba_rem!=0){
 			final byte b=ba[ba_pos++];ba_rem--;
 			if(b==' '){state=state_prot;break;}
-			if(b=='\n'){do_after_prot();break;}// ie: '. index.html\n' //todo allow white space in request line
+			if(b=='\n'){do_after_prot();break;}// ie: '. index.html\n'
 			uri_sb.append((char)b);
 		}
 		uri_length+=(ba_pos-ba_pos_prev);
@@ -656,7 +656,7 @@ public final class req{
 			return;
 		}
 
-		if(websock.class.isAssignableFrom(cls)){
+		if(websock.class.isAssignableFrom(cls)){// start a socket
 			System.out.println("websocket at "+path_s);
 			sck=(sock)cls.getConstructor().newInstance();
 			switch(sck.sockinit(headers,new sockio(socket_channel,selection_key,ByteBuffer.wrap(ba,ba_pos,ba_rem)))){default:throw new IllegalStateException();
@@ -909,8 +909,11 @@ public final class req{
 	boolean is_waiting_run_page(){return state==state_waiting_run_page;}
 
 	void close(){
+//		selection_key.cancel();
+		selection_key=null;		
 		try{if(is_sock())sck.onconnectionlost();}catch(final Throwable t){b.log(t);}
 		try{socket_channel.close();}catch(final Throwable t){b.log(t);}
+		socket_channel=null;
 	}
 	boolean is_buffer_empty(){return ba_rem ==0;}
 

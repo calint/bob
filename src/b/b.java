@@ -101,16 +101,12 @@ final public class b{
 	
 	private final static HashMap<String,Class<?>>path_to_class_map=new HashMap<String,Class<?>>();
 	private final static LinkedList<req>pending_req=new LinkedList<req>();
+	
 	public static void main(final String[]args)throws Throwable{
-//		System.out.println(hello);
+		System.out.println(hello);
 		if(!class_init(b.class,args))return;
-//		resources_lastmod=System.currentTimeMillis(); // ! doesn't work in cluster due to different startup times
 		if(print_conf_at_startup){
-//			print_hr(out,64);
-//			try{out.println(InetAddress.getLocalHost());}catch(Throwable ignored){}
 			print_hr(out,64);
-//			out.println(b.class);
-//			print_hr(out,64);
 			class_init(b.class,new String[]{"-1"});
 			print_hr(out,64);
 		}
@@ -368,12 +364,11 @@ final public class b{
 	public static byte[]tobytes(final String v){try{return v.getBytes(strenc);}catch(UnsupportedEncodingException e){throw new Error(e);}}
 	public static boolean isempty(final String s){return s==null||s.length()==0;}
 	public static String isempty(final String o,final String def){return isempty(o)?def:o;}
-//	public static Set<String>sessionsids(){return Collections.unmodifiableSet(session.all().keySet());}//?
-	public static long get_session_bits_for_sessionid(final String sesid){// ? dubious function
-		//? file(system){sha1(sessionid),bits}
-		if("".equals(sesid))return 0;
-		return 1;
-	}
+//	public static long get_session_bits_for_sessionid(final String sesid){// ? dubious function
+//		//? file(system){sha1(sessionid),bits}
+//		if("".equals(sesid))return 0;
+//		return 1;
+//	}
 	public static void class_printopts(final Class<?>cls)throws IllegalArgumentException,IllegalAccessException{
 		for(final Field f:cls.getFields()){
 			final Object o=f.get(null);
@@ -415,18 +410,12 @@ final public class b{
 		return true;
 	}
 	static enum op{read,write,noop}
-//	private static String ensure(final String s,final String def){
-//		if(s==null||s.length()==0)return def;
-//		return s;
-//	}
 	public static void cp(final InputStream in,final Writer out)throws Throwable{
 		cp(new InputStreamReader(in,strenc),out,null);
 	}
-//	public static void pl(final String s){out.print("> ");out.println(s);}
 	public static void pl(final String s){out.println(s);}
 	public static void p(final String s){out.print(s);}
 	
-	//? safe quantity unit math
 	public static @Retention(RetentionPolicy.RUNTIME)@interface unit{String name()default"";}
 	public static @Retention(RetentionPolicy.RUNTIME)@interface conf{String note()default"";boolean reboot()default false;}
 //	public static @Retention(RetentionPolicy.RUNTIME)@interface conf_reboot{String note()default"";}
@@ -487,6 +476,4 @@ final public class b{
 		final String u3=u2.replace(' ','+');
 		return u3;
 	}
-//	public static session session(final String id){return session.all().get(id);}
-	public static String uri_to(final Class<? extends a>cls){return"/"+cls.getName().substring(webobjpkg.length());}
 }
