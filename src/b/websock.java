@@ -3,7 +3,7 @@ import java.nio.*;
 import java.security.*;
 import java.util.*;
 import static b.b.*;
-public class websock extends a implements sock{static final long serialVersionUID=1;
+public class websock implements sock{static final long serialVersionUID=1;
 	private sockio so;
 	private ByteBuffer bbi;
 	private static enum state{closed,handshake,read_next_frame,read_continue}
@@ -63,7 +63,8 @@ public class websock extends a implements sock{static final long serialVersionUI
 		}		
 	}
 	@Override public void onconnectionlost()throws Throwable{
-		onclosed();}
+		onclosed();
+	}
 	protected void onclosed()throws Throwable{}
 	private int maskc;
 	final private op dobbi()throws Throwable{
@@ -173,7 +174,8 @@ public class websock extends a implements sock{static final long serialVersionUI
 		// Base Framing Protocol
 		final int ndata=bb.remaining();
 		bbos=new ByteBuffer[]{hdr(ndata,textmode),bb};
-		if(write()==op.write)so.reqwrite();
+		if(write()==op.write)
+			so.reqwrite();
 	}
 
 	final public void send(final ByteBuffer[]bba)throws Throwable{send(bba,true);}
@@ -193,13 +195,16 @@ public class websock extends a implements sock{static final long serialVersionUI
 		send(bba,false);
 	}
 	final public void send(final ByteBuffer[]bba,final boolean textmode)throws Throwable{
-		if(bbos!=null)throw new Error("overwrite");//?
+		if(bbos!=null)throw new Error("overwrite"); // ? is the buffer size enough for most use cases?
 		int ndata=0;
-		for(final ByteBuffer b:bba)ndata+=b.remaining();
+		for(final ByteBuffer b:bba)
+			ndata+=b.remaining();
 		bbos=new ByteBuffer[bba.length+1];
 		bbos[0]=hdr(ndata,textmode);
-		for(int i=1;i<bbos.length;i++)bbos[i]=bba[i-1];
-		if(write()==op.write)so.reqwrite();
+		for(int i=1;i<bbos.length;i++)
+			bbos[i]=bba[i-1];
+		if(write()==op.write)
+			so.reqwrite();
 	}
 	private ByteBuffer hdr(final int ndata,final boolean textmode){
 		// rfc6455#section-5.2

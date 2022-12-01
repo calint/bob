@@ -1,0 +1,40 @@
+<!DOCTYPE html><meta charset="utf-8"><title>web socket</title>
+<style>
+	*{margin:0;padding:0;font-family:inherit;font-size:inherit;line-height:1.2em}
+	html{white-space:pre;font-family:courier;font-size:11px;margin:0;padding:0;margin-left:auto;margin-right:auto;padding:0 4em 0 4em;display:block;text-align:center;color:#222;border-right:0px dotted #666;border-left:0px dotted #666;box-shadow:0 0 27px rgba(0,0,0,.5);border-radius:1px}
+	#txt{color:brown}
+</style>
+
+Web Socket
+<output id=outp></output>
+<input id=inp> <input type=button value="send" onclick="ws.send($.inp.value),$.inp.value=''">
+
+<script>
+$=document.all;
+function p(txt){
+	$.outp.value+=txt;
+}
+function pl(txt){
+	p(txt)
+	$.outp.value+="\n";
+}
+start();
+function start(){
+	ws=new WebSocket("ws://"+location.host+"/websocket");
+	ws.onopen=function(e){
+		pl("web socket: onopen");
+		ws.send("ping");
+	}
+	ws.onmessage=function(e){
+		p("web socket: onmessage: ");
+		pl(e.data);
+	};
+	ws.onerror=function(e){
+		p("web socket: onerror "+e.data);
+	};
+}
+function stop(){
+	ws.close();
+}
+
+</script>

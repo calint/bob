@@ -161,8 +161,16 @@ final public class b{
 				}
 				sk.interestOps(0);
 				final req r=(req)sk.attachment();
-				if(sk.isReadable()){thdwatch.ioread++;read(r);continue;}
-				if(sk.isWritable()){thdwatch.iowrite++;write(r);continue;}
+				if(sk.isReadable()){
+					thdwatch.ioread++;
+					read(r);
+					continue;
+				}
+				if(sk.isWritable()){
+					thdwatch.iowrite++;
+					write(r);
+					continue;
+				}
 				throw new IllegalStateException();
 			}}catch(final Throwable e){
 				log(e);
