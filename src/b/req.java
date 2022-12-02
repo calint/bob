@@ -681,11 +681,6 @@ public final class req{
 		}finally{
 			Db.deinitCurrentTransaction();
 		}
-//		
-//		if(state==state_sock){
-//			thdwatch.socks++;
-//			return;
-//		}
 
 		state=state_next_request;
 	}
