@@ -178,33 +178,6 @@ final public class b{
 				log(e);
 			}
 	}
-	/** Called during initiation stage. */
-	public static void set_path_to_class(final String path,final Class<?>cls){
-		path_to_class_map.put(path,cls);
-	}
-	/** Called by req. */
-	public static Class<?>get_class_for_path(final String path){
-		return path_to_class_map.get(path);
-	}
-	/** Called during initiation stage. */
-	public static void set_path_to_resource(final String path,final String resource){
-		path_to_resource_map.put(path,resource);
-	}
-	/** Called by req. */
-	public static String get_resource_for_path(final String path){
-		return path_to_resource_map.get(path);
-	}
-	private static void print_hr(final OutputStream os,final int width_in_chars)throws IOException{ // ? only used in b.main, remove?
-//		for(int i=0;i<width_in_chars;i++)
-//			os.write((byte)(Math.random()<.5?'~':' '));
-		float prob=1;
-		float dprob_di=prob/width_in_chars;
-		for(int i=0;i<width_in_chars;i++){
-			os.write((byte)(Math.random()<prob?'~':' '));
-			prob-=dprob_di;
-		}
-		os.write((byte)'\n');
-	}
 	private static void read(final req r)throws Throwable{
 		if(r.is_sock()){
 			if(r.is_sock_thread()){
@@ -260,6 +233,33 @@ final public class b{
 			return;
 		}
 		synchronized(pending_req){pending_req.addLast(r);pending_req.notify();}
+	}
+	/** Called during initiation stage. */
+	public static void set_path_to_class(final String path,final Class<?>cls){
+		path_to_class_map.put(path,cls);
+	}
+	/** Called by req. */
+	public static Class<?>get_class_for_path(final String path){
+		return path_to_class_map.get(path);
+	}
+	/** Called during initiation stage. */
+	public static void set_path_to_resource(final String path,final String resource){
+		path_to_resource_map.put(path,resource);
+	}
+	/** Called by req. */
+	public static String get_resource_for_path(final String path){
+		return path_to_resource_map.get(path);
+	}
+	private static void print_hr(final OutputStream os,final int width_in_chars)throws IOException{ // ? only used in b.main, remove?
+//		for(int i=0;i<width_in_chars;i++)
+//			os.write((byte)(Math.random()<.5?'~':' '));
+		float prob=1;
+		float dprob_di=prob/width_in_chars;
+		for(int i=0;i<width_in_chars;i++){
+			os.write((byte)(Math.random()<prob?'~':' '));
+			prob-=dprob_di;
+		}
+		os.write((byte)'\n');
 	}
 	public static int cp(final InputStream in,final OutputStream out,final sts sts) throws Throwable{
 		final byte[]buf=new byte[io_buf_B];
