@@ -23,7 +23,8 @@ final public class websocket extends websock implements threadedsock {
 //		byte[]b=new byte[16*1024*1024];
 //		for(int i=0;i<b.length;i++)
 //			b[i]='0';
-//		String s=new String(b);
+//		String s2=new String(b);
+//		send(s2);
 		send(s);
 	}
 

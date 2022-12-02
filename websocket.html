@@ -35,7 +35,7 @@ function start(){
 		//	largeString+='0';
 		//}
 		ws.send("testing ping");
-		ws.send(largeString);
+		//ws.send("pong");
 	}
 	ws.onmessage=function(e){
 		pl("web socket: onmessage "+e+" data:"+e.data);

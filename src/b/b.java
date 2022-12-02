@@ -67,7 +67,8 @@ final public class b{
 	public static @conf @unit(name="B")int transfer_file_write_size=256*K;
 	public static @conf @unit(name="B")int io_buf_B=64*K;
 	public static @conf @unit(name="B")int chunk_B=4*K;
-	public static @conf @unit(name="B")int reqinbuf_B=4*K;
+	public static @conf @unit(name="B")int reqinbuf_B=64*K;
+//	public static @conf @unit(name="B")int reqinbuf_B=4;
 	public static @conf String default_directory_file="index.html";
 //	public static @conf String default_package_class="$";
 	public static @conf boolean gc_before_stats=false;

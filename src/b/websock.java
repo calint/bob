@@ -123,6 +123,14 @@ public class websock implements sock{
 				onpayload(bbii);
 				is_first_packet=false;
 				bbi.position(limit);
+				if(bbi.remaining()!=0){
+					// client has sent multiple packets without waiting for response.
+					// this is not a supported use case.
+					// may work if write() completes the send.
+					if(response_bba!=null)
+						throw new RuntimeException("chained request with send() overrun");
+					continue;
+				}
 				return response_bba==null?op.read:op.write; // onpayload->onmessage might have done a send that is not complete
 			}
 		}
@@ -186,7 +194,8 @@ public class websock implements sock{
 		write(); // return ignored because bbos will be set to null when write is finished
 	}
 	final public void send(final ByteBuffer[]bba,final boolean textmode)throws Throwable{
-		if(response_bba!=null)throw new Error("overwrite"); // ? is the buffer size enough for most use cases?
+		if(response_bba!=null)
+			throw new RuntimeException("send did not complete before a new send was called"); // ? is the buffer size enough for most use cases?
 		int ndata=0;
 		for(final ByteBuffer b:bba)
 			ndata+=b.remaining();
