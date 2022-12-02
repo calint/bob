@@ -10,14 +10,12 @@ public class websock implements sock{
 	private final byte[]maskkey=new byte[4];
 	private int payloadlendec;
 	private ByteBuffer[]bbos;
-//	private session session;
 	private boolean firstpak;
 	private int maskc;
 	private ByteBuffer bbrq;
 	final public op sockinit(final Map<String,String>hdrs,final sockio so)throws Throwable{
 		this.so=so;
 		bbi=so.inbuf();
-//		session=req.get().session();
 		st=state.handshake;
 		// rfc6455#section-1.3
 		// Opening Handshake
@@ -36,8 +34,6 @@ public class websock implements sock{
 		bbo.put("\r\n\r\n".getBytes());
 		bbo.flip();
 		System.out.println("@@@@@ 2:   "+new String(bbo.array(),"utf8"));
-//		System.out.println(hdrs);
-//		System.out.println(new String(bbo.array(),0,bbo.limit()));
 		while(bbo.hasRemaining()&&so.write(bbo)!=0);
 			if(bbo.hasRemaining())
 				throw new RuntimeException("packetnotfullysent");
@@ -54,8 +50,7 @@ public class websock implements sock{
 			if(n==0)return op.read;//? infloop?
 			if(n==-1){
 				st=state.closed;
-//				onclosed(); //? onclosed called when request is closed
-				return op.close;
+				return op.close; // onclosed called when request is closed
 			}
 			bbi.flip();
 		}
@@ -90,8 +85,7 @@ public class websock implements sock{
 			final int opcode=b0&0xf;
 			if(opcode==8){// rfc6455#section-5.5.1
 				st=state.closed;
-//				onclosed();   // onclose called when req closed
-				return op.close;
+				return op.close; // onclose called when request is closed
 			}
 			final int b1=(int)bbi.get();
 			final boolean masked=(b1&128)==128;
@@ -136,11 +130,10 @@ public class websock implements sock{
 			if(payloadlendec==0)
 				st=state.read_next_frame;
 			final ByteBuffer bbii=ByteBuffer.wrap(bbi.array(),pos,ndata);// bbi position is start of data
-			//bbii.limit(ndata);
 			onpayload(bbii,ndata,payloadlendec,firstpak,payloadlendec==0);
 			bbi.position(limn);
 			firstpak=false;
-			return bbos==null?op.read:op.write; // onmessage might have set buffer to send
+			return bbos==null?op.read:op.write; // onpayload->onmessage might have done a send that is not complete
 		}
 	}
 	
@@ -192,11 +185,6 @@ public class websock implements sock{
 		bbos=null; // will trigger a read request when called from send(...), otherwise write
 		return op.read;
 	}
-//	final protected session session(){return session;}
-//	final public void send_binary(String s)throws Throwable{
-//		final ByteBuffer bb=ByteBuffer.wrap(b.tobytes(s));
-//		send(bb,false);
-//	}
 	
 	final public void send(String s)throws Throwable{
 		send(new ByteBuffer[]{ByteBuffer.wrap(s.getBytes())},true);
@@ -263,7 +251,7 @@ public class websock implements sock{
 			nhdr=4;
 		}else{
 			hdr[1]=127;
-//			hdr[2]=(byte)((ndata>>56)&255);
+//			hdr[2]=(byte)((ndata>>56)&255); // ignore size bigger than 4G
 //			hdr[3]=(byte)((ndata>>48)&255);
 //			hdr[4]=(byte)((ndata>>40)&255);
 //			hdr[5]=(byte)((ndata>>32)&255);
@@ -275,5 +263,5 @@ public class websock implements sock{
 		}
 		return ByteBuffer.wrap(hdr,0,nhdr);
 	}
-	final protected boolean issending(){return bbos!=null;}
+//	final protected boolean issending(){return bbos!=null;}
 }
