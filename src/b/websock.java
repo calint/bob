@@ -12,6 +12,7 @@ public class websock implements sock{
 	private ByteBuffer[]response_bba;
 	private boolean is_first_packet;
 	private int maskc;
+	private boolean masked;
 	private ByteBuffer request_bb;
 	private SocketChannel socket_channel;
 	/** @param bbspil byte buffer might have more data to be read */
@@ -74,8 +75,7 @@ public class websock implements sock{
 					return op.close; // onclose called when request is closed
 				}
 				final int b1=(int)bbi.get();
-				final boolean masked=(b1&128)==128;
-				if(!masked)throw new Error("unmasked client message");
+				masked=(b1&128)==128;
 				payload_remaining=b1&127;
 				if(payload_remaining==126){
 					final int by2=(((int)bbi.get()&0xff)<<8);
@@ -102,7 +102,7 @@ public class websock implements sock{
 				final byte[]bbia=bbi.array();
 				final int pos=bbi.position();
 				final int limit=bbi.remaining()>payload_remaining?pos+payload_remaining:bbi.limit();
-				if(maskkey[0]==0&&maskkey[1]==0&&maskkey[2]==0&&maskkey[3]==0){
+				if(masked&&maskkey[0]==0&&maskkey[1]==0&&maskkey[2]==0&&maskkey[3]==0){
 					throw new RuntimeException();
 				}
 				for(int i=pos;i<limit;i++){
