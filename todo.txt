@@ -12,4 +12,3 @@
 [ ]   review code, the ugliness is overwhelming 
 [x] rework the websock
 [x] try b with 1B input buffer
-

@@ -830,7 +830,7 @@ public final class req{
 		}
 	}
 	
-	// ? separation of concerns, this request is either a sock or a 'a'
+	// ? separation of concerns, this request is a sock or a 'a'
 	boolean is_sock(){return state==state_sock;}
 	sock.op sock_read()throws Throwable{return sck.sock_read();}
 	sock.op sock_write()throws Throwable{return sck.sock_write();}

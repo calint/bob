@@ -65,12 +65,12 @@ public final class Db {
 			pc = inst.conpool.removeFirst();
 		}
 		if (pc.getAgeInMs() > Db.pooled_connection_max_age_in_ms) {
+			try {
+				pc.getConnection().close();
+			} catch (Throwable t) {
+				log(t);
+			}
 			while (true) {
-				try {
-					pc.getConnection().close();
-				} catch (Throwable t) {
-					log(t);
-				}
 				try {
 					final Connection c = Db.instance().createJdbcConnection();
 					final PooledConnection pc2 = new PooledConnection(c);
@@ -164,13 +164,10 @@ public final class Db {
 		tn.remove();
 	}
 
-	public static synchronized void log(final Throwable t) {
-		Throwable e = t;
-		if (e instanceof InvocationTargetException)
-			e = t.getCause();
-		while (e.getCause() != null)
-			e = e.getCause();
-		System.err.println(stacktraceline(e));
+	public static synchronized void log(Throwable t) {
+		while (t.getCause() != null)
+			t = t.getCause();
+		System.err.println(stacktraceline(t));
 	}
 
 	public static String stacktrace(final Throwable e) {

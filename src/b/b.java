@@ -213,7 +213,7 @@ final public class b{
 				thread(r);
 				return;
 			}
-			// websocket that run on the main thread. may block the server.
+			// websocket that runs on the main thread. may block the server.
 			switch(r.sock_read()){default:throw new RuntimeException();
 			case read:r.selection_key.interestOps(SelectionKey.OP_READ);return;
 			case write:r.selection_key.interestOps(SelectionKey.OP_WRITE);return;
