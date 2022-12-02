@@ -397,7 +397,7 @@ public final class req{
 		if(b.resources_paths.contains(p))
 			rcpth="/"+req.class.getPackage().getName()+"/"+p;
 		else if(b.resources_enable_any_path)
-			rcpth="/"+b.webobjpkg.replace('.','/')+path;
+			rcpth="/"+path.toString();
 		else return false;
 		
 		final InputStream is=req.class.getResourceAsStream(rcpth);

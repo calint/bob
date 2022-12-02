@@ -10,14 +10,14 @@ import db.test.Game;
 import db.test.TestObj;
 import db.test.User;
 
-public class Application implements bapp {
-	private static Application inst;
+public class application implements bapp {
+	private static application inst;
 
-	public static Application instance() {
+	public static application instance() {
 		return inst;
 	}
 
-	public Application() {
+	public application() {
 		inst = this;
 	}
 
@@ -35,8 +35,8 @@ public class Application implements bapp {
 		db.register(Game.class);
 		db.register(TestObj.class);
 		
-		b.b.map_class_to_path("/",a.$.class);
-		b.b.map_class_to_path("/websocket",a.websocket.class);
+		b.b.map_class_to_path("/",c.shell.class);
+		b.b.map_class_to_path("/websocket",c.websocket.class);
 //		db.init("jdbc:mysql://localhost:3306/testdb", "c", "password", 5);
 //		db.init("jdbc:mysql://" + b.bapp_jdbc_host + "/" + b.bapp_jdbc_db
 //				+ "?allowPublicKeyRetrieval=true&useSSL=false", b.bapp_jdbc_user, b.bapp_jdbc_password,

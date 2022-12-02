@@ -1,4 +1,4 @@
-package a;
+package c;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -12,14 +12,14 @@ import b.xwriter;
 import db.Db;
 import db.test.Book;
 
-public class $ extends a {
+public class shell extends a {
 	static final long serialVersionUID = 3;
 	private int counter = 0;
 	public a txt;
 	public a_ajaxsts ajaxsts;
 //	public diro d;
 
-	public $() {
+	public shell() {
 //		d.root(req.get().session().path());
 //		d.bits_set(diro.BIT_ALLOW_FILE_CREATE);
 //		d.bits_set(diro.BIT_ALLOW_DIR_CREATE);

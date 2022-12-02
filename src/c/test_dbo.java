@@ -1,4 +1,4 @@
-package a;
+package c;
 
 import b.a;
 import b.xwriter;
