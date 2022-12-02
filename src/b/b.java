@@ -212,7 +212,7 @@ final public class b{
 				return;
 			}
 			// websocket that run on the main thread. may block the server.
-			switch(r.sock_read()){default:throw new Error();
+			switch(r.sock_read()){default:throw new RuntimeException();
 			case read:r.selection_key.interestOps(SelectionKey.OP_READ);return;
 			case write:r.selection_key.interestOps(SelectionKey.OP_WRITE);return;
 			case close:r.close();thdwatch.socks--;return;
@@ -220,7 +220,7 @@ final public class b{
 			case noop:return;
 			}
 		}
-		while(true)switch(r.parse()){default:throw new Error();
+		while(true)switch(r.parse()){default:throw new RuntimeException();
 			case read:r.selection_key.interestOps(SelectionKey.OP_READ);return;
 			case write:r.selection_key.interestOps(SelectionKey.OP_WRITE);return;
 			case noop:return;
@@ -233,24 +233,24 @@ final public class b{
 				thread(r);
 				return;
 			}
-			switch(r.sock_write()){default:throw new Error();
-			case read:r.selection_key.interestOps(SelectionKey.OP_READ);break;
-			case write:r.selection_key.interestOps(SelectionKey.OP_WRITE);break;
-			case close:r.close();thdwatch.socks--;break;
+			switch(r.sock_write()){default:throw new RuntimeException();
+			case read:r.selection_key.interestOps(SelectionKey.OP_READ);return;
+			case write:r.selection_key.interestOps(SelectionKey.OP_WRITE);return;
+			case close:r.close();thdwatch.socks--;return;
 			}
-			return;
 		}
 		if(r.is_waiting_write()){synchronized(r){r.notify();}return;}
 		if(r.is_transfer()){
 			if(!r.do_transfer()){r.selection_key.interestOps(SelectionKey.OP_WRITE);return;}
 			if(!r.is_connection_keepalive()){r.close();return;}
 			if(r.is_buffer_empty()){r.selection_key.interestOps(SelectionKey.OP_READ);return;}
-			read(r);//?? bug stackrain
+			read(r); //? bug? may cause stackrain
 			return;
 		}
 		if(r.is_waiting_run_page())
 			thread(r);
-		throw new Error();
+		
+		throw new RuntimeException();
 	}
 	static void thread(final req r){
 		r.selection_key.interestOps(0);//? must?
@@ -260,9 +260,18 @@ final public class b{
 		}
 		synchronized(pending_req){pending_req.addLast(r);pending_req.notify();}
 	}
-	public static int cp(final InputStream in,final OutputStream out) throws IOException{//?. sts
+	public static int cp(final InputStream in,final OutputStream out,final sts sts) throws Throwable{
 		final byte[]buf=new byte[io_buf_B];
-		int n=0;while(true){final int count=in.read(buf);if(count<=0)break;out.write(buf,0,count);n+=count;}
+		int n=0;
+		while(true){
+			final int count=in.read(buf);
+			if(count<=0)
+				break;
+			out.write(buf,0,count);
+			n+=count;
+			if(sts!=null)
+				sts.setsts(Long.toString(n));
+		}
 		return n;
 	}
 	public static int cp(final Reader in,final Writer out,final sts sts)throws Throwable{

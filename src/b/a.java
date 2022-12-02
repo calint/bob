@@ -91,7 +91,7 @@ public class a implements Serializable{
 	final public void to(final OutputStream os)throws IOException{os.write(tobytes(tostr(s,"")));}//? impl s?.to(os)
 	final public void to(final path p,final boolean append)throws IOException{final OutputStream os=p.outputstream(append);to(os);os.close();}
 	final public void to(final path p)throws IOException{to(p,false);}
-	final public a from(final path p)throws IOException{//? impl
+	final public a from(final path p)throws Throwable{//? impl
 		final ByteArrayOutputStream baos=new ByteArrayOutputStream((int)p.size());
 		p.to(baos);
 		baos.close();

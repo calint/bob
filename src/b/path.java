@@ -54,7 +54,7 @@ public final class path implements Serializable{static final long serialVersionU
 //	public void executable(final boolean b){if(!file.setExecutable(b))throw new Error();}
 	public boolean ishidden(){return file.getName().charAt(0)=='.';}
 	public path parent(){final File f=file.getParentFile();return f==null?null:new path(f);}
-	public void to(final xwriter x)throws IOException{to(x.outputstream());}//? filechannel
+	public void to(final xwriter x)throws Throwable{to(x.outputstream());}//? filechannel
 	public FileChannel filechannel()throws IOException{return outputstream(false).getChannel();}
 	public final int hashCode(){return file.toString().hashCode();}
 	public boolean equals(final Object obj){if(!(obj instanceof path))return false;return ((path)obj).file.equals(file);}
@@ -98,9 +98,9 @@ public final class path implements Serializable{static final long serialVersionU
 			}
 		}finally{os.close();}
 	}
-	public path to(final OutputStream os)throws IOException{
+	public path to(final OutputStream os)throws Throwable{
 		final InputStream is=inputstream();
-		try{b.cp(is,os);}finally{is.close();}
+		try{b.cp(is,os,null);}finally{is.close();}
 		return this;
 	}
 	public void mkdirs()throws IOException{
@@ -204,7 +204,7 @@ public final class path implements Serializable{static final long serialVersionU
 	public boolean isin(final path p){try{return fullpath().startsWith(p.fullpath());}catch(Throwable t){throw new Error(t);}}
 	//? rename
 	public boolean moveto(final path p){return file.renameTo(new File(p.file,name()));}
-	public void copyto(final path dir)throws IOException{
+	public void copyto(final path dir)throws Throwable{
 		final path p=dir.get(name());
 		if(p.exists())throw new Error("exists. overwrite?");
 		final OutputStream os=p.outputstream();

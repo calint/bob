@@ -1,14 +1,13 @@
 package b;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 final class chdresp_resource extends chdresp{ // ? mixes concerns. try interface of inheritance.
 	/** Caches a resource. */
-	public chdresp_resource(final InputStream is,final String contentType)throws IOException{
+	public chdresp_resource(final InputStream is,final String contentType)throws Throwable{
 		this.contentType=contentType;
 		final ByteArrayOutputStream os=new ByteArrayOutputStream();
-		b.cp(is,os);
+		b.cp(is,os,null);
 		final byte[]ba=os.toByteArray();
 		content_length_in_bytes=ba.length;
 		// prepare the cached buffer
