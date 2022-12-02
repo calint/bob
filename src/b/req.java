@@ -655,7 +655,8 @@ public final class req{
 		}
 
 		if(sock.class.isAssignableFrom(cls)){// start a socket
-			System.out.println("websocket at "+path_s);
+			System.out.println("socket at "+path_s);
+			state=state_sock;
 			sck=(sock)cls.getConstructor().newInstance();
 			switch(sck.sockinit(headers,socket_channel,ByteBuffer.wrap(ba,ba_pos,ba_rem))){default:throw new IllegalStateException();
 			case read:selection_key.interestOps(SelectionKey.OP_READ);selection_key.selector().wakeup();break;
@@ -663,7 +664,6 @@ public final class req{
 			case close:socket_channel.close();break;
 			case wait:selection_key.interestOps(0);break;
 			}
-			state=state_sock;
 			return;
 		}
 
