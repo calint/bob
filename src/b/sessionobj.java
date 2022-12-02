@@ -34,7 +34,7 @@ public final class sessionobj extends DbObject {
 		final byte[] ba = (byte[]) v;
 		try {
 			final ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(ba));
-			final Serializable o = (a) ois.readObject();
+			final Serializable o = (Serializable) ois.readObject();
 			ois.close();
 			put(object, o); // put without marking field dirty
 			return o;
