@@ -32,6 +32,7 @@ public class websock implements sock{
 		bbo.put("HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: ".getBytes());
 		bbo.put(replkey.getBytes());
 //		bbo.put("\r\nSec-WebSocket-Protocol: chat".getBytes());
+		// ? add session cookie?
 		bbo.put("\r\n\r\n".getBytes());
 		bbo.flip();
 		System.out.println("@@@@@ 2:   "+new String(bbo.array(),"utf8"));

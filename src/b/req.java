@@ -393,14 +393,6 @@ public final class req{
 		final String resource_path=b.get_resource_for_path(path_s);
 		if(resource_path==null)
 			return false;
-//		final String pn=path.name();//? path
-////		if(!b.resources_enable_any_path&&!b.resources_in_b.contains(pn))return false;
-//		final String rcpth;
-//		if(b.resources_in_b.contains(pn))
-//			rcpth="/"+req.class.getPackage().getName()+"/"+pn;
-//		else if(b.resources_enable_any_path)
-//			rcpth=path.toString();
-//		else return false;
 		
 		final InputStream is=req.class.getResourceAsStream(resource_path);
 		if(is==null)return false;
@@ -655,7 +647,14 @@ public final class req{
 			return;
 		}
 
-		if(websock.class.isAssignableFrom(cls)){// start a socket
+		if(!set_session_id_from_cookie()){
+			session_id=make_new_session_id();
+			session_id_set=true;
+			pl("new session "+session_id);
+			thdwatch.sessions++;
+		}
+
+		if(sock.class.isAssignableFrom(cls)){// start a socket
 			System.out.println("websocket at "+path_s);
 			sck=(sock)cls.getConstructor().newInstance();
 			switch(sck.sockinit(headers,new sockio(socket_channel,selection_key,ByteBuffer.wrap(ba,ba_pos,ba_rem)))){default:throw new IllegalStateException();
@@ -670,13 +669,6 @@ public final class req{
 
 		if(content_bb!=null)
 			populate_content_map_from_buffer();
-
-		if(!set_session_id_from_cookie()){
-			session_id=make_new_session_id();
-			session_id_set=true;
-			pl("new session "+session_id);
-			thdwatch.sessions++;
-		}
 
 		final DbTransaction tn=Db.initCurrentTransaction();
 		try{

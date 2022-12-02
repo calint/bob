@@ -112,9 +112,9 @@ final public class b{
 		if(print_stats_at_startup)stats_to(out);
 		b.pl("");
 		
-		map_resource_to_path("/x.js","/b/x.js");
-		map_resource_to_path("/x.css","/b/x.css");
-		map_resource_to_path("/favicon.ico","/b/favicon.ico");
+		set_path_to_resource("/x.js","/b/x.js");
+		set_path_to_resource("/x.css","/b/x.css");
+		set_path_to_resource("/favicon.ico","/b/favicon.ico");
 
 		// initiate db
 		Db.initInstance();
@@ -178,7 +178,7 @@ final public class b{
 			}
 	}
 	/** Called during initiation stage. */
-	public static void map_class_to_path(final String path,final Class<?>cls){
+	public static void set_path_to_class(final String path,final Class<?>cls){
 		path_to_class_map.put(path,cls);
 	}
 	/** Called by req. */
@@ -186,7 +186,7 @@ final public class b{
 		return path_to_class_map.get(path);
 	}
 	/** Called during initiation stage. */
-	public static void map_resource_to_path(final String path,final String resource){
+	public static void set_path_to_resource(final String path,final String resource){
 		path_to_resource_map.put(path,resource);
 	}
 	/** Called by req. */
