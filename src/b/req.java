@@ -397,7 +397,7 @@ public final class req{
 		final InputStream is=req.class.getResourceAsStream(resource_path);
 		if(is==null)return false;
 		// todo map of file suffix to content types
-		final String contentType = resource_path.endsWith(".js")?"application/javascript":null;// todo better mapping
+		final String contentType = resource_path.endsWith(".js")?"application/javascript":null;
 		final chdresp c=new chdresp_resource(is,contentType);
 		file_and_resource_cache.put(path_s,c);
 		reply(c);

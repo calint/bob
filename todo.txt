@@ -10,5 +10,5 @@
 [ ] req state to enum
 [ ] dbo: better connection pool, close old connection etc
 [x] rework the websock
-[ ] try b with 1B input buffer
+[x] try b with 1B input buffer
 

@@ -3,6 +3,8 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.security.MessageDigest;
 import java.util.Map;
+/** Supports the pattern of client sending one packet then waiting for a reply if expected.
+ * Other use cases work if the sends fit in the request buffer. */
 public class websock implements sock{
 	private ByteBuffer bbi;
 	private static enum state{initiation,closed,handshake,read_next_frame,read_continue}
@@ -23,7 +25,7 @@ public class websock implements sock{
 		// rfc6455#section-1.3
 		// Opening Handshake
 //		if(!"13".equals(hdrs.get("sec-websocket-version")))throw new Error("sec-websocket-version not 13");
-		System.out.println("@@@@@ 1:   "+hdrs);
+//		System.out.println("@@@@@ 1:   "+hdrs);
 		final String key=hdrs.get("sec-websocket-key");
 		final String s=key+"258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
 		final byte[]sha1ed=MessageDigest.getInstance("SHA-1").digest(s.getBytes());
@@ -36,7 +38,7 @@ public class websock implements sock{
 		// ? add session cookie
 		bbo.put("\r\n\r\n".getBytes());
 		bbo.flip();
-		System.out.println("@@@@@ 2:   "+new String(bbo.array(),bbo.position(),bbo.remaining()));
+//		System.out.println("@@@@@ 2:   "+new String(bbo.array(),bbo.position(),bbo.remaining()));
 		while(bbo.hasRemaining()&&sc.write(bbo)!=0);
 		if(bbo.hasRemaining())
 			throw new RuntimeException("packetnotfullysent");
