@@ -38,13 +38,14 @@ public class websock implements sock{
 		System.out.println("@@@@@ 2:   "+new String(bbo.array(),"utf8"));
 //		System.out.println(hdrs);
 //		System.out.println(new String(bbo.array(),0,bbo.limit()));
-		while(bbo.hasRemaining()&&0!=so.write(bbo));if(bbo.hasRemaining())throw new Error("packetnotfullysent");
+		while(bbo.hasRemaining()&&so.write(bbo)!=0);
+			if(bbo.hasRemaining())
+				throw new RuntimeException("packetnotfullysent");
 		bbi.position(bbi.limit());
 		st=state.read_next_frame;
 		onopened();
 		return op.read;
 	}
-	protected final void enableclientinput(){so.reqread();}
 	protected void onopened()throws Throwable{}
 	final public op read()throws Throwable{
 		if(!bbi.hasRemaining()){
@@ -53,7 +54,7 @@ public class websock implements sock{
 			if(n==0)return op.read;//? infloop?
 			if(n==-1){
 				st=state.closed;
-//				onclosed(); //? onclosed called when request closed
+//				onclosed(); //? onclosed called when request is closed
 				return op.close;
 			}
 			bbi.flip();
