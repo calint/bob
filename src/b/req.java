@@ -390,19 +390,22 @@ public final class req{
 	
 	/** @return true if resource was cached and sent. */
 	private boolean try_resource()throws Throwable{
-		final String pn=path.name();//? path
-//		if(!b.resources_enable_any_path&&!b.resources_in_b.contains(pn))return false;
-		final String rcpth;
-		if(b.resources_in_b.contains(pn))
-			rcpth="/"+req.class.getPackage().getName()+"/"+pn;
-		else if(b.resources_enable_any_path)
-			rcpth=path.toString();
-		else return false;
+		final String resource_path=b.get_resource_for_path(path_s);
+		if(resource_path==null)
+			return false;
+//		final String pn=path.name();//? path
+////		if(!b.resources_enable_any_path&&!b.resources_in_b.contains(pn))return false;
+//		final String rcpth;
+//		if(b.resources_in_b.contains(pn))
+//			rcpth="/"+req.class.getPackage().getName()+"/"+pn;
+//		else if(b.resources_enable_any_path)
+//			rcpth=path.toString();
+//		else return false;
 		
-		final InputStream is=req.class.getResourceAsStream(rcpth);
+		final InputStream is=req.class.getResourceAsStream(resource_path);
 		if(is==null)return false;
 		// todo map of file suffix to content types
-		final String contentType = rcpth.endsWith(".js")?"application/javascript":null;
+		final String contentType = resource_path.endsWith(".js")?"application/javascript":null;// todo better mapping
 		final chdresp c=new chdresp_resource(is,contentType);
 		file_and_resource_cache.put(path_s,c);
 		reply(c);

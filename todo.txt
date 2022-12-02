@@ -6,5 +6,5 @@
 [x] review ranged requests
 [x]   file
 [x]   cache
-[ ] b.map_resource_to_path(String,String)
+[x] b.map_resource_to_path(String,String)
 [ ] req state to enum

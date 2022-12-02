@@ -25,11 +25,9 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.TimeZone;
@@ -76,8 +74,8 @@ final public class b{
 //	public static @conf final String webobjpkg="a.";
 	public static @conf String datetimefmtstr="yyyy-MM-dd HH:mm:ss.sss";
 	public static @conf String resources_etag="\"v1\"";
-	public static HashSet<String>resources_in_b=new HashSet<String>(Arrays.asList("x.js","x.css","favicon.ico"));
-	public static @conf boolean resources_enable_any_path=false;
+//	public static HashSet<String>resources_in_b=new HashSet<String>(Arrays.asList("x.js","x.css","favicon.ico"));
+//	public static @conf boolean resources_enable_any_path=false;
 	public static @conf boolean enable_upload=true;
 	public static @conf int max_pending_connections=20000;// when overrun causes SYN flood warning
 	public static @conf boolean tcpnodelay=true;
@@ -100,6 +98,7 @@ final public class b{
 	public static bapp bapp=null;
 	
 	private final static HashMap<String,Class<?>>path_to_class_map=new HashMap<String,Class<?>>();
+	private final static HashMap<String,String>path_to_resource_map=new HashMap<String,String>();
 	private final static LinkedList<req>pending_req=new LinkedList<req>();
 	
 	public static void main(final String[]args)throws Throwable{
@@ -112,6 +111,10 @@ final public class b{
 		}
 		if(print_stats_at_startup)stats_to(out);
 		b.pl("");
+		
+		map_resource_to_path("/x.js","/b/x.js");
+		map_resource_to_path("/x.css","/b/x.css");
+		map_resource_to_path("/favicon.ico","/b/favicon.ico");
 
 		// initiate db
 		Db.initInstance();
@@ -181,6 +184,14 @@ final public class b{
 	/** Called by req. */
 	public static Class<?>get_class_for_path(final String path){
 		return path_to_class_map.get(path);
+	}
+	/** Called during initiation stage. */
+	public static void map_resource_to_path(final String path,final String resource){
+		path_to_resource_map.put(path,resource);
+	}
+	/** Called by req. */
+	public static String get_resource_for_path(final String path){
+		return path_to_resource_map.get(path);
 	}
 	private static void print_hr(final OutputStream os,final int width_in_chars)throws IOException{ // ? only used in b.main, remove?
 //		for(int i=0;i<width_in_chars;i++)
