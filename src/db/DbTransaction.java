@@ -11,6 +11,7 @@ import java.util.List;
 
 /** Transaction used to create, get, count and delete objects. */
 public final class DbTransaction {
+	final PooledConnection pooledCon;
 	final Connection con;
 	final Statement stmt;
 	final HashSet<DbObject> dirtyObjects = new HashSet<DbObject>();
@@ -50,9 +51,10 @@ public final class DbTransaction {
 		}
 	}
 
-	DbTransaction(final Connection c) throws Throwable {
-		con = c;
-		stmt = c.createStatement();
+	DbTransaction(final PooledConnection pc) throws Throwable {
+		pooledCon = pc;
+		con = pc.getConnection();
+		stmt = con.createStatement();
 		cache_enabled = Db.instance().enable_cache;
 	}
 

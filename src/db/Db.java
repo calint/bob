@@ -1,5 +1,8 @@
 package db;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -27,6 +30,9 @@ public final class Db {
 
 	private static Db inst;
 
+	public static long pooled_connection_max_age_in_ms = 10 * 60 * 1000;
+//	public static long pooled_connection_max_age_in_ms = 10 * 1000;
+
 	/** Called once to create the singleton instance. */
 	public static void initInstance() throws Throwable {
 		Db.log("dbo: init instance");
@@ -45,25 +51,55 @@ public final class Db {
 	 * 
 	 * @return the created transaction
 	 */
-	public static DbTransaction initCurrentTransaction() {
+	public static DbTransaction initCurrentTransaction() { // ? so ugly
 		Db.log("dbo: init transaction on " + Thread.currentThread());
-		Connection c = null;
+		PooledConnection pc;
 		synchronized (inst.conpool) {
 			while (inst.conpool.isEmpty()) { // spurious interrupt might happen
 				try {
 					inst.conpool.wait();
 				} catch (InterruptedException e) {
-					e.printStackTrace(); // ? what to do?
+					log(e);
 				}
 			}
-			c = inst.conpool.removeFirst();
+			pc = inst.conpool.removeFirst();
 		}
-		try {
-			final DbTransaction t = new DbTransaction(c);
-			tn.set(t);
-			return t;
-		} catch (Throwable e) {
-			throw new RuntimeException(e);
+		if (pc.getAgeInMs() > Db.pooled_connection_max_age_in_ms) {
+			while (true) {
+				try {
+					pc.getConnection().close();
+				} catch (Throwable t) {
+					log(t);
+				}
+				try {
+					final Connection c = Db.instance().createJdbcConnection();
+					final PooledConnection pc2 = new PooledConnection(c);
+					final DbTransaction t = new DbTransaction(pc2);
+					tn.set(t);
+					return t;
+				} catch (Throwable e) {
+					log(e);
+				}
+			}
+		}
+		while (true) {
+			try {
+				final DbTransaction t = new DbTransaction(pc);
+				tn.set(t);
+				return t;
+			} catch (Throwable e) {
+				log(e);
+			}
+			// something went wrong initiating transaction
+			try {
+				final Connection c = Db.instance().createJdbcConnection();
+				final PooledConnection pc2 = new PooledConnection(c);
+				final DbTransaction t = new DbTransaction(pc2);
+				tn.set(t);
+				return t;
+			} catch (Throwable e) {
+				log(e);
+			}
 		}
 	}
 
@@ -80,17 +116,25 @@ public final class Db {
 	 * Removes the transaction from the thread local and the JDBC connection is
 	 * returned to the pool.
 	 */
-	public static void deinitCurrentTransaction() {
-		final DbTransaction tx = tn.get();
-		try {
-			if (!tx.rollbacked) {
-				tx.commit();
-			}
-			tx.stmt.close(); // ! might not be called when exception
-		} catch (final Throwable t) {
-			t.printStackTrace();
-		}
+	public static void deinitCurrentTransaction() { // ? so ugly
 		Db.log("dbo: deinit transaction on " + Thread.currentThread());
+		final DbTransaction tx = tn.get();
+		boolean keep = true;
+		if (!tx.rollbacked) {
+			try {
+				tx.commit();
+			} catch (Throwable t) {
+				keep = false;
+				log(t);
+			}
+		}
+		try {
+			tx.stmt.close();
+		} catch (Throwable t) {
+			keep = false;
+			log(t);
+		}
+
 		// make sure statement is closed here. should be. // ? stmt.isClosed() is not in
 		// java 1.5
 //		final boolean stmtIsClosed;
@@ -102,17 +146,47 @@ public final class Db {
 //		if (!stmtIsClosed)
 //			throw new RuntimeException(
 //					"Statement should be closed here. DbTransaction.finishTransaction() not called?");
-
+		if (keep) {
+			synchronized (inst.conpool) {
+				inst.conpool.addFirst(tx.pooledCon);
+				inst.conpool.notify();
+			}
+			tn.remove();
+			return;
+		}
+		// this connection threw exception while deinit. make a new one
+		final Connection c = Db.instance().createJdbcConnection();
+		final PooledConnection pc = new PooledConnection(c);
 		synchronized (inst.conpool) {
-			inst.conpool.add(tx.con);
+			inst.conpool.addFirst(pc);
 			inst.conpool.notify();
 		}
-
 		tn.remove();
 	}
 
+	public static synchronized void log(final Throwable t) {
+		Throwable e = t;
+		if (e instanceof InvocationTargetException)
+			e = t.getCause();
+		while (e.getCause() != null)
+			e = e.getCause();
+		System.err.println(stacktraceline(e));
+	}
+
+	public static String stacktrace(final Throwable e) {
+		final StringWriter sw = new StringWriter();
+		final PrintWriter out = new PrintWriter(sw);
+		e.printStackTrace(out);
+		out.close();
+		return sw.toString();
+	}
+
+	public static String stacktraceline(final Throwable e) {
+		return stacktrace(e).replace('\n', ' ').replace('\r', ' ').replaceAll("\\s+", " ").replaceAll(" at ", " @ ");
+	}
+
 	// --- -- - -- -- - - --- - -- -- - -- --- - - - -- - - -- - -- -- -- - -- - - -
-	private final LinkedList<Connection> conpool = new LinkedList<Connection>();
+	private final LinkedList<PooledConnection> conpool = new LinkedList<PooledConnection>();
 	private final ArrayList<DbClass> dbclasses = new ArrayList<DbClass>();
 	private final HashMap<Class<? extends DbObject>, DbClass> clsToDbClsMap = new HashMap<Class<? extends DbObject>, DbClass>();
 	final ArrayList<RelRefNMeta> relRefNMeta = new ArrayList<RelRefNMeta>();
@@ -162,7 +236,7 @@ public final class Db {
 		Db.log("connection: " + url);
 		Db.log("      user: " + user);
 		Db.log("  password: " + (password == null ? "[none]" : "[not displayed]"));
-		final Connection con = DriverManager.getConnection(url, user, password);
+		final Connection con = createJdbcConnection();
 
 		final DatabaseMetaData dbm = con.getMetaData();
 		Db.log("    driver: " + dbm.getDriverName() + " " + dbm.getDriverVersion());
@@ -206,18 +280,31 @@ public final class Db {
 
 		// create connection pool
 		for (int i = 0; i < ncons; i++) {
-			final Connection c = DriverManager.getConnection(url, user, password);
-			c.setAutoCommit(false);
-			conpool.add(c);
+			final Connection c = createJdbcConnection();
+			final PooledConnection pc = new PooledConnection(c);
+			conpool.add(pc);
 		}
 
 		Db.log("--- - - - ---- - - - - - -- -- --- -- --- ---- -- -- - - -");
 	}
 
 	/** @return a JDBC connection. */
-	public Connection createJdbcConnection() throws Throwable {
-		final Connection c = DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcPasswd);
-		return c;
+	public Connection createJdbcConnection() {
+		Connection c = null;
+		while (true) {
+			try {
+				c = DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcPasswd);
+				c.setAutoCommit(false);
+				return c;
+			} catch (Throwable t) {
+				try {
+					System.err.println("dbo: cannot create connection waiting.");
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					log(e);
+				}
+			}
+		}
 	}
 
 	private void printDbMetaInfo(final DatabaseMetaData dbm) throws SQLException {
@@ -358,9 +445,9 @@ public final class Db {
 		Db.log("dbo: shutdown");
 		Db.inst = null;
 		synchronized (conpool) {
-			for (final Connection c : conpool) {
+			for (final PooledConnection pc : conpool) {
 				try {
-					c.close();
+					pc.getConnection().close();
 				} catch (Throwable e) {
 					e.printStackTrace();
 				}

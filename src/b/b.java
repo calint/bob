@@ -303,7 +303,7 @@ final public class b{
 				if("An existing connection was forcibly closed by the remote host".equals(e.getMessage()))return;
 			}
 		}
-		err.println("\n\n"+b.stacktraceline(e));
+		err.println(b.stacktraceline(e));
 	}
 	public static path path(){
 		return new path(new File(root_dir),true);

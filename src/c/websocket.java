@@ -9,12 +9,12 @@ import b.websock;
 
 final public class websocket extends websock implements threadedsock {
 
-	synchronized final @Override protected void onopened() throws Throwable {
+	synchronized final @Override protected void on_opened() throws Throwable {
 		System.out.println("onopened");
 	}
 
 	@Override
-	synchronized protected void onmessage(ByteBuffer bb) throws Throwable {
+	synchronized protected void on_message(ByteBuffer bb) throws Throwable {
 		System.out.println("onmessage size:" + bb.remaining());
 		String msg = new String(bb.array(), bb.position(), bb.remaining());
 		Timestamp ts = new Timestamp(System.currentTimeMillis());
@@ -28,7 +28,7 @@ final public class websocket extends websock implements threadedsock {
 		send(s);
 	}
 
-	synchronized final @Override protected void onclosed() throws Throwable {
+	synchronized final @Override protected void on_closed() throws Throwable {
 		System.out.println("onclosed");
 	}
 }

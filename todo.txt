@@ -8,7 +8,8 @@
 [x]   cache
 [x] b.map_resource_to_path(String,String)
 [ ] req state to enum
-[ ] dbo: better connection pool, close old connection etc
+[o] dbo: better connection pool, close old connection etc
+[ ]   review code, the ugliness is overwhelming 
 [x] rework the websock
 [x] try b with 1B input buffer
 

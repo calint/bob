@@ -6,27 +6,27 @@ import java.util.Map;
 /** Supports the pattern of client sending one packet then waiting for a reply if expected.
  * Other use cases work if the sends fit in the request buffer. */
 public class websock implements sock{
-	private ByteBuffer bbi;
 	private static enum state{initiation,closed,handshake,read_next_frame,read_continue}
+	private SocketChannel socket_channel;
+	private ByteBuffer bb;
 	private state st=state.initiation;
-	private final byte[]maskkey=new byte[4];
 	private int payload_remaining;
+	private ByteBuffer request_bb;
 	private ByteBuffer[]response_bba;
 	private boolean is_first_packet;
-	private int maskc;
+	private int mask_i;
 	private boolean masked;
-	private ByteBuffer request_bb;
-	private SocketChannel socket_channel;
-	/** @param bbspil byte buffer might have more data to be read */
-	final public op sockinit(final Map<String,String>hdrs,final SocketChannel sc,final ByteBuffer bbspil)throws Throwable{
+	private final byte[]maskkey=new byte[4];
+	/** @param bb byte buffer might have more data to be read */
+	final public op sock_init(final Map<String,String>headers,final SocketChannel sc,final ByteBuffer bb)throws Throwable{
 		socket_channel=sc;
-		bbi=bbspil;
+		this.bb=bb;
 		st=state.handshake;
 		// rfc6455#section-1.3
 		// Opening Handshake
 //		if(!"13".equals(hdrs.get("sec-websocket-version")))throw new Error("sec-websocket-version not 13");
 //		System.out.println("@@@@@ 1:   "+hdrs);
-		final String key=hdrs.get("sec-websocket-key");
+		final String key=headers.get("sec-websocket-key");
 		final String s=key+"258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
 		final byte[]sha1ed=MessageDigest.getInstance("SHA-1").digest(s.getBytes());
 		final String replkey=base64.encodeToString(sha1ed,true);
@@ -43,15 +43,15 @@ public class websock implements sock{
 		if(bbo.hasRemaining())
 			throw new RuntimeException("packetnotfullysent");
 //		bbi.position(bbi.limit());
-		onopened();
+		on_opened();
 		st=state.read_next_frame;
 		return op.read; // response sent, wait for packet (assumes client hasn't sent anything yet
 	}
-	protected void onopened()throws Throwable{}
-	final public op read()throws Throwable{
-		if(!bbi.hasRemaining()){
-			bbi.clear();
-			final int n=socket_channel.read(bbi);
+	protected void on_opened()throws Throwable{}
+	final public op sock_read()throws Throwable{
+		if(!bb.hasRemaining()){
+			bb.clear();
+			final int n=socket_channel.read(bb);
 			thdwatch.input+=n;
 
 			if(n==0)return op.read;//? infloop?
@@ -59,14 +59,14 @@ public class websock implements sock{
 				st=state.closed;
 				return op.close; // onclosed called when request is closed
 			}
-			bbi.flip();
+			bb.flip();
 		}
 		while(true) {
 			switch(st){default:throw new RuntimeException();
 			case read_next_frame: // ? assuming the header is buffered. breaking up into states for header would handle the input buffer of 1 B
 				// rfc6455#section-5.2
 				// Base Framing Protocol
-				final int b0=(int)bbi.get();
+				final int b0=(int)bb.get();
 				final boolean fin=(b0&128)==128;
 				if(fin);// to remove warning of unused variable
 				final int resv=(b0>>4)&7;
@@ -76,43 +76,45 @@ public class websock implements sock{
 					st=state.closed;
 					return op.close; // onclose called when request is closed
 				}
-				final int b1=(int)bbi.get();
+				// todo handle the other opcodes https://www.rfc-editor.org/rfc/rfc6455#section-5.2
+				
+				final int b1=(int)bb.get();
 				masked=(b1&128)==128;
 				payload_remaining=b1&127;
 				if(payload_remaining==126){
-					final int by2=(((int)bbi.get()&0xff)<<8);
-					final int by1= ((int)bbi.get()&0xff);
+					final int by2=(((int)bb.get()&0xff)<<8);
+					final int by1= ((int)bb.get()&0xff);
 					payload_remaining=by2|by1;
 				}else if(payload_remaining==127){
-					bbi.get();// skip the bytes that encode a length >4G
-					bbi.get();
-					bbi.get();
-					bbi.get();
-					final int by4=(((int)bbi.get()&0xff)<<24);
-					final int by3=(((int)bbi.get()&0xff)<<16);
-					final int by2=(((int)bbi.get()&0xff)<<8);
-					final int by1= ((int)bbi.get()&0xff);
+					bb.get();// skip the bytes that encode a length >4G
+					bb.get();
+					bb.get();
+					bb.get();
+					final int by4=(((int)bb.get()&0xff)<<24);
+					final int by3=(((int)bb.get()&0xff)<<16);
+					final int by2=(((int)bb.get()&0xff)<<8);
+					final int by1= ((int)bb.get()&0xff);
 					payload_remaining=by4|by3|by2|by1;
 				}
-				bbi.get(maskkey);
+				bb.get(maskkey);
 				is_first_packet=true;
-				maskc=0;
+				mask_i=0;
 				st=state.read_continue;
 				// fall through
 			case read_continue:
 				// unmask
-				final byte[]bbia=bbi.array();
-				final int pos=bbi.position();
-				final int limit=bbi.remaining()>payload_remaining?pos+payload_remaining:bbi.limit();
+				final byte[]bbia=bb.array();
+				final int pos=bb.position();
+				final int limit=bb.remaining()>payload_remaining?pos+payload_remaining:bb.limit();
 				if(masked&&maskkey[0]==0&&maskkey[1]==0&&maskkey[2]==0&&maskkey[3]==0){
 					throw new RuntimeException();
 				}
 				for(int i=pos;i<limit;i++){
-					final byte b=(byte)(bbia[i]^maskkey[maskc]);
+					final byte b=(byte)(bbia[i]^maskkey[mask_i]);
 					bbia[i]=b;
-					maskc++;
-					if(maskc==maskkey.length) {
-						maskc=0;
+					mask_i++;
+					if(mask_i==maskkey.length) {
+						mask_i=0;
 					}
 				}
 				
@@ -124,11 +126,11 @@ public class websock implements sock{
 				final ByteBuffer bbii=ByteBuffer.wrap(bbia,pos,read_length);// bbi position is start of data, limit is the data unmasked
 				onpayload(bbii);
 				is_first_packet=false;
-				bbi.position(limit);
-				if(bbi.remaining()!=0){
+				bb.position(limit);
+				if(bb.remaining()!=0){
 					// client has sent multiple packets without waiting for response.
 					// this is not a supported use case.
-					// may work if write() completes the send.
+					// works if write() completes the send with one call.
 					if(response_bba!=null)
 						throw new RuntimeException("chained request with send() overrun");
 					continue;
@@ -155,16 +157,16 @@ public class websock implements sock{
 		if(is_first_packet&&is_last_packet){
 			request_bb=bb;
 		}
-		onmessage(request_bb);
+		on_message(request_bb);
 		request_bb=null;
 	}
 
-	@Override public void onconnectionlost()throws Throwable{
-		onclosed();
+	@Override public void on_connection_lost()throws Throwable{
+		on_closed();
 	}
 
 	/** Called by the request or by send(...) */
-	final public op write()throws Throwable{
+	final public op sock_write()throws Throwable{
 		final long c=socket_channel.write(response_bba);
 		thdwatch.output+=c;
 		for(ByteBuffer b:response_bba){ // check if the write is complete.
@@ -177,11 +179,11 @@ public class websock implements sock{
 	}
 
 	/** Called when the web socket has been closed. */
-	protected void onclosed()throws Throwable{}
+	protected void on_closed()throws Throwable{}
 	
 	/** Called when a message has been decoded. ByteBuffer position is at start of data and limit marks the end of data.
 	 *  Note that it is assumed that client does not send a new message prior to receiving a reply. */
-	protected void onmessage(ByteBuffer bb)throws Throwable{}
+	protected void on_message(ByteBuffer bb)throws Throwable{}
 	
 	final public void send(String s)throws Throwable{
 		send(new ByteBuffer[]{ByteBuffer.wrap(s.getBytes())},true);
@@ -193,7 +195,7 @@ public class websock implements sock{
 		// Base Framing Protocol
 		final int ndata=bb.remaining();
 		response_bba=new ByteBuffer[]{make_header(ndata,textmode),bb};
-		write(); // return ignored because bbos will be set to null when write is finished
+		sock_write(); // return ignored because bbos will be set to null when write is finished
 	}
 	final public void send(final ByteBuffer[]bba,final boolean textmode)throws Throwable{
 		if(response_bba!=null)
@@ -205,7 +207,7 @@ public class websock implements sock{
 		response_bba[0]=make_header(ndata,textmode);
 		for(int i=1;i<response_bba.length;i++)
 			response_bba[i]=bba[i-1];
-		write(); // return ignored because response_bba will be set to null when write is finished
+		sock_write(); // return ignored because response_bba will be set to null when write is finished
 	}
 	private ByteBuffer make_header(final int size_of_data_to_send,final boolean text_mode){
 		// rfc6455#section-5.2
@@ -238,6 +240,6 @@ public class websock implements sock{
 	
 	@Override
 	public String toString() {
-		return new String(bbi.array(),bbi.position(),bbi.remaining());
+		return new String(bb.array(),bb.position(),bb.remaining());
 	}
 }

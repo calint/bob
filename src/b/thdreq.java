@@ -54,8 +54,8 @@ final class thdreq extends Thread{
 			r.selection_key.interestOps(SelectionKey.OP_READ);
 			r.selection_key.selector().wakeup();
 		}catch(Throwable e){
-			r.close();
 			b.log(e);
+			r.close();
 		}
 	}
 }

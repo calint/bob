@@ -658,7 +658,7 @@ public final class req{
 			System.out.println("socket at "+path_s);
 			state=state_sock;
 			sck=(sock)cls.getConstructor().newInstance();
-			switch(sck.sockinit(headers,socket_channel,ByteBuffer.wrap(ba,ba_pos,ba_rem))){default:throw new IllegalStateException();
+			switch(sck.sock_init(headers,socket_channel,ByteBuffer.wrap(ba,ba_pos,ba_rem))){default:throw new IllegalStateException();
 			case read:selection_key.interestOps(SelectionKey.OP_READ);selection_key.selector().wakeup();break;
 			case write:selection_key.interestOps(SelectionKey.OP_WRITE);selection_key.selector().wakeup();break;
 			case close:socket_channel.close();break;
@@ -832,8 +832,8 @@ public final class req{
 	
 	// ? separation of concerns, this request is either a sock or a 'a'
 	boolean is_sock(){return state==state_sock;}
-	sock.op sock_read()throws Throwable{return sck.read();}
-	sock.op sock_write()throws Throwable{return sck.write();}
+	sock.op sock_read()throws Throwable{return sck.sock_read();}
+	sock.op sock_write()throws Throwable{return sck.sock_write();}
 	// threaded socks
 	boolean is_sock_thread(){return sck instanceof threadedsock;}
 	private boolean waiting_sock_thread_read;
@@ -871,7 +871,7 @@ public final class req{
 	void close(){
 //		selection_key.cancel();
 		selection_key=null;		
-		try{if(is_sock())sck.onconnectionlost();}catch(final Throwable t){b.log(t);}
+		try{if(is_sock())sck.on_connection_lost();}catch(final Throwable t){b.log(t);}
 		try{socket_channel.close();}catch(final Throwable t){b.log(t);}
 		socket_channel=null;
 	}
