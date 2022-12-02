@@ -67,7 +67,7 @@ import java.util.Arrays;
  *         Date: 2004-aug-02
  *         Time: 11:31:11
  */
-final class base64{
+public final class base64{
 	private static final char[]CA="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".toCharArray();
 	private static final int[]IA=new int[256];
 	static{

@@ -42,7 +42,7 @@ public final class req{
 //			}
 		}
 		while(ba_rem>0){switch(state){default:throw new RuntimeException();
-			case state_nextreq:
+			case state_nextrequest:
 				method_length=0;
 				uri_sb.setLength(0);
 				uri_length=0;
@@ -95,7 +95,7 @@ public final class req{
 				break;
 			case state_content_upload:parse_content_upload();break;
 		}}
-		if(state==state_nextreq&&!is_connection_keepalive()){close();return b.op.noop;}
+		if(state==state_nextrequest&&!is_connection_keepalive()){close();return b.op.noop;}
 	}}
 
 	private void parse_method(){
@@ -496,7 +496,7 @@ public final class req{
 			bb[bi++]=ByteBuffer.wrap(content);
 		final long n=send_packet(bb,bi);
 		thdwatch.output+=n;
-		state=state_nextreq;
+		state=state_nextrequest;
 	}
 	
 	private int send_packet(final ByteBuffer[]bba,final int n)throws Throwable{
@@ -532,7 +532,7 @@ public final class req{
 			transfer_buffers_remaining-=c;
 			thdwatch.output+=c;
 		}
-		state=state_nextreq;
+		state=state_nextrequest;
 		return true;
 	}
 	
@@ -563,7 +563,7 @@ public final class req{
 			return false;
 		}
 		transfer_file_channel.close();
-		state=state_nextreq;
+		state=state_nextrequest;
 		return true;
 	}
 	
@@ -687,7 +687,7 @@ public final class req{
 //			return;
 //		}
 
-		state=state_nextreq;
+		state=state_nextrequest;
 	}
 
 	/** Called from run_page().*/
@@ -1032,7 +1032,7 @@ public final class req{
 	private final static String s_range="range";
 	private final static String s_slash="/";
 	private final static byte[]ba_page_header_pre_title="<!doctype html><meta charset=utf-8><link rel=stylesheet href=/x.css><script src=/x.js></script>".getBytes();
-	private final static int state_nextreq=0;
+	private final static int state_nextrequest=0;
 	private final static int state_method=1;
 	private final static int state_uri=2;
 	private final static int state_prot=3;

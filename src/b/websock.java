@@ -32,7 +32,7 @@ public class websock implements sock{
 		bbo.put("HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: ".getBytes());
 		bbo.put(replkey.getBytes());
 //		bbo.put("\r\nSec-WebSocket-Protocol: chat".getBytes());
-		// ? add session cookie?
+		// ? add session cookie
 		bbo.put("\r\n\r\n".getBytes());
 		bbo.flip();
 		System.out.println("@@@@@ 2:   "+new String(bbo.array(),"utf8"));
@@ -164,7 +164,7 @@ public class websock implements sock{
 		bbrq=null;
 	}
 	
-	/** Called when a message has been decoded. ByteBuffer position is at start of data. ByteBuffer limit marks the end of data.
+	/** Called when a message has been decoded. ByteBuffer position is at start of data and limit marks the end of data.
 	 *  Note that it is assumed that client does not send a new message prior to receiving a reply. */
 	protected void onmessage(ByteBuffer bb)throws Throwable{}
 
@@ -185,7 +185,7 @@ public class websock implements sock{
 				return op.read;
 			}
 			if(b.hasRemaining()){
-				return op.write; // when called from request this will trigger a new write
+				return op.write; // will trigger a new write when called from request
 			}
 		}
 		bbos=null; // will trigger a read request when called from send(...), otherwise write
