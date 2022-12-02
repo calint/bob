@@ -252,7 +252,7 @@ public final class DbTransaction {
 			con.rollback();
 			Db.log("*** rollback done");
 		} catch (Throwable t) {
-			throw new RuntimeException(t);
+			throw new RuntimeException(t);// ? this can be ignored?
 		}
 	}
 
