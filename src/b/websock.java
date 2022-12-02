@@ -187,7 +187,7 @@ public class websock implements sock{
 				return op.write; // when called from request this will trigger a new write
 			}
 		}
-		bbos=null; // setting this to null will trigger a read request when called from send(...), otherwise write
+		bbos=null; // will trigger a read request when called from send(...), otherwise write
 		return op.read;
 	}
 //	final protected session session(){return session;}

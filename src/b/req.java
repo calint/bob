@@ -215,7 +215,6 @@ public final class req{
 				final SimpleDateFormat df=new SimpleDateFormat("yyyy-MM-dd--HH:mm:ss.SSS");
 				try{p.lastmod(df.parse(lastmod_s).getTime());}catch(final ParseException e){throw new RuntimeException(e);}
 				reply(h_http204,null,null,null);
-				state=state_nextreq;
 				return;
 			}
 			if(content_type.startsWith("file;")||content_type.equals("file")){
@@ -611,7 +610,6 @@ public final class req{
 			catch(final ParseException e){throw new RuntimeException(e);}
 			catch(final Throwable ignored){System.out.println(ignored);}//? forandroid
 			reply(h_http204,null,null,null);
-			state=state_nextreq;
 		}
 	}
 	
@@ -652,7 +650,6 @@ public final class req{
 		if(cls==null){
 			xwriter x=new xwriter().p(path_s).nl().nl().pl("Resource not found.");
 			reply(h_http404,null,null,tobytes(x.toString()));
-			state=state_nextreq;
 			return;
 		}
 
@@ -690,11 +687,11 @@ public final class req{
 		}finally{
 			Db.deinitCurrentTransaction();
 		}
-		
-		if(state==state_sock){
-			thdwatch.socks++;
-			return;
-		}
+//		
+//		if(state==state_sock){
+//			thdwatch.socks++;
+//			return;
+//		}
 
 		state=state_nextreq;
 	}
