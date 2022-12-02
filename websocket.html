@@ -9,6 +9,7 @@ Web Socket
 <textarea id=inp></textarea>
 <button id=btn onclick="this.disabled=true;ws.send($.inp.value);$.inp.value='';this.disabled=false">send</button>
 <output id=outp></output>
+
 <style>
 	#inp{width:80em;height:10em}
 	#btn{width:10em}
@@ -43,5 +44,4 @@ function start(){
 function stop(){
 	ws.close();
 }
-
 </script>
