@@ -267,7 +267,16 @@ final public class b{
 	}
 	public static int cp(final Reader in,final Writer out,final sts sts)throws Throwable{
 		final char[]buf=new char[io_buf_B];
-		int n=0;while(true){final int count=in.read(buf);if(count<=0)break;out.write(buf,0,count);n+=count;if(sts!=null)sts.setsts(Long.toString(n));}
+		int n=0;
+		while(true){
+			final int count=in.read(buf);
+			if(count<=0)
+				break;
+			out.write(buf,0,count);
+			n+=count;
+			if(sts!=null)
+				sts.setsts(Long.toString(n));
+		}
 		return n;
 	}
 	public static synchronized void log(final Throwable t){
