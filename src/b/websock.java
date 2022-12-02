@@ -24,8 +24,6 @@ public class websock implements sock{
 		st=state.handshake;
 		// rfc6455#section-1.3
 		// Opening Handshake
-//		if(!"13".equals(hdrs.get("sec-websocket-version")))throw new Error("sec-websocket-version not 13");
-//		System.out.println("@@@@@ 1:   "+hdrs);
 		final String key=headers.get("sec-websocket-key");
 		final String s=key+"258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
 		final byte[]sha1ed=MessageDigest.getInstance("SHA-1").digest(s.getBytes());
@@ -38,11 +36,9 @@ public class websock implements sock{
 		// ? add session cookie
 		bbo.put("\r\n\r\n".getBytes());
 		bbo.flip();
-//		System.out.println("@@@@@ 2:   "+new String(bbo.array(),bbo.position(),bbo.remaining()));
 		while(bbo.hasRemaining()&&sc.write(bbo)!=0);
 		if(bbo.hasRemaining())
 			throw new RuntimeException("packetnotfullysent");
-//		bbi.position(bbi.limit());
 		on_opened();
 		st=state.read_next_frame;
 		return op.read; // response sent, wait for packet (assumes client hasn't sent anything yet

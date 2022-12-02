@@ -22,19 +22,19 @@ public final class sessionobj extends DbObject {
 		set(path, v);
 	}
 
-	public Serializable object() {
+	public Object object() {
 		final Object v = get(object);
 		if (v == null)
 			return null;
 
 		if (!(v instanceof byte[])) // is it transformed?
-			return (Serializable) v;
+			return v;
 
 		// convert from sql representation
 		final byte[] ba = (byte[]) v;
 		try {
 			final ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(ba));
-			final Serializable o = (Serializable) ois.readObject();
+			final Object o = ois.readObject();
 			ois.close();
 			put(object, o); // put without marking field dirty
 			return o;
