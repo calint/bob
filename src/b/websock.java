@@ -57,11 +57,16 @@ public class websock implements sock{
 			}
 			bbi.flip();
 		}
-		while(true)switch(dobbi()){default:throw new Error();
-			case read:if(bbi.hasRemaining())continue;return op.read;
-			case write:return op.write;
-			case close:return op.close;
-		}		
+		while(true) {
+			switch(dobbi()){default:throw new Error();
+				case read:
+					if(bbi.hasRemaining())
+						continue;
+					return op.read;
+				case write:return op.write;
+				case close:return op.close;
+			}		
+		}
 	}
 	@Override public void onconnectionlost()throws Throwable{
 		onclosed();
@@ -133,7 +138,7 @@ public class websock implements sock{
 			onpayload(bbii,ndata,payloadlendec,firstpak,payloadlendec==0);
 			bbi.position(limn);
 			firstpak=false;
-			return bbos==null?op.read:op.write; // onmessage might have set buffer to be sent
+			return bbos==null?op.read:op.write; // onmessage might have set buffer to send
 		}
 	}
 	
@@ -159,9 +164,10 @@ public class websock implements sock{
 	}
 	
 	/** Called when a message has been decoded. ByteBuffer position is at start of data. ByteBuffer limit marks the end of data.
-	 *  Note that it is assumed that client does not send a new message prior to receive a full reply. */
+	 *  Note that it is assumed that client does not send a new message prior to receiving a reply. */
 	protected void onmessage(ByteBuffer bb)throws Throwable{}
 
+	/** Called by the request or by send(...) */
 	final public op write()throws Throwable{
 		if(bbos==null){
 			System.out.println("bbos is null");
@@ -178,11 +184,10 @@ public class websock implements sock{
 				return op.read;
 			}
 			if(b.hasRemaining()){
-//				System.out.println("incomplete write");
-				return op.write; // ! test this
+				return op.write; // when called from request this will trigger a new write
 			}
 		}
-		bbos=null;
+		bbos=null; // setting this to null will trigger a read request when called from send(...), otherwise write
 		return op.read;
 	}
 //	final protected session session(){return session;}
@@ -203,8 +208,9 @@ public class websock implements sock{
 		// Base Framing Protocol
 		final int ndata=bb.remaining();
 		bbos=new ByteBuffer[]{make_header(ndata,textmode),bb};
-		if(write()==op.write)
-			so.reqwrite();
+//		if(write()==op.write)
+//			so.reqwrite();
+		write(); // return ignored because bbos will be set to null when write is finished
 	}
 
 //	final public void send(final ByteBuffer[]bba)throws Throwable{send(bba,true);}
@@ -235,8 +241,9 @@ public class websock implements sock{
 		bbos[0]=make_header(ndata,textmode);
 		for(int i=1;i<bbos.length;i++)
 			bbos[i]=bba[i-1];
-		if(write()==op.write)
-			so.reqwrite();
+//		if(write()==op.write)
+//			so.reqwrite();
+		write(); // return ignored because bbos will be set to null when write is finished
 	}
 	private ByteBuffer make_header(final int size_of_data_to_send,final boolean text_mode){
 		// rfc6455#section-5.2
