@@ -120,7 +120,7 @@ final public class b{
 		// initiate db
 		Db.initInstance();
 		Db.instance().register(session.class);
-		Db.instance().register(sessionpath.class);
+		Db.instance().register(sessionobj.class);
 		// initiate application
 		if(b.bapp_class!=null){
 			b.bapp=(bapp)Class.forName(b.bapp_class).getConstructor().newInstance();

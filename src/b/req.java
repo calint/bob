@@ -623,16 +623,16 @@ public final class req{
 		return dbses;
 	}
 
-	private sessionpath get_session_path(final String p){
+	private sessionobj get_session_path(final String p){
 		final DbTransaction tn=Db.currentTransaction();
-		final List<DbObject>ls=tn.get(sessionpath.class,new Query(session.sessionId,Query.EQ,session_id).and(session.paths).and(sessionpath.path,Query.EQ,p),null,null);
+		final List<DbObject>ls=tn.get(sessionobj.class,new Query(session.sessionId,Query.EQ,session_id).and(session.objects).and(sessionobj.path,Query.EQ,p),null,null);
 		if(ls.isEmpty()){
-			return get_session().path(p);
+			return get_session().object(p);
 		}else {
 			if(ls.size()>1) {
 				b.log(new RuntimeException("found "+ls.size()+" paths for session "+session_id+" path "+p));
 			}
-			return (sessionpath)ls.get(0);
+			return (sessionobj)ls.get(0);
 		}
 	}
 	
@@ -687,8 +687,8 @@ public final class req{
 
 	/** Called from run_page().*/
 	private void run_page_do(final DbTransaction tn,final Class<?>cls)throws Throwable{
-		final sessionpath dbo_root_elem=get_session_path(path_s);
-		a root_elem=dbo_root_elem.elem();
+		final sessionobj dbo_root_elem=get_session_path(path_s);
+		a root_elem=(a)dbo_root_elem.object();
 		if(root_elem==null){
 			root_elem=(a)cls.getConstructor().newInstance();
 		}
@@ -751,7 +751,7 @@ public final class req{
 			}catch(NoSuchMethodException t){
 				x.xalert("method not found:\n"+target_elem.getClass().getName()+".x_"+target_elem_method+"(xwriter,String)");
 			}
-			dbo_root_elem.elem(root_elem);// dbo element is now dirty 
+			dbo_root_elem.object(root_elem);// dbo element is now dirty 
 			tn.flush();
 			x.finish();
 			os.finish();
@@ -770,7 +770,7 @@ public final class req{
 			b.log(t);
 			x.pre().p(b.stacktrace(t));
 		}
-		dbo_root_elem.elem(root_elem);
+		dbo_root_elem.object(root_elem);
 		tn.flush();
 		x.finish();
 		os.finish();

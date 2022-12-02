@@ -10,7 +10,7 @@ import db.test.FldChars;
 
 public final class session extends DbObject {
 	public final static FldChars sessionId = new FldChars(32, "");
-	public final static RelAggN paths = new RelAggN(sessionpath.class);
+	public final static RelAggN objects = new RelAggN(sessionobj.class);
 	public final static Index ixSessionId=new Index(sessionId);
 
 	public String session_id() {
@@ -21,19 +21,19 @@ public final class session extends DbObject {
 		set(sessionId, v);
 	}
 
-	public sessionpath path(final String p) {
-		final Query q = new Query(sessionpath.path, Query.EQ, p);
-		final List<DbObject> ls = paths.get(this, q, null, null);
+	public sessionobj object(final String path) {
+		final Query q = new Query(sessionobj.path, Query.EQ, path);
+		final List<DbObject> ls = objects.get(this, q, null, null);
 		if (ls.isEmpty()) {
-			final sessionpath e = (sessionpath) paths.create(this);
-			e.path(p);
+			final sessionobj e = (sessionobj) objects.create(this);
+			e.path(path);
 			return e;
 		}
 		if (ls.size() > 1) {
 			b.pl(b.stacktrace(
-					new RuntimeException("found more than one object for path '" + p + "' in session " + this)));
+					new RuntimeException("found more than one object for path '" + path + "' in session " + this)));
 		}
-		final sessionpath e = (sessionpath) ls.get(0);
+		final sessionobj e = (sessionobj) ls.get(0);
 		return e;
 	}
 }
