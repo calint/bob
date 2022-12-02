@@ -1,21 +1,23 @@
 package b;
 import java.nio.ByteBuffer;
+import java.nio.channels.SocketChannel;
 import java.security.MessageDigest;
 import java.util.Map;
 public class websock implements sock{
-	private sockio so;
 	private ByteBuffer bbi;
 	private static enum state{closed,handshake,read_next_frame,read_continue}
 	private state st=state.closed;
 	private final byte[]maskkey=new byte[4];
 	private int payloadlendec;
-	private ByteBuffer[]bbos;
+	private ByteBuffer[]response_bba;
 	private boolean firstpak;
 	private int maskc;
-	private ByteBuffer bbrq;
-	final public op sockinit(final Map<String,String>hdrs,final sockio so)throws Throwable{
-		this.so=so;
-		bbi=so.inbuf();
+	private ByteBuffer request_bb;
+	private SocketChannel socket_channel;
+	/** @param bbspil byte buffer might have more data to be read */
+	final public op sockinit(final Map<String,String>hdrs,final SocketChannel sc,final ByteBuffer bbspil)throws Throwable{
+		socket_channel=sc;
+		bbi=bbspil;
 		st=state.handshake;
 		// rfc6455#section-1.3
 		// Opening Handshake
@@ -34,7 +36,7 @@ public class websock implements sock{
 		bbo.put("\r\n\r\n".getBytes());
 		bbo.flip();
 		System.out.println("@@@@@ 2:   "+new String(bbo.array(),"utf8"));
-		while(bbo.hasRemaining()&&so.write(bbo)!=0);
+		while(bbo.hasRemaining()&&sc.write(bbo)!=0);
 			if(bbo.hasRemaining())
 				throw new RuntimeException("packetnotfullysent");
 		bbi.position(bbi.limit());
@@ -46,7 +48,9 @@ public class websock implements sock{
 	final public op read()throws Throwable{
 		if(!bbi.hasRemaining()){
 			bbi.clear();
-			final int n=so.read(bbi);
+			final int n=socket_channel.read(bbi);
+			thdwatch.input+=n;
+
 			if(n==0)return op.read;//? infloop?
 			if(n==-1){
 				st=state.closed;
@@ -133,29 +137,29 @@ public class websock implements sock{
 			onpayload(bbii,ndata,payloadlendec,firstpak,payloadlendec==0);
 			bbi.position(limn);
 			firstpak=false;
-			return bbos==null?op.read:op.write; // onpayload->onmessage might have done a send that is not complete
+			return response_bba==null?op.read:op.write; // onpayload->onmessage might have done a send that is not complete
 		}
 	}
 	
 	final private void onpayload(ByteBuffer bb,int nbytes,int payloadlenlft,boolean firstpak,boolean lastpak)throws Throwable{
 		if(firstpak&&!lastpak){
-			bbrq=ByteBuffer.allocate(nbytes+payloadlenlft);
-			bbrq.put(bb);
+			request_bb=ByteBuffer.allocate(nbytes+payloadlenlft);
+			request_bb.put(bb);
 			return;
 		}
 		if(!firstpak&&!lastpak){
-			bbrq.put(bb);
+			request_bb.put(bb);
 			return;
 		}
 		if(!firstpak&&lastpak){
-			bbrq.put(bb);
-			bbrq.flip();
+			request_bb.put(bb);
+			request_bb.flip();
 		}
 		if(firstpak&&lastpak){
-			bbrq=bb;
+			request_bb=bb;
 		}
-		onmessage(bbrq);
-		bbrq=null;
+		onmessage(request_bb);
+		request_bb=null;
 	}
 	
 	/** Called when a message has been decoded. ByteBuffer position is at start of data and limit marks the end of data.
@@ -164,25 +168,14 @@ public class websock implements sock{
 
 	/** Called by the request or by send(...) */
 	final public op write()throws Throwable{
-		if(bbos==null){
-			System.out.println("bbos is null");
-			return op.read;
-		}
-		so.write(bbos);
-		if(bbos==null){
-			System.out.println("bbos is null 2");
-			return op.read;
-		}
-		for(ByteBuffer b:bbos){ // check if the write is complete.
-			if(b==null){
-				System.out.println("b is null");
-				return op.read;
-			}
+		final long c=socket_channel.write(response_bba);
+		thdwatch.output+=c;
+		for(ByteBuffer b:response_bba){ // check if the write is complete.
 			if(b.hasRemaining()){
 				return op.write; // will trigger a new write when called from request
 			}
 		}
-		bbos=null; // will trigger a read request when called from send(...), otherwise write
+		response_bba=null; // will trigger a read request when called from send(...), otherwise write
 		return op.read;
 	}
 	
@@ -190,50 +183,24 @@ public class websock implements sock{
 		send(new ByteBuffer[]{ByteBuffer.wrap(s.getBytes())},true);
 	}
 	
-//	final public void send(ByteBuffer bb)throws Throwable{send(bb,true);}
-	
 	final public void send(ByteBuffer bb,final boolean textmode)throws Throwable{
-		if(bbos!=null)throw new Error("overwrite");//?
+		if(response_bba!=null)throw new Error("overwrite");//?
 		// rfc6455#section-5.2
 		// Base Framing Protocol
 		final int ndata=bb.remaining();
-		bbos=new ByteBuffer[]{make_header(ndata,textmode),bb};
-//		if(write()==op.write)
-//			so.reqwrite();
+		response_bba=new ByteBuffer[]{make_header(ndata,textmode),bb};
 		write(); // return ignored because bbos will be set to null when write is finished
 	}
-
-//	final public void send(final ByteBuffer[]bba)throws Throwable{send(bba,true);}
-	
-//	final public void send_binary(final ByteBuffer...bba)throws Throwable{
-//		send(bba,false);
-//	}
-	
-//	final public void send_binary(final byte[]...bb)throws Throwable{
-//		final ByteBuffer[]bba=new ByteBuffer[bb.length];
-//		int i=0;
-//		for(byte[]ba:bb)bba[i++]=ByteBuffer.wrap(ba);
-//		send(bba,false);
-//	}
-//	final public void send_binary(final String...sa)throws Throwable{
-//		final ByteBuffer[]bba=new ByteBuffer[sa.length];
-//		int i=0;
-//		for(String s:sa)
-//			bba[i++]=ByteBuffer.wrap(tobytes(s));
-//		send(bba,false);
-//	}
 	final public void send(final ByteBuffer[]bba,final boolean textmode)throws Throwable{
-		if(bbos!=null)throw new Error("overwrite"); // ? is the buffer size enough for most use cases?
+		if(response_bba!=null)throw new Error("overwrite"); // ? is the buffer size enough for most use cases?
 		int ndata=0;
 		for(final ByteBuffer b:bba)
 			ndata+=b.remaining();
-		bbos=new ByteBuffer[bba.length+1];
-		bbos[0]=make_header(ndata,textmode);
-		for(int i=1;i<bbos.length;i++)
-			bbos[i]=bba[i-1];
-//		if(write()==op.write)
-//			so.reqwrite();
-		write(); // return ignored because bbos will be set to null when write is finished
+		response_bba=new ByteBuffer[bba.length+1];
+		response_bba[0]=make_header(ndata,textmode);
+		for(int i=1;i<response_bba.length;i++)
+			response_bba[i]=bba[i-1];
+		write(); // return ignored because response_bba will be set to null when write is finished
 	}
 	private ByteBuffer make_header(final int size_of_data_to_send,final boolean text_mode){
 		// rfc6455#section-5.2
@@ -263,5 +230,4 @@ public class websock implements sock{
 		}
 		return ByteBuffer.wrap(hdr,0,nhdr);
 	}
-//	final protected boolean issending(){return bbos!=null;}
 }
