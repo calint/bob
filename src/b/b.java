@@ -13,7 +13,6 @@ import java.io.Writer;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
@@ -290,9 +289,8 @@ final public class b{
 		}
 		return n;
 	}
-	public static synchronized void log(final Throwable t){
+	public static synchronized void log(Throwable t){
 		Throwable e=t;
-		if(t instanceof InvocationTargetException)e=t.getCause();
 		while(e.getCause()!=null)e=e.getCause();
 		if(!log_client_disconnects){
 			if(e instanceof java.nio.channels.CancelledKeyException)return;
