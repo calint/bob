@@ -49,9 +49,9 @@ final public class b{
 	public static String id=""+(int)Math.floor(Math.random()*10000);//? fixedwidth
 	public static @conf String root_dir=".";
 	public static @conf(reboot=true)String server_port="8888";
-	public static @conf boolean print_requests=false;
-	public static @conf boolean print_reply_headers=false;
-	public static @conf boolean print_replies=false;
+//	public static @conf boolean print_requests=false;
+//	public static @conf boolean print_reply_headers=false;
+//	public static @conf boolean print_replies=false;
 	public static @conf boolean try_file=true;
 	public static @conf boolean try_rc=true;
 	public static @conf(reboot=true,note="requires reboot to turn on")boolean thd_watch=true;
@@ -60,7 +60,7 @@ final public class b{
 	public static @conf(reboot=true)boolean thread_pool=true;
 	public static @conf int thread_pool_size=16;
 	public static @conf @unit(name="ms")long thread_pool_lftm=60*1000;
-	public static @conf boolean cache_uris=true;
+//	public static @conf boolean cache_uris=true;
 	public static @conf boolean cache_files=true;
 	public static @conf(reboot=true)int cache_files_hashlen=K;
 	public static @conf @unit(name="B")int cache_files_maxsize=64*K;
@@ -76,8 +76,8 @@ final public class b{
 //	public static @conf final String webobjpkg="a.";
 	public static @conf String datetimefmtstr="yyyy-MM-dd HH:mm:ss.sss";
 	public static @conf String resources_etag="\"v1\"";
-	public static @conf boolean resources_enable_any_path=false;
 	public static HashSet<String>resources_in_b=new HashSet<String>(Arrays.asList("x.js","x.css","favicon.ico"));
+	public static @conf boolean resources_enable_any_path=false;
 	public static @conf boolean enable_upload=true;
 	public static @conf int max_pending_connections=20000;// when overrun causes SYN flood warning
 	public static @conf boolean tcpnodelay=true;

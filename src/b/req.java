@@ -1,5 +1,4 @@
 package b;
-import static b.b.p;
 import static b.b.pl;
 import static b.b.tobytes;
 
@@ -37,10 +36,10 @@ public final class req{
 			ba=bb.array();
 			ba_pos=bb.position();
 			ba_rem=bb.remaining();
-			if(b.print_requests){
-				final String s=new String(ba,ba_pos,ba_rem);
-				p(s);
-			}
+//			if(b.print_requests){
+//				final String s=new String(ba,ba_pos,ba_rem);
+//				p(s);
+//			}
 		}
 		while(ba_rem>0){switch(state){default:throw new RuntimeException();
 			case state_nextreq:
