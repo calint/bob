@@ -391,13 +391,13 @@ public final class req{
 	
 	/** @return true if resource was cached and sent. */
 	private boolean try_resource()throws Throwable{
-		final String p=path.name();//? path
-		if(!b.resources_enable_any_path&&!b.resources_paths.contains(p))return false;
+		final String pn=path.name();//? path
+//		if(!b.resources_enable_any_path&&!b.resources_in_b.contains(pn))return false;
 		final String rcpth;
-		if(b.resources_paths.contains(p))
-			rcpth="/"+req.class.getPackage().getName()+"/"+p;
+		if(b.resources_in_b.contains(pn))
+			rcpth="/"+req.class.getPackage().getName()+"/"+pn;
 		else if(b.resources_enable_any_path)
-			rcpth="/"+path.toString();
+			rcpth=path.toString();
 		else return false;
 		
 		final InputStream is=req.class.getResourceAsStream(rcpth);

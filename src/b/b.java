@@ -73,11 +73,11 @@ final public class b{
 	public static @conf String default_directory_file="index.html";
 //	public static @conf String default_package_class="$";
 	public static @conf boolean gc_before_stats=false;
-	public static @conf final String webobjpkg="a.";
+//	public static @conf final String webobjpkg="a.";
 	public static @conf String datetimefmtstr="yyyy-MM-dd HH:mm:ss.sss";
-	public static @conf String resources_etag="\"b.3\"";
-	public static @conf boolean resources_enable_any_path=true;
-	public static HashSet<String>resources_paths=new HashSet<String>(Arrays.asList("x.js","x.css","favicon.ico"));
+	public static @conf String resources_etag="\"v1\"";
+	public static @conf boolean resources_enable_any_path=false;
+	public static HashSet<String>resources_in_b=new HashSet<String>(Arrays.asList("x.js","x.css","favicon.ico"));
 	public static @conf boolean enable_upload=true;
 	public static @conf int max_pending_connections=20000;// when overrun causes SYN flood warning
 	public static @conf boolean tcpnodelay=true;
