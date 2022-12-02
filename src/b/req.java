@@ -775,32 +775,6 @@ public final class req{
 		x.finish();
 		os.finish();
 	}
-//	
-//	private static Object create_instance_for_path(req r,String p)throws Throwable{
-//		String class_name=p.replace('/','.');
-//		while(class_name.startsWith("."))class_name=class_name.substring(1);
-//		class_name=b.webobjpkg+class_name;
-//		Class<?>element_class;
-//		String class_name_ext="";
-//		try{element_class=(Class<?>)Class.forName(class_name);}catch(Throwable e1){try{
-//			class_name_ext=class_name+(class_name.length()==0||class_name.endsWith(".")?"":".")+b.default_package_class;
-//			element_class=(Class<?>)Class.forName(class_name_ext);
-//		}catch(Throwable e2){
-//			while(e1.getCause()!=null)e1=e1.getCause();
-//			xwriter x=new xwriter().p(p).nl().nl().p(b.stacktraceline(e1)).nl().nl().p(b.stacktraceline(e2)).nl();
-//			pl("classnotfound for path '"+p+"' tried '"+class_name+"' and '"+class_name_ext+"'");
-//			r.reply(h_http404,null,null,tobytes(x.toString()));
-//			return null;
-//		}}
-//		Object elem;
-//		try{elem=element_class.getConstructor().newInstance();}catch(Throwable t){
-//			while(t.getCause()!=null)t=t.getCause();
-////			final xwriter x=new xwriter().p(path_s).nl().nl().p(b.stacktraceline(ex)).nl();
-//			r.reply(h_http404,null,null,tobytes(stacktrace(t)));
-//			return null;
-//		}
-//		return elem;
-//	}
 	
 	private oschunked reply_chunked(final byte[]hdr,final String contentType)throws Throwable{
 		final ByteBuffer[]bb_reply=new ByteBuffer[11];

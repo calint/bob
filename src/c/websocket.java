@@ -17,11 +17,10 @@ final public class websocket extends websock implements threadedsock {
 	synchronized protected void onmessage(ByteBuffer bb) throws Throwable {
 		System.out.println("onmessage size:" + bb.remaining());
 		String msg = new String(bb.array(), bb.position(), bb.remaining());
-//		System.out.println(msg);
 		Timestamp ts = new Timestamp(System.currentTimeMillis());
 		String s = ts.toString() + " " + req.get().ip() + " " + msg;
-//		send(new ByteBuffer[] { ByteBuffer.wrap(send.getBytes()) }, true);
-//		byte[]b=new byte[6*1024*1024];
+////		send(new ByteBuffer[] { ByteBuffer.wrap(send.getBytes()) }, true);
+//		byte[]b=new byte[16*1024*1024];
 //		for(int i=0;i<b.length;i++)
 //			b[i]='0';
 //		String s=new String(b);

@@ -5,12 +5,12 @@ import java.security.MessageDigest;
 import java.util.Map;
 public class websock implements sock{
 	private ByteBuffer bbi;
-	private static enum state{closed,handshake,read_next_frame,read_continue}
-	private state st=state.closed;
+	private static enum state{initiation,closed,handshake,read_next_frame,read_continue}
+	private state st=state.initiation;
 	private final byte[]maskkey=new byte[4];
-	private int payloadlendec;
+	private int payload_remaining;
 	private ByteBuffer[]response_bba;
-	private boolean firstpak;
+	private boolean is_first_packet;
 	private int maskc;
 	private ByteBuffer request_bb;
 	private SocketChannel socket_channel;
@@ -35,14 +35,14 @@ public class websock implements sock{
 		// ? add session cookie
 		bbo.put("\r\n\r\n".getBytes());
 		bbo.flip();
-		System.out.println("@@@@@ 2:   "+new String(bbo.array(),"utf8"));
+		System.out.println("@@@@@ 2:   "+new String(bbo.array(),bbo.position(),bbo.remaining()));
 		while(bbo.hasRemaining()&&sc.write(bbo)!=0);
-			if(bbo.hasRemaining())
-				throw new RuntimeException("packetnotfullysent");
-		bbi.position(bbi.limit());
-		st=state.read_next_frame;
+		if(bbo.hasRemaining())
+			throw new RuntimeException("packetnotfullysent");
+//		bbi.position(bbi.limit());
 		onopened();
-		return op.read;
+		st=state.read_next_frame;
+		return op.read; // response sent, wait for packet (assumes client hasn't sent anything yet
 	}
 	protected void onopened()throws Throwable{}
 	final public op read()throws Throwable{
@@ -59,112 +59,99 @@ public class websock implements sock{
 			bbi.flip();
 		}
 		while(true) {
-			switch(dobbi()){default:throw new Error();
-				case read:
-					if(bbi.hasRemaining())
-						continue;
-					return op.read;
-				case write:return op.write;
-				case close:return op.close;
-			}		
-		}
-	}
-	@Override public void onconnectionlost()throws Throwable{
-		onclosed();
-	}
-	
-	/** Called when the web socket has been closed. */
-	protected void onclosed()throws Throwable{}
-	
-	final private op dobbi()throws Throwable{
-		switch(st){default:throw new Error();
-		case read_next_frame:
-			// rfc6455#section-5.2
-			// Base Framing Protocol
-			final int b0=(int)bbi.get();
-			final boolean fin=(b0&128)==128;
-			if(fin);// to remove warning of unused variable
-			final int resv=(b0>>4)&7;
-			if(resv!=0)throw new Error("reserved bits are not 0");
-			final int opcode=b0&0xf;
-			if(opcode==8){// rfc6455#section-5.5.1
-				st=state.closed;
-				return op.close; // onclose called when request is closed
-			}
-			final int b1=(int)bbi.get();
-			final boolean masked=(b1&128)==128;
-			if(!masked)throw new Error("unmasked client message");
-			int payloadlen=b1&127;
-			if(payloadlen==126){
-				final int by2=(((int)bbi.get()&0xff)<<8);
-				final int by1= ((int)bbi.get()&0xff);
-				payloadlen=by2|by1;
-			}else if(payloadlen==127){
-				bbi.get();// skip the bytes that encode a length >4G
-				bbi.get();
-				bbi.get();
-				bbi.get();
-				final int by4=(((int)bbi.get()&0xff)<<24);
-				final int by3=(((int)bbi.get()&0xff)<<16);
-				final int by2=(((int)bbi.get()&0xff)<<8);
-				final int by1= ((int)bbi.get()&0xff);
-				payloadlen=by4|by3|by2|by1;
-			}
-			bbi.get(maskkey);
-			payloadlendec=payloadlen;
-			firstpak=true;
-			maskc=0;
-			st=state.read_continue;
-			// fall through
-		case read_continue:
-			// unmask
-			final byte[]bbia=bbi.array();
-			final int pos=bbi.position();
-			final int limn=bbi.remaining()>payloadlendec?pos+payloadlendec:bbi.limit();
-			if(!(maskkey[0]==0&&maskkey[1]==0&&maskkey[2]==0&&maskkey[3]==0)){
-				for(int i=pos;i<limn;i++){
+			switch(st){default:throw new RuntimeException();
+			case read_next_frame: // ? assuming the header is buffered. breaking up into states for header would handle the input buffer of 1 B
+				// rfc6455#section-5.2
+				// Base Framing Protocol
+				final int b0=(int)bbi.get();
+				final boolean fin=(b0&128)==128;
+				if(fin);// to remove warning of unused variable
+				final int resv=(b0>>4)&7;
+				if(resv!=0)throw new Error("reserved bits are not 0");
+				final int opcode=b0&0xf;
+				if(opcode==8){// rfc6455#section-5.5.1
+					st=state.closed;
+					return op.close; // onclose called when request is closed
+				}
+				final int b1=(int)bbi.get();
+				final boolean masked=(b1&128)==128;
+				if(!masked)throw new Error("unmasked client message");
+				payload_remaining=b1&127;
+				if(payload_remaining==126){
+					final int by2=(((int)bbi.get()&0xff)<<8);
+					final int by1= ((int)bbi.get()&0xff);
+					payload_remaining=by2|by1;
+				}else if(payload_remaining==127){
+					bbi.get();// skip the bytes that encode a length >4G
+					bbi.get();
+					bbi.get();
+					bbi.get();
+					final int by4=(((int)bbi.get()&0xff)<<24);
+					final int by3=(((int)bbi.get()&0xff)<<16);
+					final int by2=(((int)bbi.get()&0xff)<<8);
+					final int by1= ((int)bbi.get()&0xff);
+					payload_remaining=by4|by3|by2|by1;
+				}
+				bbi.get(maskkey);
+				is_first_packet=true;
+				maskc=0;
+				st=state.read_continue;
+				// fall through
+			case read_continue:
+				// unmask
+				final byte[]bbia=bbi.array();
+				final int pos=bbi.position();
+				final int limit=bbi.remaining()>payload_remaining?pos+payload_remaining:bbi.limit();
+				if(maskkey[0]==0&&maskkey[1]==0&&maskkey[2]==0&&maskkey[3]==0){
+					throw new RuntimeException();
+				}
+				for(int i=pos;i<limit;i++){
 					final byte b=(byte)(bbia[i]^maskkey[maskc]);
 					bbia[i]=b;
 					maskc++;
-					maskc%=maskkey.length;
+					if(maskc==maskkey.length) {
+						maskc=0;
+					}
 				}
+				
+				final int read_length=limit-pos;
+				payload_remaining-=read_length;
+				if(payload_remaining==0){ // data has been fully read
+					st=state.read_next_frame;
+				}
+				final ByteBuffer bbii=ByteBuffer.wrap(bbia,pos,read_length);// bbi position is start of data, limit is the data unmasked
+				onpayload(bbii);
+				is_first_packet=false;
+				bbi.position(limit);
+				return response_bba==null?op.read:op.write; // onpayload->onmessage might have done a send that is not complete
 			}
-			final int ndata=limn-pos;
-			payloadlendec-=ndata;
-			if(payloadlendec==0)
-				st=state.read_next_frame;
-			final ByteBuffer bbii=ByteBuffer.wrap(bbi.array(),pos,ndata);// bbi position is start of data
-			onpayload(bbii,ndata,payloadlendec,firstpak,payloadlendec==0);
-			bbi.position(limn);
-			firstpak=false;
-			return response_bba==null?op.read:op.write; // onpayload->onmessage might have done a send that is not complete
 		}
 	}
-	
-	final private void onpayload(ByteBuffer bb,int nbytes,int payloadlenlft,boolean firstpak,boolean lastpak)throws Throwable{
-		if(firstpak&&!lastpak){
-			request_bb=ByteBuffer.allocate(nbytes+payloadlenlft);
+	final private void onpayload(ByteBuffer bb)throws Throwable{
+		final boolean is_last_packet=payload_remaining==0;
+		if(is_first_packet&&!is_last_packet){
+			request_bb=ByteBuffer.allocate(bb.remaining()+payload_remaining);
 			request_bb.put(bb);
 			return;
 		}
-		if(!firstpak&&!lastpak){
+		if(!is_first_packet&&!is_last_packet){
 			request_bb.put(bb);
 			return;
 		}
-		if(!firstpak&&lastpak){
+		if(!is_first_packet&&is_last_packet){
 			request_bb.put(bb);
 			request_bb.flip();
 		}
-		if(firstpak&&lastpak){
+		if(is_first_packet&&is_last_packet){
 			request_bb=bb;
 		}
 		onmessage(request_bb);
 		request_bb=null;
 	}
-	
-	/** Called when a message has been decoded. ByteBuffer position is at start of data and limit marks the end of data.
-	 *  Note that it is assumed that client does not send a new message prior to receiving a reply. */
-	protected void onmessage(ByteBuffer bb)throws Throwable{}
+
+	@Override public void onconnectionlost()throws Throwable{
+		onclosed();
+	}
 
 	/** Called by the request or by send(...) */
 	final public op write()throws Throwable{
@@ -175,9 +162,16 @@ public class websock implements sock{
 				return op.write; // will trigger a new write when called from request
 			}
 		}
-		response_bba=null; // will trigger a read request when called from send(...), otherwise write
+		response_bba=null; // will trigger a read request when called from send(...). return read to thdreq
 		return op.read;
 	}
+
+	/** Called when the web socket has been closed. */
+	protected void onclosed()throws Throwable{}
+	
+	/** Called when a message has been decoded. ByteBuffer position is at start of data and limit marks the end of data.
+	 *  Note that it is assumed that client does not send a new message prior to receiving a reply. */
+	protected void onmessage(ByteBuffer bb)throws Throwable{}
 	
 	final public void send(String s)throws Throwable{
 		send(new ByteBuffer[]{ByteBuffer.wrap(s.getBytes())},true);
@@ -229,5 +223,10 @@ public class websock implements sock{
 			nhdr=10;
 		}
 		return ByteBuffer.wrap(hdr,0,nhdr);
+	}
+	
+	@Override
+	public String toString() {
+		return new String(bbi.array(),bbi.position(),bbi.remaining());
 	}
 }
