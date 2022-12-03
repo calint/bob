@@ -65,8 +65,10 @@ final public class b{
 //	public static @conf boolean allow_partial_content_from_cache=true;
 	public static @conf @unit(name="B")int transfer_file_write_size=256*K;
 	public static @conf @unit(name="B")int io_buf_B=64*K;
-	public static @conf @unit(name="B")int chunk_B=4*K;
-	public static @conf @unit(name="B")int reqinbuf_B=4*K;
+//	public static @conf @unit(name="B")int chunk_B=4*K;
+	public static @conf @unit(name="B")int chunk_B=16*K;
+	public static @conf @unit(name="B")int reqinbuf_B=16*K;
+//	public static @conf @unit(name="B")int reqinbuf_B=4*K;
 //	public static @conf @unit(name="B")int reqinbuf_B=16;
 //	public static @conf @unit(name="B")int reqinbuf_B=1;
 	public static @conf String default_directory_file="index.html";
@@ -157,8 +159,8 @@ final public class b{
 					r.socket_channel=ssc.accept();
 					r.socket_channel.configureBlocking(false);
 					
-					r.socket_channel.socket().setReceiveBufferSize(1);
-					r.socket_channel.socket().setSendBufferSize(1);
+//					r.socket_channel.socket().setReceiveBufferSize(1);
+//					r.socket_channel.socket().setSendBufferSize(1);
 					
 					if(tcpnodelay)r.socket_channel.setOption(StandardSocketOptions.TCP_NODELAY,true);
 					r.selection_key=r.socket_channel.register(sel,0,r);

@@ -49,7 +49,7 @@ public class websock implements sock{
 	final public op sock_read()throws Throwable{
 		bb.clear();
 		final int n=socket_channel.read(bb);
-		System.out.println("websock: "+Integer.toHexString(hashCode())+": sock_read "+n+" bytes");
+//		System.out.println("websock "+Integer.toHexString(hashCode())+": sock_read "+n+" bytes");
 		thdwatch.input+=n;
 		if(n==0)return op.read;//? infloop?
 		if(n==-1){
@@ -129,7 +129,9 @@ public class websock implements sock{
 						// more messages
 						continue;	
 					}
-					if(send_bba!=null){ // onpayload->on_message might have done send that is incomplete. request write from thdreq
+					if(send_bba!=null){ 
+						// onpayload->on_message might have done send that is incomplete. request write from thdreq which will start calling sock_write until send is done.
+						// When sock_write done sending it will request a read.
 						return op.write;
 					}
 					return op.read; // done. request read.
@@ -163,7 +165,7 @@ public class websock implements sock{
 		synchronized(send_que){
 			while(send_bba!=null){
 				final long n=socket_channel.write(send_bba);
-				System.out.println("websock: "+Integer.toHexString(hashCode())+": sock_write "+n+" bytes");
+				System.out.println("websock "+Integer.toHexString(hashCode())+": sock_write "+n+" bytes");
 				thdwatch.output+=n;
 				for(ByteBuffer b:send_bba){ // check if the write is complete.
 					if(b.hasRemaining()){

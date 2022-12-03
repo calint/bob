@@ -29,7 +29,7 @@ public final class req{
 		if(ba_rem==0){
 			bb.clear();
 			final int n=socket_channel.read(bb);
-			System.out.println("request " + Integer.toHexString(hashCode()) + ": read "+n);
+//			System.out.println("request " + Integer.toHexString(hashCode()) + ": read "+n);
 			if(n==0)return b.op.read;//? infloop
 			if(n==-1){close();return b.op.noop;}
 			thdwatch.input+=n;
