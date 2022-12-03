@@ -294,7 +294,7 @@ public final class Db {
 				return c;
 			} catch (Throwable t) {
 				try {
-					System.err.println("dbo: cannot create connection waiting.");
+					System.err.println("dbo: cannot create connection. waiting. "+stacktraceline(t));
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
 					log(e);

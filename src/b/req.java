@@ -33,6 +33,7 @@ public final class req{
 			if(c==-1){close();return b.op.noop;}
 			thdwatch.input+=c;
 			bb.flip();
+//			System.out.println(toString());
 			ba=bb.array();
 			ba_pos=bb.position();
 			ba_rem=bb.remaining();
@@ -842,8 +843,15 @@ public final class req{
 	void set_waiting_sock_thread_write(){waiting_sock_thread_write=true;}
 	/** Called from thread when running in threaded mode. */
 	void sock_thread_run()throws Throwable{
-		if(waiting_sock_thread_read){waiting_sock_thread_read=false;sock_thread_read();}
-		if(waiting_sock_thread_write){waiting_sock_thread_write=false;sock_thread_write();}
+		if(waiting_sock_thread_read){
+			waiting_sock_thread_read=false;
+			sock_thread_read();
+		}
+		// the read might have triggered a write
+		if(waiting_sock_thread_write){
+			waiting_sock_thread_write=false;
+			sock_thread_write();
+		}
 	}
 	private void sock_thread_read()throws Throwable{
 		switch(sock_read()){default:throw new RuntimeException();
@@ -858,6 +866,7 @@ public final class req{
 		switch(sock_write()){default:throw new RuntimeException();
 		case read:selection_key.interestOps(SelectionKey.OP_READ);selection_key.selector().wakeup();break;
 		case write:selection_key.interestOps(SelectionKey.OP_WRITE);selection_key.selector().wakeup();break;
+		case noop:break;
 		case close:close();thdwatch.socks--;break;
 		}
 	}
@@ -886,7 +895,10 @@ public final class req{
 //	public session session(){return ses;}
 	public Map<String,String>headers(){return headers;}
 	
-	public String toString(){return new String(ba,ba_pos,ba_rem)+(content_bb==null?"":new String(content_bb.slice().array()));}
+	public String toString(){
+		return hashCode()+"\n"+new String(bb.array(),bb.position(),bb.remaining());
+//		return new String(ba,ba_pos,ba_rem)+(content_bb==null?"":new String(content_bb.slice().array()));
+	}
 	
 	public static req get(){return((thdreq)Thread.currentThread()).r;}
 	public static long file_and_resource_cache_size_B(){

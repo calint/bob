@@ -51,7 +51,7 @@ final public class b{
 //	public static @conf boolean print_replies=false;
 	public static @conf boolean try_file=true;
 	public static @conf boolean try_rc=true;
-	public static @conf(reboot=true,note="requires reboot to turn on")boolean thd_watch=true;
+	public static @conf(reboot=true,note="requires reboot to turn on")boolean thd_watch=false;
 	public static @conf @unit(name="ms")int thd_watch_sleep_in_ms=10000;
 	public static @conf @unit(name="ms")int thd_watch_report_every_ms=60000;
 	public static @conf(reboot=true)boolean thread_pool=true;
@@ -156,6 +156,10 @@ final public class b{
 					final req r=new req();
 					r.socket_channel=ssc.accept();
 					r.socket_channel.configureBlocking(false);
+					
+					r.socket_channel.socket().setReceiveBufferSize(1);
+					r.socket_channel.socket().setSendBufferSize(1);
+					
 					if(tcpnodelay)r.socket_channel.setOption(StandardSocketOptions.TCP_NODELAY,true);
 					r.selection_key=r.socket_channel.register(sel,0,r);
 					read(r);

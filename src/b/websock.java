@@ -2,17 +2,19 @@ package b;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.security.MessageDigest;
+import java.util.LinkedList;
 import java.util.Map;
-/** Supports the pattern of client sending one packet then waiting for a reply if expected.
- * Other use cases work if the sends fit in the request buffer. */
+
+/** Use case is request response chain. Full duplex not supported on one thread. */
 public class websock implements sock{
-	private static enum state{initiation,closed,handshake,read_next_frame,read_continue}
+	private static enum state{initiation,closed,handshake,parse_next_frame,parse_data}
 	private SocketChannel socket_channel;
 	private ByteBuffer bb;
 	private state st=state.initiation;
 	private int payload_remaining;
 	private ByteBuffer request_bb;
-	private ByteBuffer[]response_bba;
+	private ByteBuffer[]send_bba;
+	private final LinkedList<ByteBuffer[]>send_que=new LinkedList<>();
 	private boolean is_first_packet;
 	private int mask_i;
 	private boolean masked;
@@ -40,26 +42,24 @@ public class websock implements sock{
 		if(bbo.hasRemaining())
 			throw new RuntimeException("packetnotfullysent");
 		on_opened();
-		st=state.read_next_frame;
-		return op.read; // response sent, wait for packet (assumes client hasn't sent anything yet
+		st=state.parse_next_frame;
+		return op.read; // response sent, wait for packet (assumes client hasn't sent begun sending anything yet)
 	}
 	protected void on_opened()throws Throwable{}
 	final public op sock_read()throws Throwable{
-		if(!bb.hasRemaining()){
-			bb.clear();
-			final int n=socket_channel.read(bb);
-			thdwatch.input+=n;
-
-			if(n==0)return op.read;//? infloop?
-			if(n==-1){
-				st=state.closed;
-				return op.close; // onclosed called when request is closed
-			}
-			bb.flip();
+		bb.clear();
+		final int n=socket_channel.read(bb);
+		System.out.println("websock: "+Integer.toHexString(hashCode())+": sock_read "+n+" bytes");
+		thdwatch.input+=n;
+		if(n==0)return op.read;//? infloop?
+		if(n==-1){
+			st=state.closed;
+			return op.close; // onclosed called when request is closed
 		}
+		bb.flip();
 		while(true) {
 			switch(st){default:throw new RuntimeException();
-			case read_next_frame: // ? assuming the header is buffered. breaking up into states for header would handle the input buffer of 1 B
+			case parse_next_frame: // ? assuming the header is buffered. breaking up into states for header would handle the input buffer of 1 B
 				// rfc6455#section-5.2
 				// Base Framing Protocol
 				final int b0=(int)bb.get();
@@ -74,6 +74,7 @@ public class websock implements sock{
 				}
 				// todo handle the other opcodes https://www.rfc-editor.org/rfc/rfc6455#section-5.2
 				
+				// parse header
 				final int b1=(int)bb.get();
 				masked=(b1&128)==128;
 				payload_remaining=b1&127;
@@ -95,16 +96,16 @@ public class websock implements sock{
 				bb.get(maskkey);
 				is_first_packet=true;
 				mask_i=0;
-				st=state.read_continue;
+				st=state.parse_data;
 				// fall through
-			case read_continue:
-				// unmask
+			case parse_data:
 				final byte[]bbia=bb.array();
 				final int pos=bb.position();
 				final int limit=bb.remaining()>payload_remaining?pos+payload_remaining:bb.limit();
 				if(masked&&maskkey[0]==0&&maskkey[1]==0&&maskkey[2]==0&&maskkey[3]==0){
 					throw new RuntimeException();
 				}
+				// unmask
 				for(int i=pos;i<limit;i++){
 					final byte b=(byte)(bbia[i]^maskkey[mask_i]);
 					bbia[i]=b;
@@ -113,25 +114,26 @@ public class websock implements sock{
 						mask_i=0;
 					}
 				}
+				bb.position(limit); // sets to the current position
 				
-				final int read_length=limit-pos;
+				final int read_length=limit-pos; // number of bytes read from the buffer
 				payload_remaining-=read_length;
 				if(payload_remaining==0){ // data has been fully read
-					st=state.read_next_frame;
+					st=state.parse_next_frame;
 				}
 				final ByteBuffer bbii=ByteBuffer.wrap(bbia,pos,read_length);// bbi position is start of data, limit is the data unmasked
 				onpayload(bbii);
 				is_first_packet=false;
-				bb.position(limit);
-				if(bb.remaining()!=0){
-					// client has sent multiple packets without waiting for response.
-					// this is not a supported use case.
-					// works if write() completes the send with one call.
-					if(response_bba!=null)
-						throw new RuntimeException("chained request with send() overrun");
-					continue;
+				synchronized(send_que){
+					if(bb.remaining()!=0){
+						// more messages
+						continue;	
+					}
+					if(send_bba!=null){ // onpayload->on_message might have done send that is incomplete. request write from thdreq
+						return op.write;
+					}
+					return op.read; // done. request read.
 				}
-				return response_bba==null?op.read:op.write; // onpayload->onmessage might have done a send that is not complete
 			}
 		}
 	}
@@ -156,22 +158,29 @@ public class websock implements sock{
 		on_message(request_bb);
 		request_bb=null;
 	}
+	/** Called by the request or by send(...) */
+	final public op sock_write()throws Throwable{
+		synchronized(send_que){
+			while(send_bba!=null){
+				final long n=socket_channel.write(send_bba);
+				System.out.println("websock: "+Integer.toHexString(hashCode())+": sock_write "+n+" bytes");
+				thdwatch.output+=n;
+				for(ByteBuffer b:send_bba){ // check if the write is complete.
+					if(b.hasRemaining()){
+						// if called from thdreq then request more writes otherwise return value is ignored
+						return op.write;
+					}
+				}
+				send_bba=send_que.pollFirst();
+			}
+			// if called from thdreq then request more writes otherwise return value is ignored
+			return op.read;
+		}
+
+	}
 
 	@Override public void on_connection_lost()throws Throwable{
 		on_closed();
-	}
-
-	/** Called by the request or by send(...) */
-	final public op sock_write()throws Throwable{
-		final long c=socket_channel.write(response_bba);
-		thdwatch.output+=c;
-		for(ByteBuffer b:response_bba){ // check if the write is complete.
-			if(b.hasRemaining()){
-				return op.write; // will trigger a new write when called from request
-			}
-		}
-		response_bba=null; // will trigger a read request when called from send(...). return read to thdreq
-		return op.read;
 	}
 
 	/** Called when the web socket has been closed. */
@@ -186,25 +195,35 @@ public class websock implements sock{
 	}
 	
 	final public void send(ByteBuffer bb,final boolean textmode)throws Throwable{
-		if(response_bba!=null)throw new Error("overwrite");//?
-		// rfc6455#section-5.2
-		// Base Framing Protocol
-		final int ndata=bb.remaining();
-		response_bba=new ByteBuffer[]{make_header(ndata,textmode),bb};
-		sock_write(); // return ignored because bbos will be set to null when write is finished
+		send(new ByteBuffer[]{bb},textmode);
+//		if(response_bba!=null)throw new Error("overwrite");//?
+//		// rfc6455#section-5.2
+//		// Base Framing Protocol
+//		final int ndata=bb.remaining();
+//		response_bba=new ByteBuffer[]{make_header(ndata,textmode),bb};
+//		sock_write(); // return ignored because bbos will be set to null when write is finished
 	}
 	final public void send(final ByteBuffer[]bba,final boolean textmode)throws Throwable{
-		if(response_bba!=null)
-			throw new RuntimeException("send did not complete before a new send was called"); // ? is the buffer size enough for most use cases?
-		int ndata=0;
+		int nbytes_to_send=0;
 		for(final ByteBuffer b:bba)
-			ndata+=b.remaining();
-		response_bba=new ByteBuffer[bba.length+1];
-		response_bba[0]=make_header(ndata,textmode);
-		for(int i=1;i<response_bba.length;i++)
-			response_bba[i]=bba[i-1];
+			nbytes_to_send+=b.remaining();
+		
+		final ByteBuffer[]bbout=new ByteBuffer[bba.length+1];
+		bbout[0]=make_header(nbytes_to_send,textmode);
+		for(int i=1;i<bbout.length;i++)
+			bbout[i]=bba[i-1];
+			
+		synchronized(send_que){
+			if(send_bba!=null){
+				send_que.add(bbout);
+				return;
+			}else{
+				send_bba=bbout;
+			}
+		}
 		sock_write(); // return ignored because response_bba will be set to null when write is finished
 	}
+	
 	private ByteBuffer make_header(final int size_of_data_to_send,final boolean text_mode){
 		// rfc6455#section-5.2
 		// Base Framing Protocol

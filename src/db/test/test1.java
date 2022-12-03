@@ -269,17 +269,17 @@ public class test1 extends TestCase {
 		final User u9 = (User) tn.create(User.class);
 		final File f9 = (File) tn.create(File.class);
 		f9.setName("dog ok");
-		f9.loadFile("img/far_side_dog_ok.jpg");
+		f9.loadFile("qa/img/far_side_dog_ok.jpg");
 		u9.setGroupPic(f9);
 		tn.commit();
 		final File f10 = u9.getGroupPic();
-		f10.writeFile("img/dog_ok.jpg");
+		f10.writeFile("qa/dog_ok.jpg");
 
 		// ! on unix only
-		final int procres = Runtime.getRuntime().exec("diff img/far_side_dog_ok.jpg img/dog_ok.jpg").waitFor();
+		final int procres = Runtime.getRuntime().exec("diff qa/img/far_side_dog_ok.jpg qa/dog_ok.jpg").waitFor();
 		if (procres != 0)
 			throw new RuntimeException();
-		if (!new java.io.File("img/dog_ok.jpg").delete())
+		if (!new java.io.File("qa/dog_ok.jpg").delete())
 			throw new RuntimeException();
 
 		tn.delete(f10);

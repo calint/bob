@@ -10,7 +10,8 @@
 [ ] req state to enum
 [o] dbo: better connection pool, close old connection etc
 [ ]   review code, the ugliness is overwhelming 
+[ ]   rework Db.initTransaction deintTransaction
 [x] rework the websock
-[ ]   add send que
+[x]   add send que
+[ ]   fix edge case
 [x] try b with 1B input buffer
-[ ] rework Db.initTransaction deintTransaction
