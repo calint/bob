@@ -28,10 +28,11 @@ public final class req{
 	b.op parse()throws Throwable{while(true){
 		if(ba_rem==0){
 			bb.clear();
-			final int c=socket_channel.read(bb);
-			if(c==0)return b.op.read;//? infloop
-			if(c==-1){close();return b.op.noop;}
-			thdwatch.input+=c;
+			final int n=socket_channel.read(bb);
+			System.out.println("request " + Integer.toHexString(hashCode()) + ": read "+n);
+			if(n==0)return b.op.read;//? infloop
+			if(n==-1){close();return b.op.noop;}
+			thdwatch.input+=n;
 			bb.flip();
 //			System.out.println(toString());
 			ba=bb.array();
@@ -656,7 +657,7 @@ public final class req{
 		}
 
 		if(sock.class.isAssignableFrom(cls)){// start a socket
-			System.out.println("socket at "+path_s);
+			System.out.println("request " + Integer.toHexString(hashCode()) + ": socket at "+path_s);
 			state=state_sock;
 			sck=(sock)cls.getConstructor().newInstance();
 			switch(sck.sock_init(headers,socket_channel,ByteBuffer.wrap(ba,ba_pos,ba_rem))){default:throw new IllegalStateException();
