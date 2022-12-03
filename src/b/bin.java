@@ -1,1 +1,4 @@
-package b;public interface bin{String contenttype();}
+package b;
+public interface bin{
+	String content_type();
+}

@@ -1,5 +1,5 @@
 [ ] fix "// todo" comments
-[ ]   content type for cached file from Map of suffix to content-type?
+[x] content type for cached file from Map of suffix to content-type?
 [x] cookie: same-site
 [ ] fix for client that makes many threaded requests and then stalls them to starve server of threads or create too many. ddos.
 [x] etag instead of last-modified
@@ -16,3 +16,5 @@
 [x]   fix edge case
 [ ]     full duplex with thread for send?
 [x] try b with 1B input buffer
+[x] try b with socket small in/out buffers
+[ ] dbo: log_sql()

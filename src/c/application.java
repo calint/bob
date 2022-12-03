@@ -37,6 +37,8 @@ public class application implements bapp {
 		
 		b.b.set_path_to_class("/",c.shell.class);
 		b.b.set_path_to_class("/websocket",c.websocket.class);
+		b.b.set_path_to_class("/websocket2",c.websocket2.class);
+		b.b.set_path_to_class("/ws_app",c.ws_app.class);
 		b.b.set_path_to_class("/health-check",c.health_check.class);
 //		db.init("jdbc:mysql://localhost:3306/testdb", "c", "password", 5);
 //		db.init("jdbc:mysql://" + b.bapp_jdbc_host + "/" + b.bapp_jdbc_db

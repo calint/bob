@@ -1,4 +1,4 @@
-debug_set=true;
+ebug_set=true;
 debug_js=true;
 debug_verbose=false;
 
@@ -89,8 +89,9 @@ ui._onreadystatechange=function(){
 		}
 	}}
 	switch(this.readyState){
-	case 1:// Open
+	case 1:{// Open
 		if(this._hasopened)break;this._hasopened=true;//? firefox quirkfix1
+		$d('req open');
 		if(debug_verbose)$d(new Date().getTime()-this._t0+" * sending");
 		$s('-ajaxsts','sending '+this._pd.length+' text');
 		this.setRequestHeader('Content-Type','text/plain; charset=utf-8');
@@ -98,12 +99,16 @@ ui._onreadystatechange=function(){
 		ui.req._jscodeoffset=0;
 		this.send(this._pd);
 		break;
-	case 2:// Sent
+	}
+	case 2:{// Sent
+		$d('req sent');
 		const dt=new Date().getTime()-this._t0;
 //		$d(dt+" * sending done");
 		$s('-ajaxsts','sent '+this._pd.length+' in '+dt+' ms');
 		break;
-	case 3:// Receiving
+	}
+	case 3:{// Receiving
+		$d('req receiving');
 //		$d(new Date().getTime()-this._t0+" * reply code "+this.status);
 		const s=this.responseText.charAt(this.responseText.length-1);
 		const ms=new Date().getTime()-this._t0;
@@ -113,13 +118,15 @@ ui._onreadystatechange=function(){
 //			$d(new Date().getTime()-this._t0+" * not eol "+(this.responseText.length-this._jscodeoffset));
 			break;
 		}
-		let jscode=this.responseText.substring(this._jscodeoffset);
+		const jscode=this.responseText.substring(this._jscodeoffset);
 		if(debug_js)$d(new Date().getTime()-this._t0+" * run "+jscode.length+" bytes");
 		if(debug_js)$d(jscode);
 		this._jscodeoffset+=jscode.length;
 		eval(jscode);
 		break;
-	case 4:// Loaded
+	}
+	case 4:{// Loaded
+		$d('req loaded');
 		this._hasopened=null;//? firefox quirkfix1
 		this._pd=null;
 		ui._pbls=[];
@@ -135,7 +142,9 @@ ui._onreadystatechange=function(){
 		$s('-ajaxsts',this._dt+' ms '+ui.fmtsize(this.responseText.length)+' chars '+ui.fmt_data_per_second(this.responseText.length,this._dt));
 		$d("~~~~~~~ ~~~~~~~ ~~~~~~~ ~~~~~~~ ")
 //		$d("done in "+this._dt+" ms");
-		break;		
+		break;
+	}
+	default:throw "unknown state";	
 	}
 }
 ui._pbls=[];
@@ -188,7 +197,7 @@ $x=function(pb){
 			}else{
 				$d("   * busy, cancelling");
 				ui.req.abort();
-				ui.req._hasopened=null;//? firefox quirkfix1
+//				ui.req._hasopened=null;//? firefox quirkfix1
 			}
 		}	
 	}

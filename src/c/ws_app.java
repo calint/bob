@@ -6,7 +6,7 @@ import java.util.Map;
 import b.threadedsock;
 import b.websock;
 
-final public class websocket extends websock implements threadedsock {
+final public class ws_app extends websock implements threadedsock {
 
 	synchronized final @Override protected void on_opened(final Map<String, String> headers) throws Throwable {
 		System.out.println("websocket " + Integer.toHexString(hashCode()) + ": on_opened");

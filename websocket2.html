@@ -26,10 +26,19 @@ function pl(txt){
 start();
 function start(){
 	const is_ssl=location.protocol=='https:'
-	ws=new WebSocket("ws"+(is_ssl?"s":"")+"://"+location.host+"/websocket");
+	ws=new WebSocket("ws"+(is_ssl?"s":"")+"://"+location.host+"/websocket2");
 	ws.onopen=function(e){
 		pl("web socket: onopen");
-		ws.send("ping");
+		let largeString="";
+	//	const n=16*1024*1024;
+	//	const n=16*1024;
+		const n=128*1024;
+		for(let i=0;i<n;i++){
+			largeString+='0';
+		}
+		ws.send(largeString);
+		ws.send("testing ping");
+		ws.send("pong");
 	}
 	ws.onmessage=function(e){
 		pl("web socket: onmessage "+e+" data:"+e.data);

@@ -53,6 +53,7 @@ public final class Db {
 	public static DbTransaction initCurrentTransaction() { // ? so ugly
 		Db.log("dbo: init transaction on " + Thread.currentThread());
 		PooledConnection pc;
+		// get pooled connection
 		synchronized (inst.conpool) {
 			while (inst.conpool.isEmpty()) { // spurious interrupt might happen
 				try {
