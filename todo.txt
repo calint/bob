@@ -11,4 +11,6 @@
 [o] dbo: better connection pool, close old connection etc
 [ ]   review code, the ugliness is overwhelming 
 [x] rework the websock
+[ ]   add send que
 [x] try b with 1B input buffer
+[ ] rework Db.initTransaction deintTransaction
