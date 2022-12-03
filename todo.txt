@@ -13,5 +13,6 @@
 [ ]   rework Db.initTransaction deintTransaction
 [x] rework the websock
 [x]   add send que
-[ ]   fix edge case
+[x]   fix edge case
+[ ]     full duplex with thread for send?
 [x] try b with 1B input buffer
