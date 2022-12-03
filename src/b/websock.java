@@ -54,7 +54,7 @@ public class websock implements sock{
 		if(n==0)return op.read;//? infloop?
 		if(n==-1){
 			st=state.closed;
-			return op.close; // onclosed called when request is closed
+			return op.close; // on_connection_lost called when request is closed
 		}
 		bb.flip();
 		while(true) {
@@ -181,7 +181,7 @@ public class websock implements sock{
 
 	}
 
-	@Override public void on_connection_lost()throws Throwable{
+	@Override public void sock_on_closed()throws Throwable{
 		on_closed();
 	}
 

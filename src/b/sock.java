@@ -8,5 +8,5 @@ public interface sock{
 	op sock_init(Map<String,String>headers,SocketChannel sc,ByteBuffer bb)throws Throwable;
 	op sock_read()throws Throwable;
 	op sock_write()throws Throwable;
-	void on_connection_lost()throws Throwable;
+	void sock_on_closed()throws Throwable;
 }

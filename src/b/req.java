@@ -881,7 +881,7 @@ public final class req{
 	void close(){
 //		selection_key.cancel();
 		selection_key=null;		
-		try{if(is_sock())sck.on_connection_lost();}catch(final Throwable t){b.log(t);}
+		try{if(is_sock())sck.sock_on_closed();}catch(final Throwable t){b.log(t);}
 		try{socket_channel.close();}catch(final Throwable t){b.log(t);}
 		socket_channel=null;
 	}
