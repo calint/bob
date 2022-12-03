@@ -444,12 +444,9 @@ public final class req{
 			if(range_to==-1){ // invalid or not specified
 				bb[i++]=ByteBuffer.wrap(Long.toString(len-range_from).getBytes());
 				bb[i++]=ByteBuffer.wrap(hk_content_range_bytes);
-				bb[i++]=ByteBuffer.wrap((range_from+s_minus+(len-1)+s_slash+len).getBytes());// zero index
-																								// and
-																								// inclusive
-																								// adjustment
+				bb[i++]=ByteBuffer.wrap((range_from+s_minus+(len-1)+s_slash+len).getBytes());// zero index and inclusive adjustment
 			}else{ // range_to specified
-				bb[i++]=ByteBuffer.wrap(Long.toString(range_to+1).getBytes());// zero index inclusive adjustment
+				bb[i++]=ByteBuffer.wrap(Long.toString(range_to-range_from+1).getBytes());// zero index inclusive adjustment
 				bb[i++]=ByteBuffer.wrap(hk_content_range_bytes);
 				bb[i++]=ByteBuffer.wrap((range_from+s_minus+range_to+s_slash+len).getBytes());
 			}

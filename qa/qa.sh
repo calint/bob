@@ -44,5 +44,26 @@ curl -s -r 1-5 $QA_HOST/$URI_FILES/$FILE > res
 if ! cmp -s cmp3 res; then exit 1; fi
 echo " ok"
 #--------------------------------------------------------
+TEST_NAME="get ranged (range 1-): "
+FILE=far_side_dog_ok.jpg
+echo -n $TEST_NAME
+curl -s -r 1- $QA_HOST/$URI_FILES/$FILE > res
+if ! cmp -s cmp4 res; then exit 1; fi
+echo " ok"
+#--------------------------------------------------------
+TEST_NAME="get ranged (range -10): "
+FILE=far_side_dog_ok.jpg
+echo -n $TEST_NAME
+curl -s -r -10 $QA_HOST/$URI_FILES/$FILE > res
+if ! cmp -s cmp5 res; then exit 1; fi
+echo " ok"
+#--------------------------------------------------------
+TEST_NAME="get ranged (range 1-10): "
+FILE=far_side_dog_ok.jpg
+echo -n $TEST_NAME
+curl -s -r 1-10 $QA_HOST/$URI_FILES/$FILE > res
+if ! cmp -s cmp6 res; then exit 1; fi
+echo " ok"
+#--------------------------------------------------------
 
 rm res
