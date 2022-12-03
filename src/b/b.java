@@ -106,13 +106,15 @@ final public class b{
 	private final static HashMap<String,byte[]> file_suffix_to_content_type_map=new HashMap<String,byte[]>();
 	public static void main(final String[] args) throws Throwable{
 		System.out.println(hello);
-		if(!class_init(b.class,args)) return;
+		if(!class_init(b.class,args))
+			return;
 		if(print_conf_at_startup){
 			print_hr(out,64);
 			class_init(b.class,new String[]{"-1"});
 			print_hr(out,64);
 		}
-		if(print_stats_at_startup) stats_to(out);
+		if(print_stats_at_startup)
+			stats_to(out);
 		b.pl("");
 
 		set_path_to_resource("/x.js","/b/x.js");
@@ -151,7 +153,8 @@ final public class b{
 				sel.select();
 				thdwatch.iokeys=sel.keys().size();
 				final Iterator<SelectionKey> it=sel.selectedKeys().iterator();
-				if(!it.hasNext()) continue;
+				if(!it.hasNext())
+					continue;
 				thdwatch.iosel++;
 				while(it.hasNext()){
 					thdwatch.ioevent++;
@@ -166,7 +169,8 @@ final public class b{
 //					r.socket_channel.socket().setReceiveBufferSize(1);
 //					r.socket_channel.socket().setSendBufferSize(1);
 
-						if(tcpnodelay) r.socket_channel.setOption(StandardSocketOptions.TCP_NODELAY,true);
+						if(tcpnodelay)
+							r.socket_channel.setOption(StandardSocketOptions.TCP_NODELAY,true);
 						r.selection_key=r.socket_channel.register(sel,0,r);
 						read(r);
 						continue;
@@ -275,7 +279,8 @@ final public class b{
 			read(r); // ? bug? may cause stackrain
 			return;
 		}
-		if(r.is_waiting_run_page()) thread(r);
+		if(r.is_waiting_run_page())
+			thread(r);
 
 		throw new RuntimeException();
 	}
@@ -332,10 +337,12 @@ final public class b{
 		int n=0;
 		while(true){
 			final int count=in.read(buf);
-			if(count<=0) break;
+			if(count<=0)
+				break;
 			out.write(buf,0,count);
 			n+=count;
-			if(sts!=null) sts.setsts(Long.toString(n));
+			if(sts!=null)
+				sts.setsts(Long.toString(n));
 		}
 		return n;
 	}
@@ -344,10 +351,12 @@ final public class b{
 		int n=0;
 		while(true){
 			final int count=in.read(buf);
-			if(count<=0) break;
+			if(count<=0)
+				break;
 			out.write(buf,0,count);
 			n+=count;
-			if(sts!=null) sts.setsts(Long.toString(n));
+			if(sts!=null)
+				sts.setsts(Long.toString(n));
 		}
 		return n;
 	}
@@ -356,12 +365,17 @@ final public class b{
 		while(e.getCause()!=null)
 			e=e.getCause();
 		if(!log_client_disconnects){
-			if(e instanceof java.nio.channels.CancelledKeyException) return;
-			if(e instanceof java.nio.channels.ClosedChannelException) return;
+			if(e instanceof java.nio.channels.CancelledKeyException)
+				return;
+			if(e instanceof java.nio.channels.ClosedChannelException)
+				return;
 			if(e instanceof java.io.IOException){
-				if("Broken pipe".equals(e.getMessage())) return;
-				if("Connection reset by peer".equals(e.getMessage())) return;
-				if("An existing connection was forcibly closed by the remote host".equals(e.getMessage())) return;
+				if("Broken pipe".equals(e.getMessage()))
+					return;
+				if("Connection reset by peer".equals(e.getMessage()))
+					return;
+				if("An existing connection was forcibly closed by the remote host".equals(e.getMessage()))
+					return;
 			}
 		}
 		err.println(b.stacktraceline(e));
@@ -373,7 +387,8 @@ final public class b{
 		ensure_path_ok(path);
 		final path p=new path(new File(root_dir,path));// ? dont inst path yet
 		final String uri=p.uri();
-		if(firewall_paths_on) firewall_ensure_path_access(uri);
+		if(firewall_paths_on)
+			firewall_ensure_path_access(uri);
 		return p;
 	}
 	static void firewall_ensure_path_access(final String uri){
@@ -383,7 +398,8 @@ final public class b{
 //		return new path(new File(root_dir,path));
 //	}
 	private static void ensure_path_ok(final String path) throws Error{
-		if(path.contains("..")) throw new Error("illegalpath "+path+": containing '..'");
+		if(path.contains(".."))
+			throw new Error("illegalpath "+path+": containing '..'");
 	}
 	static LinkedList<req> pending_requests_list(){
 		return pending_req;
@@ -418,11 +434,13 @@ final public class b{
 		ps.println(hello);
 		for(final NetworkInterface ni:Collections.list(NetworkInterface.getNetworkInterfaces())){
 			final String nm=ni.getName();
-			if(nm.startsWith("lo")) continue;
+			if(nm.startsWith("lo"))
+				continue;
 			p("              url: ");
 			for(final InetAddress ia:Collections.list(ni.getInetAddresses())){
 				final String s=ia.getHostAddress();
-				if(!s.matches("\\d+\\.\\d+\\.\\d+\\.\\d+")) continue;
+				if(!s.matches("\\d+\\.\\d+\\.\\d+\\.\\d+"))
+					continue;
 				p("http://");
 				p(s);
 				if(!server_port.equals("80")){
@@ -446,7 +464,8 @@ final public class b{
 //		ps.println("      cached uris: "+(req.cacheu_size()>>10)+" KB");
 		ps.println("        classpath: "+System.getProperty("java.class.path"));
 		final Runtime rt=Runtime.getRuntime();
-		if(gc_before_stats) rt.gc();
+		if(gc_before_stats)
+			rt.gc();
 		final long m1=rt.totalMemory();
 		final long m2=rt.freeMemory();
 		ps.println("         ram used: "+((m1-m2)>>10)+" KB");
@@ -515,21 +534,25 @@ final public class b{
 			out.print(f.getName());
 			out.print("=");
 			String type=f.getType().getName();
-			if(type.startsWith("java.lang.")) type=type.substring("java.lang.".length());
-			if(type.startsWith("java.util.")) type=type.substring("java.util.".length());
+			if(type.startsWith("java.lang."))
+				type=type.substring("java.lang.".length());
+			if(type.startsWith("java.util."))
+				type=type.substring("java.util.".length());
 			final boolean isstr=type.equals("String");
 			final boolean isbool=type.equals("boolean");
 			final boolean isint=type.equals("int");
 			final boolean islong=type.equals("long");
 			final boolean print_type=!(isstr||isbool||isint||islong);
-			if(isstr) out.print("\"");
+			if(isstr)
+				out.print("\"");
 			if(print_type){
 				out.print(type);
 				out.print("(");
 			}
 			out.print(o==null?"":o.toString().replaceAll("\\n","\\\\n"));
 //			if(islong)out.print("L");
-			if(isstr) out.print("\"");
+			if(isstr)
+				out.print("\"");
 			if(print_type){
 				out.print(")");
 			}
@@ -537,7 +560,8 @@ final public class b{
 		}
 	}
 	public static boolean class_init(final Class<?> cls,final String[] args) throws SecurityException,NoSuchFieldException,IllegalArgumentException,IllegalAccessException{
-		if(args==null||args.length==0) return true;
+		if(args==null||args.length==0)
+			return true;
 //		System.out.println("args:");
 //		for(String s:args)System.out.println(s);
 		if("-1".equals(args[0])){
@@ -556,7 +580,8 @@ final public class b{
 				fld.set(null,Integer.parseInt(val));
 			else if(fldcls.isAssignableFrom(boolean.class))
 				fld.set(null,"1".equals(val)||"true".equals(val)||"yes".equals(val)||"y".equals(val)?Boolean.TRUE:Boolean.FALSE);
-			else if(fldcls.isAssignableFrom(long.class)) fld.set(null,Long.parseLong(val));
+			else if(fldcls.isAssignableFrom(long.class))
+				fld.set(null,Long.parseLong(val));
 		}
 		return true;
 	}
@@ -624,16 +649,19 @@ final public class b{
 //	}
 	public static void firewall_assert_access(final a e){
 		final Class<? extends a> cls=e.getClass();
-		if(cls.equals(a.class)) return;
+		if(cls.equals(a.class))
+			return;
 		final String clsnm=cls.getName();
 //		final int i=clsnm.lastIndexOf('.');
 //		final String pkgnm=i==-1?"":clsnm.substring(0,i);
 //		if(pkgnm.endsWith(".a")&&!req.get().session().bits_hasall(2))throw new Error("firewalled1");
-		if(clsnm.startsWith("a.localhost.")&&!req.get().ip().toString().equals("/0:0:0:0:0:0:0:1")) throw new Error("firewalled2");
+		if(clsnm.startsWith("a.localhost.")&&!req.get().ip().toString().equals("/0:0:0:0:0:0:0:1"))
+			throw new Error("firewalled2");
 	}
 	public static String file_to_uri(final File f){// ? cleanup
 		final String u1=f.getPath();
-		if(!u1.startsWith(root_dir)) throw new SecurityException("path "+u1+" not in root "+root_dir);
+		if(!u1.startsWith(root_dir))
+			throw new SecurityException("path "+u1+" not in root "+root_dir);
 		final String u4=u1.substring(root_dir.length());
 		final String u2=u4.replace(File.pathSeparatorChar,'/');
 		final String u3=u2.replace(' ','+');

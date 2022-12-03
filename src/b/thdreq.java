@@ -30,7 +30,8 @@ final class thdreq extends Thread{
 			process_request();
 			// if thread is older than dt let it finish
 			final long dt=System.currentTimeMillis()-t0;
-			if(dt>b.thread_pool_lftm) break;
+			if(dt>b.thread_pool_lftm)
+				break;
 			// if(all.size()>htp.thread_pool_size)break;
 		}
 		synchronized(all_request_threads){
@@ -49,7 +50,8 @@ final class thdreq extends Thread{
 			else
 				throw new IllegalStateException();
 			// the state of the page may have changed to socket
-			if(r.is_sock()) return;
+			if(r.is_sock())
+				return;
 			if(r.is_transfer()){
 				r.selection_key.interestOps(SelectionKey.OP_WRITE);
 				r.selection_key.selector().wakeup();

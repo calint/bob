@@ -41,10 +41,12 @@ public class a implements Serializable{
 	}
 	private void autonew(){
 		try{
-			if(b.firewall_on) b.firewall_assert_access(this);
+			if(b.firewall_on)
+				b.firewall_assert_access(this);
 //		if(b.acl_on)b.acl_ensure_create(this);
 			for(final Field f:getClass().getFields()){
-				if(!a.class.isAssignableFrom(f.getType())) continue;
+				if(!a.class.isAssignableFrom(f.getType()))
+					continue;
 //			if(f.getName().startsWith("$"))
 //				continue;
 				a a=(a)f.get(this);
@@ -73,8 +75,10 @@ public class a implements Serializable{
 		return pt;
 	}
 	public final a pt(final Class<? extends a> cls){
-		if(pt==null) return null;
-		if(cls.isAssignableFrom(pt.getClass())) return pt;
+		if(pt==null)
+			return null;
+		if(cls.isAssignableFrom(pt.getClass()))
+			return pt;
 		return pt.pt(cls);
 	}
 //	public final a pt(final a a){pt=a;return this;}
@@ -98,7 +102,8 @@ public class a implements Serializable{
 		return null;
 	}
 	protected void ev(final xwriter x,final a from,final Object o) throws Throwable{
-		if(pt!=null) pt.ev(x,from,o);
+		if(pt!=null)
+			pt.ev(x,from,o);
 	}
 	final protected void ev(final xwriter x,final a from) throws Throwable{
 		ev(x,from,null);
@@ -108,7 +113,8 @@ public class a implements Serializable{
 	}
 
 	public void to(final xwriter x) throws Throwable{
-		if(s==null) return;
+		if(s==null)
+			return;
 		x.p(s);
 	}
 	public final a set(final String s){

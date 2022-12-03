@@ -24,7 +24,8 @@ public final class sessionobj extends DbObject{
 
 	public Object object(){
 		final Object v=get(object);
-		if(v==null) return null;
+		if(v==null)
+			return null;
 
 		if(!(v instanceof byte[])) // is it transformed?
 			return v;

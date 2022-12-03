@@ -42,7 +42,8 @@ public class websock implements sock{
 		bbo.put("\r\n\r\n".getBytes());
 		bbo.flip();
 		while(bbo.hasRemaining()&&sc.write(bbo)!=0);
-		if(bbo.hasRemaining()) throw new RuntimeException("packetnotfullysent");
+		if(bbo.hasRemaining())
+			throw new RuntimeException("packetnotfullysent");
 		on_opened(headers);
 		st=state.parse_next_frame;
 		return op.read; // response sent, wait for packet (assumes client hasn't sent begun sending
@@ -55,7 +56,8 @@ public class websock implements sock{
 		final int n=socket_channel.read(bb);
 //		System.out.println("websock "+Integer.toHexString(hashCode())+": sock_read "+n+" bytes");
 		thdwatch.input+=n;
-		if(n==0) return op.read;// ? infloop?
+		if(n==0)
+			return op.read;// ? infloop?
 		if(n==-1){
 			st=state.closed;
 			return op.close; // on_connection_lost called when request is closed
@@ -71,9 +73,11 @@ public class websock implements sock{
 				// Base Framing Protocol
 				final int b0=(int)bb.get();
 				final boolean fin=(b0&128)==128;
-				if(fin);// to remove warning of unused variable
+				if(fin)
+					;// to remove warning of unused variable
 				final int resv=(b0>>4)&7;
-				if(resv!=0) throw new Error("reserved bits are not 0");
+				if(resv!=0)
+					throw new Error("reserved bits are not 0");
 				final int opcode=b0&0xf;
 				if(opcode==8){// rfc6455#section-5.5.1
 					st=state.closed;

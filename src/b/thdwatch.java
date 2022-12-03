@@ -39,7 +39,8 @@ final public class thdwatch extends Thread{
 	public void run(){
 		while(!_stop)
 			try{
-				if(!b.thd_watch) break;
+				if(!b.thd_watch)
+					break;
 				sleep(b.thd_watch_sleep_in_ms);
 				ms=System.currentTimeMillis()-_t0;
 				if(ms-_t>b.thd_watch_report_every_ms){
@@ -62,8 +63,10 @@ final public class thdwatch extends Thread{
 	public static void print_fieldnames_to(final OutputStream os,final String eol) throws IOException{
 		for(final Field f:_fields){
 			String s=f.getName();
-			if(s.startsWith("_")) continue;
-			if(s.length()>_pad.length()) s=s.substring(0,_pad.length());
+			if(s.startsWith("_"))
+				continue;
+			if(s.length()>_pad.length())
+				s=s.substring(0,_pad.length());
 			os.write(_pad.substring(0,_pad.length()-s.length()).getBytes());
 			os.write(s.getBytes());
 			os.write(" ".getBytes());
@@ -73,8 +76,10 @@ final public class thdwatch extends Thread{
 	public static void reset(){// ? freethdsgetsderanged
 		for(final Field f:_fields){
 			final String s=f.getName();
-			if(s.startsWith("_")) continue;
-			if(f.getType()!=long.class) continue;
+			if(s.startsWith("_"))
+				continue;
+			if(f.getType()!=long.class)
+				continue;
 			try{
 				f.set(null,Long.valueOf(0));
 			}catch(final Throwable t){
@@ -85,9 +90,11 @@ final public class thdwatch extends Thread{
 	public static void print_fields_to(final OutputStream os,final String eol) throws IllegalAccessException,IOException{
 		for(final Field f:_fields){
 			String s=f.getName();
-			if(s.startsWith("_")) continue;
+			if(s.startsWith("_"))
+				continue;
 			s=f.get(null).toString();
-			if(s.length()>_pad.length()) s=s.substring(0,_pad.length());
+			if(s.length()>_pad.length())
+				s=s.substring(0,_pad.length());
 			os.write(_pad.substring(0,_pad.length()-s.length()).getBytes());
 			os.write(s.getBytes());
 			os.write(" ".getBytes());
@@ -97,8 +104,10 @@ final public class thdwatch extends Thread{
 	public static void print_fields2_to(final osnl os,final byte[] ba_eol,final byte[] ba_eor,final String pad) throws Throwable{
 		for(final Field f:_fields){
 			String s=f.getName();
-			if(s.startsWith("_")) continue;
-			if(s.length()>pad.length()) s=s.substring(0,pad.length());
+			if(s.startsWith("_"))
+				continue;
+			if(s.length()>pad.length())
+				s=s.substring(0,pad.length());
 			os.write(pad.substring(0,pad.length()-s.length()).getBytes());
 			os.write(s.getBytes());
 			os.write(": ".getBytes());

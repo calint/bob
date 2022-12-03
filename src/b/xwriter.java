@@ -15,7 +15,8 @@ public final class xwriter{
 		return os;
 	}
 	public xwriter p(final String s){
-		if(s==null) return this;
+		if(s==null)
+			return this;
 		try{
 			os.write(tobytes(s));
 		}catch(final IOException e){
@@ -108,14 +109,17 @@ public final class xwriter{
 	public xwriter ax(final a e,final String func,final String param,final String html,final String accesskey){
 		final String wid=e.id();
 		p("<a");
-		if(accesskey!=null) spc().p("accesskey=").p(accesskey).attr("title",accesskey);
+		if(accesskey!=null)
+			spc().p("accesskey=").p(accesskey).attr("title",accesskey);
 		p(" href=\"javascript:").axjs(wid,func,param).p("\">").p(html).p("</a>");
 		return this;
 	}
 	public xwriter axjs(final String eid,final String func,final String param){
 		p("$x('").p(eid);
-		if(!isempty(func)) p(" ").p(func);
-		if(!isempty(param)) p(" ").p(param);
+		if(!isempty(func))
+			p(" ").p(func);
+		if(!isempty(param))
+			p(" ").p(param);
 		return p("')");
 	}
 	public xwriter ajx(final a e,final String args){
@@ -148,9 +152,12 @@ public final class xwriter{
 	}
 	public xwriter divo(final a e,final String cls,final String style){
 		tago("div");
-		if(e!=null) attr("id",e.id());
-		if(!isempty(cls)) attr("class",cls);
-		if(!isempty(style)) attr("style",style);
+		if(e!=null)
+			attr("id",e.id());
+		if(!isempty(cls))
+			attr("class",cls);
+		if(!isempty(style))
+			attr("style",style);
 //		if(!isempty(intaginline))spc().p(intaginline);
 		return tagoe();
 	}
@@ -162,9 +169,12 @@ public final class xwriter{
 	}
 	public xwriter divh(final a e,final String cls,final String style){
 		tago("div");
-		if(e!=null) attr("id",e.id());
-		if(!isempty(cls)) attr("class",cls);
-		if(!isempty(style)) attr("style",style);
+		if(e!=null)
+			attr("id",e.id());
+		if(!isempty(cls))
+			attr("class",cls);
+		if(!isempty(style))
+			attr("style",style);
 //		if(!isempty(intaginline))spc().p(intaginline);
 		tagoe();
 		try{
@@ -210,7 +220,8 @@ public final class xwriter{
 	}
 	public xwriter spanx(final a e,final String style){
 		tago("span").attr("id",e.id());
-		if(style!=null) attr("style",style);
+		if(style!=null)
+			attr("style",style);
 		return tagoe().tage("span");
 	}
 	public xwriter span(final a e){
@@ -218,7 +229,8 @@ public final class xwriter{
 	}
 	public xwriter span(final a e,final String style){
 		tago("span").attr("id",e.id());
-		if(style!=null) attr("style",style);
+		if(style!=null)
+			attr("style",style);
 		tagoe();
 		try{
 			e.to(new osltgt(os));
@@ -235,8 +247,10 @@ public final class xwriter{
 	}
 	public xwriter spanh(final a e,final String cls,final String style){
 		tago("span").attr("id",e.id());
-		if(cls!=null) attr("class",cls);
-		if(style!=null) attr("style",style);
+		if(cls!=null)
+			attr("class",cls);
+		if(style!=null)
+			attr("style",style);
 		tagoe();
 		try{
 			e.to(os);
@@ -256,8 +270,10 @@ public final class xwriter{
 	}
 	public xwriter table(final String cls,final String style){
 		tago("table");
-		if(!isempty(cls)) attr("class",cls);
-		if(!isempty(style)) attr("style",style);
+		if(!isempty(cls))
+			attr("class",cls);
+		if(!isempty(style))
+			attr("style",style);
 		tagoe();
 		return this;
 	}
@@ -278,8 +294,10 @@ public final class xwriter{
 	}
 	public xwriter td(final String cls,final String style){
 		tago("td");
-		if(cls!=null&&cls.length()!=0) attr("class",cls);
-		if(style!=null&&style.length()!=0) attr("style",style);
+		if(cls!=null&&cls.length()!=0)
+			attr("class",cls);
+		if(style!=null&&style.length()!=0)
+			attr("style",style);
 		return tagoe();
 	}
 	public xwriter td_(){
@@ -316,7 +334,8 @@ public final class xwriter{
 		return tag("li");
 	}
 	public xwriter li(final String cls){
-		if(cls==null) return li();
+		if(cls==null)
+			return li();
 		return tago("li").attr("class",cls).tagoe();
 	}
 	public xwriter code(){
@@ -347,16 +366,20 @@ public final class xwriter{
 	public xwriter inp(final a e,final String type,final String style,final String stylecls,final a on_enter_ajax_elem,final String on_enter_ajax_param,final String txt,final a on_change_ajax_elem,final String on_change_ajax_param){
 		final String value=txt==null?e.toString():txt;
 		tago("input").attr("value",value).attrdef(e);
-		if(!isempty(type)) attr("type",type);
-		if(!isempty(stylecls)) attr("class",stylecls);
-		if(!isempty(style)) attr("style",style);
+		if(!isempty(type))
+			attr("type",type);
+		if(!isempty(stylecls))
+			attr("class",stylecls);
+		if(!isempty(style))
+			attr("style",style);
 		if(on_enter_ajax_elem!=null){
 			final String ax=on_enter_ajax_elem.id()+(on_enter_ajax_param!=null?(" "+on_enter_ajax_param):"");
 			attr("onkeypress","return $r(event,this,'"+ax+"')");
 		}
 		final StringBuilder sb=new StringBuilder();
 		if("checkbox".equals(type)){
-			if(value.equals(Boolean.TRUE.toString())) attr("checked","checked");
+			if(value.equals(Boolean.TRUE.toString()))
+				attr("checked","checked");
 			sb.append("this.value=this.checked?'1':'0';$b(this)");
 			if(on_change_ajax_elem!=null){
 				final String ax=on_enter_ajax_elem.id()+(on_enter_ajax_param!=null?(" "+on_change_ajax_param):"");
@@ -380,7 +403,8 @@ public final class xwriter{
 //			.attr("onkeydown","$b(this);if(event.keyCode==9){console.log(this.id+' '+this.selectionStart);this.value=this.value.substring(0,this.selectionStart)+'   '+this.value.substring(this.selectionStart,this.value.length);console.log(this.selectionStart);this.selectionStart=this.selectionEnd=this.selectionStart-2;return false;}return true;")
 				.attr("onkeydown","$b(this)");
 
-		if(cls!=null) attr("class",cls);
+		if(cls!=null)
+			attr("class",cls);
 		attr("wrap","off").attr("spellcheck","false").tagoe();
 		try{
 			e.to(new osltgt(outputstream()));
@@ -430,11 +454,13 @@ public final class xwriter{
 	}
 	public xwriter inpax(final a e,final String stylecls,final a ax,final String axp){
 		tago("input").attr("value",e.toString()).attrdef(e).attr("type","text");
-		if(!isempty(stylecls)) attr("class",stylecls);
+		if(!isempty(stylecls))
+			attr("class",stylecls);
 		attr("onfocus","this.setSelectionRange(this.value.length,this.value.length)");
 		final StringBuilder sb=new StringBuilder();
 		sb.append((ax==null?e:ax).id());
-		if(!isempty(axp)) sb.append(" ").append(axp);
+		if(!isempty(axp))
+			sb.append(" ").append(axp);
 		final String sbs=sb.toString();
 		attr("oninput","$b(this);$x('"+sbs+"');return true;");
 		attr("onkeypress","return $r(event,this,'"+ax.id()+" sel')");
@@ -442,11 +468,13 @@ public final class xwriter{
 	}
 	public xwriter inpax(final a e,final String stylecls,final a ax,final String onchangeaxp,final String onselectaxp){
 		tago("input").attr("value",e.toString()).attrdef(e).attr("type","text");
-		if(!isempty(stylecls)) attr("class",stylecls);
+		if(!isempty(stylecls))
+			attr("class",stylecls);
 		final String eid=ax.id();
 		attr("onfocus","this.setSelectionRange(this.value.length,this.value.length)");
 		attr("oninput","$b(this);$x('"+eid+" "+onchangeaxp+"');return true;");
-		if(onselectaxp!=null) attr("onkeypress","if(!event)event=window.event;if(event.keyCode!=13)return true;$x('"+eid+" "+onselectaxp+"');return false;");
+		if(onselectaxp!=null)
+			attr("onkeypress","if(!event)event=window.event;if(event.keyCode!=13)return true;$x('"+eid+" "+onselectaxp+"');return false;");
 		return tagoe();
 	}
 	public xwriter inputax(final a e){
@@ -570,18 +598,21 @@ public final class xwriter{
 	}
 //	public xwriter el_(){return p("</span>");}
 	public xwriter r(final a e) throws Throwable{
-		if(e==null) return this;
+		if(e==null)
+			return this;
 		e.to(this);
 		return this;
 	}
 	public xwriter rel(final a e) throws Throwable{
-		if(e==null) return this;
+		if(e==null)
+			return this;
 		el(e);
 		e.to(this);
 		return el_();
 	}
 	public xwriter rdiv(final a e) throws Throwable{
-		if(e==null) return this;
+		if(e==null)
+			return this;
 		divo(e);
 		e.to(this);
 		return div_();
@@ -603,7 +634,8 @@ public final class xwriter{
 	}
 	public xwriter dived(final a e,final a axe,final String axp,final String style) throws Throwable{
 		p("<div id=").p(e.id()).p(" contenteditable=true spellcheck=false ");
-		if(style!=null&&style.length()>0) p("style=\"").p(style).p("\" ");
+		if(style!=null&&style.length()>0)
+			p("style=\"").p(style).p("\" ");
 		p("onkeypress=\"");
 		if(axe!=null){
 			p("if(event.charCode==13){$x('");
@@ -641,8 +673,10 @@ public final class xwriter{
 	}
 	public xwriter span(final String cls,final String style){
 		tago("span");
-		if(!isempty(cls)) attr("class",cls);
-		if(!isempty(style)) attr("style",style);
+		if(!isempty(cls))
+			attr("class",cls);
+		if(!isempty(style))
+			attr("style",style);
 		return tagoe();
 	}
 	public xwriter nbsp(){
@@ -650,7 +684,8 @@ public final class xwriter{
 	}
 	private final OutputStream os;
 	private static String encquot(final String text){
-		if(text==null) return "";
+		if(text==null)
+			return "";
 		return text.replaceAll("\"","&quot;");
 	}
 	public xwriter spaned(final a e){
@@ -679,7 +714,8 @@ public final class xwriter{
 			p(kilos).p("k");
 			return this;
 		}
-		if(x>0) p(x);
+		if(x>0)
+			p(x);
 		return this;
 	}
 }

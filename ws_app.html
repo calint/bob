@@ -1,0 +1,56 @@
+<!DOCTYPE html><meta charset="utf-8"><title>web socket</title>
+<style>
+	*{margin:0;padding:0;font-family:inherit;font-size:inherit;line-height:1.2em}
+	html{white-space:pre;font-family:courier;font-size:11px;margin:0;padding:0;margin-left:auto;margin-right:auto;padding:0 4em 0 4em;display:block;text-align:center;color:#222;border-right:0px dotted #666;border-left:0px dotted #666;box-shadow:0 0 27px rgba(0,0,0,.5);border-radius:1px}
+	#txt{color:brown}
+</style>
+
+Web Socket
+<textarea id=inp></textarea>
+<button id=btn onclick="ws.send($.inp.value);$.inp.value=''">send</button>
+<output id=outp></output>
+
+<style>
+	#inp{width:80em;height:10em}
+	#btn{width:10em}
+</style>
+<script>
+$=document.all;
+function p(txt){
+	$.outp.value+=txt;
+}
+function pl(txt){
+	p(txt)
+	$.outp.value+="\n";
+}
+start();
+function start(){
+	const is_ssl=location.protocol=='https:'
+	ws=new WebSocket("ws"+(is_ssl?"s":"")+"://"+location.host+"/ws_app");
+	ws.onopen=function(e){
+		pl("web socket: onopen");
+		let largeString="";
+	//	const n=16*1024*1024;
+	//	const n=16*1024;
+		const n=128*1024;
+		for(let i=0;i<n;i++){
+			largeString+='0';
+		}
+		ws.send(largeString);
+		ws.send("testing ping");
+		ws.send("pong");
+	}
+	ws.onmessage=function(e){
+		pl("web socket: onmessage "+e+" data:"+e.data);
+	};
+	ws.onerror=function(e){
+		pl("web socket: onerror "+e+" data:"+e.data);
+	};
+	ws.onclose=function(e){
+		pl("web socket: onclose "+e);
+	};
+}
+function stop(){
+	ws.close();
+}
+</script>
