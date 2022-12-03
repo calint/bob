@@ -673,6 +673,7 @@ public final class req{
 			populate_content_map_from_buffer();
 
 		final DbTransaction tn=Db.initCurrentTransaction();
+		System.out.println("dbo: connection pool: "+Db.instance().getConnectionPoolSize());
 		try{
 			run_page_do(tn,cls);
 		}catch(Throwable t){

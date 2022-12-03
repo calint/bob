@@ -297,7 +297,8 @@ final public class b{
 	}
 	public static synchronized void log(Throwable t){
 		Throwable e=t;
-		while(e.getCause()!=null)e=e.getCause();
+		while(e.getCause()!=null)
+			e=e.getCause();
 		if(!log_client_disconnects){
 			if(e instanceof java.nio.channels.CancelledKeyException)return;
 			if(e instanceof java.nio.channels.ClosedChannelException)return;

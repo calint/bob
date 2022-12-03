@@ -64,6 +64,8 @@ public final class Db {
 			pc = inst.conpool.removeFirst();
 		}
 		if (pc.getAgeInMs() > Db.pooled_connection_max_age_in_ms) {
+			// connection exceeded life time. create a new connection.
+			Db.log("dbo: connection "+Integer.toHexString(pc.hashCode())+" exceeded life time. Creating new.");
 			try {
 				pc.getConnection().close();
 			} catch (Throwable t) {
@@ -81,6 +83,7 @@ public final class Db {
 				}
 			}
 		}
+		// create transaction using pooled connection
 		while (true) {
 			try {
 				final DbTransaction t = new DbTransaction(pc);
@@ -90,6 +93,7 @@ public final class Db {
 				log(e);
 			}
 			// something went wrong initiating transaction
+			// create a new connection
 			try {
 				final Connection c = Db.instance().createJdbcConnection();
 				final PooledConnection pc2 = new PooledConnection(c);
@@ -118,19 +122,19 @@ public final class Db {
 	public static void deinitCurrentTransaction() { // ? so ugly
 		Db.log("dbo: deinit transaction on " + Thread.currentThread());
 		final DbTransaction tx = tn.get();
-		boolean keep = true;
+		boolean connection_is_ok = true;
 		if (!tx.rollbacked) {
 			try {
 				tx.commit();
 			} catch (Throwable t) {
-				keep = false;
+				connection_is_ok = false;
 				log(t);
 			}
 		}
 		try {
 			tx.stmt.close();
 		} catch (Throwable t) {
-			keep = false;
+			connection_is_ok = false;
 			log(t);
 		}
 
@@ -145,7 +149,7 @@ public final class Db {
 //		if (!stmtIsClosed)
 //			throw new RuntimeException(
 //					"Statement should be closed here. DbTransaction.finishTransaction() not called?");
-		if (keep) {
+		if (connection_is_ok) {
 			synchronized (inst.conpool) {
 				inst.conpool.addFirst(tx.pooledCon);
 				inst.conpool.notify();
@@ -284,7 +288,7 @@ public final class Db {
 		Db.log("--- - - - ---- - - - - - -- -- --- -- --- ---- -- -- - - -");
 	}
 
-	/** @return a JDBC connection. */
+	/** @return a new JDBC connection. The method will block until a connection has been created. */
 	public Connection createJdbcConnection() {
 		Connection c = null;
 		while (true) {
@@ -294,7 +298,7 @@ public final class Db {
 				return c;
 			} catch (Throwable t) {
 				try {
-					System.err.println("dbo: cannot create connection. waiting. "+stacktraceline(t));
+					System.err.println("dbo: cannot create connection. waiting. " + stacktraceline(t));
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
 					log(e);
@@ -470,5 +474,11 @@ public final class Db {
 	/** @return the {@link DbClass} for the Java class */
 	public DbClass getDbClassForJavaClass(final Class<? extends DbObject> cls) {
 		return clsToDbClsMap.get(cls);
+	}
+
+	public int getConnectionPoolSize() {
+		synchronized (conpool) {
+			return conpool.size();
+		}
 	}
 }
