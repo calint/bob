@@ -2,7 +2,7 @@ package b;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
-final class chdresp_resource extends chdresp{ // ? mixes concerns. try interface of inheritance.
+final class chdresp_resource extends chdresp{
 	/** Caches a resource. */
 	public chdresp_resource(final InputStream is,final byte[] content_type) throws Throwable{
 		this.content_type=content_type;

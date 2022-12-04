@@ -14,7 +14,9 @@ final public class ws_app extends websock implements threadedsock{
 		System.out.println("websocket "+Integer.toHexString(hashCode())+": on_opened");
 		root.set("hello world");
 		final xwriter x=new xwriter();
+		x.xub(root,true,false);
 		root.to(x);
+		x.xube();
 		send(x.toString());
 	}
 

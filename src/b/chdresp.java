@@ -1,6 +1,6 @@
 package b;
 import java.nio.ByteBuffer;
-abstract class chdresp{ // ? mixes concerns. try interface of inheritance.
+abstract class chdresp{
 	static final int hdrlencap=8*64;
 	String etag;
 	byte[] content_type;
