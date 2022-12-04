@@ -41,7 +41,7 @@ final class thdreq extends Thread{
 	private void process_request(){
 		try{
 			if(r.is_sock()){
-				r.sock_thread_run();
+				r.websock.process();
 				return;
 			}
 			thdwatch.pages++;

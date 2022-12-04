@@ -26,6 +26,8 @@ public class shell extends a {
 	}
 
 	public void to(final xwriter x) throws Throwable {
+//		final byte[]ba=new byte[1*1024*1024];
+//		x.pl(new String(ba,0,ba.length));
 		x.style().css("body", "padding:0 10em 0 4em").style_();
 		final int count = Db.currentTransaction().getCount(Book.class, null);
 		x.p("sql count: ").p(count).nl();

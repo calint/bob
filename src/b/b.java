@@ -66,10 +66,10 @@ final public class b{
 	public static @conf @unit(name="B") int io_buf_B=64*K;
 //	public static @conf @unit(name="B")int chunk_B=4*K;
 	public static @conf @unit(name="B") int chunk_B=16*K;
-//	public static @conf @unit(name="B") int reqinbuf_B=16*K;
+	public static @conf @unit(name="B") int reqinbuf_B=16*K;
 //	public static @conf @unit(name="B")int reqinbuf_B=4*K;
 //	public static @conf @unit(name="B")int reqinbuf_B=16;
-	public static @conf @unit(name="B")int reqinbuf_B=1;
+//	public static @conf @unit(name="B")int reqinbuf_B=1;
 	public static @conf String default_directory_file="index.html";
 //	public static @conf String default_package_class="$";
 	public static @conf boolean gc_before_stats=false;
@@ -167,25 +167,25 @@ final public class b{
 						r.socket_channel=ssc.accept();
 						r.socket_channel.configureBlocking(false);
 
-					r.socket_channel.socket().setReceiveBufferSize(1);
-					r.socket_channel.socket().setSendBufferSize(1);
+//						r.socket_channel.socket().setReceiveBufferSize(1);
+//						r.socket_channel.socket().setSendBufferSize(1);
 
 						if(tcpnodelay)
 							r.socket_channel.setOption(StandardSocketOptions.TCP_NODELAY,true);
 						r.selection_key=r.socket_channel.register(sel,0,r);
-						read(r);
+						process(r);
 						continue;
 					}
 					sk.interestOps(0); // ? why?
 					final req r=(req)sk.attachment();
 					if(sk.isReadable()){
 						thdwatch.ioread++;
-						read(r);
+						process(r);
 						continue;
 					}
 					if(sk.isWritable()){
 						thdwatch.iowrite++;
-						write(r);
+						process(r);
 						continue;
 					}
 					throw new IllegalStateException();
@@ -194,38 +194,38 @@ final public class b{
 				log(e);
 			}
 	}
-	private static void read(final req r) throws Throwable{
+	private static void process(final req r) throws Throwable{
 		if(r.is_sock()){
 			if(r.websock.is_threaded()){
-				r.set_waiting_sock_thread_read();
+//				r.set_waiting_sock_thread_read();
 				b.thread(r);
 				return;
 			}
-			r.websock.read_and_parse();
+			r.websock.process();
 			return;
 		}
 		r.process();
 	}
-	private static void write(final req r) throws Throwable{
-		if(r.is_sock()){
-			if(r.websock.is_threaded()){
-				r.set_waiting_sock_thread_write();
-				b.thread(r);
-				return;
-			}
-			r.websock.write();
-			return;
-		}
-
-		if(r.is_waiting_write()){ // is oschunked blocked waiting for write?
-			synchronized(r){
-				r.notify();
-			}
-			return;
-		}
-		
-		r.process();
-	}
+//	private static void write(final req r) throws Throwable{
+//		if(r.is_sock()){
+//			if(r.websock.is_threaded()){
+//				r.set_waiting_sock_thread_write();
+//				b.thread(r);
+//				return;
+//			}
+//			r.websock.process();
+//			return;
+//		}
+//
+//		if(r.is_waiting_write()){ // is oschunked blocked waiting for write?
+//			synchronized(r){
+//				r.notify();
+//			}
+//			return;
+//		}
+//		
+//		r.process();
+//	}
 	static void thread(final req r){
 		r.selection_key.interestOps(0);// ? must?
 		if(!b.thread_pool||thdreq.all_request_threads.size()<thread_pool_size){

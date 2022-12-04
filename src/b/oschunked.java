@@ -54,14 +54,13 @@ final class oschunked extends OutputStream{
 		for(ByteBuffer bb:bba)
 			remaining+=bb.remaining();
 		while(remaining!=0){
-			final long c=r.socket_channel.write(bba,0,bba.length);// ?
+			final long c=r.socket_channel.write(bba,0,bba.length);
 			if(c==0){
 				synchronized(r){
 					r.waiting_write(true);
 					r.selection_key.interestOps(SelectionKey.OP_WRITE);
 					r.selection_key.selector().wakeup();
-					// ?? racing?
-					/* ;; */try{
+					try{
 						r.wait();
 					}catch(final InterruptedException ok){
 					}

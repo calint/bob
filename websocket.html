@@ -29,10 +29,12 @@ function start(){
 	ws=new WebSocket("ws"+(is_ssl?"s":"")+"://"+location.host+"/websocket");
 	ws.onopen=function(e){
 		pl("web socket: onopen");
-		ws.send("ping");
+		ws.send("ping 1");
+		ws.send("ping 2");
 	}
 	ws.onmessage=function(e){
 		pl("web socket: onmessage "+e+" data:"+e.data);
+//		ws.send(e.data+"1");
 	};
 	ws.onerror=function(e){
 		pl("web socket: onerror "+e+" data:"+e.data);

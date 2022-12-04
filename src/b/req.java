@@ -2,7 +2,6 @@ package b;
 
 import static b.b.pl;
 import static b.b.tobytes;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -19,7 +18,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
 import b.b.conf;
 import db.Db;
 import db.DbObject;
@@ -29,6 +27,7 @@ import db.Query;
 public final class req{
 	void process() throws Throwable{
 		while(true){
+			// check if there are ongoing writes
 			if(is_transfer()){
 				do_transfer();
 				if(is_transfer()){ // more writes to do?
@@ -39,9 +38,14 @@ public final class req{
 					return;
 				}
 			}
+			// check if buffer is fully processed and make a new read
 			if(ba_rem==0){
 				bb.clear();
 				final int n=socket_channel.read(bb);
+				bb.flip();
+				ba=bb.array();
+				ba_pos=bb.position();
+				ba_rem=bb.remaining();
 				if(n==0){
 					selection_key.interestOps(SelectionKey.OP_READ);
 					return;
@@ -51,10 +55,6 @@ public final class req{
 					return;
 				}
 				thdwatch.input+=n;
-				bb.flip();
-				ba=bb.array();
-				ba_pos=bb.position();
-				ba_rem=bb.remaining();
 			}
 			while(ba_rem>0){
 				switch(state){
@@ -75,7 +75,7 @@ public final class req{
 					break;
 				case state_header_name:
 					parse_header_name();
-					// state might have changed after parse_header_name()->do_after_header()
+					//  parse_header_name()->do_after_header() might have changed the state
 					if(is_transfer()){
 						return;
 					}
@@ -137,8 +137,8 @@ public final class req{
 		upload_channel=null;
 		upload_lastmod_s=null;
 		websock=null;
-		waiting_sock_thread_read=false;
-		waiting_sock_thread_write=false;
+//		waiting_sock_thread_read=false;
+//		waiting_sock_thread_write=false;
 	}
 
 	private void parse_method(){
@@ -830,21 +830,8 @@ public final class req{
 			System.out.println("request "+Integer.toHexString(hashCode())+": socket at "+path_str);
 			state=state_sock;
 			websock=(websock)cls.getConstructor().newInstance();
-			switch(websock.init(this)){
-			default:
-				throw new IllegalStateException();
-			case read:
-				selection_key.interestOps(SelectionKey.OP_READ);
-				selection_key.selector().wakeup();
-				break;
-			case write:
-				selection_key.interestOps(SelectionKey.OP_WRITE);
-				selection_key.selector().wakeup();
-				break;
-			case close:
-				socket_channel.close();
-				break;
-			}
+			bb.position(ba_pos); // set the position to the end of processed data. the buffer will be used by websock.
+			websock.init(this);
 			return;
 		}
 
@@ -1026,35 +1013,35 @@ public final class req{
 		return state==state_sock;
 	}
 
-	// threaded socks
-	void set_waiting_sock_thread_read(){
-		waiting_sock_thread_read=true;
-	}
+//	// threaded socks
+//	void set_waiting_sock_thread_read(){
+//		waiting_sock_thread_read=true;
+//	}
+//
+//	void set_waiting_sock_thread_write(){
+//		waiting_sock_thread_write=true;
+//	}
+//
+//	/** Called from thread when running in threaded mode. */
+//	void sock_thread_run() throws Throwable{
+//		if(waiting_sock_thread_read){
+//			waiting_sock_thread_read=false;
+//			sock_thread_read();
+//		}
+//		// the read might have triggered a write
+//		if(waiting_sock_thread_write){
+//			waiting_sock_thread_write=false;
+//			sock_thread_write();
+//		}
+//	}
 
-	void set_waiting_sock_thread_write(){
-		waiting_sock_thread_write=true;
-	}
-
-	/** Called from thread when running in threaded mode. */
-	void sock_thread_run() throws Throwable{
-		if(waiting_sock_thread_read){
-			waiting_sock_thread_read=false;
-			sock_thread_read();
-		}
-		// the read might have triggered a write
-		if(waiting_sock_thread_write){
-			waiting_sock_thread_write=false;
-			sock_thread_write();
-		}
-	}
-
-	private void sock_thread_read() throws Throwable{
-		websock.read_and_parse();
-	}
-
-	private void sock_thread_write() throws Throwable{
-		websock.write();
-	}
+//	private void sock_thread_read() throws Throwable{
+//		websock.process();
+//	}
+//
+//	private void sock_thread_write() throws Throwable{
+//		websock.write();
+//	}
 
 	boolean is_waiting_write(){
 		return waiting_write;
@@ -1196,10 +1183,9 @@ public final class req{
 	private path upload_path;
 	private FileChannel upload_channel;
 	private String upload_lastmod_s;
-	// websocket
 	websock websock;
-	private boolean waiting_sock_thread_read;
-	private boolean waiting_sock_thread_write;
+//	private boolean waiting_sock_thread_read;
+//	private boolean waiting_sock_thread_write;
 	// --
 	public final static String ajax_field_path_separator="-";
 
