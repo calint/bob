@@ -1,6 +1,8 @@
 package bob;
 
 import java.lang.reflect.InvocationTargetException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +20,15 @@ final public class sock extends websock implements threadedsock{
 
 	final @Override protected void on_opened(final Map<String,String> headers) throws Throwable{
 		System.out.println("websocket "+Integer.toHexString(hashCode())+": on_opened");
+//		try {
+//            InetAddress inetadd = InetAddress.getLocalHost();
+//            String name = inetadd.getHostName();
+//            String address = inetadd.getHostAddress();
+//            System.out.println("HostName is : "+name);
+//            System.out.println("Host Address is: "+address);
+//        }
+//        catch(UnknownHostException u){
+//        }
 		// todo load root from db or create new
 		root=(a)Class.forName(root_class_name).getConstructor().newInstance();
 
