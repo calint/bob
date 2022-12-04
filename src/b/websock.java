@@ -3,7 +3,6 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.security.MessageDigest;
 import java.util.LinkedList;
-import java.util.Map;
 
 /**
  * Use case is request response chain. Full duplex not supported on one thread.
@@ -27,15 +26,7 @@ public abstract class websock{
 	private boolean is_masked;
 	private final byte[] mask_key=new byte[4];
 	protected boolean is_threaded=true;
-	private String session_id;
-
-	final boolean is_threaded(){
-		return is_threaded;
-	}
-
-	final protected String session_id(){
-		return session_id;
-	}
+	protected req rq;
 
 	/** @param is_threaded true to handle on_message on a thread. If websock is not threaded it will run on the server thread potentially blocking. */
 	public websock(boolean is_threaded){
@@ -43,13 +34,14 @@ public abstract class websock{
 	}
 
 	/** @param bb byte buffer might have more data to be read */
-	final op init(final Map<String,String> headers,final SocketChannel sc,final ByteBuffer bb,final String session_id,final boolean session_id_set) throws Throwable{
-		socket_channel=sc;
-		this.bb=bb;
-		this.session_id=session_id;
+	final op init(req r) throws Throwable{
+//	final op init(final Map<String,String> headers,final SocketChannel sc,final ByteBuffer bb,final String session_id,final boolean session_id_set) throws Throwable{
+		this.rq=r;
+		this.socket_channel=r.socket_channel;
+		this.bb=r.bb;
 		// rfc6455#section-1.3
 		// Opening Handshake
-		final String key=headers.get("sec-websocket-key");
+		final String key=r.headers().get("sec-websocket-key");
 		final String s=key+"258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
 		final byte[] sha1ed=MessageDigest.getInstance("SHA-1").digest(s.getBytes());
 		final String replkey=base64.encodeToString(sha1ed,true);
@@ -58,17 +50,18 @@ public abstract class websock{
 		bbo.put("HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: ".getBytes());
 		bbo.put(replkey.getBytes());
 //		bbo.put("\r\nSec-WebSocket-Protocol: chat".getBytes());
-		if(session_id_set){
+		if(r.session_id_set){
 			bbo.put(req.hk_set_cookie);
-			bbo.put(session_id.getBytes());
+			bbo.put(r.session_id().getBytes());
 			bbo.put(req.hkv_set_cookie_append);
+			r.session_id_set=false;
 		}
 		bbo.put("\r\n\r\n".getBytes());
 		bbo.flip();
-		while(bbo.hasRemaining()&&sc.write(bbo)!=0);
+		while(bbo.hasRemaining()&&socket_channel.write(bbo)!=0);
 		if(bbo.hasRemaining())
 			throw new RuntimeException("packetnotfullysent");
-		on_opened(headers);
+		on_opened();
 		st=state.parse_next_frame;
 		return op.read; // response sent, wait for packet (assumes client hasn't sent aanything yet)
 	}
@@ -218,7 +211,7 @@ public abstract class websock{
 
 	}
 
-	abstract protected void on_opened(Map<String,String> headers) throws Throwable;
+	abstract protected void on_opened() throws Throwable;
 
 	/** Called when the web socket has been closed. */
 	abstract protected void on_closed() throws Throwable;
@@ -290,6 +283,14 @@ public abstract class websock{
 			nhdr=10;
 		}
 		return ByteBuffer.wrap(hdr,0,nhdr);
+	}
+
+	final protected req req(){
+		return rq;
+	}
+
+	final boolean is_threaded(){
+		return is_threaded;
 	}
 
 	@Override public String toString(){

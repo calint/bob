@@ -823,7 +823,7 @@ public final class req{
 			System.out.println("request "+Integer.toHexString(hashCode())+": socket at "+path_str);
 			state=state_sock;
 			websock=(websock)cls.getConstructor().newInstance();
-			switch(websock.init(headers,socket_channel,ByteBuffer.wrap(ba,ba_pos,ba_rem),session_id,session_id_set)){
+			switch(websock.init(this)){
 			default:
 				throw new IllegalStateException();
 			case read:
@@ -838,7 +838,6 @@ public final class req{
 				socket_channel.close();
 				break;
 			}
-			session_id_set=false; // ? probably unnecessary since request is in websocket mode here
 			return;
 		}
 
@@ -1189,7 +1188,7 @@ public final class req{
 	SelectionKey selection_key;
 	SocketChannel socket_channel;
 	private int state=state_method;
-	private final ByteBuffer bb=ByteBuffer.allocate(b.reqinbuf_B);
+	final ByteBuffer bb=ByteBuffer.allocate(b.reqinbuf_B);
 	private byte[] ba;
 	private int ba_rem;
 	private int ba_pos;
@@ -1208,7 +1207,7 @@ public final class req{
 	private int headers_count;
 	private final Map<String,String> headers=new HashMap<String,String>();
 	private String session_id;
-	private boolean session_id_set;
+	boolean session_id_set;
 	private ByteBuffer content_bb;
 	private String content_type;
 	private long content_remaining_to_read;

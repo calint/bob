@@ -1,7 +1,6 @@
 package c;
 
 import java.nio.ByteBuffer;
-import java.util.Map;
 import b.websock;
 
 final public class websocket extends websock{
@@ -9,7 +8,7 @@ final public class websocket extends websock{
 		super(true);
 	}
 
-	synchronized final @Override protected void on_opened(final Map<String,String> headers) throws Throwable{
+	synchronized final @Override protected void on_opened() throws Throwable{
 		System.out.println("websocket "+Integer.toHexString(hashCode())+": on_opened");
 	}
 

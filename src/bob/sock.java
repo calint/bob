@@ -19,7 +19,7 @@ final public class sock extends websock{
 		super(true);
 	}
 
-	final @Override protected void on_opened(final Map<String,String> headers) throws Throwable{
+	final @Override protected void on_opened() throws Throwable{
 		System.out.println("websocket "+Integer.toHexString(hashCode())+": on_opened");
 
 		// todo load root from db or create new

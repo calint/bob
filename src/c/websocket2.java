@@ -1,7 +1,6 @@
 package c;
 
 import java.nio.ByteBuffer;
-import java.util.Map;
 import b.req;
 import b.websock;
 
@@ -38,8 +37,8 @@ final public class websocket2 extends websock{
 		}
 	}
 
-	synchronized final @Override protected void on_opened(final Map<String,String> headers) throws Throwable{
-		session_id=req.get_session_id_from_headers(headers);
+	synchronized final @Override protected void on_opened() throws Throwable{
+		session_id=req.get_session_id_from_headers(req().headers());
 		System.out.println("websocket "+Integer.toHexString(hashCode())+": onopen (session "+session_id+")");
 		new thd().start();
 	}
