@@ -816,11 +816,11 @@ public final class req{
 			thdwatch.sessions++;
 		}
 
-		if(sock.class.isAssignableFrom(cls)){// start a socket
+		if(websock.class.isAssignableFrom(cls)){// start a socket
 			System.out.println("request "+Integer.toHexString(hashCode())+": socket at "+path_str);
 			state=state_sock;
-			sck=(sock)cls.getConstructor().newInstance();
-			switch(sck.sock_init(headers,socket_channel,ByteBuffer.wrap(ba,ba_pos,ba_rem))){
+			websock=(websock)cls.getConstructor().newInstance();
+			switch(websock.sock_init(headers,socket_channel,ByteBuffer.wrap(ba,ba_pos,ba_rem))){
 			default:
 				throw new IllegalStateException();
 			case read:
@@ -1019,17 +1019,17 @@ public final class req{
 		return state==state_sock;
 	}
 
-	sock.op sock_read() throws Throwable{
-		return sck.sock_read();
+	websock.op sock_read() throws Throwable{
+		return websock.sock_read();
 	}
 
-	sock.op sock_write() throws Throwable{
-		return sck.sock_write();
+	websock.op sock_write() throws Throwable{
+		return websock.sock_write();
 	}
 
 	// threaded socks
-	boolean is_sock_thread(){
-		return sck instanceof threadedsock;
+	boolean sock_is_thread(){
+		return websock.sock_is_threaded();
 	}
 
 	private boolean waiting_sock_thread_read;
@@ -1126,7 +1126,7 @@ public final class req{
 		selection_key=null;
 		try{
 			if(is_sock())
-				sck.sock_on_closed();
+				websock.sock_on_closed();
 		}catch(final Throwable t){
 			b.log(t);
 		}
@@ -1244,7 +1244,7 @@ public final class req{
 	private FileChannel upload_channel;
 	private String upload_lastmod_s;
 
-	private sock sck;
+	private websock websock;
 
 	public final static String ajax_field_path_separator="-";
 

@@ -2,57 +2,53 @@ package c;
 
 import java.nio.ByteBuffer;
 import java.util.Map;
-
 import b.req;
-import b.threadedsock;
 import b.websock;
 
-final public class websocket2 extends websock implements threadedsock {
+final public class websocket2 extends websock{
 	private static int nthreads;
 	private boolean is_closed;
 	private String session_id;
 
-	private class thd extends Thread {
-		thd() {
-			super("websocket " + (++nthreads));
+	private class thd extends Thread{
+		thd(){
+			super("websocket "+(++nthreads));
 		}
 
-		@Override
-		public void run() {
-			int i = 1;
-			b.b.pl("thread " + Integer.toHexString(this.hashCode()) + " " + session_id + ": start");
-			while (!websocket2.this.is_closed) {
-				try {
-					websocket2.this.send("ping " + i);
-				} catch (Throwable t) {
+		@Override public void run(){
+			int i=1;
+			b.b.pl("thread "+Integer.toHexString(this.hashCode())+" "+session_id+": start");
+			while(!websocket2.this.is_closed){
+				try{
+					websocket2.this.send("ping "+i);
+				}catch(Throwable t){
 					b.b.log(t);
 				}
 				i++;
-				try {
+				try{
 					Thread.sleep(5000);
-				} catch (InterruptedException ignored) {
+				}catch(InterruptedException ignored){
 				}
 			}
-			b.b.pl("thread " + Integer.toHexString(this.hashCode()) + ": exit");
+			b.b.pl("thread "+Integer.toHexString(this.hashCode())+": exit");
 		}
 	}
 
-	synchronized final @Override protected void on_opened(final Map<String, String> headers) throws Throwable {
-		session_id = req.get_session_id_from_headers(headers);
-		System.out.println("websocket " + Integer.toHexString(hashCode()) + ": onopen (session " + session_id + ")");
+	synchronized final @Override protected void on_opened(final Map<String,String> headers) throws Throwable{
+		session_id=req.get_session_id_from_headers(headers);
+		System.out.println("websocket "+Integer.toHexString(hashCode())+": onopen (session "+session_id+")");
 		new thd().start();
 	}
 
-	@Override
-	protected void on_message(ByteBuffer bb) throws Throwable {
-		System.out.println("websocket " + Integer.toHexString(hashCode()) + ": onmessage size:" + bb.remaining());
+	@Override protected void on_message(ByteBuffer bb) throws Throwable{
+		System.out.println("websocket "+Integer.toHexString(hashCode())+": onmessage size:"+bb.remaining());
 //		send(new String(bb.array(), bb.position(), bb.remaining()));
 //		return;
 //		if(bb.remaining()==0) {
 //			send("");
 //			return;
 //		}
-		String msg = new String(bb.array(), bb.position(), bb.remaining());
+		String msg=new String(bb.array(),bb.position(),bb.remaining());
 //		Timestamp ts = new Timestamp(System.currentTimeMillis());
 //		String s = ts.toString() + " " + req.get().ip() + " " + msg;
 		send(msg);
@@ -64,8 +60,8 @@ final public class websocket2 extends websock implements threadedsock {
 //		send(s);
 	}
 
-	synchronized final @Override protected void on_closed() throws Throwable {
-		System.out.println("websocket " + Integer.toHexString(hashCode()) + ": onclosed");
-		is_closed = true;
+	synchronized final @Override protected void on_closed() throws Throwable{
+		System.out.println("websocket "+Integer.toHexString(hashCode())+": onclosed");
+		is_closed=true;
 	}
 }

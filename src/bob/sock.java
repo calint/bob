@@ -1,22 +1,23 @@
 package bob;
 
 import java.lang.reflect.InvocationTargetException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 import b.a;
 import b.b;
 import b.req;
-import b.threadedsock;
 import b.websock;
 import b.xwriter;
 
-final public class sock extends websock implements threadedsock{
+final public class sock extends websock{
 	private final static String axfld="$";
 	public String root_class_name="bob.root";
 	protected a root;
+
+	public sock(){
+		is_threaded=false;
+	}
 
 	final @Override protected void on_opened(final Map<String,String> headers) throws Throwable{
 		System.out.println("websocket "+Integer.toHexString(hashCode())+": on_opened");

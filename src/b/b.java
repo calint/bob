@@ -196,7 +196,7 @@ final public class b{
 	}
 	private static void read(final req r) throws Throwable{
 		if(r.is_sock()){
-			if(r.is_sock_thread()){
+			if(r.sock_is_thread()){
 				r.set_waiting_sock_thread_read();
 				thread(r);
 				return;
@@ -238,7 +238,7 @@ final public class b{
 	}
 	private static void write(final req r) throws Throwable{
 		if(r.is_sock()){
-			if(r.is_sock_thread()){
+			if(r.sock_is_thread()){
 				r.set_waiting_sock_thread_write();
 				thread(r);
 				return;
@@ -607,8 +607,8 @@ final public class b{
 		boolean reboot() default false;
 	}
 //	public static @Retention(RetentionPolicy.RUNTIME)@interface conf_reboot{String note()default"";}
-	public static @Retention(RetentionPolicy.RUNTIME) @interface ref{
-	}
+//	public static @Retention(RetentionPolicy.RUNTIME) @interface ref{
+//	}
 
 	public static @Retention(RetentionPolicy.RUNTIME) @interface acl{
 		long create() default 0;

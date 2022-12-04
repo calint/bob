@@ -8,9 +8,12 @@ import java.util.Map;
 /**
  * Use case is request response chain. Full duplex not supported on one thread.
  */
-public class websock implements sock{
+public abstract class websock {
 	private static enum state{
 		handshake,parse_next_frame,parse_data,closed
+	}
+	enum op{
+		write,read,close,noop,wait
 	}
 	private SocketChannel socket_channel;
 	private ByteBuffer bb;
@@ -21,8 +24,14 @@ public class websock implements sock{
 	private final LinkedList<ByteBuffer[]> send_que=new LinkedList<>();
 	private boolean is_first_packet;
 	private int mask_i;
-	private boolean masked;
-	private final byte[] maskkey=new byte[4];
+	private boolean is_masked;
+	private final byte[] mask_key=new byte[4];
+	protected boolean is_threaded=true;
+	
+	final public boolean sock_is_threaded() {
+		return is_threaded;
+	}
+	
 	/** @param bb byte buffer might have more data to be read */
 	final public op sock_init(final Map<String,String> headers,final SocketChannel sc,final ByteBuffer bb) throws Throwable{
 		socket_channel=sc;
@@ -88,7 +97,7 @@ public class websock implements sock{
 
 				// parse header
 				final int b1=(int)bb.get();
-				masked=(b1&128)==128;
+				is_masked=(b1&128)==128;
 				payload_remaining=b1&127;
 				if(payload_remaining==126){
 					final int by2=(((int)bb.get()&0xff)<<8);
@@ -105,7 +114,7 @@ public class websock implements sock{
 					final int by1=((int)bb.get()&0xff);
 					payload_remaining=by4|by3|by2|by1;
 				}
-				bb.get(maskkey);
+				bb.get(mask_key);
 				is_first_packet=true;
 				mask_i=0;
 				st=state.parse_data;
@@ -114,15 +123,15 @@ public class websock implements sock{
 				final byte[] bbia=bb.array();
 				final int pos=bb.position();
 				final int limit=bb.remaining()>payload_remaining?pos+payload_remaining:bb.limit();
-				if(masked&&maskkey[0]==0&&maskkey[1]==0&&maskkey[2]==0&&maskkey[3]==0){
+				if(is_masked&&mask_key[0]==0&&mask_key[1]==0&&mask_key[2]==0&&mask_key[3]==0){
 					throw new RuntimeException();
 				}
 				// unmask
 				for(int i=pos;i<limit;i++){
-					final byte b=(byte)(bbia[i]^maskkey[mask_i]);
+					final byte b=(byte)(bbia[i]^mask_key[mask_i]);
 					bbia[i]=b;
 					mask_i++;
-					if(mask_i==maskkey.length){
+					if(mask_i==mask_key.length){
 						mask_i=0;
 					}
 				}
@@ -135,7 +144,7 @@ public class websock implements sock{
 				}
 				final ByteBuffer bbii=ByteBuffer.wrap(bbia,pos,read_length);// bbia position is start of data, limit is
 																			// the data unmasked
-				onpayload(bbii);
+				on_payload(bbii);
 				is_first_packet=false;
 				synchronized(send_que){
 					if(bb.remaining()!=0){
@@ -153,7 +162,7 @@ public class websock implements sock{
 			}
 		}
 	}
-	final private void onpayload(ByteBuffer bb) throws Throwable{
+	final private void on_payload(ByteBuffer bb) throws Throwable{
 		final boolean is_last_packet=payload_remaining==0;
 		if(is_first_packet&&!is_last_packet){
 			request_bb=ByteBuffer.allocate(bb.remaining()+payload_remaining);
@@ -196,7 +205,7 @@ public class websock implements sock{
 
 	}
 
-	@Override public void sock_on_closed() throws Throwable{
+	final public void sock_on_closed() throws Throwable{
 		on_closed();
 	}
 
