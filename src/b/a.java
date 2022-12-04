@@ -91,7 +91,7 @@ public class a implements Serializable{
 			throw new Error(t);
 		}
 	}
-	final a chld(final String id){
+	public final a chld(final String id){
 		try{
 			return (a)getClass().getField(id).get(this);
 		}catch(Throwable e){

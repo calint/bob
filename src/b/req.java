@@ -712,14 +712,7 @@ public final class req{
 				thdwatch.output+=c;
 			}catch(final IOException e){
 				final String msg=e.getMessage();
-				if(e instanceof IOException&&(msg.startsWith("Broken pipe")||"Connection reset by peer".equals(msg)||"sendfile failed: EPIPE (Broken pipe)".equals(msg)|| // ?
-																																											// android
-																																											// (when
-																																											// closing
-																																											// browser
-																																											// while
-																																											// transfering
-																																											// file)
+				if(e instanceof IOException&&(msg.startsWith("Broken pipe")||"Connection reset by peer".equals(msg)||"sendfile failed: EPIPE (Broken pipe)".equals(msg)|| // ? android (when closing browser while transfering file)
 						"An existing connection was forcibly closed by the remote host".equals(msg))){
 					close();
 					return false;

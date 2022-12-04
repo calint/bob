@@ -4,7 +4,7 @@
 	html{white-space:pre;font-family:courier;font-size:11px;margin:0;padding:0;margin-left:auto;margin-right:auto;padding:0 4em 0 4em;display:block;text-align:center;color:#222;border-right:0px dotted #666;border-left:0px dotted #666;box-shadow:0 0 27px rgba(0,0,0,.5);border-radius:1px}
 	#txt{color:brown}
 </style>
-<script src=/x.js></script>
+<script src=/ws_app.js></script>
 
 
 <div id="-"></div>
@@ -19,17 +19,17 @@ function start(){
 	const is_ssl=location.protocol=='https:'
 	ws=new WebSocket("ws"+(is_ssl?"s":"")+"://"+location.host+"/ws_app");
 	ws.onopen=function(e){
-		console.log("web socket: onopen");
+		$d("web socket: onopen");
 	}
 	ws.onmessage=function(e){
-		console.log("web socket: onmessage "+e+" data:"+e.data);
+		$d(e.data);
 		eval(e.data);
 	};
 	ws.onerror=function(e){
-		console.log("web socket: onerror "+e+" data:"+e.data);
+		$d("web socket: onerror "+e+" data:"+e.data);
 	};
 	ws.onclose=function(e){
-		console.log("web socket: onclose "+e);
+		$d("web socket: onclose "+e);
 	};
 }
 function stop(){
