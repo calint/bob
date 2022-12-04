@@ -58,7 +58,6 @@ public abstract class websock{
 		bbo.put("HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: ".getBytes());
 		bbo.put(replkey.getBytes());
 //		bbo.put("\r\nSec-WebSocket-Protocol: chat".getBytes());
-		// ? add session cookie
 		if(session_id_set){
 			bbo.put(req.hk_set_cookie);
 			bbo.put(session_id.getBytes());
@@ -71,8 +70,7 @@ public abstract class websock{
 			throw new RuntimeException("packetnotfullysent");
 		on_opened(headers);
 		st=state.parse_next_frame;
-		return op.read; // response sent, wait for packet (assumes client hasn't sent begun sending
-						// anything yet)
+		return op.read; // response sent, wait for packet (assumes client hasn't sent aanything yet)
 	}
 
 	final op read() throws Throwable{
