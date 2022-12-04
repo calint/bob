@@ -66,7 +66,7 @@ public abstract class websock{
 		return op.read; // response sent, wait for packet (assumes client hasn't sent aanything yet)
 	}
 
-	final op read() throws Throwable{
+	final op read_and_parse() throws Throwable{
 		bb.clear();
 		final int n=socket_channel.read(bb);
 		System.out.println("websock "+Integer.toHexString(hashCode())+": sock_read: "+n+" bytes");

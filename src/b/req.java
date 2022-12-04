@@ -27,7 +27,7 @@ import db.DbTransaction;
 import db.Query;
 
 public final class req{
-	b.op parse() throws Throwable{
+	b.op read_and_parse() throws Throwable{
 		while(true){
 			if(ba_rem==0){
 				bb.clear();
@@ -1044,7 +1044,7 @@ public final class req{
 	}
 
 	private void sock_thread_read() throws Throwable{
-		switch(websock.read()){
+		switch(websock.read_and_parse()){
 		default:
 			throw new RuntimeException();
 		case read:

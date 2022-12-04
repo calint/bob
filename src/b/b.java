@@ -202,7 +202,7 @@ final public class b{
 				return;
 			}
 			// websocket runs on selector thread
-			switch(r.websock.read()){
+			switch(r.websock.read_and_parse()){
 			default:
 				throw new RuntimeException();
 			case read:
@@ -217,19 +217,18 @@ final public class b{
 				return;
 			}
 		}
-		while(true)
-			switch(r.parse()){
-			default:
-				throw new RuntimeException();
-			case read:
-				r.selection_key.interestOps(SelectionKey.OP_READ);
-				return;
-			case write:
-				r.selection_key.interestOps(SelectionKey.OP_WRITE);
-				return;
-			case noop:
-				return;
-			}
+		switch(r.read_and_parse()){
+		default:
+			throw new RuntimeException();
+		case read:
+			r.selection_key.interestOps(SelectionKey.OP_READ);
+			return;
+		case write:
+			r.selection_key.interestOps(SelectionKey.OP_WRITE);
+			return;
+		case noop:
+			return;
+		}
 	}
 	private static void write(final req r) throws Throwable{
 		if(r.is_sock()){
