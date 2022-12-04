@@ -82,6 +82,7 @@ public final class req{
 					break;
 				case state_content_read:
 					parse_content_read();
+					// state might have changed
 					if(state==state_waiting_run_page){
 						b.thread(this);
 						return b.op.noop;

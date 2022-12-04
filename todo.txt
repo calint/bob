@@ -1,3 +1,4 @@
+b
 [ ] fix "// todo" comments
 [x] content type for cached file from Map of suffix to content-type?
 [x] cookie: same-site
@@ -8,13 +9,58 @@
 [x]   cache
 [x] b.map_resource_to_path(String,String)
 [ ] req state to enum
-[o] dbo: better connection pool, close old connection etc
-[ ]   review code, the ugliness is overwhelming 
-[ ]   rework Db.initTransaction deintTransaction
+-------------------------------------------------------------------------------
+[x] dbo: better connection pool, close old connection etc
+[x]   review code, the ugliness is overwhelming. Db.createJdbcConnection blocks at exception.
+[x]   rework Db.initTransaction deintTransaction
 [x] rework the websock
 [x]   add send que
 [x]   fix edge case
-[ ]     full duplex with thread for send?
+[x]     full duplex with thread for send? no.
 [x] try b with 1B input buffer
 [x] try b with socket small in/out buffers
-[ ] dbo: log_sql()
+
+dbo
+[ ] log_sql()
+[o] javadoc
+[o] review code. search for "// todo" "// !" "// ?"
+[ ] Db.tableNameForJavaClass does not include package name
+[ ] Query.TableAliasMap: User -> u. if u present try us etc
+[o] removing referenced DbObject. check and possibly fail or update to null? DbClass.List<RelRef>. setting on db update_referring
+[x]   updates referring tables column to null
+[ ]   objects in cache not updated. evict all objects of the referring type or iterate through cache and set null where field refers to deleted object
+[x]   racing conditions. example object referring to deleted object is committed after the deletes. not resolvable
+[x]   index on the referring field for delete ... where
+[ ] Db.instance().makeConsistent() deleting RefN orphans, setting null on missing Ref etc 
+[ ] Db.instance().delete(Index) Db.instance().create(Index) for faster imports?
+[ ] check RelRef.set(id) vs RelRef.set(DbObject) check type? requires get() for id. still not safe. maybe when Db.mode_safe_ref_set=true
+[ ] tn.get(new Class[]{User.class,File.class},...) returns List<DbObject[]>
+[o] better connection pool
+[x]   thread safe
+[x]   wait if connection pool is empty or create new connections? wait.
+[ ]   close connection after a number of recycles and create a new one
+[o] Index(DbField...)
+[x]    Collation asc (default)
+[ ]    Collation desc
+[o] Query(IndexFt,String)
+[x]   IN BOOLEAN MODE (default)
+[ ]   IN NATURAL LANGUAGE MODE
+[ ]   IN NATURAL LANGUAGE MODE WITH QUERY EXPANSION
+[ ]   WITH QUERY EXPANSION
+[ ] class OID instead of integer
+[ ] FldString check string length vs field length at set? DbField.getSize()?
+[ ] FldFloat max from Float.MAX_VALUE can not be committed
+[ ] inheritance
+[ ]   example: select t1.* from File where t1.clspth like 'aaabbb%'; selects all objects that are File or inherits from File given File clspth=aaabbb
+[ ] refactor commands. example: rename main.User main.Person, rename main.User.name fullName, delete main.User.hashCode etc
+[ ] cluster
+[ ]   connections to multiple servers
+[ ]   write to all
+[ ]   read round robin
+[o] drivers for other (open source) rdbms. see https://www.databasestar.com/sql-data-types/
+[x]   mysql
+[ ]   sqlite
+[ ]   postgresql
+[ ]   oracle?
+[ ]   ms sql server?
+[ ]   ibm db2?
