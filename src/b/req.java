@@ -27,28 +27,34 @@ import db.DbTransaction;
 import db.Query;
 
 public final class req{
-	b.op read_and_parse() throws Throwable{
+	void process() throws Throwable{
 		while(true){
+			if(is_transfer()){
+				do_transfer();
+				if(is_transfer()){ // more writes to do?
+					return;
+				}
+				if(!is_connection_keepalive()){
+					close();
+					return;
+				}
+			}
 			if(ba_rem==0){
 				bb.clear();
 				final int n=socket_channel.read(bb);
-//			System.out.println("request " + Integer.toHexString(hashCode()) + ": read "+n);
-				if(n==0)
-					return b.op.read;// ? infloop
+				if(n==0){
+					selection_key.interestOps(SelectionKey.OP_READ);
+					return;
+				}
 				if(n==-1){
 					close();
-					return b.op.noop;
+					return;
 				}
 				thdwatch.input+=n;
 				bb.flip();
-//			System.out.println(toString());
 				ba=bb.array();
 				ba_pos=bb.position();
 				ba_rem=bb.remaining();
-//			if(b.print_requests){
-//				final String s=new String(ba,ba_pos,ba_rem);
-//				p(s);
-//			}
 			}
 			while(ba_rem>0){
 				switch(state){
@@ -70,11 +76,12 @@ public final class req{
 				case state_header_name:
 					parse_header_name();
 					// state might have changed after parse_header_name()->do_after_header()
-					if(state==state_transfer_buffers||state==state_transfer_file)
-						return b.op.write;
-					if(state==state_waiting_run_page){
+					if(is_transfer()){
+						return;
+					}
+					if(is_waiting_run_page()){
 						b.thread(this);
-						return b.op.noop;
+						return;
 					}
 					break;
 				case state_header_value:
@@ -83,9 +90,9 @@ public final class req{
 				case state_content_read:
 					parse_content_read();
 					// state might have changed
-					if(state==state_waiting_run_page){
+					if(is_waiting_run_page()){
 						b.thread(this);
-						return b.op.noop;
+						return;
 					}
 					break;
 				case state_content_upload:
@@ -95,7 +102,7 @@ public final class req{
 			}
 			if(state==state_next_request&&!is_connection_keepalive()){
 				close();
-				return b.op.noop;
+				return;
 			}
 		}
 	}
@@ -404,11 +411,22 @@ public final class req{
 		if(!path.exists())
 			return false;
 		if(path.isdir()){
-			path=path.get(b.default_directory_file);
-			if(!path.exists()||!path.isfile())
+			final path p=path.get(b.default_directory_file);
+			if(!p.exists()||!p.isfile())
 				return false;
+			path=p;
 		}
 		thdwatch.files++;
+		if(path.size()<=b.cache_files_maxsize){
+			final String suffix=path_str.substring(path_str.lastIndexOf('.')+1);
+			final byte[] content_type=b.get_content_type_for_file_suffix(suffix);
+			final chdresp cr=new chdresp_file(path,content_type);
+			file_and_resource_cache.put(path_str,cr);
+			reply(cr);
+			thdwatch._cachef++;
+			return true;
+		}
+
 		final long lastmod_l=path.lastmod();
 		final String etag="\""+lastmod_l+"\"";
 		final String client_etag=headers.get(hk_if_none_match);
@@ -492,28 +510,14 @@ public final class req{
 			transfer_file_remaining=range_to-range_from+1; // zero indexed inclusive adjustment
 
 		state=state_transfer_file;
-		do_transfer_file();
+		do_transfer_file(); // ? return value ignored
 		return true;
 	}
 
 	/** @return true if the file or resource has been cached. */
 	private boolean try_cache() throws Throwable{
 		chdresp cachedresp=file_and_resource_cache.get(path_str);
-		if(cachedresp==null){ // not in cache, try to cache a file
-			if(path.isdir())
-				path=path.get(b.default_directory_file);
-			if(!path.exists())
-				return false;
-			if(path.size()<=b.cache_files_maxsize){
-				final String suffix=path_str.substring(path_str.lastIndexOf('.')+1);
-				final byte[] content_type=b.get_content_type_for_file_suffix(suffix);
-				cachedresp=new chdresp_file(path,content_type);
-				file_and_resource_cache.put(path_str,cachedresp);
-				reply(cachedresp);
-				thdwatch._cachef++;
-				return true;
-			}
-			// file to big to cache
+		if(cachedresp==null){
 			return false;
 		}
 		// validate that the cached response is up to date
@@ -681,37 +685,38 @@ public final class req{
 	}
 
 	/** @return true if transfer is done, false if more writes are needed. */
-	boolean do_transfer() throws Throwable{
+	void do_transfer() throws Throwable{
 		if(state==state_transfer_file)
-			return do_transfer_file();
+			do_transfer_file();
 		else if(state==state_transfer_buffers)
-			return do_transfer_buffers();
+			do_transfer_buffers();
 		else
 			throw new IllegalStateException();
 	}
 
 	/** @return true if if transfer is done, more writes are needed. */
-	private boolean do_transfer_buffers() throws Throwable{
+	private void do_transfer_buffers() throws Throwable{
 		while(transfer_buffers_remaining!=0){
 			final long c=socket_channel.write(transfer_buffers);
 			if(c==0)
-				return false;
+				return;
 			transfer_buffers_remaining-=c;
 			thdwatch.output+=c;
 		}
 		state=state_next_request;
-		return true;
 	}
 
 	/** @return true if if transfer is done, more writes are needed. */
-	private boolean do_transfer_file() throws IOException{
+	private void do_transfer_file() throws IOException{
 		final int buf_size=b.transfer_file_write_size;
 		while(transfer_file_remaining!=0)
 			try{
 				final long n=transfer_file_remaining>buf_size?buf_size:transfer_file_remaining;
 				final long c=transfer_file_channel.transferTo(transfer_file_position,n,socket_channel);
-				if(c==0)
-					return false;
+				if(c==0){
+					selection_key.interestOps(SelectionKey.OP_WRITE);
+					return;
+				}
 				transfer_file_position+=c;
 				transfer_file_remaining-=c;
 				thdwatch.output+=c;
@@ -720,14 +725,14 @@ public final class req{
 				if(e instanceof IOException&&(msg.startsWith("Broken pipe")||msg.startsWith("Connection reset by peer")||msg.startsWith("sendfile failed")|| // ? android (when closing browser while transfering file)
 						msg.startsWith("An existing connection was forcibly closed by the remote host"))){
 					close();
-					return false;
+					return;
 				}
 				thdwatch.eagain++; // ? assuming. eventually bug
-				return false;
+				return;
 			}
 		transfer_file_channel.close();
 		state=state_next_request;
-		return true;
+		return;
 	}
 
 	private void parse_content_read(){
@@ -1044,41 +1049,11 @@ public final class req{
 	}
 
 	private void sock_thread_read() throws Throwable{
-		switch(websock.read_and_parse()){
-		default:
-			throw new RuntimeException();
-		case read:
-			selection_key.interestOps(SelectionKey.OP_READ);
-			selection_key.selector().wakeup();
-			return;
-		case write:
-			selection_key.interestOps(SelectionKey.OP_WRITE);
-			selection_key.selector().wakeup();
-			return;
-		case close:
-			close();
-			thdwatch.socks--;
-			return;
-		}
+		websock.read_and_parse();
 	}
 
 	private void sock_thread_write() throws Throwable{
-		switch(websock.write()){
-		default:
-			throw new RuntimeException();
-		case read:
-			selection_key.interestOps(SelectionKey.OP_READ);
-			selection_key.selector().wakeup();
-			break;
-		case write:
-			selection_key.interestOps(SelectionKey.OP_WRITE);
-			selection_key.selector().wakeup();
-			break;
-		case close:
-			close();
-			thdwatch.socks--;
-			break;
-		}
+		websock.write();
 	}
 
 	boolean is_waiting_write(){

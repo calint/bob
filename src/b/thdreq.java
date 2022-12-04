@@ -61,6 +61,7 @@ final class thdreq extends Thread{
 				r.close();
 				return;
 			}
+			// ? this is dubious. what if req has ba_rem left to do
 			r.selection_key.interestOps(SelectionKey.OP_READ);
 			r.selection_key.selector().wakeup();
 		}catch(Throwable e){

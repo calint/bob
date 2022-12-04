@@ -1,0 +1,28 @@
+HTTP/1.1 200 OK
+Content-Length: 485
+ETag: "1670165801062"
+Connection: Keep-Alive
+
+*{font-size:1em;padding:0;margin:0;border:0;outline:0;white-space:pre;font-family:inherit;font-size:inherit;background:inherit;color:inherit}
+html{font-family:monospace}
+table{border-collapse:collapse;empty-cells:show}
+table td{vertical-align:top}
+table th{vertical-align:bottom}
+ul{list-style:none inside}
+ol{list-style-position:inside}
+a,a:visited{text-decoration:none;color:#00a;transition:all .3s ease-in-out}
+a:focus,a:hover,a:active{color:red;text-shadow:0 0 1em rgba(0,0,0,.7)}
+HTTP/1.1 200 OK
+Content-Length: 485
+ETag: "1670165801062"
+Connection: Keep-Alive
+
+*{font-size:1em;padding:0;margin:0;border:0;outline:0;white-space:pre;font-family:inherit;font-size:inherit;background:inherit;color:inherit}
+html{font-family:monospace}
+table{border-collapse:collapse;empty-cells:show}
+table td{vertical-align:top}
+table th{vertical-align:bottom}
+ul{list-style:none inside}
+ol{list-style-position:inside}
+a,a:visited{text-decoration:none;color:#00a;transition:all .3s ease-in-out}
+a:focus,a:hover,a:active{color:red;text-shadow:0 0 1em rgba(0,0,0,.7)}

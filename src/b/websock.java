@@ -1,5 +1,6 @@
 package b;
 import java.nio.ByteBuffer;
+import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
 import java.security.MessageDigest;
 import java.util.LinkedList;
@@ -66,16 +67,20 @@ public abstract class websock{
 		return op.read; // response sent, wait for packet (assumes client hasn't sent aanything yet)
 	}
 
-	final op read_and_parse() throws Throwable{
+	final void read_and_parse() throws Throwable{
 		bb.clear();
 		final int n=socket_channel.read(bb);
 		System.out.println("websock "+Integer.toHexString(hashCode())+": sock_read: "+n+" bytes");
 		thdwatch.input+=n;
-		if(n==0)
-			return op.read;// ? infloop?
+		if(n==0){
+			rq.selection_key.interestOps(SelectionKey.OP_READ);
+			return;// ? infloop?
+		}
 		if(n==-1){
 			st=state.closed;
-			return op.close; // on_connection_lost called when request is closed
+			rq.close();
+			thdwatch.socks--;
+			return; // on_connection_lost called when request is closed
 		}
 		bb.flip();
 		while(true){
@@ -96,7 +101,8 @@ public abstract class websock{
 				final int opcode=b0&0xf;
 				if(opcode==8){// rfc6455#section-5.5.1
 					st=state.closed;
-					return op.close; // onclose called when request is closed
+					rq.close();
+					return;
 				}
 				// todo handle the other opcodes
 				// https://www.rfc-editor.org/rfc/rfc6455#section-5.2
@@ -161,9 +167,11 @@ public abstract class websock{
 						// onpayload->on_message might have done send that is incomplete. request write
 						// from thdreq which will start calling sock_write until send is done.
 						// When sock_write is done sending it will request a read.
-						return op.write;
+						rq.selection_key.interestOps(SelectionKey.OP_WRITE);
+						return;
 					}
-					return op.read; // done. request read.
+					rq.selection_key.interestOps(SelectionKey.OP_READ);
+					return; // done. request read.
 				}
 			}
 		}
@@ -190,7 +198,7 @@ public abstract class websock{
 		request_bb=null;
 	}
 	/** Called by the request or by send(...) */
-	final op write() throws Throwable{
+	final void write() throws Throwable{
 		synchronized(send_que){
 			while(send_bba!=null){
 				final long n=socket_channel.write(send_bba);
@@ -200,15 +208,17 @@ public abstract class websock{
 					if(b.hasRemaining()){
 						// if called from thdreq then request more writes otherwise return value is
 						// ignored
-						return op.write;
+						rq.selection_key.interestOps(SelectionKey.OP_WRITE);
+						rq.selection_key.selector().wakeup();
+						return;
 					}
 				}
 				send_bba=send_que.pollFirst();
 			}
 			// if called from thdreq then request read otherwise return value is ignored
-			return op.read;
+			rq.selection_key.interestOps(SelectionKey.OP_READ);
+			rq.selection_key.selector().wakeup();
 		}
-
 	}
 
 	abstract protected void on_opened() throws Throwable;
@@ -252,8 +262,7 @@ public abstract class websock{
 				send_bba=bbout;
 			}
 		}
-		write(); // return ignored because response_bba will be set to null when write is
-					// finished
+		write(); // ! not always on thread 
 	}
 
 	private ByteBuffer make_header(final int size_of_data_to_send,final boolean text_mode){

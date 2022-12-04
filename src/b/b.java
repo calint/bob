@@ -30,7 +30,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.TimeZone;
-
 import db.Db;
 final public class b{
 	public final static String strenc="utf-8";
@@ -67,10 +66,10 @@ final public class b{
 	public static @conf @unit(name="B") int io_buf_B=64*K;
 //	public static @conf @unit(name="B")int chunk_B=4*K;
 	public static @conf @unit(name="B") int chunk_B=16*K;
-	public static @conf @unit(name="B") int reqinbuf_B=16*K;
+//	public static @conf @unit(name="B") int reqinbuf_B=16*K;
 //	public static @conf @unit(name="B")int reqinbuf_B=4*K;
 //	public static @conf @unit(name="B")int reqinbuf_B=16;
-//	public static @conf @unit(name="B")int reqinbuf_B=1;
+	public static @conf @unit(name="B")int reqinbuf_B=1;
 	public static @conf String default_directory_file="index.html";
 //	public static @conf String default_package_class="$";
 	public static @conf boolean gc_before_stats=false;
@@ -134,7 +133,6 @@ final public class b{
 		}
 		Db.instance().init("jdbc:mysql://"+b.bapp_jdbc_host+"/"+b.bapp_jdbc_db+"?verifyServerCertificate=false&useSSL=true&ssl-mode=REQUIRED",b.bapp_jdbc_user,b.bapp_jdbc_password,Integer.parseInt(b.bapp_jdbc_ncons));
 
-		b.pl("opening port "+b.server_port);
 		final ServerSocketChannel ssc=ServerSocketChannel.open();
 		ssc.configureBlocking(false);
 		final InetSocketAddress isa=new InetSocketAddress(Integer.parseInt(server_port));
@@ -145,6 +143,8 @@ final public class b{
 			new thdwatch().start();
 		else
 			stats_to(out);
+		b.pl("");
+		b.pl("port open: "+b.server_port);
 		final Selector sel=Selector.open();
 		ssc.register(sel,SelectionKey.OP_ACCEPT);
 		Runtime.getRuntime().addShutdownHook(new jvmsdh());
@@ -167,8 +167,8 @@ final public class b{
 						r.socket_channel=ssc.accept();
 						r.socket_channel.configureBlocking(false);
 
-//					r.socket_channel.socket().setReceiveBufferSize(1);
-//					r.socket_channel.socket().setSendBufferSize(1);
+					r.socket_channel.socket().setReceiveBufferSize(1);
+					r.socket_channel.socket().setSendBufferSize(1);
 
 						if(tcpnodelay)
 							r.socket_channel.setOption(StandardSocketOptions.TCP_NODELAY,true);
@@ -176,7 +176,7 @@ final public class b{
 						read(r);
 						continue;
 					}
-					sk.interestOps(0);
+					sk.interestOps(0); // ? why?
 					final req r=(req)sk.attachment();
 					if(sk.isReadable()){
 						thdwatch.ioread++;
@@ -198,87 +198,33 @@ final public class b{
 		if(r.is_sock()){
 			if(r.websock.is_threaded()){
 				r.set_waiting_sock_thread_read();
-				thread(r);
+				b.thread(r);
 				return;
 			}
-			// websocket runs on selector thread
-			switch(r.websock.read_and_parse()){
-			default:
-				throw new RuntimeException();
-			case read:
-				r.selection_key.interestOps(SelectionKey.OP_READ);
-				return;
-			case write:
-				r.selection_key.interestOps(SelectionKey.OP_WRITE);
-				return;
-			case close:
-				r.close();
-				thdwatch.socks--;
-				return;
-			}
-		}
-		switch(r.read_and_parse()){
-		default:
-			throw new RuntimeException();
-		case read:
-			r.selection_key.interestOps(SelectionKey.OP_READ);
-			return;
-		case write:
-			r.selection_key.interestOps(SelectionKey.OP_WRITE);
-			return;
-		case noop:
+			r.websock.read_and_parse();
 			return;
 		}
+		r.process();
 	}
 	private static void write(final req r) throws Throwable{
 		if(r.is_sock()){
 			if(r.websock.is_threaded()){
 				r.set_waiting_sock_thread_write();
-				thread(r);
+				b.thread(r);
 				return;
 			}
-			// websocket runs on selector thread
-			switch(r.websock.write()){
-			default:
-				throw new RuntimeException();
-			case read:
-				r.selection_key.interestOps(SelectionKey.OP_READ);
-				return;
-			case write:
-				r.selection_key.interestOps(SelectionKey.OP_WRITE);
-				return;
-			case close:
-				r.close();
-				thdwatch.socks--;
-				return;
-			}
+			r.websock.write();
+			return;
 		}
-		if(r.is_waiting_write()){
+
+		if(r.is_waiting_write()){ // is oschunked blocked waiting for write?
 			synchronized(r){
 				r.notify();
 			}
 			return;
 		}
-		if(r.is_transfer()){
-			if(!r.do_transfer()){
-				r.selection_key.interestOps(SelectionKey.OP_WRITE);
-				return;
-			}
-			if(!r.is_connection_keepalive()){
-				r.close();
-				return;
-			}
-			if(r.is_buffer_empty()){
-				r.selection_key.interestOps(SelectionKey.OP_READ);
-				return;
-			}
-			read(r); // ? bug? may cause stackrain
-			return;
-		}
-		if(r.is_waiting_run_page())
-			thread(r);
-
-		throw new RuntimeException();
+		
+		r.process();
 	}
 	static void thread(final req r){
 		r.selection_key.interestOps(0);// ? must?

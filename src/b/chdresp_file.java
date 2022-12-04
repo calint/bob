@@ -9,7 +9,8 @@ final class chdresp_file extends chdresp{
 	chdresp_file(final path p,final byte[] content_type) throws Throwable{
 		path=p;
 		this.content_type=content_type;
-		validate(System.currentTimeMillis());
+		if(!validate(System.currentTimeMillis()))
+			throw new RuntimeException();
 	}
 
 	/** @return true if path is valid, false to evict it from the cache */
