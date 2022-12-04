@@ -58,9 +58,9 @@ public final class req{
 					method_length=0;
 					uri_sb.setLength(0);
 					uri_length=0;
-					path_s=null;
+					path_str=null;
 					path=null;
-					query_s=null;
+					query_str=null;
 					prot_length=0;
 					header_name_length=0;
 					header_name_sb.setLength(0);
@@ -192,11 +192,11 @@ public final class req{
 		final String uri_encoded=uri_sb.toString().trim();
 		final int i=uri_encoded.indexOf('?');
 		if(i==-1){
-			path_s=b.urldecode(uri_encoded);
-			query_s="";
+			path_str=b.urldecode(uri_encoded);
+			query_str="";
 		}else{
-			path_s=b.urldecode(uri_encoded.substring(0,i));
-			query_s=uri_encoded.substring(i+1);
+			path_str=b.urldecode(uri_encoded.substring(0,i));
+			query_str=uri_encoded.substring(i+1);
 		}
 		state=state_header_name;
 	}
@@ -273,7 +273,7 @@ public final class req{
 					throw new RuntimeException("nocookie at create dir. path:"+uri_sb);
 				final String[] q=content_type.split(";");
 				final String lastmod_s=q[1];
-				final path p=b.path(b.sessions_dir).get(session_id).get(path_s);
+				final path p=b.path(b.sessions_dir).get(session_id).get(path_str);
 				if(!p.exists())
 					p.mkdirs();
 				if(!p.isdir())
@@ -306,7 +306,7 @@ public final class req{
 				// final String md5=q[3];
 				// final String range=q[4];
 				try{
-					upload_path=b.path(b.sessions_dir).get(session_id).get(path_s);
+					upload_path=b.path(b.sessions_dir).get(session_id).get(path_str);
 				}catch(final Throwable t){
 					close();
 					throw t;
@@ -334,7 +334,7 @@ public final class req{
 			return;
 		}
 		try{
-			path=b.path(path_s);
+			path=b.path(path_str);
 		}catch(final Throwable t){
 			reply(h_http404,null,null,tobytes(b.stacktrace(t)));
 			close();
@@ -417,7 +417,7 @@ public final class req{
 		long range_to;
 		final ByteBuffer[] bb=new ByteBuffer[16];
 		int i=0;
-		final String suffix=path_s.substring(path_s.lastIndexOf('.')+1);
+		final String suffix=path_str.substring(path_str.lastIndexOf('.')+1);
 		final byte[] content_type=b.get_content_type_for_file_suffix(suffix);
 		if(range_s!=null){
 			final String[] s=range_s.split(s_equals);
@@ -491,17 +491,17 @@ public final class req{
 
 	/** @return true if the file or resource has been cached. */
 	private boolean try_cache() throws Throwable{
-		chdresp cachedresp=file_and_resource_cache.get(path_s);
+		chdresp cachedresp=file_and_resource_cache.get(path_str);
 		if(cachedresp==null){ // not in cache, try to cache a file
 			if(path.isdir())
 				path=path.get(b.default_directory_file);
 			if(!path.exists())
 				return false;
 			if(path.size()<=b.cache_files_maxsize){
-				final String suffix=path_s.substring(path_s.lastIndexOf('.')+1);
+				final String suffix=path_str.substring(path_str.lastIndexOf('.')+1);
 				final byte[] content_type=b.get_content_type_for_file_suffix(suffix);
 				cachedresp=new chdresp_file(path,content_type);
-				file_and_resource_cache.put(path_s,cachedresp);
+				file_and_resource_cache.put(path_str,cachedresp);
 				reply(cachedresp);
 				thdwatch._cachef++;
 				return true;
@@ -511,7 +511,7 @@ public final class req{
 		}
 		// validate that the cached response is up to date
 		if(!cachedresp.validate(System.currentTimeMillis())){
-			file_and_resource_cache.remove(path_s);
+			file_and_resource_cache.remove(path_str);
 			thdwatch._cachef--;
 			return false;
 		}
@@ -521,17 +521,17 @@ public final class req{
 
 	/** @return true if resource was cached and sent. */
 	private boolean try_resource() throws Throwable{
-		final String resource_path=b.get_resource_for_path(path_s);
+		final String resource_path=b.get_resource_for_path(path_str);
 		if(resource_path==null)
 			return false;
 
 		final InputStream is=req.class.getResourceAsStream(resource_path);
 		if(is==null)
 			return false;
-		final String suffix=path_s.substring(path_s.lastIndexOf('.')+1);
+		final String suffix=path_str.substring(path_str.lastIndexOf('.')+1);
 		final byte[] content_type=b.get_content_type_for_file_suffix(suffix);
 		final chdresp c=new chdresp_resource(is,content_type);
-		file_and_resource_cache.put(path_s,c);
+		file_and_resource_cache.put(path_str,c);
 		reply(c);
 		return true;
 	}
@@ -809,9 +809,9 @@ public final class req{
 	void run_page() throws Throwable{
 		state=state_run_page;
 
-		final Class<?> cls=b.get_class_for_path(path_s);
+		final Class<?> cls=b.get_class_for_path(path_str);
 		if(cls==null){
-			xwriter x=new xwriter().p(path_s).nl().nl().pl("Resource not found.");
+			xwriter x=new xwriter().p(path_str).nl().nl().pl("Resource not found.");
 			reply(h_http404,null,null,tobytes(x.toString()));
 			return;
 		}
@@ -824,7 +824,7 @@ public final class req{
 		}
 
 		if(sock.class.isAssignableFrom(cls)){// start a socket
-			System.out.println("request "+Integer.toHexString(hashCode())+": socket at "+path_s);
+			System.out.println("request "+Integer.toHexString(hashCode())+": socket at "+path_str);
 			state=state_sock;
 			sck=(sock)cls.getConstructor().newInstance();
 			switch(sck.sock_init(headers,socket_channel,ByteBuffer.wrap(ba,ba_pos,ba_rem))){
@@ -871,7 +871,7 @@ public final class req{
 
 	/** Called from run_page(). */
 	private void run_page_do(final DbTransaction tn,final Class<?> cls) throws Throwable{
-		final sessionobj dbo_root_elem=get_session_path(path_s);
+		final sessionobj dbo_root_elem=get_session_path(path_str);
 		a root_elem=(a)dbo_root_elem.object();
 		if(root_elem==null){
 			root_elem=(a)cls.getConstructor().newInstance();
@@ -1169,11 +1169,11 @@ public final class req{
 	}
 
 	public String path(){
-		return path_s;
+		return path_str;
 	}
 
 	public String query(){
-		return query_s;
+		return query_str;
 	}
 
 //	public session session(){return ses;}
@@ -1225,8 +1225,8 @@ public final class req{
 	private int method_length;
 	private final StringBuilder uri_sb=new StringBuilder(128);
 	private int uri_length;
-	private String path_s;
-	private String query_s;
+	private String path_str;
+	private String query_str;
 	private path path;
 	private int prot_length;
 	private int header_name_length;
