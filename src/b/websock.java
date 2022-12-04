@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * Use case is request response chain. Full duplex not supported on one thread.
  */
-public abstract class websock {
+public abstract class websock{
 	private static enum state{
 		handshake,parse_next_frame,parse_data,closed
 	}
@@ -27,27 +27,43 @@ public abstract class websock {
 	private boolean is_masked;
 	private final byte[] mask_key=new byte[4];
 	protected boolean is_threaded=true;
-	
-	final public boolean sock_is_threaded() {
+	private String session_id;
+
+	final boolean is_threaded(){
 		return is_threaded;
 	}
-	
+
+	final protected String session_id(){
+		return session_id;
+	}
+
+	/** @param is_threaded true to handle on_message on a thread. If websock is not threaded it will run on the server thread potentially blocking. */
+	public websock(boolean is_threaded){
+		this.is_threaded=is_threaded;
+	}
+
 	/** @param bb byte buffer might have more data to be read */
-	final public op sock_init(final Map<String,String> headers,final SocketChannel sc,final ByteBuffer bb) throws Throwable{
+	final op init(final Map<String,String> headers,final SocketChannel sc,final ByteBuffer bb,final String session_id,final boolean session_id_set) throws Throwable{
 		socket_channel=sc;
 		this.bb=bb;
+		this.session_id=session_id;
 		// rfc6455#section-1.3
 		// Opening Handshake
 		final String key=headers.get("sec-websocket-key");
 		final String s=key+"258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
 		final byte[] sha1ed=MessageDigest.getInstance("SHA-1").digest(s.getBytes());
 		final String replkey=base64.encodeToString(sha1ed,true);
-		final ByteBuffer bbo=ByteBuffer.allocate(b.K>>2);
+		final ByteBuffer bbo=ByteBuffer.allocate(b.K);
 //		final String prot=hdrs.get("sec-webSocket-protocol");
 		bbo.put("HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: ".getBytes());
 		bbo.put(replkey.getBytes());
 //		bbo.put("\r\nSec-WebSocket-Protocol: chat".getBytes());
 		// ? add session cookie
+		if(session_id_set){
+			bbo.put(req.hk_set_cookie);
+			bbo.put(session_id.getBytes());
+			bbo.put(req.hkv_set_cookie_append);
+		}
 		bbo.put("\r\n\r\n".getBytes());
 		bbo.flip();
 		while(bbo.hasRemaining()&&sc.write(bbo)!=0);
@@ -58,9 +74,8 @@ public abstract class websock {
 		return op.read; // response sent, wait for packet (assumes client hasn't sent begun sending
 						// anything yet)
 	}
-	protected void on_opened(Map<String,String> headers) throws Throwable{
-	}
-	final public op sock_read() throws Throwable{
+
+	final op read() throws Throwable{
 		bb.clear();
 		final int n=socket_channel.read(bb);
 		System.out.println("websock "+Integer.toHexString(hashCode())+": sock_read: "+n+" bytes");
@@ -184,7 +199,7 @@ public abstract class websock {
 		request_bb=null;
 	}
 	/** Called by the request or by send(...) */
-	final public op sock_write() throws Throwable{
+	final op write() throws Throwable{
 		synchronized(send_que){
 			while(send_bba!=null){
 				final long n=socket_channel.write(send_bba);
@@ -205,25 +220,21 @@ public abstract class websock {
 
 	}
 
-	final public void sock_on_closed() throws Throwable{
-		on_closed();
-	}
+	abstract protected void on_opened(Map<String,String> headers) throws Throwable;
 
 	/** Called when the web socket has been closed. */
-	protected void on_closed() throws Throwable{
-	}
+	abstract protected void on_closed() throws Throwable;
 
 	/**
 	 * Called when a message has been decoded. ByteBuffer position is at start of data and limit marks the end of data.
 	 */
-	protected void on_message(ByteBuffer bb) throws Throwable{
-	}
+	abstract protected void on_message(ByteBuffer bb) throws Throwable;
 
-	final public void send(String s) throws Throwable{
+	final protected void send(String s) throws Throwable{
 		send(new ByteBuffer[]{ByteBuffer.wrap(s.getBytes())},true);
 	}
 
-	final public void send(ByteBuffer bb,final boolean textmode) throws Throwable{
+	final protected void send(ByteBuffer bb,final boolean textmode) throws Throwable{
 		send(new ByteBuffer[]{bb},textmode);
 //		if(response_bba!=null)throw new Error("overwrite");//?
 //		// rfc6455#section-5.2
@@ -232,7 +243,7 @@ public abstract class websock {
 //		response_bba=new ByteBuffer[]{make_header(ndata,textmode),bb};
 //		sock_write(); // return ignored because bbos will be set to null when write is finished
 	}
-	final public void send(final ByteBuffer[] bba,final boolean textmode) throws Throwable{
+	final protected void send(final ByteBuffer[] bba,final boolean textmode) throws Throwable{
 		int nbytes_to_send=0;
 		for(final ByteBuffer b:bba)
 			nbytes_to_send+=b.remaining();
@@ -250,8 +261,8 @@ public abstract class websock {
 				send_bba=bbout;
 			}
 		}
-		sock_write(); // return ignored because response_bba will be set to null when write is
-						// finished
+		write(); // return ignored because response_bba will be set to null when write is
+					// finished
 	}
 
 	private ByteBuffer make_header(final int size_of_data_to_send,final boolean text_mode){

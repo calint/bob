@@ -196,13 +196,13 @@ final public class b{
 	}
 	private static void read(final req r) throws Throwable{
 		if(r.is_sock()){
-			if(r.websock.sock_is_threaded()){
+			if(r.websock.is_threaded()){
 				r.set_waiting_sock_thread_read();
 				thread(r);
 				return;
 			}
 			// websocket runs on selector thread
-			switch(r.websock.sock_read()){
+			switch(r.websock.read()){
 			default:
 				throw new RuntimeException();
 			case read:
@@ -233,13 +233,13 @@ final public class b{
 	}
 	private static void write(final req r) throws Throwable{
 		if(r.is_sock()){
-			if(r.websock.sock_is_threaded()){
+			if(r.websock.is_threaded()){
 				r.set_waiting_sock_thread_write();
 				thread(r);
 				return;
 			}
 			// websocket runs on selector thread
-			switch(r.websock.sock_write()){
+			switch(r.websock.write()){
 			default:
 				throw new RuntimeException();
 			case read:

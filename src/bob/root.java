@@ -1,6 +1,7 @@
 package bob;
 
 import b.a;
+import b.req;
 import b.xwriter;
 
 public class root extends a{
@@ -8,7 +9,7 @@ public class root extends a{
 	private int counter=0;
 	public a txt;
 	public a server_id;
-	
+
 	public root(){
 		server_id.set(b.b.id);
 	}
@@ -20,6 +21,7 @@ public class root extends a{
 		x.style_();
 		x.pl();
 		x.p("server: ").span(server_id).nl();
+		x.p("sesion id: ").p(req.get().session_id()).nl();
 		x.inptxt(txt).p(" ");
 		x.ax(this,"clk","click me");
 	}

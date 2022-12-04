@@ -10,6 +10,10 @@ final public class websocket2 extends websock{
 	private boolean is_closed;
 	private String session_id;
 
+	public websocket2(){
+		super(true);
+	}
+
 	private class thd extends Thread{
 		thd(){
 			super("websocket "+(++nthreads));

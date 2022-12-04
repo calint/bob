@@ -818,13 +818,12 @@ public final class req{
 			pl("new session "+session_id);
 			thdwatch.sessions++;
 		}
-		// ! new session id is not set by websocket
 
 		if(websock.class.isAssignableFrom(cls)){// start a socket
 			System.out.println("request "+Integer.toHexString(hashCode())+": socket at "+path_str);
 			state=state_sock;
 			websock=(websock)cls.getConstructor().newInstance();
-			switch(websock.sock_init(headers,socket_channel,ByteBuffer.wrap(ba,ba_pos,ba_rem))){
+			switch(websock.init(headers,socket_channel,ByteBuffer.wrap(ba,ba_pos,ba_rem),session_id,session_id_set)){
 			default:
 				throw new IllegalStateException();
 			case read:
@@ -839,6 +838,7 @@ public final class req{
 				socket_channel.close();
 				break;
 			}
+			session_id_set=false; // ? probably unnecessary since request is in websocket mode here
 			return;
 		}
 
@@ -1043,7 +1043,7 @@ public final class req{
 	}
 
 	private void sock_thread_read() throws Throwable{
-		switch(websock.sock_read()){
+		switch(websock.read()){
 		default:
 			throw new RuntimeException();
 		case read:
@@ -1062,7 +1062,7 @@ public final class req{
 	}
 
 	private void sock_thread_write() throws Throwable{
-		switch(websock.sock_write()){
+		switch(websock.write()){
 		default:
 			throw new RuntimeException();
 		case read:
@@ -1105,7 +1105,7 @@ public final class req{
 		selection_key=null;
 		try{
 			if(is_sock())
-				websock.sock_on_closed();
+				websock.on_closed();
 		}catch(final Throwable t){
 			b.log(t);
 		}
@@ -1261,10 +1261,10 @@ public final class req{
 	private final static byte[] h_http304="HTTP/1.1 304 Not Modified".getBytes();
 	final static byte[] h_http403="HTTP/1.1 403 Forbidden".getBytes();
 	private final static byte[] h_http404="HTTP/1.1 404 Not Found".getBytes();
-	private final static byte[] hk_set_cookie="\r\nSet-Cookie: i=".getBytes();
+	final static byte[] hk_set_cookie="\r\nSet-Cookie: i=".getBytes();
 	// allow sites to run without ssl
 //	private final static byte[]hkv_set_cookie_append =";path=/;expires=Thu, 31-Dec-2099 00:00:00 GMT;Secure;SameSite=Lax".getBytes();
-	private final static byte[] hkv_set_cookie_append=";path=/;expires=Thu, 31-Dec-2099 00:00:00 GMT;SameSite=Lax".getBytes();
+	final static byte[] hkv_set_cookie_append=";path=/;expires=Thu, 31-Dec-2099 00:00:00 GMT;SameSite=Lax".getBytes();
 	private final static byte[] hkp_transfer_encoding_chunked="\r\nTransfer-Encoding: chunked".getBytes();
 	private final static byte[] hkp_accept_ranges_byte="\r\nAccept-Ranges: bytes".getBytes();
 	private final static byte[] hk_content_range_bytes="\r\nContent-Range: bytes ".getBytes();
