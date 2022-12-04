@@ -43,7 +43,7 @@ final public class b{
 	public final static long P=K*T;
 	public final static String pathsep="/";
 	public static @conf String hello="public domain server #1";
-	public static String id=""+(int)Math.floor(Math.random()*10000);// ? fixedwidth
+	public static String id=""+Integer.toHexString((int)Math.floor(Math.random()*Short.MAX_VALUE));
 	public static @conf String root_dir=".";
 	public static @conf(reboot=true) String server_port="8888";
 //	public static @conf boolean print_requests=false;
@@ -92,7 +92,7 @@ final public class b{
 	public static PrintStream out=System.out;
 	public static PrintStream err=System.err;
 
-	public static String bapp_class="c.application";
+	public static String bapp_class="bob.app";
 	public static String bapp_jdbc_host="localhost:3306";
 	public static String bapp_jdbc_db="dbo";
 	public static String bapp_jdbc_user="user";

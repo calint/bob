@@ -1,4 +1,4 @@
-package c;
+package bob;
 
 import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
@@ -11,13 +11,16 @@ import b.threadedsock;
 import b.websock;
 import b.xwriter;
 
-final public class bob_websocket extends websock implements threadedsock{
+final public class sock extends websock implements threadedsock{
 	private final static String axfld="$";
-	private bob root=new bob();
+	public static String root_class_name="bob.root";
+	protected a root;
 
-	synchronized final @Override protected void on_opened(final Map<String,String> headers) throws Throwable{
+	final @Override protected void on_opened(final Map<String,String> headers) throws Throwable{
 		System.out.println("websocket "+Integer.toHexString(hashCode())+": on_opened");
-		root.set("<b>hello world</b>");
+		// todo load root from db or create new
+		root=(a)Class.forName(root_class_name).getConstructor().newInstance();
+
 		final xwriter xjs=new xwriter();
 		xwriter x=xjs.xub(root,true,false);
 		root.to(x);
@@ -25,12 +28,14 @@ final public class bob_websocket extends websock implements threadedsock{
 		send(xjs.toString());
 	}
 
-	@Override protected void on_message(ByteBuffer bb) throws Throwable{
+	final @Override protected void on_message(ByteBuffer bb) throws Throwable{
 		System.out.println("websocket "+Integer.toHexString(hashCode())+": on_message size:"+bb.remaining());
-//		System.out.println(new String(bb.array(),bb.position(),bb.remaining()));
-		HashMap<String,String>content=populate_content_map_from_buffer(bb);
+		System.out.println(new String(bb.array(),bb.position(),bb.remaining()));
+		System.out.println("-- - -- ------- -- - - - - -- - -");
+
+		HashMap<String,String> content=populate_content_map_from_buffer(bb);
 		System.out.println(content);
-		
+
 		// ajax post
 		String ajax_command_string="";
 		for(final Map.Entry<String,String> me:content.entrySet()){
@@ -99,8 +104,9 @@ final public class bob_websocket extends websock implements threadedsock{
 		send(msg);
 	}
 
-	synchronized final @Override protected void on_closed() throws Throwable{
+	final @Override protected void on_closed() throws Throwable{
 		System.out.println("websocket "+Integer.toHexString(hashCode())+": on_closed");
+		// todo store root in db
 	}
 
 	private static HashMap<String,String> populate_content_map_from_buffer(final ByteBuffer content_bb) throws Throwable{

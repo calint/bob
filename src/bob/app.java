@@ -1,6 +1,10 @@
-package c;
+package bob;
 
 import b.bapp;
+import c.health_check;
+import c.shell;
+import c.websocket;
+import c.websocket2;
 import db.Db;
 import db.test.Book;
 import db.test.DataBinary;
@@ -10,14 +14,14 @@ import db.test.Game;
 import db.test.TestObj;
 import db.test.User;
 
-public class application implements bapp {
-	private static application inst;
+public final class app implements bapp {
+	private static app inst;
 
-	public static application instance() {
+	public static app instance() {
 		return inst;
 	}
 
-	public application() {
+	public app() {
 		inst = this;
 	}
 
@@ -40,8 +44,9 @@ public class application implements bapp {
 		b.b.set_path_to_class("/",shell.class);
 		b.b.set_path_to_class("/websocket",websocket.class);
 		b.b.set_path_to_class("/websocket2",websocket2.class);
-		b.b.set_path_to_class("/bob/websocket",bob_websocket.class);
+		b.b.set_path_to_class("/bob/websocket",bob.sock.class);
 		b.b.set_path_to_class("/health-check",health_check.class);
+		
 //		db.init("jdbc:mysql://localhost:3306/testdb", "c", "password", 5);
 //		db.init("jdbc:mysql://" + b.bapp_jdbc_host + "/" + b.bapp_jdbc_db
 //				+ "?allowPublicKeyRetrieval=true&useSSL=false", b.bapp_jdbc_user, b.bapp_jdbc_password,

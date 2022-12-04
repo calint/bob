@@ -1,14 +1,16 @@
-package c;
+package bob;
 
 import b.a;
 import b.xwriter;
 
-public class bob extends a{
+public class root extends a{
 	static final long serialVersionUID=3;
 	private int counter=0;
 	public a txt;
+	public a server_id;
 	
-	public bob(){
+	public root(){
+		server_id.set(b.b.id);
 	}
 
 	public void to(final xwriter x) throws Throwable{
@@ -17,6 +19,7 @@ public class bob extends a{
 		x.css(txt,"border-style:dotted;border-width:1px;border-color:green");
 		x.style_();
 		x.pl();
+		x.p("server: ").span(server_id).nl();
 		x.inptxt(txt).p(" ");
 		x.ax(this,"clk","click me");
 	}
