@@ -55,40 +55,9 @@ public final class req{
 				default:
 					throw new RuntimeException();
 				case state_next_request:
-					method_length=0;
-					uri_sb.setLength(0);
-					uri_length=0;
-					path_str=null;
-					path=null;
-					query_str=null;
-					prot_length=0;
-					header_name_length=0;
-					header_name_sb.setLength(0);
-					header_value_length=0;
-					header_value_sb.setLength(0);
-					headers_count=0;
-					headers.clear();
-					session_id=null;
-					session_id_set=false;
-					content_bb=null;
-					content_type=null;
-					content_remaining_to_read=0;
-					content.clear();
-					transfer_buffers=null;
-					transfer_buffers_remaining=0;
-					transfer_file_channel=null;
-					transfer_file_position=0;
-					transfer_file_remaining=0;
-					waiting_write=false;
-					upload_path=null;
-					upload_channel=null;
-					upload_lastmod_s=null;
-					websock=null;
-					waiting_sock_thread_read=false;
-					waiting_sock_thread_write=false;
-
-					state=state_method;// fallthrough
-
+					reset();
+					state=state_method;
+					// fallthrough
 				case state_method:
 					parse_method();
 					break;
@@ -128,6 +97,40 @@ public final class req{
 				return b.op.noop;
 			}
 		}
+	}
+
+	private void reset(){
+		method_length=0;
+		uri_sb.setLength(0);
+		uri_length=0;
+		path_str=null;
+		path=null;
+		query_str=null;
+		prot_length=0;
+		header_name_length=0;
+		header_name_sb.setLength(0);
+		header_value_length=0;
+		header_value_sb.setLength(0);
+		headers_count=0;
+		headers.clear();
+		session_id=null;
+		session_id_set=false;
+		content_bb=null;
+		content_type=null;
+		content_remaining_to_read=0;
+		content.clear();
+		transfer_buffers=null;
+		transfer_buffers_remaining=0;
+		transfer_file_channel=null;
+		transfer_file_position=0;
+		transfer_file_remaining=0;
+		waiting_write=false;
+		upload_path=null;
+		upload_channel=null;
+		upload_lastmod_s=null;
+		websock=null;
+		waiting_sock_thread_read=false;
+		waiting_sock_thread_write=false;
 	}
 
 	private void parse_method(){
@@ -1100,20 +1103,18 @@ public final class req{
 	}
 
 	void close(){
-//		selection_key.cancel();
-		selection_key=null;
-		try{
-			if(is_sock())
+		if(is_sock())
+			try{
 				websock.on_closed();
-		}catch(final Throwable t){
-			b.log(t);
-		}
+			}catch(final Throwable t){
+				b.log(t);
+			}
+		
 		try{
 			socket_channel.close();
 		}catch(final Throwable t){
 			b.log(t);
 		}
-		socket_channel=null;
 	}
 
 	boolean is_buffer_empty(){
