@@ -14,6 +14,7 @@ public abstract class websock{
 	enum op{
 		write,read,close
 	}
+	private req rq;
 	private SocketChannel socket_channel;
 	private ByteBuffer bb;
 	private state st=state.handshake;
@@ -25,8 +26,7 @@ public abstract class websock{
 	private int mask_i;
 	private boolean is_masked;
 	private final byte[] mask_key=new byte[4];
-	protected boolean is_threaded=true;
-	protected req rq;
+	private boolean is_threaded=true;
 
 	/** @param is_threaded true to handle on_message on a thread. If websock is not threaded it will run on the server thread potentially blocking. */
 	public websock(boolean is_threaded){
