@@ -13,13 +13,14 @@ final public class ws_app extends websock implements threadedsock{
 	synchronized final @Override protected void on_opened(final Map<String,String> headers) throws Throwable{
 		System.out.println("websocket "+Integer.toHexString(hashCode())+": on_opened");
 		root.set("hello world");
+		final xwriter x=new xwriter();
+		root.to(x);
+		send(x.toString());
 	}
 
 	@Override protected void on_message(ByteBuffer bb) throws Throwable{
 		System.out.println("websocket "+Integer.toHexString(hashCode())+": on_message size:"+bb.remaining());
-		final xwriter x=new xwriter();
-		root.to(x);
-		send(x.toString());
+		send(bb,true);
 	}
 
 	synchronized final @Override protected void on_closed() throws Throwable{
