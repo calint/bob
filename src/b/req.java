@@ -83,6 +83,9 @@ public final class req{
 					upload_path=null;
 					upload_channel=null;
 					upload_lastmod_s=null;
+					websock=null;
+					waiting_sock_thread_read=false;
+					waiting_sock_thread_write=false;
 
 					state=state_method;// fallthrough
 
@@ -815,6 +818,7 @@ public final class req{
 			pl("new session "+session_id);
 			thdwatch.sessions++;
 		}
+		// ! new session id is not set by websocket
 
 		if(websock.class.isAssignableFrom(cls)){// start a socket
 			System.out.println("request "+Integer.toHexString(hashCode())+": socket at "+path_str);
@@ -1019,22 +1023,7 @@ public final class req{
 		return state==state_sock;
 	}
 
-	websock.op sock_read() throws Throwable{
-		return websock.sock_read();
-	}
-
-	websock.op sock_write() throws Throwable{
-		return websock.sock_write();
-	}
-
 	// threaded socks
-	boolean sock_is_thread(){
-		return websock.sock_is_threaded();
-	}
-
-	private boolean waiting_sock_thread_read;
-	private boolean waiting_sock_thread_write;
-
 	void set_waiting_sock_thread_read(){
 		waiting_sock_thread_read=true;
 	}
@@ -1057,7 +1046,7 @@ public final class req{
 	}
 
 	private void sock_thread_read() throws Throwable{
-		switch(sock_read()){
+		switch(websock.sock_read()){
 		default:
 			throw new RuntimeException();
 		case read:
@@ -1081,7 +1070,7 @@ public final class req{
 	}
 
 	private void sock_thread_write() throws Throwable{
-		switch(sock_write()){
+		switch(websock.sock_write()){
 		default:
 			throw new RuntimeException();
 		case read:
@@ -1157,7 +1146,7 @@ public final class req{
 		final String h=headers.get("host");
 		final String[] ha=h.split(":");
 		if(ha.length<2)
-			return 80;
+			return 80; // ? SSL?
 		return Integer.parseInt(ha[1]);
 	}
 
@@ -1243,9 +1232,11 @@ public final class req{
 	private path upload_path;
 	private FileChannel upload_channel;
 	private String upload_lastmod_s;
-
-	private websock websock;
-
+	// websocket
+	websock websock;
+	private boolean waiting_sock_thread_read;
+	private boolean waiting_sock_thread_write;
+	// --
 	public final static String ajax_field_path_separator="-";
 
 	public static @conf int abuse_method_len=5;

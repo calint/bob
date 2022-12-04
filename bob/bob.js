@@ -2,10 +2,8 @@ debug_set=true;
 debug_js=true;
 debug_verbose=false;
 
-
 ui={}
 ui.is_dbg=true;
-ui.axconwait=false;
 $=function(eid){return document.getElementById(eid);}
 $d=function(v){console.log(v);}
 $s=function(eid,txt){

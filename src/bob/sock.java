@@ -16,7 +16,7 @@ final public class sock extends websock{
 	protected a root;
 
 	public sock(){
-		is_threaded=false;
+		is_threaded=true;
 	}
 
 	final @Override protected void on_opened(final Map<String,String> headers) throws Throwable{
