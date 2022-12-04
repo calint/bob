@@ -15,7 +15,7 @@ import b.xwriter;
 
 final public class sock extends websock implements threadedsock{
 	private final static String axfld="$";
-	public static String root_class_name="bob.root";
+	public String root_class_name="bob.root";
 	protected a root;
 
 	final @Override protected void on_opened(final Map<String,String> headers) throws Throwable{
@@ -40,11 +40,11 @@ final public class sock extends websock implements threadedsock{
 	}
 
 	final @Override protected void on_message(ByteBuffer bb) throws Throwable{
-		System.out.println("websocket "+Integer.toHexString(hashCode())+": on_message size:"+bb.remaining());
+		System.out.println("websocket "+Integer.toHexString(hashCode())+": on_message: "+bb.remaining()+" bytes");
 		System.out.println(new String(bb.array(),bb.position(),bb.remaining()));
 		System.out.println("-- - -- ------- -- - - - - -- - -");
 
-		HashMap<String,String> content=populate_content_map_from_buffer(bb);
+		final HashMap<String,String> content=populate_content_map_from_buffer(bb);
 		System.out.println(content);
 
 		// ajax post

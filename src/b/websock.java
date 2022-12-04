@@ -54,7 +54,7 @@ public class websock implements sock{
 	final public op sock_read() throws Throwable{
 		bb.clear();
 		final int n=socket_channel.read(bb);
-//		System.out.println("websock "+Integer.toHexString(hashCode())+": sock_read "+n+" bytes");
+		System.out.println("websock "+Integer.toHexString(hashCode())+": sock_read: "+n+" bytes");
 		thdwatch.input+=n;
 		if(n==0)
 			return op.read;// ? infloop?
@@ -179,7 +179,7 @@ public class websock implements sock{
 		synchronized(send_que){
 			while(send_bba!=null){
 				final long n=socket_channel.write(send_bba);
-				System.out.println("websock "+Integer.toHexString(hashCode())+": sock_write "+n+" bytes");
+				System.out.println("websock "+Integer.toHexString(hashCode())+": sock_write: "+n+" bytes");
 				thdwatch.output+=n;
 				for(ByteBuffer b:send_bba){ // check if the write is complete.
 					if(b.hasRemaining()){

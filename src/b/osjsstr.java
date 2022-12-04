@@ -59,4 +59,8 @@ final class osjsstr extends OutputStream{
 	@Override public void flush() throws IOException{
 		os.flush();
 	}
+	@Override public String toString(){
+		return os.toString();
+	}
+
 }
