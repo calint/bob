@@ -35,6 +35,8 @@ public class application implements bapp {
 		db.register(Game.class);
 		db.register(TestObj.class);
 		
+		b.b.set_file_suffix_to_content_type("java","text/plain");
+		
 		b.b.set_path_to_class("/",c.shell.class);
 		b.b.set_path_to_class("/websocket",c.websocket.class);
 		b.b.set_path_to_class("/websocket2",c.websocket2.class);

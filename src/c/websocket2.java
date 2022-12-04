@@ -38,7 +38,7 @@ final public class websocket2 extends websock implements threadedsock {
 	}
 
 	synchronized final @Override protected void on_opened(final Map<String, String> headers) throws Throwable {
-		session_id = req.get_session_id_from_cookie(headers);
+		session_id = req.get_session_id_from_headers(headers);
 		System.out.println("websocket " + Integer.toHexString(hashCode()) + ": onopen (session " + session_id + ")");
 		new thd().start();
 	}

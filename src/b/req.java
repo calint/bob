@@ -352,7 +352,7 @@ public final class req{
 		return;
 	}
 
-	public static String get_session_id_from_cookie(Map<String,String> headers){
+	public static String get_session_id_from_headers(Map<String,String> headers){
 		final String cookie=headers.get(req.hk_cookie);
 		if(cookie==null)
 			return null;
@@ -367,19 +367,21 @@ public final class req{
 	}
 
 	private boolean set_session_id_from_cookie(){
-		final String cookie=headers.get(hk_cookie);
-		if(cookie==null)
-			return false;
-		final String[] c1=cookie.split(";");
-		for(String cc:c1){
-			cc=cc.trim();
-			if(cc.startsWith("i=")){
-				session_id=cc.substring("i=".length());
-				session_id_set=false;
-				return true;
-			}
-		}
-		return false;
+		session_id=get_session_id_from_headers(headers);
+		return session_id!=null;
+//		final String cookie=headers.get(hk_cookie);
+//		if(cookie==null)
+//			return false;
+//		final String[] c1=cookie.split(";");
+//		for(String cc:c1){
+//			cc=cc.trim();
+//			if(cc.startsWith("i=")){
+//				session_id=cc.substring("i=".length());
+//				session_id_set=false;
+//				return true;
+//			}
+//		}
+//		return false;
 	}
 
 	private static String make_new_session_id(){
@@ -468,7 +470,7 @@ public final class req{
 			bb[i++]=ByteBuffer.wrap(hk_set_cookie);
 			bb[i++]=ByteBuffer.wrap(session_id.getBytes());
 			bb[i++]=ByteBuffer.wrap(hkv_set_cookie_append);
-			session_id_set=false;
+//			session_id_set=false;
 		}
 		if(connection_keep_alive)
 			bb[i++]=ByteBuffer.wrap(hkp_connection_keep_alive);
@@ -588,7 +590,7 @@ public final class req{
 				bb[i++]=ByteBuffer.wrap(hk_set_cookie);
 				bb[i++]=ByteBuffer.wrap(session_id.getBytes());
 				bb[i++]=ByteBuffer.wrap(hkv_set_cookie_append);
-				session_id_set=false;// cookie will be set
+//				session_id_set=false;// cookie will be set
 			}
 			if(content_type!=null){ // ? is it necessary in ranged requests?
 				bb[i++]=ByteBuffer.wrap(h_content_type);
@@ -616,7 +618,7 @@ public final class req{
 																	// of the remaining data, which is
 																	// additional_headers_insertion_position
 		transfer_buffers(bba);
-		session_id_set=false;
+//		session_id_set=false;
 	}
 
 	private void reply(final byte[] firstline,final byte[] lastMod,final byte[] content_type,final byte[] content) throws Throwable{
@@ -627,7 +629,7 @@ public final class req{
 			bb[bi++]=ByteBuffer.wrap(hk_set_cookie);
 			bb[bi++]=ByteBuffer.wrap(session_id.getBytes());
 			bb[bi++]=ByteBuffer.wrap(hkv_set_cookie_append);
-			session_id_set=false;
+//			session_id_set=false;
 		}
 		if(lastMod!=null){
 			bb[bi++]=ByteBuffer.wrap(h_last_modified);
@@ -970,7 +972,7 @@ public final class req{
 			bb_reply[bbi++]=ByteBuffer.wrap(hk_set_cookie);
 			bb_reply[bbi++]=ByteBuffer.wrap(session_id.getBytes());
 			bb_reply[bbi++]=ByteBuffer.wrap(hkv_set_cookie_append);
-			session_id_set=false;
+//			session_id_set=false;
 		}
 		if(connection_keep_alive)
 			bb_reply[bbi++]=ByteBuffer.wrap(hkp_connection_keep_alive);
