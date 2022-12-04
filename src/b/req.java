@@ -704,8 +704,6 @@ public final class req{
 
 	/** @return true if if transfer is done, more writes are needed. */
 	private boolean do_transfer_file() throws IOException{
-		// ? heavy
-		// final long buf_size=this.sockch.socket().getSendBufferSize();
 		final int buf_size=b.transfer_file_write_size;
 		while(transfer_file_remaining!=0)
 			try{
@@ -718,8 +716,8 @@ public final class req{
 				thdwatch.output+=c;
 			}catch(final IOException e){
 				final String msg=e.getMessage();
-				if(e instanceof IOException&&(msg.startsWith("Broken pipe")||"Connection reset by peer".equals(msg)||"sendfile failed: EPIPE (Broken pipe)".equals(msg)|| // ? android (when closing browser while transfering file)
-						"An existing connection was forcibly closed by the remote host".equals(msg))){
+				if(e instanceof IOException&&(msg.startsWith("Broken pipe")||msg.startsWith("Connection reset by peer")||msg.startsWith("sendfile failed")|| // ? android (when closing browser while transfering file)
+						msg.startsWith("An existing connection was forcibly closed by the remote host"))){
 					close();
 					return false;
 				}
@@ -769,7 +767,7 @@ public final class req{
 			}catch(final ParseException e){
 				throw new RuntimeException(e);
 			}catch(final Throwable ignored){
-				System.out.println(ignored);
+				b.log(ignored);
 			} // ? forandroid
 			reply(h_http204,null,null,null);
 		}
@@ -1109,7 +1107,7 @@ public final class req{
 			}catch(final Throwable t){
 				b.log(t);
 			}
-		
+
 		try{
 			socket_channel.close();
 		}catch(final Throwable t){

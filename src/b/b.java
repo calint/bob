@@ -105,7 +105,7 @@ final public class b{
 	private final static LinkedList<req> pending_req=new LinkedList<req>();
 	private final static HashMap<String,byte[]> file_suffix_to_content_type_map=new HashMap<String,byte[]>();
 	public static void main(final String[] args) throws Throwable{
-		System.out.println(hello);
+		out.println(hello);
 		id=InetAddress.getLocalHost().getHostName();
 		if(!class_init(b.class,args))
 			return;
@@ -559,8 +559,6 @@ final public class b{
 	public static boolean class_init(final Class<?> cls,final String[] args) throws SecurityException,NoSuchFieldException,IllegalArgumentException,IllegalAccessException{
 		if(args==null||args.length==0)
 			return true;
-//		System.out.println("args:");
-//		for(String s:args)System.out.println(s);
 		if("-1".equals(args[0])){
 			class_printopts(cls);
 			return false;

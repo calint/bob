@@ -29,6 +29,7 @@ final public class sock extends websock{
 		xwriter x=xjs.xub(root,true,false);
 		root.to(x);
 		xjs.xube();
+		
 		send(xjs.toString());
 	}
 

@@ -19,7 +19,7 @@ public class root extends a{
 		x.css("body","padding:0 10em 0 4em");
 		x.css(txt,"border-style:dotted;border-width:1px;border-color:green");
 		x.style_();
-		x.pl();
+		x.nl().nl();
 		x.p("server: ").span(server_id).nl();
 		x.p("sesion id: ").p(req.get().session_id()).nl();
 		x.inptxt(txt).p(" ");
