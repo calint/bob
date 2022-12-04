@@ -215,11 +215,6 @@ final public class b{
 				r.close();
 				thdwatch.socks--;
 				return;
-			case wait:
-				r.selection_key.interestOps(0);
-				return;
-			case noop:
-				return;
 			}
 		}
 		while(true)

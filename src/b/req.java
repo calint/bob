@@ -838,9 +838,6 @@ public final class req{
 			case close:
 				socket_channel.close();
 				break;
-			case wait:
-				selection_key.interestOps(0);
-				break;
 			}
 			return;
 		}
@@ -1061,11 +1058,6 @@ public final class req{
 			close();
 			thdwatch.socks--;
 			return;
-		case wait:
-			selection_key.interestOps(0);
-			return;
-		case noop:
-			return;
 		}
 	}
 
@@ -1080,8 +1072,6 @@ public final class req{
 		case write:
 			selection_key.interestOps(SelectionKey.OP_WRITE);
 			selection_key.selector().wakeup();
-			break;
-		case noop:
 			break;
 		case close:
 			close();

@@ -13,7 +13,7 @@ public abstract class websock {
 		handshake,parse_next_frame,parse_data,closed
 	}
 	enum op{
-		write,read,close,noop,wait
+		write,read,close
 	}
 	private SocketChannel socket_channel;
 	private ByteBuffer bb;
