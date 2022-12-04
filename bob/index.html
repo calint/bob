@@ -1,4 +1,4 @@
-<!DOCTYPE html><meta charset="utf-8"><title>web socket</title>
+<!DOCTYPE html><meta charset="utf-8"><title>bob</title>
 <style>
 	*{margin:0;padding:0;font-family:inherit;font-size:inherit;line-height:1.2em}
 	html{white-space:pre;font-family:courier;font-size:11px;margin:0;padding:0;margin-left:auto;margin-right:auto;padding:0 4em 0 4em;display:block;text-align:center;color:#222;border-right:0px dotted #666;border-left:0px dotted #666;box-shadow:0 0 27px rgba(0,0,0,.5);border-radius:1px}
@@ -14,27 +14,20 @@
 </style>
 <script>
 $=document.all;
-
-function start(){
-	const is_ssl=location.protocol=='https:'
-	ws=new WebSocket("ws"+(is_ssl?"s":"")+"://"+location.host+"/bob/websocket");
-	ws.onopen=function(e){
-		$d("web socket: onopen");
-	}
-	ws.onmessage=function(e){
-		$d(e.data);
-		eval(e.data);
-		$d("~~~~~~~ ~~~~~~~ ~~~~~~~ ~~~~~~~ ")
-	};
-	ws.onerror=function(e){
-		$d("web socket: onerror "+e+" data:"+e.data);
-	};
-	ws.onclose=function(e){
-		$d("web socket: onclose "+e);
-	};
+const is_ssl=location.protocol=='https:'
+ws=new WebSocket("ws"+(is_ssl?"s":"")+"://"+location.host+"/bob/websocket");
+ws.onopen=function(e){
+	$d("web socket: onopen");
 }
-function stop(){
-	ws.close();
-}
-start();
+ws.onmessage=function(e){
+	$d(e.data);
+	eval(e.data);
+	$d("~~~~~~~ ~~~~~~~ ~~~~~~~ ~~~~~~~ ")
+};
+ws.onerror=function(e){
+	$d("web socket: onerror "+e+" data:"+e.data);
+};
+ws.onclose=function(e){
+	$d("web socket: onclose "+e);
+};
 </script>
