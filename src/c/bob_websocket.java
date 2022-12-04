@@ -11,9 +11,9 @@ import b.threadedsock;
 import b.websock;
 import b.xwriter;
 
-final public class ws_app extends websock implements threadedsock{
+final public class bob_websocket extends websock implements threadedsock{
 	private final static String axfld="$";
-	private app root=new app();
+	private bob root=new bob();
 
 	synchronized final @Override protected void on_opened(final Map<String,String> headers) throws Throwable{
 		System.out.println("websocket "+Integer.toHexString(hashCode())+": on_opened");
@@ -94,8 +94,8 @@ final public class ws_app extends websock implements threadedsock{
 		}
 		x.finish();
 
-		System.out.println(x);
 		final String msg=x.toString();
+		System.out.println(msg);
 		send(msg);
 	}
 

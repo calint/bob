@@ -88,13 +88,13 @@ ui.qpb=function(e){
 }
 $b=ui.qpb;
 ui.qpbhas=function(id){return id in ui._pbls;}
-ui._axc=1;
+ui._axc=0;
 $x=function(pb){
 	ui._axc++;
 	$d("\nmessage #"+ui._axc);
 	$d("~~~~~~~ ~~~~~~~ ~~~~~~~ ~~~~~~~ ")
 	let post='$='+pb+'\r';
-	for(var id in ui._pbls){
+	for(const id in ui._pbls){
 		//$d('field '+id);
 		const e=$(id)
 		post+=e.id+'=';			

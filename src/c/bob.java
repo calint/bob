@@ -3,12 +3,12 @@ package c;
 import b.a;
 import b.xwriter;
 
-public class app extends a{
+public class bob extends a{
 	static final long serialVersionUID=3;
 	private int counter=0;
 	public a txt;
 	
-	public app(){
+	public bob(){
 	}
 
 	public void to(final xwriter x) throws Throwable{
