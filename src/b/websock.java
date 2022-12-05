@@ -32,8 +32,8 @@ public abstract class websock{
 		this.is_threaded=is_threaded;
 	}
 
-	/** @param bb byte buffer might have more data to be read */
-	final void init(req r) throws Throwable{
+	/** @param r the request that runs this websocket. */
+	final synchronized void init(req r) throws Throwable{ // synchronized not needed because there is no racing
 //	final op init(final Map<String,String> headers,final SocketChannel sc,final ByteBuffer bb,final String session_id,final boolean session_id_set) throws Throwable{
 		this.rq=r;
 		this.socket_channel=r.socket_channel;
