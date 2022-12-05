@@ -12,6 +12,16 @@ $s=function(eid,txt){
 	if(!e){$d(eid+' notfound');return;}
 	if(e.nodeName=="INPUT"||e.nodeName=="TEXTAREA"||e.nodeName=="OUTPUT"){
 		e.value=txt;
+	}else{
+		e.innerHTML=txt;
+	}
+}
+$sv=function(eid,txt){
+	const e=$(eid);
+	if(debug_set)$d(eid+'{'+txt+'}');
+	if(!e){$d(eid+' notfound');return;}
+	if(e.nodeName=="INPUT"||e.nodeName=="TEXTAREA"||e.nodeName=="OUTPUT"){
+		e.value=txt;
 		$b(e);
 	}else{
 		e.innerHTML=txt;
@@ -88,6 +98,7 @@ $b=ui.qpb;
 ui.qpbhas=function(id){return id in ui._pbls;}
 ui._axc=0;
 $x=function(pb){
+	// todo if a new post is made before the previous has been completed?
 	ui._axc++;
 	$d("\nmessage #"+ui._axc);
 	$d("~~~~~~~ ~~~~~~~ ~~~~~~~ ~~~~~~~ ")
@@ -103,7 +114,26 @@ $x=function(pb){
 		}
 		post+='\r';
 	}
-	$d(post.replace("\r","\n"));
-	$d("~~~~~~~ ~~~~~~~ ~~~~~~~ ~~~~~~~ ")
-	ws.send(post);
+	ui._pbls=[];
+	$d(post.replace('\r','\n'));
+	$d("~~~~~~~ ~~~~~~~ ~~~~~~~ ~~~~~~~ ");
+	ui.ws.send(post);
 }
+
+ui.ws=new WebSocket("ws"+(location.protocol=='https:'?"s":"")+"://"+location.host+"/bob/websocket");
+ui.ws.onopen=function(e){
+	$d("web socket: onopen");
+}
+ui.ws.onmessage=function(e){
+	$d("message length: "+e.data.length);
+	$d(e.data);
+	eval(e.data);
+	$d("~~~~~~~ ~~~~~~~ ~~~~~~~ ~~~~~~~ ")
+};
+ui.ws.onerror=function(e){
+	$d("web socket: onerror "+e+" data:"+e.data);
+};
+ui.ws.onclose=function(e){
+	$d("web socket: onclose "+e);
+	alert("Connection to server lost.");
+};

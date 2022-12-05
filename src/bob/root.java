@@ -28,6 +28,17 @@ public class root extends a{
 
 	public void x_clk(xwriter x,String s) throws Throwable{
 		counter+=10;
+//		final byte[] ba=new byte[20*1024*1024];
+//		byte ch=(byte)'a';
+//		for(int i=0;i<ba.length;i++){
+//			ba[i]=ch;
+//			ch++;
+//			if(ch>(byte)'z')
+//				ch='a';
+//		}
+//		final String msg=new String(ba,0,ba.length);
+//		txt.set(msg);
+//		Thread.sleep(10*1000);
 		txt.set(txt.str()+" "+counter);
 		x.xu(txt);
 	}

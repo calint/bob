@@ -34,12 +34,12 @@ final public class sock extends websock{
 	}
 
 	final @Override protected void on_message(ByteBuffer bb) throws Throwable{
-		System.out.println("websocket "+Integer.toHexString(hashCode())+": on_message: "+bb.remaining()+" bytes");
-		System.out.println(new String(bb.array(),bb.position(),bb.remaining()));
-		System.out.println("-- - -- ------- -- - - - - -- - -");
+//		System.out.println("websocket "+Integer.toHexString(hashCode())+": on_message: "+bb.remaining()+" bytes");
+//		System.out.println(new String(bb.array(),bb.position(),bb.remaining()));
+//		System.out.println("-- - -- ------- -- - - - - -- - -");
 
 		final HashMap<String,String> content=populate_content_map_from_buffer(bb);
-		System.out.println(content);
+//		System.out.println(content);
 
 		// ajax post
 		String ajax_command_string="";
@@ -105,7 +105,7 @@ final public class sock extends websock{
 		x.finish();
 
 		final String msg=x.toString();
-		System.out.println(msg);
+//		System.out.println(msg);
 		send(msg);
 	}
 
