@@ -146,8 +146,6 @@ public final class req{
 		upload_channel=null;
 		upload_lastmod_s=null;
 		websock=null;
-//		waiting_sock_thread_read=false;
-//		waiting_sock_thread_write=false;
 	}
 
 	private void parse_method(){
@@ -1260,9 +1258,9 @@ public final class req{
 	private final static int state_transfer_file=7;
 	private final static int state_transfer_buffers=8;
 	private final static int state_waiting_run_page=9;
-	private final static int state_run_page=11;
-	private final static int state_content_upload=13;
-	private final static int state_sock=15;
+	private final static int state_run_page=10;
+	private final static int state_content_upload=11;
+	private final static int state_sock=12;
 	private final static String text_html_utf8="text/html;charset=utf-8";
 	private final static String text_plain="text/plain";// ? utf8 encoding?
 //	private final static String text_plain_utf8="text/plain;charset=utf-8";

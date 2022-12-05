@@ -98,6 +98,10 @@ $b=ui.qpb;
 ui.qpbhas=function(id){return id in ui._pbls;}
 ui._axc=0;
 $x=function(pb){
+	if(ui.is_busy){
+		ui.alert('Server is busy. Try again in a moment.');
+		return;
+	}
 	// todo if a new post is made before the previous has been completed?
 	ui._axc++;
 	$d("\nmessage #"+ui._axc);
@@ -117,6 +121,7 @@ $x=function(pb){
 	ui._pbls=[];
 	$d(post.replace('\r','\n'));
 	$d("~~~~~~~ ~~~~~~~ ~~~~~~~ ~~~~~~~ ");
+	ui.is_busy=true;
 	ui.ws.send(post);
 }
 
@@ -128,12 +133,14 @@ ui.ws.onmessage=function(e){
 	$d("message length: "+e.data.length);
 	$d(e.data);
 	eval(e.data);
+	ui.is_busy=false;
 	$d("~~~~~~~ ~~~~~~~ ~~~~~~~ ~~~~~~~ ")
 };
 ui.ws.onerror=function(e){
 	$d("web socket: onerror "+e+" data:"+e.data);
+	ui.alert('An error has occured while communicating with the server.')
 };
 ui.ws.onclose=function(e){
 	$d("web socket: onclose "+e);
-	alert("Connection to server lost.");
+	ui.alert("Connection to server lost.");
 };
