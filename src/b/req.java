@@ -38,6 +38,12 @@ public final class req{
 					return;
 				}
 			}
+			if(is_oschunked_waiting_write()){// ? is..waiting not synchronized on request ok? spurious notify...
+				synchronized(this){
+					notify();
+				}
+				return;
+			}
 			// check if buffer is fully processed and make a new read
 			if(ba_rem==0){
 				bb.clear();
@@ -75,12 +81,12 @@ public final class req{
 					break;
 				case state_header_name:
 					parse_header_name();
-					//  parse_header_name()->do_after_header() might have changed the state and started transfer
+					// parse_header_name()->do_after_header() might have changed the state and started transfer
 					if(is_transfer()){
 						return;
 					}
 					if(is_waiting_run_page()){
-						System.out.println("interest ops: "+selection_key.interestOps());
+//						System.out.println("interest ops: "+selection_key.interestOps());
 						b.thread(this);
 //						break; // more requests might be in buffer but if more threads are spawned using the same socket channel then writes would not be in sequence
 						return; // ! will hang client on chained requests
@@ -135,7 +141,7 @@ public final class req{
 		transfer_file_channel=null;
 		transfer_file_position=0;
 		transfer_file_remaining=0;
-		waiting_write=false;
+		oschunked_waiting_write=false;
 		upload_path=null;
 		upload_channel=null;
 		upload_lastmod_s=null;
@@ -1046,12 +1052,12 @@ public final class req{
 //		websock.write();
 //	}
 
-	boolean is_waiting_write(){
-		return waiting_write;
+	boolean is_oschunked_waiting_write(){
+		return oschunked_waiting_write;
 	}
 
-	void waiting_write(final boolean b){
-		waiting_write=b;
+	void oschunked_waiting_write(final boolean b){
+		oschunked_waiting_write=b;
 	}
 
 	boolean is_connection_keepalive(){
@@ -1182,7 +1188,7 @@ public final class req{
 	private FileChannel transfer_file_channel;
 	private long transfer_file_position;
 	private long transfer_file_remaining;
-	private boolean waiting_write;
+	private boolean oschunked_waiting_write;
 	private path upload_path;
 	private FileChannel upload_channel;
 	private String upload_lastmod_s;

@@ -76,6 +76,11 @@ echo " ok"
 #echo -n $TEST_NAME
 #echo -n $'GET /b/test/t1 HTTP/1.1\r\n\r\nGET /b/test/t1 HTTP/1.1\r\nConnection: close\r\n\r\n' | nc localhost 8888 > res
 #echo " ok"
-
+#--------------------------------------------------------
+TEST_NAME="large oschucked reply hang: "
+echo -n $TEST_NAME
+curl -s $QA_BASE_URL/b/test/t2 > res
+echo " ok"
+#--------------------------------------------------------
 rm res
 

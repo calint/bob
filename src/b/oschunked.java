@@ -56,15 +56,16 @@ final class oschunked extends OutputStream{
 		while(remaining!=0){
 			final long c=r.socket_channel.write(bba,0,bba.length);
 			if(c==0){
+//				System.out.println("oschunked blocked rem:"+remaining);
 				synchronized(r){
-					r.waiting_write(true);
+					r.oschunked_waiting_write(true);
 					r.selection_key.interestOps(SelectionKey.OP_WRITE);
 					r.selection_key.selector().wakeup();
 					try{
 						r.wait();
 					}catch(final InterruptedException ok){
 					}
-					r.waiting_write(false);
+					r.oschunked_waiting_write(false);
 				}
 			}
 			remaining-=c;

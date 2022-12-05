@@ -49,6 +49,7 @@ public final class app implements bapp {
 		
 		// qa
 		b.b.set_path_to_class("/b/test/t1",b.test.t1.class);
+		b.b.set_path_to_class("/b/test/t2",b.test.t2.class);
 //		db.init("jdbc:mysql://localhost:3306/testdb", "c", "password", 5);
 //		db.init("jdbc:mysql://" + b.bapp_jdbc_host + "/" + b.bapp_jdbc_db
 //				+ "?allowPublicKeyRetrieval=true&useSSL=false", b.bapp_jdbc_user, b.bapp_jdbc_password,
