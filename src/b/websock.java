@@ -33,7 +33,7 @@ public abstract class websock{
 	}
 
 	/** @param r the request that runs this websocket. */
-	final synchronized void init(req r) throws Throwable{ // synchronized not needed because there is no racing
+	final synchronized void init(req r) throws Throwable{ // synchronized not needed because the racing that may occur with a call 'to process' is safe
 //	final op init(final Map<String,String> headers,final SocketChannel sc,final ByteBuffer bb,final String session_id,final boolean session_id_set) throws Throwable{
 		this.rq=r;
 		this.socket_channel=r.socket_channel;
@@ -74,6 +74,7 @@ public abstract class websock{
 		return st==state.sending;
 	}
 
+	/** Called by b whenever there is read or write to socket available. */
 	final synchronized void process() throws Throwable{
 		while(true){
 			if(is_sending()){
@@ -103,8 +104,7 @@ public abstract class websock{
 				switch(st){
 				default:
 					throw new RuntimeException();
-				case parse_next_frame: // ? assuming the header is buffered. breaking up into states for header would
-										// handle the input buffer of 1 B
+				case parse_next_frame: // ? assuming the header is buffered. breaking up into states for header would handle the input buffer of 1 B
 					// rfc6455#section-5.2
 					// Base Framing Protocol
 					final int b0=(int)bb.get();
@@ -244,8 +244,10 @@ public abstract class websock{
 //		sock_write(); // return ignored because bbos will be set to null when write is finished
 	}
 	final protected void send(final ByteBuffer[] bba,final boolean textmode) throws Throwable{
-		if(send_bba!=null)
-			throw new RuntimeException("incompleted send. only one send per message.");
+		if(is_sending()){
+			throw new RuntimeException("Trying to send while busy sending. Only one send per on_message.");
+			// note. before the request is closed by the exception handler there might be attempted reads which throw closed channel exception. ok?
+		}
 		int nbytes_to_send=0;
 		for(final ByteBuffer b:bba)
 			nbytes_to_send+=b.remaining();
@@ -259,7 +261,7 @@ public abstract class websock{
 		write();
 	}
 
-	private ByteBuffer make_header(final int size_of_data_to_send,final boolean text_mode){
+	private static ByteBuffer make_header(final int size_of_data_to_send,final boolean text_mode){
 		// rfc6455#section-5.2
 		// Base Framing Protocol
 		int nhdr;
