@@ -227,7 +227,7 @@ final public class b{
 //		r.process();
 //	}
 	static void thread(final req r){
-		r.selection_key.interestOps(0);// ? must?
+//		r.selection_key.interestOps(0);// ? must?
 		if(!b.thread_pool||thdreq.all_request_threads.size()<thread_pool_size){
 			new thdreq(r);
 			return;

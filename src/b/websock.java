@@ -74,7 +74,7 @@ public abstract class websock{
 		return st==state.sending;
 	}
 
-	final void process() throws Throwable{
+	final synchronized void process() throws Throwable{
 		while(true){
 			if(is_sending()){
 				write();
@@ -245,7 +245,7 @@ public abstract class websock{
 	}
 	final protected void send(final ByteBuffer[] bba,final boolean textmode) throws Throwable{
 		if(send_bba!=null)
-			throw new RuntimeException("incompleted send. only one send per message allowed.");
+			throw new RuntimeException("incompleted send. only one send per message.");
 		int nbytes_to_send=0;
 		for(final ByteBuffer b:bba)
 			nbytes_to_send+=b.remaining();

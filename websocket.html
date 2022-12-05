@@ -29,8 +29,17 @@ function start(){
 	ws=new WebSocket("ws"+(is_ssl?"s":"")+"://"+location.host+"/websocket");
 	ws.onopen=function(e){
 		pl("web socket: onopen");
+		let largeString="";
+			const n=16*1024*1024;
+		//	const n=16*1024;
+//		const n=128*1024;
+		for(let i=0;i<n;i++){
+			largeString+='0';
+		}
+		ws.send(largeString);
 		ws.send("ping 1");
 		ws.send("ping 2");
+		
 	}
 	ws.onmessage=function(e){
 		pl("web socket: onmessage "+e+" data:"+e.data);
