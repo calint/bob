@@ -13,11 +13,13 @@ cd /
 git clone https://github.com/calint/bob
 
 # to update from git with HEAD
-# if files have been changed locally
-git checkout -p stash .
-
 git pull https://github.com/calint/bob
 
+# if files have been changed locally
+git checkout -p stash .
+			git stash
+			
+			
 	# alternative on developer machine
 	cd ~/w/
 	rsync -auv -e ssh --progress bob/ root@1.2.3.4:/bob

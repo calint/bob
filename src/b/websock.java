@@ -33,8 +33,7 @@ public abstract class websock{
 	}
 
 	/** @param r the request that runs this websocket. */
-	final synchronized void init(req r) throws Throwable{ // synchronized not needed because the racing that may occur with a call 'to process' is safe
-//	final op init(final Map<String,String> headers,final SocketChannel sc,final ByteBuffer bb,final String session_id,final boolean session_id_set) throws Throwable{
+	final synchronized void init(final req r) throws Throwable{ // synchronized not needed because the racing that may occur with a call 'to process' is safe
 		this.rq=r;
 		this.socket_channel=r.socket_channel;
 		this.bb=r.bb;
@@ -202,7 +201,6 @@ public abstract class websock{
 		on_message(request_bb);
 		request_bb=null;
 	}
-	/** Called by the request or by send(...) */
 	private void write() throws Throwable{
 		final long n=socket_channel.write(send_bba);
 		System.out.println("websock "+Integer.toHexString(hashCode())+": sock_write: "+n+" bytes");
