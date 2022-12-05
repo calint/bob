@@ -75,13 +75,15 @@ public final class req{
 					break;
 				case state_header_name:
 					parse_header_name();
-					//  parse_header_name()->do_after_header() might have changed the state
+					//  parse_header_name()->do_after_header() might have changed the state and started transfer
 					if(is_transfer()){
 						return;
 					}
 					if(is_waiting_run_page()){
+						System.out.println("interest ops: "+selection_key.interestOps());
 						b.thread(this);
-						return;
+//						break; // more requests might be in buffer but if more threads are spawned using the same socket channel then writes would not be in sequence
+						return; // ! will hang client on chained requests
 					}
 					break;
 				case state_header_value:
@@ -92,7 +94,8 @@ public final class req{
 					// state might have changed
 					if(is_waiting_run_page()){
 						b.thread(this);
-						return;
+//						break; // more requests might be in buffer but if more threads are spawned using the same socket channel then writes would not be in sequence
+						return; // ! will hang client on chained requests
 					}
 					break;
 				case state_content_upload:
@@ -1115,8 +1118,8 @@ public final class req{
 	}
 
 	public String toString(){
-		return hashCode()+"\n"+new String(bb.array(),bb.position(),bb.remaining());
-//		return new String(ba,ba_pos,ba_rem)+(content_bb==null?"":new String(content_bb.slice().array()));
+//		return hashCode()+"\n"+new String(bb.array(),bb.position(),bb.remaining());
+		return new String(ba,ba_pos,ba_rem)+(content_bb==null?"":new String(content_bb.slice().array()));
 	}
 
 	public static req get(){

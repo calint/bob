@@ -66,12 +66,16 @@ curl -s -r 1-10 $QA_BASE_URL/$URI_FILES/$FILE > res
 if ! cmp -s $DIR_CMP/6 res; then exit 1; fi
 echo " ok"
 #--------------------------------------------------------
-TEST_NAME="chained request: "
+TEST_NAME="chained requests (static content): "
 echo -n $TEST_NAME
-FILE=x.css
 echo -n $'GET /qa/files/x.css HTTP/1.1\r\n\r\nGET /qa/files/x.css HTTP/1.1\r\nConnection: close\r\n\r\n' | nc $QA_HOST $QA_PORT > res
 if ! cmp -s $DIR_CMP/7 res; then exit 1; fi
 echo " ok"
+#--------------------------------------------------------
+#TEST_NAME="chained requests (page) check hang: "
+#echo -n $TEST_NAME
+#echo -n $'GET /b/test/t1 HTTP/1.1\r\n\r\nGET /b/test/t1 HTTP/1.1\r\nConnection: close\r\n\r\n' | nc localhost 8888 > res
+#echo " ok"
 
 rm res
 
