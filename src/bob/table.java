@@ -12,7 +12,7 @@ public class table extends a{
 		x.table("f").nl();
 		x.tr().th().ax(this,"up","••").th(3).span("margin-left:22px;float:right").inpax(q,null,this,null).span_();;
 
-//		x.tag("is").p("alert('hello \\'hello\\'')").tage("is");
+//		x.tag("is").p("alert('hello \\n \\'hello\\'')").tage("is");
 		x.tag("is").p("$f('").p(q.id()).p("')").tage("is");
 		final String icon_not_selected="◻";
 		final String icon_selected="▣";
@@ -27,10 +27,10 @@ public class table extends a{
 			if(!title.startsWith(qstr))
 				continue;
 			x.tr();
-			x.td("icns").p(icon_not_selected);
-			x.td("name").p(title);
-			x.td("date").p("2022-12-06 15:33");
-			x.td("size").p("12 KB");
+			x.td().p(icon_not_selected);
+			x.td().p(title);
+			x.td().p("2022-12-06 15:33");
+			x.td().p("12 KB");
 			x.nl();
 		}
 		x.table_();
