@@ -44,6 +44,8 @@ dbo
 [ ] FldFloat max from Float.MAX_VALUE can not be committed
 [ ] inheritance
 [ ]   example: select t1.* from File where t1.clspth like 'aaabbb%'; selects all objects that are File or inherits from File given File clspth=aaabbb
+[ ] components
+[ ]   example: DbClass.addComponent(DbClassComponent) where DbClassComponent has fields, relations and indexes
 [ ] refactor commands. example: rename main.User main.Person, rename main.User.name fullName, delete main.User.hashCode etc
 [ ] cluster
 [ ]   connections to multiple servers
