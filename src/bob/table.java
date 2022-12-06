@@ -10,15 +10,10 @@ public class table extends a{
 	public a q;
 	public void to(final xwriter x) throws Throwable{
 		x.table("f").nl();
-		x.tr();
-		x.th();
-		x.ax(this,"up","••");
-		x.th(3);
-		x.span("margin-left:22px;float:right");
-		x.inpax(q,null,this,null);
-		x.tag("is").p("$f('").p(q.id()).p("')").tage("is");
-		x.span_();
+		x.tr().th().ax(this,"up","••").th(3).span("margin-left:22px;float:right").inpax(q,null,this,null).span_();;
 
+//		x.tag("is").p("alert('hello \\'hello\\'')").tage("is");
+		x.tag("is").p("$f('").p(q.id()).p("')").tage("is");
 		final String icon_not_selected="◻";
 		final String icon_selected="▣";
 		final List<String> ls=new ArrayList<String>();
@@ -26,7 +21,7 @@ public class table extends a{
 		ls.add("file2.txt");
 		ls.add("another file.txt");
 		
-//		x.tr().th().th().p("Name").th().p("Created").th().p("Size");
+		x.tr().th().th().p("Name").th().p("Created").th().p("Size");
 		final String qstr=q.str();
 		for(final String title:ls){
 			if(!title.startsWith(qstr))
@@ -38,9 +33,6 @@ public class table extends a{
 			x.td("size").p("12 KB");
 			x.nl();
 		}
-//		x.tr().td().td().td().td();
-//		x.td("total size last").p("24 KB");
-//		x.nl();
 		x.table_();
 	}
 	public void x_(xwriter js,String s) throws Throwable{
