@@ -16,7 +16,7 @@ public class table extends a{
 		x.th(3);
 		x.span("margin-left:22px;float:right");
 		x.inpax(q,null,this,null);
-		x.p("<is>").p("$f('").p(q.id()).p("')").p("</is>");
+		x.tag("is").p("$f('").p(q.id()).p("')").tage("is");
 		x.span_();
 
 		final String icnfile="◻";
