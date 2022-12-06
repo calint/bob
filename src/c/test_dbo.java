@@ -14,10 +14,10 @@ public class test_dbo extends a {
 
 	public void to(final xwriter x) throws Throwable {
 		x.style().css("body", "padding:0 10em 0 4em").style_();
-//		runTest(x, new test1(true));
-//		runTest(x, new test2(true));
-//		runTest(x, new import_books(true));
-//		runTest(x, new import_games(true));
+		runTest(x, new test1(true));
+		runTest(x, new test2(true));
+		runTest(x, new import_books(true));
+		runTest(x, new import_games(true));
 		runTest(x, new test3(true));
 	}
 
