@@ -1,14 +1,11 @@
-debug_set=true;
-debug_js=true;
-debug_verbose=false;
-
 ui={}
 ui.is_dbg=true;
+ui.debug_set=true;
 $=function(eid){return document.getElementById(eid);}
 $d=function(v){console.log(v);}
 $s=function(eid,txt){
 	const e=$(eid);
-	if(debug_set)$d(eid+'{'+txt+'}');
+	if(ui.debug_set)$d(eid+'{'+txt+'}');
 	if(!e){$d(eid+' notfound');return;}
 	if(e.nodeName=="INPUT"||e.nodeName=="TEXTAREA"||e.nodeName=="OUTPUT"){
 		e.value=txt;
@@ -18,7 +15,7 @@ $s=function(eid,txt){
 }
 $sv=function(eid,txt){
 	const e=$(eid);
-	if(debug_set)$d(eid+'{'+txt+'}');
+	if(ui.debug_set)$d(eid+'{'+txt+'}');
 	if(!e){$d(eid+' notfound');return;}
 	if(e.nodeName=="INPUT"||e.nodeName=="TEXTAREA"||e.nodeName=="OUTPUT"){
 		e.value=txt;
@@ -30,7 +27,7 @@ $sv=function(eid,txt){
 	}
 }
 $o=function(eid,txt){
-	if(debug_set)$d(eid+'={'+txt+'}');
+	if(ui.debug_set)$d(eid+'={'+txt+'}');
 	const e=$(eid);if(!e)return;e.outerHTML=txt;
 }
 $p=function(eid,txt){

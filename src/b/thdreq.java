@@ -2,7 +2,7 @@ package b;
 import java.nio.channels.*;
 import java.util.*;
 final class thdreq extends Thread{
-	static final Collection<thdreq> all_request_threads=new LinkedList<thdreq>();
+	static final LinkedList<thdreq> all_request_threads=new LinkedList<thdreq>();
 	private static int seq;
 	req r;
 	thdreq(final req r){
