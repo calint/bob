@@ -4,6 +4,28 @@ ui.debug_set=true;
 $=function(eid){return document.getElementById(eid);}
 $d=function(v){console.log(v);}
 $s=function(eid,txt){
+	// extract inline script
+	const tag_bgn="<is>";
+	const tag_bgn_len=tag_bgn.length;
+	const tag_end="</is>";
+	const tag_end_len=tag_end.length;
+	const inlines=[];
+	let i=0;
+	while(true){
+		const i_bgn=txt.indexOf(tag_bgn,i);
+		if(i_bgn==-1)
+			break;
+		const i_end=txt.indexOf(tag_end,i_bgn+tag_bgn_len);
+		if(i_end==-1){
+			alert("Did not find end tag after index "+(i_bgn+tag_bgn_len));
+			break;
+		}
+		const script=txt.substring(i_bgn+tag_bgn_len,i_end);
+		inlines.push(script);
+		txt=txt.substring(0,i_bgn)+txt.substring(i_end+tag_end_len,txt.length);
+		i=i_bgn;
+	}
+	// set txt stripped of inline script
 	const e=$(eid);
 	if(ui.debug_set)$d(eid+'{'+txt+'}');
 	if(!e){$d(eid+' notfound');return;}
@@ -11,6 +33,10 @@ $s=function(eid,txt){
 		e.value=txt;
 	}else{
 		e.innerHTML=txt;
+	}
+
+	for(let i=0;i<inlines.length;i++){
+		eval(inlines[i]);
 	}
 }
 $sv=function(eid,txt){
@@ -134,7 +160,8 @@ ui.ws.onopen=function(e){
 ui.ws.onmessage=function(e){
 	$d("message length: "+e.data.length);
 	$d(e.data);
-	eval(e.data);
+	if(e.data.length>0)
+		eval(e.data);
 	ui.is_busy=false;
 	$d("~~~~~~~ ~~~~~~~ ~~~~~~~ ~~~~~~~ ")
 };
