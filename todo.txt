@@ -13,7 +13,7 @@ b
 [x] packet snooper to investigate and improve. tcpdump 
 [ ] jmeter: performance testing
 [ ] page that does not save state or access session
-[ ] oschunked to send first packet including the http response headers
+[x] oschunked to send first packet including the http response headers
 -------------------------------------------------------------------------------
 [x] dbo: better connection pool, close old connection etc
 [x]   review code, the ugliness is overwhelming. Db.createJdbcConnection blocks at exception.

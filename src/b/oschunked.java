@@ -10,8 +10,13 @@ final class oschunked extends OutputStream{
 	private final byte[] chunkhx;
 	private final byte[] buf;
 	private int bufi;
-	oschunked(final req r,final int chunk_size_bytes){
+	private final ByteBuffer[] headers_bb;
+	private int headers_bb_len;
+	private boolean first_send=true;
+	oschunked(final req r,final ByteBuffer[] headers_bb,final int headers_bb_len,final int chunk_size_bytes){
 		this.r=r;
+		this.headers_bb=headers_bb;
+		this.headers_bb_len=headers_bb_len;
 		this.chunk_size_bytes=chunk_size_bytes;
 		chunkhx=(Integer.toHexString(chunk_size_bytes)+"\r\n").getBytes();
 		buf=new byte[chunk_size_bytes];
@@ -50,11 +55,25 @@ final class oschunked extends OutputStream{
 		}
 	}
 	private void write_blocking(final ByteBuffer[] bba) throws IOException{
+		final ByteBuffer[] send_buffers;
+		if(first_send){ // include the header buffers at first send
+			first_send=false;
+			send_buffers=new ByteBuffer[headers_bb_len+bba.length];
+			for(int i=0;i<headers_bb_len;i++){
+				send_buffers[i]=headers_bb[i];
+			}
+			final int n=headers_bb_len+bba.length;
+			for(int i=headers_bb_len,j=0;i<n;i++,j++){
+				send_buffers[i]=bba[j];
+			}
+		}else{
+			send_buffers=bba;
+		}
 		long remaining=0;
-		for(ByteBuffer bb:bba)
+		for(ByteBuffer bb:send_buffers)
 			remaining+=bb.remaining();
 		while(remaining!=0){
-			final long c=r.socket_channel.write(bba,0,bba.length);
+			final long c=r.socket_channel.write(send_buffers,0,send_buffers.length);
 			if(c==0){
 //				System.out.println("oschunked blocked rem:"+remaining);
 				synchronized(r){
