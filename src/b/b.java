@@ -124,14 +124,15 @@ final public class b{
 
 		// initiate db
 		Db.initInstance();
-		Db.instance().register(session.class);
-		Db.instance().register(sessionobj.class);
+		final Db db=Db.instance();
+		db.register(session.class);
+		db.register(sessionobj.class);
 		// initiate application
 		if(b.bapp_class!=null){
 			b.bapp=(bapp)Class.forName(b.bapp_class).getConstructor().newInstance();
 			b.bapp.init();
 		}
-		Db.instance().init("jdbc:mysql://"+b.bapp_jdbc_host+"/"+b.bapp_jdbc_db+"?verifyServerCertificate=false&useSSL=true&ssl-mode=REQUIRED",b.bapp_jdbc_user,b.bapp_jdbc_password,Integer.parseInt(b.bapp_jdbc_ncons));
+		db.init("jdbc:mysql://"+b.bapp_jdbc_host+"/"+b.bapp_jdbc_db+"?verifyServerCertificate=false&useSSL=true&ssl-mode=REQUIRED",b.bapp_jdbc_user,b.bapp_jdbc_password,Integer.parseInt(b.bapp_jdbc_ncons));
 
 		final ServerSocketChannel ssc=ServerSocketChannel.open();
 		ssc.configureBlocking(false);
