@@ -24,7 +24,9 @@ public class table extends a{
 		ls.add("file1.txt");
 		ls.add("file2.txt");
 		ls.add("another file.txt");
-
+		
+		x.tr();
+		x.th().th().p("Name").th().p("Created").th().p("Size");
 		final String qstr=q.str();
 		for(final String title:ls){
 			if(!title.startsWith(qstr))
