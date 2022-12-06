@@ -11,7 +11,7 @@ public class root extends a{
 		x.style();
 		x.css("table.f","margin-left:auto;margin-right:auto");
 		x.css("table.f tr:first-child","border:0;border-bottom:1px solid green;border-top:1px solid #070");
-		x.css("table.f tr:last-child td","border:0;border-top:1px solid #040");
+		x.css("table.f tr:last-child","border:0;border-bottom:1px solid #040");
 		x.css("table.f th:first-child","border-right:1px dotted #ccc");
 		x.css("table.f td","padding:.5em;vertical-align:middle;border-left:1px dotted #ccc;border-bottom:1px dotted #ccc");
 		x.css("table.f td:first-child","border-left:0");

@@ -36,9 +36,9 @@ public class table extends a{
 			x.td("size").p("12 KB");
 			x.nl();
 		}
-		x.tr().td().td().td();
-		x.td("total size last").p("24 KB");
-		x.nl();
+//		x.tr().td().td().td().td();
+//		x.td("total size last").p("24 KB");
+//		x.nl();
 		x.table_();
 	}
 	public void x_(xwriter js,String s) throws Throwable{
