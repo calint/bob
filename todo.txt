@@ -12,26 +12,7 @@ b
 [ ] use java.util.concurrent
 [ ]   b: request queue, thread pool
 [ ]   dbo: connection pool
--------------------------------------------------------------------------------
-[x] content type for cached file from Map of suffix to content-type?
-[x] cookie: same-site
-[x] etag instead of last-modified
-[x] review ranged requests
-[x]   file
-[x]   cache
-[x] b.map_resource_to_path(String,String)
-[x] oschunked to send first packet including the http response headers
-[x] packet snooper to investigate and improve. tcpdump 
-[x] dbo: better connection pool, close old connection etc
-[x]   review code, the ugliness is overwhelming. Db.createJdbcConnection blocks at exception.
-[x]   rework Db.initTransaction deintTransaction
-[x] rework the websock
-[x]   add send que
-[x]   fix edge case
-[x]     full duplex with thread for send? no.
-[x] try b with 1B input buffer
-[x] try b with socket small in/out buffers
--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
 dbo
 [ ] log_sql()
 [o] javadoc
@@ -75,5 +56,24 @@ dbo
 [ ]   oracle?
 [ ]   ms sql server?
 [ ]   ibm db2?
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+[x] content type for cached file from Map of suffix to content-type?
+[x] cookie: same-site
+[x] etag instead of last-modified
+[x] review ranged requests
+[x]   file
+[x]   cache
+[x] b.map_resource_to_path(String,String)
+[x] oschunked to send first packet including the http response headers
+[x] packet snooper to investigate and improve. tcpdump 
+[x] dbo: better connection pool, close old connection etc
+[x]   review code, the ugliness is overwhelming. Db.createJdbcConnection blocks at exception.
+[x]   rework Db.initTransaction deintTransaction
+[x] rework the websock
+[x]   add send que
+[x]   fix edge case
+[x]     full duplex with thread for send? no.
+[x] try b with 1B input buffer
+[x] try b with socket small in/out buffers
 -------------------------------------------------------------------------------
 [x] tn.get(new Class[]{User.class,File.class},...) returns List<DbObject[]>

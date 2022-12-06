@@ -10,396 +10,399 @@ import java.util.HashSet;
 import java.util.List;
 
 /** Transaction used to create, get, count and delete objects. */
-public final class DbTransaction{
-	final PooledConnection pooledCon;
-	final Connection con;
-	final Statement stmt;
-	final HashSet<DbObject> dirtyObjects=new HashSet<DbObject>();
-	final Cache cache=new Cache();
-	public boolean cache_enabled=true;
-	boolean rollbacked=false;
+public final class DbTransaction {
+    final PooledConnection pooledCon;
+    final Connection con;
+    final Statement stmt;
+    final HashSet<DbObject> dirtyObjects = new HashSet<DbObject>();
+    final Cache cache = new Cache();
+    public boolean cache_enabled = true;
+    boolean rollbacked = false;
 
-	static final class Cache{
-		final HashMap<Class<? extends DbObject>,HashMap<Integer,DbObject>> clsToIdObjMap=new HashMap<Class<? extends DbObject>,HashMap<Integer,DbObject>>();
+    static final class Cache {
+	final HashMap<Class<? extends DbObject>, HashMap<Integer, DbObject>> clsToIdObjMap = new HashMap<Class<? extends DbObject>, HashMap<Integer, DbObject>>();
 
-		void put(final DbObject o){
-			HashMap<Integer,DbObject> idToObjMap=clsToIdObjMap.get(o.getClass());
-			if(idToObjMap==null){
-				idToObjMap=new HashMap<Integer,DbObject>();
-				clsToIdObjMap.put(o.getClass(),idToObjMap);
-			}
-			idToObjMap.put(o.id(),o);
-		}
-
-		DbObject get(final Class<?> cls,final int id){
-			HashMap<Integer,DbObject> idToObjMap=clsToIdObjMap.get(cls);
-			if(idToObjMap==null)
-				return null;
-			final DbObject o=idToObjMap.get(id);
-			return o;
-		}
-
-		void remove(final DbObject o){
-			final HashMap<Integer,DbObject> idToObjMap=clsToIdObjMap.get(o.getClass());
-			if(idToObjMap==null)
-				return;
-			idToObjMap.remove(o.id());
-		}
-
-		void clear(){
-			clsToIdObjMap.clear();
-		}
+	void put(final DbObject o) {
+	    HashMap<Integer, DbObject> idToObjMap = clsToIdObjMap.get(o.getClass());
+	    if (idToObjMap == null) {
+		idToObjMap = new HashMap<Integer, DbObject>();
+		clsToIdObjMap.put(o.getClass(), idToObjMap);
+	    }
+	    idToObjMap.put(o.id(), o);
 	}
 
-	DbTransaction(final PooledConnection pc) throws Throwable{
-		pooledCon=pc;
-		con=pc.getConnection();
-		stmt=con.createStatement();
-		cache_enabled=Db.instance().enable_cache;
+	DbObject get(final Class<?> cls, final int id) {
+	    HashMap<Integer, DbObject> idToObjMap = clsToIdObjMap.get(cls);
+	    if (idToObjMap == null)
+		return null;
+	    final DbObject o = idToObjMap.get(id);
+	    return o;
 	}
 
-	public Statement getJdbcStatement(){
-		return stmt;
+	void remove(final DbObject o) {
+	    final HashMap<Integer, DbObject> idToObjMap = clsToIdObjMap.get(o.getClass());
+	    if (idToObjMap == null)
+		return;
+	    idToObjMap.remove(o.id());
 	}
 
-	public Connection getJdbcConnetion(){
-		return con;
+	void clear() {
+	    clsToIdObjMap.clear();
+	}
+    }
+
+    DbTransaction(final PooledConnection pc) throws Throwable {
+	pooledCon = pc;
+	con = pc.getConnection();
+	stmt = con.createStatement();
+	cache_enabled = Db.instance().enable_cache;
+    }
+
+    public Statement getJdbcStatement() {
+	return stmt;
+    }
+
+    public Connection getJdbcConnetion() {
+	return con;
+    }
+
+    /** creates a DbObject */
+    public DbObject create(final Class<? extends DbObject> cls) {
+	try {
+	    final DbObject o = cls.getConstructor().newInstance();
+
+	    final StringBuilder sb = new StringBuilder(256);
+	    sb.append("insert into ").append(Db.tableNameForJavaClass(cls)).append(" values()");
+
+	    final String sql = sb.toString();
+	    Db.log(sql);
+	    stmt.execute(sql, Statement.RETURN_GENERATED_KEYS);
+	    final ResultSet rs = stmt.getGeneratedKeys();
+	    if (rs.next()) {
+		final int id = rs.getInt(1);
+		o.fieldValues.put(DbObject.id, id);
+	    } else
+		throw new RuntimeException("expected generated id");
+	    rs.close();
+
+	    // init default values
+	    final DbClass dbcls = Db.instance().dbClassForJavaClass(cls);
+	    for (final DbField f : dbcls.allFields) {
+		f.putDefaultValue(o.fieldValues);
+	    }
+
+	    if (cache_enabled)
+		cache.put(o);
+
+	    return o;
+	} catch (Throwable t) {
+	    throw new RuntimeException(t);
+	}
+    }
+
+    public void delete(final DbObject o) {
+	flush();
+
+	final DbClass dbcls = Db.instance().dbClassForJavaClass(o.getClass());
+	if (dbcls.cascadeDelete) {
+	    for (final DbRelation r : dbcls.allRelations) {
+		if (r.cascadeDeleteNeeded()) {
+		    r.cascadeDelete(o);
+		}
+	    }
 	}
 
-	/** creates a DbObject */
-	public DbObject create(final Class<? extends DbObject> cls){
-		try{
-			final DbObject o=cls.getConstructor().newInstance();
+	final int id = o.id();
 
-			final StringBuilder sb=new StringBuilder(256);
-			sb.append("insert into ").append(Db.tableNameForJavaClass(cls)).append(" values()");
-
-			final String sql=sb.toString();
-			Db.log(sql);
-			stmt.execute(sql,Statement.RETURN_GENERATED_KEYS);
-			final ResultSet rs=stmt.getGeneratedKeys();
-			if(rs.next()){
-				final int id=rs.getInt(1);
-				o.fieldValues.put(DbObject.id,id);
-			}else
-				throw new RuntimeException("expected generated id");
-			rs.close();
-
-			// init default values
-			final DbClass dbcls=Db.instance().dbClassForJavaClass(cls);
-			for(final DbField f:dbcls.allFields){
-				f.putDefaultValue(o.fieldValues);
-			}
-
-			if(cache_enabled)
-				cache.put(o);
-
-			return o;
-		}catch(Throwable t){
-			throw new RuntimeException(t);
-		}
+	// delete orphans
+	for (final RelRefN r : dbcls.referingRefN) {
+	    r.deleteReferencesTo(id);
 	}
 
-	public void delete(final DbObject o){
-		flush();
-
-		final DbClass dbcls=Db.instance().dbClassForJavaClass(o.getClass());
-		if(dbcls.cascadeDelete){
-			for(final DbRelation r:dbcls.allRelations){
-				if(r.cascadeDeleteNeeded()){
-					r.cascadeDelete(o);
-				}
-			}
-		}
-
-		final int id=o.id();
-
-		// delete orphans
-		for(final RelRefN r:dbcls.referingRefN){
-			r.deleteReferencesTo(id);
-		}
-
-		// update referring fields to null
-		if(Db.instance().enable_update_referring_tables){
-			for(final RelRef r:dbcls.referingRef){
-				final StringBuilder sb=new StringBuilder(256);
-				sb.append("update ").append(r.tableName).append(" set ").append(r.name).append("=null").append(" where ").append(r.name).append('=').append(id);
-				execSql(sb);
-			}
-		}
-
-		// delete this
-		final StringBuilder sb=new StringBuilder(256);
-		sb.append("delete from ").append(dbcls.tableName).append(" where id=").append(id);
+	// update referring fields to null
+	if (Db.instance().enable_update_referring_tables) {
+	    for (final RelRef r : dbcls.referingRef) {
+		final StringBuilder sb = new StringBuilder(256);
+		sb.append("update ").append(r.tableName).append(" set ").append(r.name).append("=null")
+			.append(" where ").append(r.name).append('=').append(id);
 		execSql(sb);
-		dirtyObjects.remove(o);
-		if(cache_enabled)
-			cache.remove(o);
+	    }
 	}
 
-	public List<DbObject> get(final Class<?> cls,final Query qry,final Order ord,final Limit lmt){
-		flush(); // update database before query
+	// delete this
+	final StringBuilder sb = new StringBuilder(256);
+	sb.append("delete from ").append(dbcls.tableName).append(" where id=").append(id);
+	execSql(sb);
+	dirtyObjects.remove(o);
+	if (cache_enabled)
+	    cache.remove(o);
+    }
 
-		final Query.TableAliasMap tam=new Query.TableAliasMap();
-		final StringBuilder sbwhere=new StringBuilder(128);
-		if(qry!=null){
-			sbwhere.append("where ");
-			qry.sql_build(sbwhere,tam);
+    public List<DbObject> get(final Class<?> cls, final Query qry, final Order ord, final Limit lmt) {
+	flush(); // update database before query
+
+	final Query.TableAliasMap tam = new Query.TableAliasMap();
+	final StringBuilder sbwhere = new StringBuilder(128);
+	if (qry != null) {
+	    sbwhere.append("where ");
+	    qry.sql_build(sbwhere, tam);
+	}
+
+	final DbClass dbcls = Db.instance().dbClassForJavaClass(cls);
+	final StringBuilder sb = new StringBuilder(256);
+	sb.append("select ").append(tam.getAliasForTableName(dbcls.tableName)).append(".* from ");
+	tam.sql_appendSelectFromTables(sb);
+	sb.append(" ");
+
+	if (sbwhere.length() != 0)
+	    sb.append(sbwhere);
+
+	if (ord != null)
+	    ord.sql_appendToQuery(sb, tam);
+
+	if (lmt != null)
+	    lmt.sql_appendToQuery(sb);
+
+	sb.setLength(sb.length() - 1);
+
+	final ArrayList<DbObject> ls = new ArrayList<DbObject>(128); // ? magic number
+	try {
+	    final Constructor<?> ctor = cls.getConstructor();
+	    final String sql = sb.toString();
+	    Db.log(sql);
+	    final ResultSet rs = stmt.executeQuery(sql);
+	    if (cache_enabled) {
+		while (rs.next()) {
+		    final DbObject cachedObj = cache.get(cls, rs.getInt(1));
+		    if (cachedObj != null) {
+			ls.add(cachedObj);
+			continue;
+		    }
+		    final DbObject o = (DbObject) ctor.newInstance();
+		    readResultSetToDbObject(o, dbcls, rs, 1);
+		    cache.put(o);
+		    ls.add(o);
 		}
+	    } else {
+		while (rs.next()) {
+		    final DbObject o = (DbObject) ctor.newInstance();
+		    readResultSetToDbObject(o, dbcls, rs, 1);
+		    ls.add(o);
+		}
+	    }
+	} catch (final Throwable t) {
+	    throw new RuntimeException(t);
+	}
+	return ls;
+    }
 
-		final DbClass dbcls=Db.instance().dbClassForJavaClass(cls);
-		final StringBuilder sb=new StringBuilder(256);
-		sb.append("select ").append(tam.getAliasForTableName(dbcls.tableName)).append(".* from ");
-		tam.sql_appendSelectFromTables(sb);
-		sb.append(" ");
+    public List<DbObject[]> get(final Class<?>[] classes, final Query qry, final Order ord, final Limit lmt) {
+	flush(); // update database before query
 
-		if(sbwhere.length()!=0)
-			sb.append(sbwhere);
+	final Query.TableAliasMap tam = new Query.TableAliasMap();
+	final StringBuilder sbwhere = new StringBuilder(128);
+	if (qry != null) {
+	    sbwhere.append("where ");
+	    qry.sql_build(sbwhere, tam);
+	}
 
-		if(ord!=null)
-			ord.sql_appendToQuery(sb,tam);
+	final Db db = Db.instance();
+	final int n = classes.length;
+	if (n < 1) {
+	    throw new RuntimeException("classes array is empty");
+	}
+	final DbClass[] dbclasses = new DbClass[n];
+	for (int i = 0; i < n; i++) {
+	    dbclasses[i] = db.dbClassForJavaClass(classes[i]);
+	}
 
-		if(lmt!=null)
-			lmt.sql_appendToQuery(sb);
+	final StringBuilder sb = new StringBuilder(256);
+	sb.append("select ");
+	for (int i = 0; i < n; i++) {
+	    final DbClass c = dbclasses[i];
+	    sb.append(tam.getAliasForTableName(c.tableName));
+	    sb.append(".*, ");
+	}
+	sb.setLength(sb.length() - 2);
+	sb.append(" from ");
+	tam.sql_appendSelectFromTables(sb);
+	sb.append(" ");
 
-		sb.setLength(sb.length()-1);
+	if (sbwhere.length() != 0)
+	    sb.append(sbwhere);
 
-		final ArrayList<DbObject> ls=new ArrayList<DbObject>(128); // ? magic number
-		try{
-			final Constructor<?> ctor=cls.getConstructor();
-			final String sql=sb.toString();
-			Db.log(sql);
-			final ResultSet rs=stmt.executeQuery(sql);
-			if(cache_enabled){
-				while(rs.next()){
-					final DbObject cachedObj=cache.get(cls,rs.getInt(1));
-					if(cachedObj!=null){
-						ls.add(cachedObj);
-						continue;
-					}
-					final DbObject o=(DbObject)ctor.newInstance();
-					readResultSetToDbObject(o,dbcls,rs,1);
-					cache.put(o);
-					ls.add(o);
-				}
-			}else{
-				while(rs.next()){
-					final DbObject o=(DbObject)ctor.newInstance();
-					readResultSetToDbObject(o,dbcls,rs,1);
-					ls.add(o);
-				}
+	if (ord != null)
+	    ord.sql_appendToQuery(sb, tam);
+
+	if (lmt != null)
+	    lmt.sql_appendToQuery(sb);
+
+	sb.setLength(sb.length() - 1);
+	final ArrayList<DbObject[]> ls = new ArrayList<DbObject[]>(128); // ? magic number
+	try {
+	    final Constructor<?>[] ctors = new Constructor<?>[n];
+	    for (int i = 0; i < n; i++) {
+		ctors[i] = classes[i].getConstructor();
+	    }
+
+	    final int[] class_field_counts = new int[n];
+	    for (int i = 0; i < n; i++) {
+		class_field_counts[i] = dbclasses[i].allFields.size();
+	    }
+
+	    final String sql = sb.toString();
+	    Db.log(sql);
+	    final ResultSet rs = stmt.executeQuery(sql);
+	    if (cache_enabled) {
+		while (rs.next()) {
+		    final DbObject[] objs = new DbObject[n];
+		    for (int i = 0, j = 1; i < n; i++) { // read the objects from the result using column offset j
+			final DbObject cachedObj = cache.get(classes[i], rs.getInt(j));
+			if (cachedObj != null) {
+			    objs[i] = cachedObj;
+			    j += class_field_counts[i]; // jump to next object in result set
+			    continue;
 			}
-		}catch(final Throwable t){
-			throw new RuntimeException(t);
+			final DbObject o = (DbObject) ctors[i].newInstance();
+			readResultSetToDbObject(o, dbclasses[i], rs, j);
+			objs[i] = o;
+			j += class_field_counts[i]; // jump to next object in result set
+			cache.put(o);
+		    }
+		    ls.add(objs);
 		}
-		return ls;
+	    } else {
+		while (rs.next()) {
+		    final DbObject[] objs = new DbObject[n];
+		    for (int i = 0, j = 1; i < n; i++) {
+			final DbObject o = (DbObject) ctors[i].newInstance();
+			readResultSetToDbObject(o, dbclasses[i], rs, j);
+			objs[i] = o;
+			j += class_field_counts[i]; // jump to next object in result set
+		    }
+		    ls.add(objs);
+		}
+	    }
+	} catch (final Throwable t) {
+	    throw new RuntimeException(t);
+	}
+	return ls;
+    }
+
+    private void readResultSetToDbObject(final DbObject o, final DbClass cls, final ResultSet rs, final int offset)
+	    throws Throwable {
+	int i = offset;
+	for (final DbField f : cls.allFields) {
+	    final Object v = rs.getObject(i);
+	    o.fieldValues.put(f, v);
+	    i++;
+	}
+    }
+
+    public int getCount(final Class<? extends DbObject> cls, final Query qry) {
+	flush(); // update database before query
+
+	final StringBuilder sb = new StringBuilder(256);
+	sb.append("select count(*) from ");
+
+	final Query.TableAliasMap tam = new Query.TableAliasMap();
+
+	if (qry != null) {
+	    final StringBuilder sbwhere = new StringBuilder(128);
+	    qry.sql_build(sbwhere, tam);
+	    tam.sql_appendSelectFromTables(sb);
+	    sb.append(" where ");
+	    sb.append(sbwhere);
+	    sb.setLength(sb.length() - 1);
+	} else {
+	    final DbClass dbcls = Db.instance().dbClassForJavaClass(cls);
+	    sb.append(dbcls.tableName);
 	}
 
-	public List<DbObject[]> get(final Class<?>[] classes,final Query qry,final Order ord,final Limit lmt){
-		flush(); // update database before query
-
-		final Query.TableAliasMap tam=new Query.TableAliasMap();
-		final StringBuilder sbwhere=new StringBuilder(128);
-		if(qry!=null){
-			sbwhere.append("where ");
-			qry.sql_build(sbwhere,tam);
-		}
-
-		final Db db=Db.instance();
-		final int n=classes.length;
-		if(n<1){
-			throw new RuntimeException("classes array is empty");
-		}
-		final DbClass[] dbclasses=new DbClass[n];
-		for(int i=0;i<n;i++){
-			dbclasses[i]=db.dbClassForJavaClass(classes[i]);
-		}
-
-		final StringBuilder sb=new StringBuilder(256);
-		sb.append("select ");
-		for(int i=0;i<n;i++){
-			final DbClass c=dbclasses[i];
-			sb.append(tam.getAliasForTableName(c.tableName));
-			sb.append(".*, ");
-		}
-		sb.setLength(sb.length()-2);
-		sb.append(" from ");
-		tam.sql_appendSelectFromTables(sb);
-		sb.append(" ");
-
-		if(sbwhere.length()!=0)
-			sb.append(sbwhere);
-
-		if(ord!=null)
-			ord.sql_appendToQuery(sb,tam);
-
-		if(lmt!=null)
-			lmt.sql_appendToQuery(sb);
-
-		sb.setLength(sb.length()-1);
-		final ArrayList<DbObject[]> ls=new ArrayList<DbObject[]>(128); // ? magic number
-		try{
-			final Constructor<?>[] ctors=new Constructor<?>[n];
-			for(int i=0;i<n;i++){
-				ctors[i]=classes[i].getConstructor();
-			}
-			
-			final int[] class_field_counts=new int[n];
-			for(int i=0;i<n;i++){
-				class_field_counts[i]=dbclasses[i].allFields.size();
-			}
-
-			final String sql=sb.toString();
-			Db.log(sql);
-			final ResultSet rs=stmt.executeQuery(sql);
-			if(cache_enabled){
-				while(rs.next()){
-					final DbObject[] objs=new DbObject[n];
-					for(int i=0,j=1;i<n;i++){ // read the objects from the result using column offset j
-						final DbObject cachedObj=cache.get(classes[i],rs.getInt(j));
-						if(cachedObj!=null){
-							objs[i]=cachedObj;
-							j+=class_field_counts[i]; // jump to next object in result set
-							continue;
-						}
-						final DbObject o=(DbObject)ctors[i].newInstance();
-						readResultSetToDbObject(o,dbclasses[i],rs,j);
-						objs[i]=o;
-						j+=class_field_counts[i]; // jump to next object in result set
-						cache.put(o);
-					}
-					ls.add(objs);
-				}
-			}else{
-				while(rs.next()){
-					final DbObject[] objs=new DbObject[n];
-					for(int i=0,j=1;i<n;i++){
-						final DbObject o=(DbObject)ctors[i].newInstance();
-						readResultSetToDbObject(o,dbclasses[i],rs,j);
-						objs[i]=o;
-						j+=class_field_counts[i]; // jump to next object in result set
-					}
-					ls.add(objs);
-				}
-			}
-		}catch(final Throwable t){
-			throw new RuntimeException(t);
-		}
-		return ls;
+	final String sql = sb.toString();
+	Db.log(sql);
+	try {
+	    final ResultSet rs = stmt.executeQuery(sql);
+	    if (!rs.next())
+		throw new RuntimeException("expected result from " + sql);
+	    return rs.getInt(1);
+	} catch (final Throwable t) {
+	    throw new RuntimeException(t);
 	}
+    }
 
-	private void readResultSetToDbObject(final DbObject o,final DbClass cls,final ResultSet rs,final int offset) throws Throwable{
-		int i=offset;
-		for(final DbField f:cls.allFields){
-			final Object v=rs.getObject(i);
-			o.fieldValues.put(f,v);
-			i++;
-		}
-	}
+    /** writes changed objects to database, clears cache, commits */
+    public void commit() throws Throwable {
+	flush();
+	if (cache_enabled) // will keep memory usage down at batch imports
+	    cache.clear();
+	con.commit();
+    }
 
-	public int getCount(final Class<? extends DbObject> cls,final Query qry){
-		flush(); // update database before query
-
-		final StringBuilder sb=new StringBuilder(256);
-		sb.append("select count(*) from ");
-
-		final Query.TableAliasMap tam=new Query.TableAliasMap();
-
-		if(qry!=null){
-			final StringBuilder sbwhere=new StringBuilder(128);
-			qry.sql_build(sbwhere,tam);
-			tam.sql_appendSelectFromTables(sb);
-			sb.append(" where ");
-			sb.append(sbwhere);
-			sb.setLength(sb.length()-1);
-		}else{
-			final DbClass dbcls=Db.instance().dbClassForJavaClass(cls);
-			sb.append(dbcls.tableName);
-		}
-
-		final String sql=sb.toString();
-		Db.log(sql);
-		try{
-			final ResultSet rs=stmt.executeQuery(sql);
-			if(!rs.next())
-				throw new RuntimeException("expected result from "+sql);
-			return rs.getInt(1);
-		}catch(final Throwable t){
-			throw new RuntimeException(t);
-		}
-	}
-
-	/** writes changed objects to database, clears cache, commits */
-	public void commit() throws Throwable{
-		flush();
-		if(cache_enabled) // will keep memory usage down at batch imports
-			cache.clear();
-		con.commit();
-	}
-
-	public void rollback(){
-		Db.log("*** rollback transaction");
-		rollbacked=true;
+    public void rollback() {
+	Db.log("*** rollback transaction");
+	rollbacked = true;
 //		if (cache_enabled)
 //			cache.clear();
-		try{
-			con.rollback();
-			Db.log("*** rollback done");
-		}catch(Throwable t){
-			throw new RuntimeException(t);// ? this can be ignored?
-		}
+	try {
+	    con.rollback();
+	    Db.log("*** rollback done");
+	} catch (Throwable t) {
+	    throw new RuntimeException(t);// ? this can be ignored?
+	}
+    }
+
+    /** called when done with the transaction */
+    public void finishTransaction() throws Throwable {
+	if (!rollbacked) {
+	    commit();
+	}
+	stmt.close();
+    }
+
+    /** writes changed objects to database */
+    public void flush() { // ? public?
+	if (dirtyObjects.isEmpty())
+	    return;
+	Db.log("*** flushing " + dirtyObjects.size() + " objects");
+	try {
+	    for (final DbObject o : dirtyObjects) {
+		updateDbFromDbObject(o);
+	    }
+	} catch (Throwable t) {
+	    throw new RuntimeException(t);
 	}
 
-	/** called when done with the transaction */
-	public void finishTransaction() throws Throwable{
-		if(!rollbacked){
-			commit();
-		}
-		stmt.close();
-	}
+	dirtyObjects.clear();
+	Db.log("*** done flushing");
+    }
 
-	/** writes changed objects to database */
-	public void flush(){ // ? public?
-		if(dirtyObjects.isEmpty())
-			return;
-		Db.log("*** flushing "+dirtyObjects.size()+" objects");
-		try{
-			for(final DbObject o:dirtyObjects){
-				updateDbFromDbObject(o);
-			}
-		}catch(Throwable t){
-			throw new RuntimeException(t);
-		}
-
-		dirtyObjects.clear();
-		Db.log("*** done flushing");
+    private void updateDbFromDbObject(final DbObject o) throws Throwable {
+	final StringBuilder sb = new StringBuilder(256);
+	sb.append("update ").append(Db.tableNameForJavaClass(o.getClass())).append(" set ");
+	for (final DbField f : o.dirtyFields) {
+	    sb.append(f.name).append('=');
+	    f.sql_updateValue(sb, o);
+	    sb.append(',');
 	}
+	sb.setLength(sb.length() - 1);
+	sb.append(" where id=").append(o.id());
+	execSql(sb);
+	o.dirtyFields.clear();
+    }
 
-	private void updateDbFromDbObject(final DbObject o) throws Throwable{
-		final StringBuilder sb=new StringBuilder(256);
-		sb.append("update ").append(Db.tableNameForJavaClass(o.getClass())).append(" set ");
-		for(final DbField f:o.dirtyFields){
-			sb.append(f.name).append('=');
-			f.sql_updateValue(sb,o);
-			sb.append(',');
-		}
-		sb.setLength(sb.length()-1);
-		sb.append(" where id=").append(o.id());
-		execSql(sb);
-		o.dirtyFields.clear();
+    void execSql(final StringBuilder sb) {
+	final String sql = sb.toString();
+	Db.log(sql);
+	try {
+	    stmt.execute(sql);
+	} catch (Throwable t) {
+	    throw new RuntimeException(t);
 	}
+    }
 
-	void execSql(final StringBuilder sb){
-		final String sql=sb.toString();
-		Db.log(sql);
-		try{
-			stmt.execute(sql);
-		}catch(Throwable t){
-			throw new RuntimeException(t);
-		}
-	}
-
-	@Override public String toString(){
-		return "dirtyObjects="+dirtyObjects;
-	}
+    @Override
+    public String toString() {
+	return "dirtyObjects=" + dirtyObjects;
+    }
 }

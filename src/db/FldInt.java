@@ -4,19 +4,19 @@ import java.util.Map;
 
 /** Integer field. */
 public final class FldInt extends DbField {
-	final private int defval;
+    final private int defval;
 
-	public FldInt(final int def) {
-		super("int", 0, Integer.toString(def), false, false);
-		defval = def;
-	}
+    public FldInt(final int def) {
+	super("int", 0, Integer.toString(def), false, false);
+	defval = def;
+    }
 
-	public FldInt() {
-		this(0);
-	}
+    public FldInt() {
+	this(0);
+    }
 
-	@Override
-	protected void putDefaultValue(final Map<DbField, Object> kvm) {
-		kvm.put(this, defval);
-	}
+    @Override
+    protected void putDefaultValue(final Map<DbField, Object> kvm) {
+	kvm.put(this, defval);
+    }
 }
