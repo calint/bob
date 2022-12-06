@@ -2,9 +2,14 @@ b
 [ ] fix for client that makes many threaded requests and then stalls them to starve server of threads or create too many. ddos.
 [ ] req state to enum
 [ ] thread pool: get first thread and create only if none available
-[ ] jmeter: performance testing
+[ ] performance testing in qa
+[ ]   jmeter
+[ ]   ab
 [ ] page that does not save state or access session
 [ ] fix "// todo" comments
+[ ] use java.util.concurrent
+[ ]   b: request queue, thread pool
+[ ]   dbo: connection pool
 -------------------------------------------------------------------------------
 [x] content type for cached file from Map of suffix to content-type?
 [x] cookie: same-site
