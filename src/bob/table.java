@@ -41,12 +41,10 @@ public class table extends a{
 		x.nl();
 		x.table_();
 	}
-	public void x_(xwriter xx,String s) throws Throwable{
+	public void x_(xwriter js,String s) throws Throwable{
 		System.out.println("query: "+q.str());
-		final xwriter xjs=new xwriter();
-		xwriter x=xjs.xub(this,true,false);
+		xwriter x=js.xub(this,true,false);
 		to(x);
-		xjs.xube();
-		xx.p(xjs.toString());
+		js.xube();
 	}
 }

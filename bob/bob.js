@@ -36,6 +36,7 @@ $s=function(eid,txt){
 	}
 
 	for(let i=0;i<inlines.length;i++){
+		console.log('inline: '+inlines[i]);
 		eval(inlines[i]);
 	}
 }
