@@ -1,20 +1,20 @@
 b
+[ ] fix for client that makes many threaded requests and then stalls them to starve server of threads or create too many. ddos.
+[ ] req state to enum
+[ ] thread pool: get first thread and create only if none available
+[ ] jmeter: performance testing
+[ ] page that does not save state or access session
 [ ] fix "// todo" comments
+-------------------------------------------------------------------------------
 [x] content type for cached file from Map of suffix to content-type?
 [x] cookie: same-site
-[ ] fix for client that makes many threaded requests and then stalls them to starve server of threads or create too many. ddos.
 [x] etag instead of last-modified
 [x] review ranged requests
 [x]   file
 [x]   cache
 [x] b.map_resource_to_path(String,String)
-[ ] req state to enum
-[ ] thread pool: get first thread and create only if none available
-[x] packet snooper to investigate and improve. tcpdump 
-[ ] jmeter: performance testing
-[ ] page that does not save state or access session
 [x] oschunked to send first packet including the http response headers
--------------------------------------------------------------------------------
+[x] packet snooper to investigate and improve. tcpdump 
 [x] dbo: better connection pool, close old connection etc
 [x]   review code, the ugliness is overwhelming. Db.createJdbcConnection blocks at exception.
 [x]   rework Db.initTransaction deintTransaction
