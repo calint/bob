@@ -977,7 +977,7 @@ public final class req{
 		}
 		bb_reply[bbi++]=ByteBuffer.wrap(hkp_transfer_encoding_chunked);
 		bb_reply[bbi++]=ByteBuffer.wrap(ba_crlf2);
-		thdwatch.output+=send_packet(bb_reply,bbi);// ? sends 2 packets. initiate oschuncked with reply buffers to send at first
+		thdwatch.output+=send_packet(bb_reply,bbi);// ? sends 2 packets. initiate oschuncked with reply buffers to send header at first write
 		return new oschunked(this,b.chunk_B); // ?
 	}
 
