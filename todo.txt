@@ -6,7 +6,9 @@ b
 [ ]   jmeter
 [ ]   ab
 [ ] page that does not save state or access session
+[ ]   annotation regarding transaction and state saving
 [ ] fix "// todo" comments
+[ ]   websock: implement ping/pong
 [ ] use java.util.concurrent
 [ ]   b: request queue, thread pool
 [ ]   dbo: connection pool

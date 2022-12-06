@@ -16,6 +16,7 @@ public class t2 extends a{
 			if(ch>(byte)'z')
 				ch='a';
 		}
-		x.pl(new String(ba,0,ba.length));
+		x.outputstream().write(ba);
+//		x.p(new String(ba,0,ba.length));
 	}
 }
