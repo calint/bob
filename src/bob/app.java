@@ -46,6 +46,7 @@ public final class app implements bapp {
 		b.b.set_path_to_class("/websocket2",websocket2.class);
 		b.b.set_path_to_class("/bob/websocket",bob.sock.class);
 		b.b.set_path_to_class("/health-check",health_check.class);
+		b.b.set_path_to_class("/dbo/test/test_dbo",c.test_dbo.class);
 		
 		// qa
 		b.b.set_path_to_class("/b/test/t1",b.test.t1.class);

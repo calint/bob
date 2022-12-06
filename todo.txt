@@ -33,7 +33,6 @@ b
 [x] try b with socket small in/out buffers
 -------------------------------------------------------------------------------
 dbo
-[ ] tn.get(new Class[]{User.class,File.class},...) returns List<DbObject[]>
 [ ] log_sql()
 [o] javadoc
 [o] review code. search for "// todo" "// !" "// ?"
@@ -76,3 +75,5 @@ dbo
 [ ]   oracle?
 [ ]   ms sql server?
 [ ]   ibm db2?
+-------------------------------------------------------------------------------
+[x] tn.get(new Class[]{User.class,File.class},...) returns List<DbObject[]>
