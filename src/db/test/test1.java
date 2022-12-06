@@ -283,7 +283,7 @@ public class test1 extends TestCase {
 	    throw new RuntimeException();
 
 	tn.delete(f10);
-	final File f11 = u9.getGroupPic(); // ! has dangling reference
+	final File f11 = u9.getGroupPic(); // might have dangling reference
 	if (f11 != null)
 	    throw new RuntimeException();
 

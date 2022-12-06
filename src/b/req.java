@@ -100,7 +100,7 @@ public final class req{
 					// state might have changed
 					if(is_waiting_run_page()){
 						b.thread(this);
-//						break; // more requests might be in buffer but if more threads are spawned using the same socket channel then writes would not be in sequence
+//						break; // more requests might be in buffer but if more threads are spawned using the same socket channel then writes might not be in sequence
 						return; // ! will hang client on chained requests
 					}
 					break;
@@ -835,7 +835,7 @@ public final class req{
 		}
 
 		if(websock.class.isAssignableFrom(cls)){// start a socket
-			System.out.println("request "+Integer.toHexString(hashCode())+": socket at "+path_str);
+//			System.out.println("request "+Integer.toHexString(hashCode())+": socket at "+path_str);
 			state=state_sock;
 			websock=(websock)cls.getConstructor().newInstance();
 			bb.position(ba_pos); // set the position to the end of processed data. the buffer will be used by websock.
@@ -847,7 +847,7 @@ public final class req{
 			populate_content_map_from_buffer();
 
 		final DbTransaction tn=Db.initCurrentTransaction();
-		System.out.println("dbo: connection pool: "+Db.instance().getConnectionPoolSize());
+//		System.out.println("dbo: connection pool: "+Db.instance().getConnectionPoolSize());
 		try{
 			run_page_do(tn,cls);
 		}catch(Throwable t){
@@ -982,8 +982,8 @@ public final class req{
 	}
 
 	private void populate_content_map_from_buffer() throws Throwable{
-		System.out.println("*** content type: "+content_type);
-		System.out.println(new String(content_bb.array(),0,content_bb.limit()));
+//		System.out.println("*** content type: "+content_type);
+//		System.out.println(new String(content_bb.array(),0,content_bb.limit()));
 		if(content_type!=null&&!content_type.startsWith(text_plain))
 			throw new RuntimeException("postedcontent only "+text_plain+" allowed");
 		byte[] ba=content_bb.array();

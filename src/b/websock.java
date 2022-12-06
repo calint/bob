@@ -85,7 +85,7 @@ public abstract class websock{
 				bb.clear();
 				final int n=socket_channel.read(bb);
 				bb.flip();
-				System.out.println("websock "+Integer.toHexString(hashCode())+": sock_read: "+n+" bytes");
+//				System.out.println("websock "+Integer.toHexString(hashCode())+": sock_read: "+n+" bytes");
 				if(n==0){
 					rq.selection_key.interestOps(SelectionKey.OP_READ);
 					rq.selection_key.selector().wakeup();
@@ -203,7 +203,7 @@ public abstract class websock{
 	}
 	private void write() throws Throwable{
 		final long n=socket_channel.write(send_bba);
-		System.out.println("websock "+Integer.toHexString(hashCode())+": sock_write: "+n+" bytes");
+//		System.out.println("websock "+Integer.toHexString(hashCode())+": sock_write: "+n+" bytes");
 		thdwatch.output+=n;
 		for(ByteBuffer b:send_bba){ // check if the write is complete.
 			if(b.hasRemaining()){

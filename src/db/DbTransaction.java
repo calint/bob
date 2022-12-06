@@ -138,7 +138,7 @@ public final class DbTransaction {
 	    cache.remove(o);
     }
 
-    public List<DbObject> get(final Class<?> cls, final Query qry, final Order ord, final Limit lmt) {
+    public List<DbObject> get(final Class<?> cls, final Query qry, final Order ord, final Limit lmt) { // ? call get(new Class[]..)?
 	flush(); // update database before query
 
 	final Query.TableAliasMap tam = new Query.TableAliasMap();
@@ -165,7 +165,7 @@ public final class DbTransaction {
 
 	sb.setLength(sb.length() - 1);
 
-	final ArrayList<DbObject> ls = new ArrayList<DbObject>(128); // ? magic number
+	final ArrayList<DbObject> ls = new ArrayList<DbObject>(128); // ? magic number, use limit if available
 	try {
 	    final Constructor<?> ctor = cls.getConstructor();
 	    final String sql = sb.toString();
@@ -238,7 +238,7 @@ public final class DbTransaction {
 	    lmt.sql_appendToQuery(sb);
 
 	sb.setLength(sb.length() - 1);
-	final ArrayList<DbObject[]> ls = new ArrayList<DbObject[]>(128); // ? magic number
+	final ArrayList<DbObject[]> ls = new ArrayList<DbObject[]>(128); // ? magic number, use limit if available
 	try {
 	    final Constructor<?>[] ctors = new Constructor<?>[n];
 	    for (int i = 0; i < n; i++) {

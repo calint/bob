@@ -20,7 +20,7 @@ final public class sock extends websock{
 	}
 
 	final @Override protected void on_opened() throws Throwable{
-		System.out.println("websocket "+Integer.toHexString(hashCode())+": on_opened");
+//		System.out.println("websocket "+Integer.toHexString(hashCode())+": on_opened");
 
 		// todo load root from db or create new
 		root=(a)Class.forName(root_class_name).getConstructor().newInstance();
@@ -110,7 +110,7 @@ final public class sock extends websock{
 	}
 
 	final @Override protected void on_closed() throws Throwable{
-		System.out.println("websocket "+Integer.toHexString(hashCode())+": on_closed");
+//		System.out.println("websocket "+Integer.toHexString(hashCode())+": on_closed");
 		// todo store root in db
 	}
 
