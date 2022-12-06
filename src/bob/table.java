@@ -19,20 +19,20 @@ public class table extends a{
 		x.tag("is").p("$f('").p(q.id()).p("')").tage("is");
 		x.span_();
 
-		final String icnfile="◻";
+		final String icon_not_selected="◻";
+		final String icon_selected="▣";
 		final List<String> ls=new ArrayList<String>();
 		ls.add("file1.txt");
 		ls.add("file2.txt");
 		ls.add("another file.txt");
 		
-		x.tr();
-		x.th().th().p("Name").th().p("Created").th().p("Size");
+//		x.tr().th().th().p("Name").th().p("Created").th().p("Size");
 		final String qstr=q.str();
 		for(final String title:ls){
 			if(!title.startsWith(qstr))
 				continue;
 			x.tr();
-			x.td("icns").p(icnfile);
+			x.td("icns").p(icon_not_selected);
 			x.td("name").p(title);
 			x.td("date").p("2022-12-06 15:33");
 			x.td("size").p("12 KB");

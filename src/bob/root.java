@@ -17,7 +17,7 @@ public class root extends a{
 		x.css("table.f td:first-child","border-left:0");
 		x.css(t.q,"float:right;background:yellow;border:1px dotted #555;text-align:right;width:10em;margin-left:1em");
 		x.style_();
-
+		x.nl();
 		x.divo(t);
 		t.to(x);
 		x.div_();
