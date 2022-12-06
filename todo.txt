@@ -1,7 +1,7 @@
 b
 [ ] fix for client that makes many threaded requests and then stalls them to starve server of threads or create too many. ddos.
 [ ] req state to enum
-[ ] thread pool: get first thread and create only if none available
+[ ] thread pool: get first, create if none available
 [ ] performance testing in qa
 [ ]   jmeter
 [ ]   ab

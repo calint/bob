@@ -81,9 +81,7 @@ TEST_NAME="large oschunked reply hang: "
 echo -n $TEST_NAME
 curl -s $QA_BASE_URL/b/test/t2 > res
 SIZE=$(wc -c < res)
-if [ $SIZE != 33554527 ]; then
-    exit 1
-fi
+if [ $SIZE != 33554527 ]; then exit 1 fi
 echo " ok"
 #--------------------------------------------------------
 TEST_NAME="page 'hello world': "
