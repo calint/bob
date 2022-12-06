@@ -102,6 +102,10 @@ $x=function(pb){
 		ui.alert('Server is busy. Try again in a moment.');
 		return;
 	}
+	if(!ui.is_open){
+		ui.alert('Connection to server is not open.');
+		return;
+	}
 	// todo if a new post is made before the previous has been completed?
 	ui._axc++;
 	$d("\nmessage #"+ui._axc);
@@ -128,6 +132,7 @@ $x=function(pb){
 ui.ws=new WebSocket("ws"+(location.protocol=='https:'?"s":"")+"://"+location.host+"/bob/websocket");
 ui.ws.onopen=function(e){
 	$d("web socket: onopen");
+	ui.is_open=true;
 }
 ui.ws.onmessage=function(e){
 	$d("message length: "+e.data.length);
@@ -142,5 +147,6 @@ ui.ws.onerror=function(e){
 };
 ui.ws.onclose=function(e){
 	$d("web socket: onclose "+e);
+	ui.is_open=false;
 	ui.alert("Connection to server lost.");
 };

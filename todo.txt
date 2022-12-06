@@ -9,6 +9,11 @@ b
 [x]   cache
 [x] b.map_resource_to_path(String,String)
 [ ] req state to enum
+[ ] thread pool: get first thread and create only if none available
+[x] packet snooper to investigate and improve. tcpdump 
+[ ] jmeter: performance testing
+[ ] page that does not save state or access session
+[ ] oschunked to send first packet including the http response headers
 -------------------------------------------------------------------------------
 [x] dbo: better connection pool, close old connection etc
 [x]   review code, the ugliness is overwhelming. Db.createJdbcConnection blocks at exception.

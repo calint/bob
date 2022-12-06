@@ -38,7 +38,7 @@ public class root extends a{
 //		}
 //		final String msg=new String(ba,0,ba.length);
 //		txt.set(msg);
-		Thread.sleep(10*1000);
+//		Thread.sleep(10*1000);
 		txt.set(txt.str()+" "+counter);
 		x.xu(txt);
 	}

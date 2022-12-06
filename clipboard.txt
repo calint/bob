@@ -75,3 +75,8 @@ cd /bob && git pull https://github.com/calint/bob && ./build.sh && systemctl res
 ssh root@<ip> 'cd /bob && git pull https://github.com/calint/bob && ./build.sh && systemctl restart bob'
 
 
+sudo tcpdump -i lo port 8888 -X
+
+
+
+

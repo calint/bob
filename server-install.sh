@@ -28,8 +28,8 @@ systemctl enable bob
 # MYSQL_DB=testdb
 # MYSQL_USER=c
 # MYSQL_PASSWORD=password
-# MYSQL_NCONS=100
-# B_NTHREADS=100
+# MYSQL_NCONS=10
+# B_NTHREADS=10
 # PORT=8888
 
 # reboot (logs from the service won't be available otherwise)

@@ -341,7 +341,7 @@ public final class req{
 		}
 		// assumes content type "text/plain; charset=utf-8" from an ajax post
 		final String contentLength_s=headers.get(hk_content_length);
-		if(contentLength_s!=null){
+		if(contentLength_s!=null&&!contentLength_s.equals("0")){
 			if(!set_session_id_from_cookie())
 				throw new RuntimeException("nocookie in request with content. path:"+uri_sb);
 			content_remaining_to_read=Long.parseLong(contentLength_s);
@@ -823,6 +823,7 @@ public final class req{
 		if(cls==null){
 			xwriter x=new xwriter().p(path_str).nl().nl().pl("Resource not found.");
 			reply(h_http404,null,null,tobytes(x.toString()));
+			b.log(new RuntimeException("http404 "+path()));
 			return;
 		}
 
@@ -976,7 +977,7 @@ public final class req{
 		}
 		bb_reply[bbi++]=ByteBuffer.wrap(hkp_transfer_encoding_chunked);
 		bb_reply[bbi++]=ByteBuffer.wrap(ba_crlf2);
-		thdwatch.output+=send_packet(bb_reply,bbi);// ? sends2packs
+		thdwatch.output+=send_packet(bb_reply,bbi);// ? sends 2 packets. initiate oschuncked with reply buffers to send at first
 		return new oschunked(this,b.chunk_B); // ?
 	}
 
