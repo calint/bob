@@ -13,7 +13,6 @@ b
 [ ] use java.util.concurrent
 [ ]   b: request queue, thread pool
 [ ]   dbo: connection pool
-[ ] bob: adaptive design for mobile users
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 dbo
 [ ] log_sql()
@@ -61,6 +60,7 @@ dbo
 [ ]   ms sql server?
 [ ]   ibm db2?
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
+[x] bob,b: adaptive design for mobile users. <meta name="viewport" content="width=device-width,initial-scale=1"/> 
 [x] content type for cached file from Map of suffix to content-type?
 [x] cookie: same-site
 [x] etag instead of last-modified
