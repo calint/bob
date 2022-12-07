@@ -180,7 +180,7 @@ public abstract class websock{
 			}
 		}
 	}
-	final private void on_payload(ByteBuffer bb) throws Throwable{
+	private void on_payload(ByteBuffer bb) throws Throwable{
 		final boolean is_last_packet=payload_remaining==0;
 		if(is_first_packet&&!is_last_packet){
 			request_bb=ByteBuffer.allocate(bb.remaining()+payload_remaining);

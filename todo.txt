@@ -1,4 +1,5 @@
 b
+[ ] bob: review css for conformity
 [ ] fix for client that makes many threaded requests and then stalls them to starve server of threads or create too many. ddos.
 [ ] req state to enum
 [ ] thread pool: get first, create if none available
@@ -12,6 +13,7 @@ b
 [ ] use java.util.concurrent
 [ ]   b: request queue, thread pool
 [ ]   dbo: connection pool
+[ ] bob: adaptive design for mobile users
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 dbo
 [ ] log_sql()

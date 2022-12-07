@@ -6,25 +6,27 @@ import b.a;
 import b.xwriter;
 
 public class table extends a{
-	static final long serialVersionUID=3;
+	static final long serialVersionUID=1;
 	public a q;
 	public void to(final xwriter x) throws Throwable{
-		x.table("f").nl();
-		x.tr().th().ax(this,"up","••").th(3).span("margin-left:22px;float:right").inpax(q,null,this,null).span_();;
-
-//		x.tag("is").p("alert('hello \\n \\'hello\\'')").tage("is");
+		x.p("<div style='text-align:center;padding-bottom:0.5em'>");
+		x.ax(this,"up","••").inpax(q,null,this,null);
 		x.tag("is").p("$f('").p(q.id()).p("')").tage("is");
-		final String icon_not_selected="◻";
-		final String icon_selected="▣";
+		x.div_();
+
 		final List<String> ls=new ArrayList<String>();
 		ls.add("file1.txt");
 		ls.add("file2.txt");
 		ls.add("another file.txt");
 		
+		final String icon_not_selected="◻";
+		final String icon_selected="▣";
+		x.table("f").nl();
 		x.tr().th().th().p("Name").th().p("Created").th().p("Size");
 		final String qstr=q.str();
-		for(final String title:ls){
-			if(!title.startsWith(qstr))
+		for(final Object o:ls){
+			final String title=(String)o;
+			if(!title.toLowerCase().startsWith(qstr.toLowerCase()))
 				continue;
 			x.tr();
 			x.td().p(icon_not_selected);

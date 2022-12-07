@@ -30,7 +30,11 @@ systemctl enable bob
 # MYSQL_PASSWORD=password
 # MYSQL_NCONS=10
 # B_NTHREADS=10
-# PORT=8888
+# B_PORT=8888
+
+# to pull after changing run.cfg
+# git stash
+# git pull
 
 # reboot (logs from the service won't be available otherwise)
 # add droplet to mysql cluster trusted sources
