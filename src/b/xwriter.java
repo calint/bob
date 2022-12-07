@@ -224,6 +224,9 @@ public final class xwriter{
 			attr("style",style);
 		return tagoe().tage("span");
 	}
+	public xwriter spano(final a e){
+		return tago("span").attr("id",e.id()).tagoe();
+	}
 	public xwriter span(final a e){
 		return span(e,null);
 	}
