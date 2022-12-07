@@ -307,24 +307,29 @@ final public class b{
 		return n;
 	}
 	public static synchronized void log(Throwable t){
-		Throwable e=t;
-		while(e.getCause()!=null)
-			e=e.getCause();
+		while(t.getCause()!=null)
+			t=t.getCause();
 		if(!log_client_disconnects){
-			if(e instanceof java.nio.channels.CancelledKeyException)
+			if(t instanceof java.nio.channels.CancelledKeyException)
 				return;
-			if(e instanceof java.nio.channels.ClosedChannelException)
+			if(t instanceof java.nio.channels.ClosedChannelException)
 				return;
-			if(e instanceof java.io.IOException){
-				if("Broken pipe".equals(e.getMessage()))
-					return;
-				if("Connection reset by peer".equals(e.getMessage()))
-					return;
-				if("An existing connection was forcibly closed by the remote host".equals(e.getMessage()))
-					return;
+			if(t instanceof java.net.SocketException){
+				final String msg=t.getMessage();
+				if("Connection reset".equals(msg))
+					return;				
 			}
+			if(t instanceof java.io.IOException){
+				final String msg=t.getMessage();
+				if("Broken pipe".equals(msg))
+					return;
+				if("Connection reset by peer".equals(msg))
+					return;
+				if("An existing connection was forcibly closed by the remote host".equals(msg))
+					return;
+				}
 		}
-		err.println(b.stacktraceline(e));
+		err.println(b.stacktraceline(t));
 	}
 	public static path path(){
 		return new path(new File(root_dir),true);

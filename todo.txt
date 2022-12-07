@@ -1,5 +1,5 @@
 b
-[ ] bob: review css for conformity
+[ ] xwriter: review span overloads
 [ ] fix for client that makes many threaded requests and then stalls them to starve server of threads or create too many. ddos.
 [ ] req state to enum
 [ ] thread pool: get first, create if none available
@@ -60,6 +60,7 @@ dbo
 [ ]   ms sql server?
 [ ]   ibm db2?
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
+[x] bob: review css for conformity
 [x] bob,b: adaptive design for mobile users. <meta name="viewport" content="width=device-width,initial-scale=1"/> 
 [x] content type for cached file from Map of suffix to content-type?
 [x] cookie: same-site
