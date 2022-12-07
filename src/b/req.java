@@ -1248,7 +1248,7 @@ public final class req{
 	private final static String s_minus="-";
 	private final static String s_range="range";
 	private final static String s_slash="/";
-	private final static byte[] ba_page_header_pre_title="<!doctype html><meta charset=utf-8><link rel=stylesheet href=/x.css><script src=/x.js></script>".getBytes();
+	private final static byte[] ba_page_header_pre_title="<!doctype html><meta charset=utf-8><link rel=stylesheet href=/x.css><script src=/x.js></script><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"/>".getBytes();
 	private final static int state_next_request=0;
 	private final static int state_method=1;
 	private final static int state_uri=2;
