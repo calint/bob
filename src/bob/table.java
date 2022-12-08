@@ -16,17 +16,22 @@ public class table extends a{
 	public container ans; // actions
 	public container cbs; // checkboxes
 
+	public table(){
+		final List<action> actions=getActionsList();
+		for(action a:actions){
+			ans.add(a);
+		}
+
+	}
+
 	public void to(final xwriter x) throws Throwable{
 		x.p("<div style='text-align:center;padding-bottom:0.5em'>");
 		// add actions to container
-		final List<action> actions=getActionsList();
-		ans.clear();
-		for(action a:actions){
-			ans.add(a);
-			a.to(x);
+		for(a e:ans.elements()){
+			e.to(x);
 			x.p(" ");
 		}
-		if(!actions.isEmpty()){
+		if(!ans.elements().isEmpty()){
 			x.hr();
 		}
 
