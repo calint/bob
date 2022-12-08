@@ -20,13 +20,21 @@ public final class Db {
 	/** Enables the log(...) method. */
 	public static boolean enable_log = true;
 
+	/** Enables the log(...) method. */
+	public static boolean enable_log_sql = true;
+
 	/** Prints the string to System.out */
 	public static void log(String s) {
 		if (!enable_log)
 			return;
 		System.out.println(s);
 	}
-
+	/** Prints the string to System.out */
+	public static void log_sql(String s) {
+		if (!enable_log_sql)
+			return;
+		System.out.println(s);
+	}
 	private static Db inst;
 
 	public static long pooled_connection_max_age_in_ms = 10 * 60 * 1000;
@@ -395,7 +403,7 @@ public final class Db {
 				final StringBuilder sb = new StringBuilder(128);
 				sb.append("drop table ").append(s);
 				final String sql = sb.toString();
-				Db.log(sql);
+				Db.log_sql(sql);
 				stmt.execute(sql);
 			}
 		}
@@ -419,14 +427,14 @@ public final class Db {
 				sb.setLength(0);
 				sb.append("drop table ").append(dbc.tableName);
 				final String sql = sb.toString();
-				Db.log(sql);
+				Db.log_sql(sql);
 				stmt.execute(sql);
 			}
 			for (final RelRefNMeta rnm : relRefNMeta) {
 				sb.setLength(0);
 				sb.append("drop table ").append(rnm.tableName);
 				final String sql = sb.toString();
-				Db.log(sql);
+				Db.log_sql(sql);
 				stmt.execute(sql);
 			}
 			stmt.close();

@@ -87,7 +87,7 @@ public final class RelRefN extends DbRelation {
 			final StringBuilder sb = new StringBuilder(128);
 			rrm.sql_createIndexOnFromColumn(sb);
 			final String sql = sb.toString();
-			Db.log(sql);
+			Db.log_sql(sql);
 			stmt.execute(sql);
 		}
 
@@ -95,7 +95,7 @@ public final class RelRefN extends DbRelation {
 			final StringBuilder sb = new StringBuilder(128);
 			rrm.sql_createIndexOnToColumn(sb);
 			final String sql = sb.toString();
-			Db.log(sql);
+			Db.log_sql(sql);
 			stmt.execute(sql);
 		}
 	}

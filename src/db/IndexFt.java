@@ -20,7 +20,7 @@ public final class IndexFt extends Index {
 		sb.append(')');
 
 		final String sql = sb.toString();
-		Db.log(sql);
+		Db.log_sql(sql);
 		stmt.execute(sql);
 	}
 }

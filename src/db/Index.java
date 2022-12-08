@@ -86,7 +86,7 @@ public class Index {
 		sb.append(')');
 
 		final String sql = sb.toString();
-		Db.log(sql);
+		Db.log_sql(sql);
 		stmt.execute(sql);
 	}
 
@@ -96,7 +96,7 @@ public class Index {
 		sb.append("drop index ").append(name).append(" on ").append(tableName);
 
 		final String sql = sb.toString();
-		Db.log(sql);
+		Db.log_sql(sql);
 		stmt.execute(sql);
 	}
 

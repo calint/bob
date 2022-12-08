@@ -1,5 +1,5 @@
 b
-[ ] xwriter: review span overloads
+[o] xwriter: review
 [ ] fix for client that makes many threaded requests and then stalls them to starve server of threads or create too many. ddos.
 [ ] req state to enum
 [ ] thread pool: get first, create if none available
@@ -15,7 +15,6 @@ b
 [ ]   dbo: connection pool
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 dbo
-[ ] log_sql()
 [o] javadoc
 [o] review code. search for "// todo" "// !" "// ?"
 [ ] Db.tableNameForJavaClass does not include package name
@@ -81,4 +80,5 @@ dbo
 [x] try b with 1B input buffer
 [x] try b with socket small in/out buffers
 -------------------------------------------------------------------------------
+[x] log_sql()
 [x] tn.get(new Class[]{User.class,File.class},...) returns List<DbObject[]>

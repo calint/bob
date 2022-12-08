@@ -75,7 +75,7 @@ public final class DbTransaction {
 			sb.append("insert into ").append(Db.tableNameForJavaClass(cls)).append(" values()");
 
 			final String sql = sb.toString();
-			Db.log(sql);
+			Db.log_sql(sql);
 			stmt.execute(sql, Statement.RETURN_GENERATED_KEYS);
 			final ResultSet rs = stmt.getGeneratedKeys();
 			if (rs.next()) {
@@ -170,7 +170,7 @@ public final class DbTransaction {
 		try {
 			final Constructor<?> ctor = cls.getConstructor();
 			final String sql = sb.toString();
-			Db.log(sql);
+			Db.log_sql(sql);
 			final ResultSet rs = stmt.executeQuery(sql);
 			if (cache_enabled) {
 				while (rs.next()) {
@@ -252,7 +252,7 @@ public final class DbTransaction {
 			}
 
 			final String sql = sb.toString();
-			Db.log(sql);
+			Db.log_sql(sql);
 			final ResultSet rs = stmt.executeQuery(sql);
 			if (cache_enabled) {
 				while (rs.next()) {
@@ -321,7 +321,7 @@ public final class DbTransaction {
 		}
 
 		final String sql = sb.toString();
-		Db.log(sql);
+		Db.log_sql(sql);
 		try {
 			final ResultSet rs = stmt.executeQuery(sql);
 			if (!rs.next())
@@ -394,7 +394,7 @@ public final class DbTransaction {
 
 	void execSql(final StringBuilder sb) {
 		final String sql = sb.toString();
-		Db.log(sql);
+		Db.log_sql(sql);
 		try {
 			stmt.execute(sql);
 		} catch (Throwable t) {

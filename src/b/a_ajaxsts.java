@@ -2,6 +2,7 @@ package b;
 import b.b.conf;
 public class a_ajaxsts extends a{
 	@Override public void to(final xwriter x) throws Throwable{
+		// ? review this
 		x.p("<span onclick=\"console.log(event);let e=$('"+id()+"');console.log(e);e.style.cssText='"+sts_css_closed+"';\">");
 		x.span(this,null,sts_css_opened);
 		x.span_();

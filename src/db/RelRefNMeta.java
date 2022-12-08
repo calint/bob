@@ -40,7 +40,7 @@ final class RelRefNMeta {
 		sb.append("create table ").append(tableName).append("(id int primary key auto_increment").append(',')
 				.append(fromColName).append(" int,").append(toColName).append(" int)");
 		final String sql = sb.toString();
-		Db.log(sql);
+		Db.log_sql(sql);
 		stmt.execute(sql);
 	}
 

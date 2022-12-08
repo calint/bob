@@ -124,7 +124,7 @@ public final class DbClass {
 		sb.append(")");
 
 		final String sql = sb.toString();
-		Db.log(sql);
+		Db.log_sql(sql);
 		stmt.execute(sql);
 	}
 
@@ -149,7 +149,7 @@ public final class DbClass {
 			final StringBuilder sb = new StringBuilder(128);
 			sb.append("alter table ").append(tableName).append(" drop column ").append(c.name);
 			final String sql = sb.toString();
-			Db.log(sql);
+			Db.log_sql(sql);
 			stmt.execute(sql);
 		}
 	}
@@ -192,7 +192,7 @@ public final class DbClass {
 			sb.append("alter table ").append(tableName).append(" modify ");
 			f.sql_columnDefinition(sb);
 			final String sql = sb.toString();
-			Db.log(sql);
+			Db.log_sql(sql);
 			stmt.execute(sql);
 		}
 	}
@@ -225,7 +225,7 @@ public final class DbClass {
 					sb.append(prevField.name);
 				}
 				final String sql = sb.toString();
-				Db.log(sql);
+				Db.log_sql(sql);
 				stmt.execute(sql);
 				break;
 			}
@@ -272,7 +272,7 @@ public final class DbClass {
 			sb.append(prevFld.name);
 		}
 		final String sql = sb.toString();
-		Db.log(sql);
+		Db.log_sql(sql);
 		stmt.execute(sql);
 	}
 
@@ -375,7 +375,7 @@ public final class DbClass {
 			final StringBuilder sb = new StringBuilder(128);
 			sb.append("drop index ").append(s).append(" on ").append(tableName);
 			final String sql = sb.toString();
-			Db.log(sql);
+			Db.log_sql(sql);
 			stmt.execute(sql);
 		}
 	}
