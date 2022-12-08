@@ -27,14 +27,15 @@ public class root extends a{
 		t.to(x);
 		x.div_();
 		x.p("serialized size: ");
-//		x.spanot(s).p(" onclick=\"").js_x(this,"s onclick \"'hello'\"",true).p("\"").tagoe().p(s.str()).span_();
+		x.spanot(s,"bytes","background:yellow").p(" onclick=\"").js_x(this,"s \"'hello'\"",true).p("\"").tagoe().p(s.str()).span_();
 //		x.spano(s).p(s.str()).span_();
-		x.span(s);
-//		x.tag("is");
-//		x.js_x(this,"s onclick \"h'ello",false);
-//		x.tage("is");		
+//		x.span(s);
 		x.p(" B ");
+//		x.ax(this,"s \"'hello'\"",":: refresh \"''\"");
 		x.ax(this,"s",":: refresh");
+//		x.iso().js_x(this,"s \"'hello'\"",false).isc();
+//		x.divot(s,"bytes","background:yellow").p(" onclick=\"ui.alert('&quot;\\'hello\\'&quot;')").p("\"").tagoe().p(s).div_();
+//		x.divot(s,"bytes","background:yellow").p(s).div_();
 	}
 
 	public void x_s(xwriter x,String param) throws Throwable{

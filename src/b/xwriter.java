@@ -6,106 +6,14 @@ import java.io.IOException;
 import java.io.OutputStream;
 public final class xwriter{
 	private final OutputStream os;
-	public xwriter(final OutputStream os){
-		this.os=os;
-	}
-	public xwriter(){
-		os=new ByteArrayOutputStream();
-	}
-	public OutputStream outputstream(){
-		return os;
-	}
-	public xwriter p(final String s){
-		if(s==null)
-			return this;
-		try{
-			os.write(tobytes(s));
-		}catch(final IOException e){
-			throw new Error(e);
-		}
-		return this;
-	}
-	public xwriter nl(){
-		return p('\n');
-	}
-	public xwriter nl(final int number_of_newlines){
-		for(int i=0;i<number_of_newlines;i++)
-			p('\n');
-		return this;
-	}
-	public xwriter p(final byte n){
-		return p(Byte.toString(n));
-	}
-	public xwriter p(final char n){
-		return p(Character.toString(n));
-	}
-	public xwriter p(final int n){
-		return p(Integer.toString(n));
-	}
-	public xwriter p(final float n){
-		return p(Float.toString(n));
-	}
-	public xwriter p(final long n){
-		return p(Long.toString(n));
-	}
-	public xwriter p(final double n){
-		return p(Double.toString(n));
-	}
-	public xwriter pl(final String s){
-		return p(s).nl();
-	}
-	public xwriter pl(){
-		return nl();
-	}
-	public xwriter tag(final String name){
-		return p("<").p(name).p(">");
-	}
-	public xwriter tag(final String name,final String id){
-		return p("<").p(name).p(" id=").p(id).p(">");
-	}
-	public xwriter tago(final String name){
-		return p("<").p(name);
-	}
-	public xwriter attrdef(final a e){
-		final String id=e.id();
-		return attr("id",id);
-	}
-	public xwriter attr(final String name,final int value){
-		return p(" ").p(name).p("=").p(value);
-	}
-	public xwriter attr(final String name,final String value){
-		return p(" ").p(name).p("=\"").p(enc_quot(value)).p("\"");
-	}
-	public xwriter attr(final String name){
-		return p(" ").p(name);
-	}
-	public xwriter tagoe(){
-		return p(">");
-	}
-	public xwriter tage(final String name){
-		return p("</").p(name).p(">");
-	}
 	public xwriter a(final String href){
 		return tago("a").attr("href",href).tagoe();
 	}
 	public xwriter a_(){
 		return tage("a");
 	}
-	public xwriter a(final String href,final String txt){
-		return a(href).p(txt).a_();
-	}
-	public xwriter ax(final a e,final String func){
-		return ax(e,func,func);
-	}
-	public xwriter ax(final a e,final String func,final String html){
-		final String wid=e.id();
-		p("<a href=\"javascript:").axjs(wid,func,"").p("\">").p(html).p("</a>");
-		return this;
-	}
-	public xwriter ax(final a e,final String func,final String param,final String html){
-		final String wid=e.id();
-		p("<a href=\"javascript:").axjs(wid,func,param).p("\">").p(html).p("</a>");
-		return this;
+	public xwriter a(final String href,final String html){
+		return a(href).p(html).a_();
 	}
 	public xwriter ax(final a e,final String func,final String param,final String html,final String accesskey){
 		final String wid=e.id();
@@ -114,14 +22,6 @@ public final class xwriter{
 			spc().p("accesskey=").p(accesskey).attr("title",accesskey);
 		p(" href=\"javascript:").axjs(wid,func,param).p("\">").p(html).p("</a>");
 		return this;
-	}
-	public xwriter axjs(final String eid,final String func,final String param){
-		p("$x('").p(eid);
-		if(!isempty(func))
-			p(" ").p(func);
-		if(!isempty(param))
-			p(" ").p(param);
-		return p("')");
 	}
 	public xwriter ajx(final a e,final String args){
 		return tago("a").attr("href","javascript:$x('"+e.id()+" "+args+"')").attr("id",e.id()).tagoe();
@@ -132,83 +32,10 @@ public final class xwriter{
 	public xwriter ajx_(){
 		return tage("a");
 	}
-	public xwriter br(){
-		return tag("br");
-	}
-//	public xwriter divo(final String cls){return tago("div").attr("class",cls).tagoe();}
-	public xwriter divo(){
-		return tag("div");
-	}
-	public xwriter divo(final a e){
-		return tago("div").attr("id",e.id()).tagoe();
-	}
-	public xwriter divo(final a e,final String cls){
-		return divo(e,cls,"");
-	}
-	public xwriter divo(final String cls,final String style){
-		return divo(null,cls,style);
-	}
-	public xwriter divo(final String cls){
-		return divo(null,cls,null);
-	}
-	public xwriter divo(final a e,final String cls,final String style){
-		tago("div");
-		if(e!=null)
-			attr("id",e.id());
-		if(!isempty(cls))
-			attr("class",cls);
-		if(!isempty(style))
-			attr("style",style);
-//		if(!isempty(intaginline))spc().p(intaginline);
-		return tagoe();
-	}
-	public xwriter divh(final a e){
-		return divh(e,null,null);
-	}
-	public xwriter divh(final a e,final String cls){
-		return divh(e,cls,null);
-	}
-	public xwriter divh(final a e,final String cls,final String style){
-		tago("div");
-		if(e!=null)
-			attr("id",e.id());
-		if(!isempty(cls))
-			attr("class",cls);
-		if(!isempty(style))
-			attr("style",style);
-//		if(!isempty(intaginline))spc().p(intaginline);
-		tagoe();
-		try{
-			e.to(this);
-		}catch(Throwable t){
-			throw new Error(t);
-		}// ? printerror
-		return div_();
-	}
+
 //	public xwriter ph_div(final a e){return tago("div").attr("id",e.id()).tagoe().tage("div");}
-	public xwriter div_(){
-		return tage("div");
-	}
 	public xwriter focus(final a e){
 		return script().p("$f('").p(e.id()).p("')").script_();
-	}
-	public xwriter inpint(final a e){
-		return tago("input").attr("value",e.toString()).attrdef(e).attr("type","text").attr("class","nbr").attr("size",5).attr("onchange","$b(this)").tagoe();
-	}
-	public xwriter inpflt(final a e){
-		return tago("input").attr("value",e.toString()).attrdef(e).attr("type","text").attr("class","nbr").attr("size",5).attr("onchange","$b(this)").tagoe();
-	}
-	public xwriter inplng(final a e){
-		return inpint(e);
-	}
-	public xwriter pre(){
-		return tag("pre");
-	}
-	public xwriter pre(final String cls){
-		return tago("pre").attr("class",cls).tagoe();
-	}
-	public xwriter pre_(){
-		return tage("pre");
 	}
 	public xwriter script(){
 		return tag("script");
@@ -240,68 +67,6 @@ public final class xwriter{
 //		}
 //		return span_();
 //	}
-	public xwriter table(){
-		return tag("table");
-	}
-	public xwriter table(final String cls){
-		return tago("table").attr("class",cls).tagoe();
-	}
-	public xwriter table(final String cls,final String style){
-		tago("table");
-		if(!isempty(cls))
-			attr("class",cls);
-		if(!isempty(style))
-			attr("style",style);
-		tagoe();
-		return this;
-	}
-	public xwriter table_(){
-		return tage("table");
-	}
-	public xwriter style(){
-		return p("<style scoped>");
-	}
-	public xwriter style_(){
-		return tage("style");
-	}
-	public xwriter td(){
-		return tag("td");
-	}
-	public xwriter td(final String cls){
-		return td(cls,"");
-	}
-	public xwriter td(final String cls,final String style){
-		tago("td");
-		if(cls!=null&&cls.length()!=0)
-			attr("class",cls);
-		if(style!=null&&style.length()!=0)
-			attr("style",style);
-		return tagoe();
-	}
-	public xwriter td_(){
-		return tage("td");
-	}
-	public xwriter th(){
-		return tag("th");
-	}
-	public xwriter th(final int colspan){
-		return tago("th").attr("colspan",colspan).tagoe();
-	}
-	public xwriter th(final String cls){
-		return tago("th").attr("class",cls).tagoe();
-	}
-	public xwriter th_(){
-		return tage("th");
-	}
-	public xwriter tr(){
-		return tag("tr");
-	}
-	public xwriter tr(final String cls){
-		return tago("tr").attr("class",cls).tagoe();
-	}
-	public xwriter tr_(){
-		return tage("tr");
-	}
 	public xwriter ul(){
 		return tag("ul");
 	}
@@ -341,57 +106,6 @@ public final class xwriter{
 	public xwriter inpcolr(final a e){
 		return inp(e,"color",null,null,null,null,null,null,null);
 	}
-	public xwriter inp(final a e,final String type,final String style,final String stylecls,final a on_enter_ajax_elem,final String on_enter_ajax_param,final String txt,final a on_change_ajax_elem,final String on_change_ajax_param){
-		final String value=txt==null?e.toString():txt;
-		tago("input").attr("value",value).attrdef(e);
-		if(!isempty(type))
-			attr("type",type);
-		if(!isempty(stylecls))
-			attr("class",stylecls);
-		if(!isempty(style))
-			attr("style",style);
-		if(on_enter_ajax_elem!=null){
-			final String ax=on_enter_ajax_elem.id()+(on_enter_ajax_param!=null?(" "+on_enter_ajax_param):"");
-			attr("onkeypress","return $r(event,this,'"+ax+"')");
-		}
-		final StringBuilder sb=new StringBuilder();
-		if("checkbox".equals(type)){
-			if(value.equals(Boolean.TRUE.toString()))
-				attr("checked","checked");
-			sb.append("this.value=this.checked?'1':'0';$b(this)");
-			if(on_change_ajax_elem!=null){
-				final String ax=on_enter_ajax_elem.id()+(on_enter_ajax_param!=null?(" "+on_change_ajax_param):"");
-				sb.append(";$x('"+ax+"')");
-			}
-		}else{
-			sb.append("$b(this)");
-			if(on_change_ajax_elem!=null){
-				final String ax=on_enter_ajax_elem.id()+(on_enter_ajax_param!=null?(" "+on_change_ajax_param):"");
-				sb.append(";$x('"+ax+"')");
-			}
-		}
-		attr("onchange",sb.toString());
-		return tagoe();// ? <input hidden value="false">
-	}
-	public xwriter inptxtarea(final a e){
-		return inptxtarea(e,null);
-	}
-	public xwriter inptxtarea(final a e,final String cls){
-		tago("textarea").attrdef(e).attr("onchange","$b(this)")
-//			.attr("onkeydown","$b(this);if(event.keyCode==9){console.log(this.id+' '+this.selectionStart);this.value=this.value.substring(0,this.selectionStart)+'   '+this.value.substring(this.selectionStart,this.value.length);console.log(this.selectionStart);this.selectionStart=this.selectionEnd=this.selectionStart-2;return false;}return true;")
-				.attr("onkeydown","$b(this)");
-
-		if(cls!=null)
-			attr("class",cls);
-		attr("wrap","off").attr("spellcheck","false").tagoe();
-		try{
-			e.to(new osltgt(outputstream()));
-		}catch(final Throwable t){
-			b.log(t);
-			p(b.stacktrace(t));
-		}
-		return tage("textarea");
-	}
 	public xwriter flush(){
 		try{
 			os.flush();
@@ -418,34 +132,8 @@ public final class xwriter{
 	public xwriter bell(){
 		return p('\07');
 	}
-	public xwriter p(final CharSequence cs){
-		return p(cs.toString());
-	}
-	public xwriter title(final String s){
-		return tag("title").p(s).tage("title");
-	}
-	public xwriter css(final String selector,final String stl){
-		return p(selector).p("{").p(stl).p("}");
-	}
-	public xwriter css(final a e,final String style){
-		return p("#").p(e.id()).p("{").p(style).p("}");
-	}
-	public xwriter inpax(final a e,final String stylecls,final a ax,final String axp){
-		tago("input").attr("value",e.toString()).attrdef(e).attr("type","text");
-		if(!isempty(stylecls))
-			attr("class",stylecls);
-		attr("onfocus","this.setSelectionRange(this.value.length,this.value.length)");
-		final StringBuilder sb=new StringBuilder();
-		sb.append((ax==null?e:ax).id());
-		if(!isempty(axp))
-			sb.append(" ").append(axp);
-		final String sbs=sb.toString();
-		attr("oninput","$b(this);$x('"+sbs+"');return true;");
-		attr("onkeypress","return $r(event,this,'"+ax.id()+" sel')");
-		return tagoe();
-	}
 	public xwriter inpax(final a e,final String stylecls,final a ax,final String onchangeaxp,final String onselectaxp){
-		tago("input").attr("value",e.toString()).attrdef(e).attr("type","text");
+		tago("input").attr("value",e.toString()).default_attrs_for_element(e).attr("type","text");
 		if(!isempty(stylecls))
 			attr("class",stylecls);
 		final String eid=ax.id();
@@ -486,32 +174,6 @@ public final class xwriter{
 	}
 	public xwriter xu(final a e,final String s){
 		return xu(e.id(),s);
-	}
-	public xwriter xub(final a e,final boolean inner,final boolean escltgt){
-		p("$").p(inner?"s":"o").p("('").p(e.id()).p("','");
-		return new xwriter(new osjsstr(escltgt?new osltgt(os):os));
-	}
-	public xwriter xube(){
-		return pl("');");
-	}
-	public xwriter xu(final a e) throws Throwable{
-		e.to(xub(e,true,false));
-		return xube();
-	}
-	public xwriter xu(final a...es) throws Throwable{
-		for(a e:es){
-			e.to(xub(e,true,false));
-			xube();
-		}
-		return this;
-	}
-	public xwriter xu(final a e,final boolean escltgt) throws Throwable{
-		e.to(xub(e,true,escltgt));
-		return xube();
-	}
-	public xwriter xuo(final a e) throws Throwable{
-		e.to(xub(e,false,false));
-		return xube();
 	}
 	public xwriter xinterval(final a e,final String ax,final int ms){
 		return p("setInterval(\"$x('").p(e.id()).p(" ").p(ax).p("')\",").p(ms).pl(");");
@@ -595,9 +257,6 @@ public final class xwriter{
 		e.to(this);
 		return div_();
 	}
-	public xwriter td(final int colspan){
-		return p("<td colspan=").p(colspan).p(">");
-	}
 	public xwriter style(final a e,final String style){
 		return style().css(e,style).style_();
 	}
@@ -657,11 +316,8 @@ public final class xwriter{
 //			attr("style",style);
 //		return tagoe();
 //	}
-	public xwriter nbsp(){
-		return p("&nbsp;");
-	}
 	public xwriter spaned(final a e){
-		tago("span").attrdef(e).attr("contenteditable").p(" onkeydown=\"$b(this)\" spellcheck=false");
+		tago("span").default_attrs_for_element(e).attr("contenteditable").p(" onkeydown=\"$b(this)\" spellcheck=false");
 //		p(" oncopy=\"var e=event;e.preventDefault();var r=window.getSelection();e.clipboardData.setData('text/plain',r);\"");
 		p(" onpaste=\"var e=event;e.preventDefault();var t=e.clipboardData.getData('text/plain');document.execCommand('inserttext',false,t);\"");
 		tagoe();
@@ -690,12 +346,144 @@ public final class xwriter{
 			p(x);
 		return this;
 	}
-	// -----------------------------------------
-	// -------------- reviewed
-	// -----------------------------------------
 
+	public xwriter axjs(final String eid,final String func,final String param){
+		p("$x('").p(eid);
+		if(!isempty(func))
+			p(" ").p(func);
+		if(!isempty(param))
+			p(" ").p(param);
+		return p("')");
+	}
+	public xwriter ax(final a e,final String callback,final String param,final String html){
+		final String wid=e.id();
+		p("<a href=\"javascript:").axjs(wid,callback,param).p("\">").p(html).p("</a>");
+		return this;
+	}
+	// -----------------------------------------------------------------------------------
+	// -------------- reviewed for use with bob... encoding of string in string etc
+	// -----------------------------------------------------------------------------------
+	public xwriter(final OutputStream os){
+		this.os=os;
+	}
+	public xwriter(){
+		os=new ByteArrayOutputStream();
+	}
+	public OutputStream outputstream(){
+		return os;
+	}
+	public xwriter p(final String s){
+		if(s==null)
+			return this;
+		try{
+			os.write(tobytes(s));
+		}catch(final IOException e){
+			throw new Error(e);
+		}
+		return this;
+	}
+	public xwriter nl(){
+		return p('\n');
+	}
+	public xwriter nl(final int number_of_newlines){
+		for(int i=0;i<number_of_newlines;i++)
+			p('\n');
+		return this;
+	}
+	public xwriter p(final byte n){
+		return p(Byte.toString(n));
+	}
+	public xwriter p(final char n){
+		return p(Character.toString(n));
+	}
+	public xwriter p(final int n){
+		return p(Integer.toString(n));
+	}
+	public xwriter p(final float n){
+		return p(Float.toString(n));
+	}
+	public xwriter p(final long n){
+		return p(Long.toString(n));
+	}
+	public xwriter p(final double n){
+		return p(Double.toString(n));
+	}
+	public xwriter p(final CharSequence cs){
+		return p(cs.toString());
+	}
+	public xwriter p(final a e){
+		return p(e.str());
+	}
+	public xwriter pl(final String s){
+		return p(s).nl();
+	}
+	public xwriter pl(){
+		return nl();
+	}
+	public xwriter br(){
+		return tag("br");
+	}
+	public xwriter nbsp(){
+		return p("&nbsp;");
+	}
+	public xwriter tag(final String name){
+		return p("<").p(name).p(">");
+	}
+//	public xwriter tag(final String name,final String id){
+//		return p("<").p(name).p(" id=").p(id).p(">");
+//	}
+	/** Opens a tag. Example tago("a") outputs "<a" */
+	public xwriter tago(final String name){
+		return p("<").p(name);
+	}
+	public xwriter default_attrs_for_element(final a e){
+		final String id=e.id();
+		return attr("id",id);
+	}
+	public xwriter attr(final String name,final int value){
+		return p(" ").p(name).p("=").p(value);
+	}
+	public xwriter attr(final String name,final String value){
+		return p(" ").p(name).p("=\"").p(enc_quot(value)).p("\"");
+	}
+	public xwriter attr(final String name){
+		return p(" ").p(name);
+	}
+	/** Outputs '>'. Called after a tago(...) to close the tag. */
+	public xwriter tagoe(){
+		return p(">");
+	}
+	/** End tag. Example tage("a") outputs </a> */
+	public xwriter tage(final String name){
+		return p("</").p(name).p(">");
+	}
+	public xwriter title(final String title){
+		return tag("title").p(title).tage("title");
+	}
+	public xwriter css(final String selector,final String style){
+		return p(selector).p("{").p(style).p("}");
+	}
+	public xwriter css(final a e,final String style){
+		return p("#").p(e.id()).p("{").p(style).p("}");
+	}
+	/** Opens a tag for inline script that is executed on the client side. The script is collected in a list from the response message and executed after the field has been set. */
+	public xwriter inline_js_open(){
+		return tag("is");
+	}
+	/** Alias for inline_js_open() */
+	public xwriter iso(){
+		return inline_js_open();
+	}
+	/** Closes inline script tag. */
+	public xwriter inline_js_close(){
+		return tage("is");
+	}
+	/** Alias for inline_js_close() */
+	public xwriter isc(){
+		return inline_js_close();
+	}
 	/**
-	 * Opens a span tag with id, class and style allowing the appending of additional attributes such as onclick etc. Tag must be closed with tagoe()
+	 * Opens a span tag with id, class and style allowing the appending of additional attributes. Must be closed with tagoe().
 	 * 
 	 * @param e     the element
 	 * @param cls   the class attribute
@@ -715,7 +503,7 @@ public final class xwriter{
 	public xwriter spanot(final a e){
 		return spanot(e,null,null);
 	}
-	/** Renders the span tag. Must be closed with a span_() call. */
+	/** Renders the span tag. Must be closed with span_(). */
 	public xwriter spano(final a e,String cls,String style){
 		spanot(e,cls,style);
 		return tagoe();
@@ -726,7 +514,7 @@ public final class xwriter{
 	public xwriter spano(final a e){
 		return spano(e,null,null);
 	}
-	/** Renders a complete span with the HTML escaped value. */
+	/** Renders a complete span with HTML escaped value. */
 	public xwriter span(final a e,final String cls,final String style){
 		spano(e,cls,style);
 		try{
@@ -742,7 +530,7 @@ public final class xwriter{
 	public xwriter span(final a e){
 		return span(e,null,null);
 	}
-	/** Renders a complete span with the unescaped value. */
+	/** Renders a complete span with unescaped value. */
 	public xwriter span_html(final a e,final String cls,final String style){
 		spano(e,cls,style);
 		try{
@@ -752,36 +540,316 @@ public final class xwriter{
 		}
 		return span_();
 	}
-	public xwriter span_html(final a e,final String cls){
+	/** Alias for span_html(...). */
+	public xwriter spanh(final a e,final String cls,final String style){
+		return span_html(e,cls,style);
+	}
+	public xwriter spanh(final a e,final String cls){
 		return span_html(e,cls,null);
 	}
-	public xwriter span_html(final a e){
+	public xwriter spanh(final a e){
 		return span_html(e,null,null);
 	}
 	/** Closes span tag. */
 	public xwriter span_(){
 		return tage("span");
 	}
+	public xwriter ax(final a e,final String callback,final String html){
+		p("<a href=\"javascript:");
+		js_x(e,callback,true);
+		p("\">").p(html).p("</a>");
+		return this;
+	}
+	public xwriter ax(final a e,final String callback){
+		return ax(e,callback,callback);
+	}
+	public xwriter table(final String cls,final String style){
+		tago("table");
+		if(!isempty(cls))
+			attr("class",cls);
+		if(!isempty(style))
+			attr("style",style);
+		tagoe();
+		return this;
+	}
+	public xwriter table(final String cls){
+		return table(cls,null);
+	}
+	public xwriter table(){
+		return table(null,null);
+	}
+	public xwriter tr(final String cls){
+		tago("tr");
+		if(!isempty(cls))
+			attr("class",cls);
+		return tagoe();
+	}
+	public xwriter tr(){
+		return tr(null);
+	}
+	public xwriter tr_(){
+		return tage("tr");
+	}
+	public xwriter td(final String cls,final String style){
+		tago("td");
+		if(!isempty(cls))
+			attr("class",cls);
+		if(!isempty(style))
+			attr("style",style);
+		return tagoe();
+	}
+	public xwriter td(final String cls){
+		return td(cls,null);
+	}
+	public xwriter td(){
+		return td(null,null);
+	}
+	public xwriter td_(){
+		return tage("td");
+	}
+	public xwriter th(final String cls){
+		tago("th");
+		if(!isempty(cls))
+			attr("class",cls);
+		return tagoe();
+	}
+	public xwriter th(){
+		return th(null);
+	}
+	public xwriter th(final int colspan){
+		return tago("th").attr("colspan",colspan).tagoe();
+	}
+	public xwriter th_(){
+		return tage("th");
+	}
+	public xwriter table_(){
+		return tage("table");
+	}
+	public xwriter td(final int colspan){
+		return p("<td colspan=").p(colspan).p(">");
+	}
+	public xwriter style(){
+		return p("<style>");
+	}
+	public xwriter style_(){
+		return tage("style");
+	}
+	public xwriter divot(final a e,final String cls,final String style){
+		tago("div");
+		if(e!=null)
+			attr("id",e.id());
+		if(!isempty(cls))
+			attr("class",cls);
+		if(!isempty(style))
+			attr("style",style);
+		return this;
+	}
+	public xwriter divo(final a e,final String cls,final String style){
+		divot(e,cls,style);
+		return tagoe();
+	}
+	public xwriter divo(final a e,final String cls){
+		return divo(e,cls,null);
+	}
+	public xwriter divo(final a e){
+		return divo(e,null,null);
+	}
+	public xwriter divo(final String cls,final String style){
+		return divo(null,cls,style);
+	}
+	public xwriter divo(final String cls){
+		return divo(null,cls,null);
+	}
+	public xwriter divo(){
+		return divo(null,null,null);
+	}
+	public xwriter div_(){
+		return tage("div");
+	}
+	/** Renders a div tag with element content. */
+	public xwriter div_html(final a e,final String cls,final String style){
+		tago("div").attr("id",e.id());
+		if(!isempty(cls))
+			attr("class",cls);
+		if(!isempty(style))
+			attr("style",style);
+		tagoe();
+		try{
+			e.to(this);
+		}catch(Throwable t){
+			throw new Error(t);
+		}
+		return div_();
+	}
+	/** Alias for div_html(...). */
+	public xwriter divh(final a e,final String cls,final String style){
+		return div_html(e,cls,style);
+	}
+	public xwriter divh(final a e,final String cls){
+		return divh(e,cls,null);
+	}
+	public xwriter divh(final a e){
+		return divh(e,null,null);
+	}
+	public xwriter pre(final String cls){
+		tago("pre");
+		if(!isempty(cls))
+			attr("class",cls);
+		return tagoe();
+	}
+	public xwriter pre(){
+		return pre(null);
+	}
+	public xwriter pre_(){
+		return tage("pre");
+	}
+	// ? review this
+	public xwriter inp(final a e,final String type,final String cls,final String style,final a on_enter_callback_elem,final String on_enter_callback,final String default_value,final a on_change_callback_elem,final String on_change_callback){
+		final String value=default_value==null?e.toString():default_value;
+		tago("input").attr("value",value).default_attrs_for_element(e);
+		if(!isempty(type))
+			attr("type",type);
+		if(!isempty(cls))
+			attr("class",cls);
+		if(!isempty(style))
+			attr("style",style);
+		if(on_enter_callback_elem!=null){
+			final String ax=on_enter_callback_elem.id()+(on_enter_callback!=null?(" "+on_enter_callback):"");
+			attr("onkeypress","return $r(event,this,'"+ax+"')");
+		}
+		final StringBuilder sb=new StringBuilder();
+		if("checkbox".equals(type)){
+			if(value.equals(Boolean.TRUE.toString()))
+				attr("checked","checked");
+			sb.append("this.value=this.checked?'1':'0';$b(this)");
+			if(on_change_callback_elem!=null){
+				final String ax=on_enter_callback_elem.id()+(on_enter_callback!=null?(" "+on_change_callback):"");
+				sb.append(";$x('"+ax+"')");
+			}
+		}else{
+			sb.append("$b(this)");
+			if(on_change_callback_elem!=null){
+				final String ax=on_enter_callback_elem.id()+(on_enter_callback!=null?(" "+on_change_callback):"");
+				sb.append(";$x('"+ax+"')");
+			}
+		}
+		attr("onchange",sb.toString());
+		return tagoe();// ? <input hidden value="false">
+	}
+	public xwriter inpint(final a e){
+		return tago("input").attr("value",e.toString()).default_attrs_for_element(e).attr("type","text").attr("class","nbr").attr("size",5).attr("onchange","$b(this)").tagoe();
+	}
+	public xwriter inpflt(final a e){
+		return tago("input").attr("value",e.toString()).default_attrs_for_element(e).attr("type","text").attr("class","nbr").attr("size",5).attr("onchange","$b(this)").tagoe();
+	}
+	public xwriter inplng(final a e){
+		return inpint(e);
+	}
 	/**
-	 * Renders JavaScript for a callback.
+	 * Input field that callbacks an element while typing.
+	 * 
+	 * @param e             the element.
+	 * @param cls           style class.
+	 * @param callback_elem element to do callback on at change.
+	 * @param callback      callback argument. First word is the method and the rest of the string is the parameter(s).
+	 */
+	public xwriter inpax(final a e,final String cls,final a callback_elem,final String callback){
+		tago("input").attr("value",e.toString()).default_attrs_for_element(e).attr("type","text");
+		if(!isempty(cls))
+			attr("class",cls);
+		attr("onfocus","this.setSelectionRange(this.value.length,this.value.length)");
+		final StringBuilder sb=new StringBuilder();
+		sb.append(callback_elem.id());
+		if(!isempty(callback))
+			sb.append(" ").append(callback);
+		final String sbs=sb.toString();
+		attr("oninput","$b(this);$x('"+sbs+"');return true;");
+		attr("onkeypress","return $r(event,this,'"+callback_elem.id()+" sel')");
+		return tagoe();
+	}
+	/** Input text area. */
+	public xwriter inptxtarea(final a e,final String cls){
+		tago("textarea").default_attrs_for_element(e).attr("onchange","$b(this)")
+//			.attr("onkeydown","$b(this);if(event.keyCode==9){console.log(this.id+' '+this.selectionStart);this.value=this.value.substring(0,this.selectionStart)+'   '+this.value.substring(this.selectionStart,this.value.length);console.log(this.selectionStart);this.selectionStart=this.selectionEnd=this.selectionStart-2;return false;}return true;")
+				.attr("onkeydown","$b(this)");
+
+		if(!isempty(cls))
+			attr("class",cls);
+		attr("wrap","off").attr("spellcheck","false").tagoe();
+		try{
+			e.to(new osltgt(outputstream()));
+		}catch(final Throwable t){
+			b.log(t);
+			p(b.stacktrace(t));
+		}
+		return tage("textarea");
+	}
+	public xwriter inptxtarea(final a e){
+		return inptxtarea(e,null);
+	}
+	/**
+	 * @param e       element
+	 * @param inner   true if update inner HTML, false if update outter element.
+	 * @param escltgt true to escape lt and gt.
+	 * @return xwriter xwriter that will generate a script set call. Will update element inner or outer HTML code. Must be closed with xube().
+	 */
+	public xwriter xub(final a e,final boolean inner,final boolean escltgt){
+		p("$").p(inner?"s":"o").p("('").p(e.id()).p("','");
+		return new xwriter(new osjsstr(escltgt?new osltgt(os):os));
+	}
+	/** Completes an xub(...) operation. */
+	public xwriter xube(){
+		return pl("');");
+	}
+	/**
+	 * Updates inner HTML of element.
+	 * 
+	 * @param e       element
+	 * @param escltgt true to escape lt and gt.
+	 */
+	public xwriter xu(final a e,final boolean escltgt) throws Throwable{
+		e.to(xub(e,true,escltgt));
+		return xube();
+	}
+	/** Updates inner HTML of element e. */
+	public xwriter xu(final a e) throws Throwable{
+		return xu(e,false);
+	}
+	/** Updates inner HTML of elements e... */
+	public xwriter xu(final a...es) throws Throwable{
+		for(a e:es){
+			e.to(xub(e,true,false));
+			xube();
+		}
+		return this;
+	}
+	/** Updates element outer HTML. */
+	public xwriter xuo(final a e) throws Throwable{
+		e.to(xub(e,false,false));
+		return xube();
+	}
+	/**
+	 * Renders script for a callback.
 	 * 
 	 * @param e                    element to call
-	 * @param param                first word is the method to call and remaining string is the parameter.
-	 * @param encode_for_attribute true to encode param for JavaScript in HTML attribute and false for JavaScript single quoted string.
+	 * @param callback             first word is method name and remaining string is the parameter.
+	 * @param encode_for_attribute true to encode param for script in HTML attribute.
 	 */
-	public xwriter js_x(a e,String param,boolean encode_for_attribute){
+	public xwriter js_x(a e,String callback,boolean encode_for_attribute){
 		p("$x('").p(e.id());
-		if(!isempty(param)){
+		if(!isempty(callback)){
 			p(" ");
 			if(encode_for_attribute)
-				p(enc_js_str_in_attr(param));
+				p(enc_js_in_attr(callback));
 			else
-				p(enc_js_str(param));
+				p(enc_js_str(callback));
 		}
 		p("');");
 		return this;
 	}
-
+	public xwriter js_x(a e,String callback){
+		return js_x(e,callback,false);
+	}
 	public xwriter js_x(a e,boolean encode_for_attribute){
 		return js_x(e,null,encode_for_attribute);
 	}
@@ -792,7 +860,7 @@ public final class xwriter{
 		return text.replaceAll("\"","&quot;");
 	}
 
-	private static String enc_js_str_in_attr(final String text){
+	private static String enc_js_in_attr(final String text){
 		if(text==null)
 			return "";
 		return text.replaceAll("'","\\\\'").replaceAll("\"","&quot;");

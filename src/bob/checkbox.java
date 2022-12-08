@@ -18,9 +18,9 @@ public class checkbox extends a{
 	public void to(xwriter x) throws Throwable{
 		x.spano(this);
 		if(on.equals(str())){
-			x.ax(this,"u",null,on);
+			x.ax(this,"u",on);
 		}else{
-			x.ax(this,"s",null,off);
+			x.ax(this,"s",off);
 		}
 		x.span_();
 	}
