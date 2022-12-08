@@ -28,9 +28,9 @@ public class root extends a{
 		t.to(x);
 		x.div_();
 		x.p("serialized size: ");
-		x.spanot(s,"bytes","background:yellow").p(" onclick=\"").js_x(this,"s \"'hello'\"",true).p("\"").tagoe().p(s.str()).span_();
+//		x.spanot(s,"bytes","background:yellow").p(" onclick=\"").js_x(this,"s \"'hello'\"",true).p("\"").tagoe().p(s.str()).span_();
 //		x.spano(s).p(s.str()).span_();
-//		x.span(s);
+		x.span(s);
 		x.p(" B ");
 //		x.ax(this,"s \"'hello'\"",":: refresh \"''\"");
 		x.ax(this,"s",":: refresh");
@@ -65,10 +65,9 @@ public class root extends a{
 		update_serialized_size();
 		x.xu(s);
 	}
-	public void x_test(xwriter x,String param) throws Throwable{
-		System.out.println("x_test: param:{"+param+"} value={"+test.str()+"}");
-	}
-
+//	public void x_test(xwriter x,String param) throws Throwable{
+//		System.out.println("x_test: param:{"+param+"} value={"+test.str()+"}");
+//	}
 	private void update_serialized_size(){
 		s.set(Integer.toString(serialize(this).length));
 	}
