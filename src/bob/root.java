@@ -53,7 +53,11 @@ public class root extends a{
 //		x.nl().inp(test,"checkbox",null,null,this,null,null,null,null);
 //		x.nl().inp(test,"date",null,null,this,null,null,null,null);
 //		x.nl().inp(test,"time",null,null,null,null,null,null,null);
-//		x.nl().inp_color(test);
+//		x.nl().inp(test,"number",null,null,null,null,null,null,null);
+//		x.nl().inp(test,"color",null,null,null,null,null,null,null);
+//		x.nl().inp(test,"image",null,null,null,null,null,null,null);
+//		x.nl().inp(test,"file",null,null,null,null,null,null,null);
+//		x.nl().inp(test,"search",null,null,null,null,null,null,null);
 	}
 
 	public void x_s(xwriter x,String param) throws Throwable{

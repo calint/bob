@@ -752,9 +752,9 @@ public final class xwriter{
 	public xwriter inptxt(final a e,final a callback_elem_on_enter,final String callback,final String default_value,final String cls){
 		return inp(e,null,cls,null,callback_elem_on_enter,callback,default_value,null,null);
 	}
-	public xwriter inp_color(final a e){
-		return inp(e,"color",null,null,null,null,null,null,null);
-	}
+//	public xwriter inp_color(final a e){
+//		return inp(e,"color",null,null,null,null,null,null,null);
+//	}
 	public xwriter inpint(final a e){
 		return tago("input").attr("value",e.toString()).default_attrs_for_element(e).attr("type","text").attr("class","nbr").attr("size",5).attr("oninput","$b(this)").tagoe();
 	}
