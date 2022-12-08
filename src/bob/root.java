@@ -9,7 +9,9 @@ public class root extends a{
 	static final long serialVersionUID=1;
 	public table t;
 	public a s;
-
+	public root(){
+		update_serialized_size();
+	}
 	public void to(final xwriter x) throws Throwable{
 		x.style();
 		x.css("table.f","margin-left:auto;margin-right:auto");
@@ -25,14 +27,19 @@ public class root extends a{
 		x.divo(t);
 		t.to(x);
 		x.div_();
-		x.p("serialized size: ").spano(s).p(serialize(this).length).span_().p(" B ");
+		x.p("serialized size: ").span(s).p(" B ");
 		x.ax(this,"s",":: refresh");
 	}
-	
-	public void x_s(xwriter x,String param){
-		x.xu(s,Integer.toString(serialize(this).length));
+
+	private void update_serialized_size(){
+		s.set(Integer.toString(serialize(this).length));
 	}
-	
+
+	public void x_s(xwriter x,String param) throws Throwable{
+		update_serialized_size();
+		x.xu(s);
+	}
+
 	private static byte[] serialize(Object o){
 		try{
 			final ByteArrayOutputStream bos=new ByteArrayOutputStream(256);
