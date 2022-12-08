@@ -49,7 +49,10 @@ public class table extends a{
 			final String id=getIdFrom(o);
 			x.tr().td();
 			final checkbox cb=new checkbox(id,selectedIds.contains(id));
+			// add to container where the element will get a name unique in the context.
+			// the parent of the checkbox will be the container.
 			cbs.add(cb);
+			// checkbox now has parent and name. render it.
 			cb.to(x);
 			renderRowCells(x,o);
 			x.nl();
@@ -92,13 +95,6 @@ public class table extends a{
 	// --------------------------------------------------------------------------
 	// --------------------------------------------------------------------------
 	// --------------------------------------------------------------------------
-	final static List<String> ls=new ArrayList<String>();
-	static{
-		ls.add("file1.txt");
-		ls.add("file+2.txt");
-		ls.add("another file.txt");
-	}
-	// --------------------------------------------------------------------------
 	protected List<action> getActionsList(){
 		final List<action> ls=new ArrayList<action>();
 		ls.add(new action_create());
@@ -108,7 +104,7 @@ public class table extends a{
 	protected List<?> getList(){
 		final List<String> result=new ArrayList<String>();
 		final String qstr=q.str().toLowerCase();
-		for(Iterator<String> i=ls.iterator();i.hasNext();){
+		for(Iterator<String> i=data.ls.iterator();i.hasNext();){
 			final String title=i.next();
 			if(!title.toLowerCase().startsWith(qstr)){
 				continue;

@@ -6,15 +6,11 @@ import b.xwriter;
 
 public abstract class action extends a{
 	private static final long serialVersionUID=1L;
-	private final String name;
 	public action(String name){
-		this.name=name;
-	}
-	public final String getName() {
-		return name;
+		set(name);
 	}
 	@Override public final void to(xwriter x) throws Throwable{
-		x.ax(this,null,":: "+name);
+		x.ax(this,null,":: "+str());
 	}
 	public final void x_(xwriter x,String param) throws Throwable{
 		bubble_event(x);

@@ -13,7 +13,7 @@ public class action_delete extends action{
 	@Override protected void process(a from,Set<String> selectedIds) throws Throwable{
 		System.out.println(getClass().getName()+" "+selectedIds);
 		for(String id:selectedIds){
-			table.ls.remove(id);
+			data.ls.remove(id);
 		}
 		selectedIds.clear();
 	}

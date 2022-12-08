@@ -13,6 +13,6 @@ public class action_create extends action{
 	@Override protected void process(a from,Set<String> selectedIds) throws Throwable{
 		System.out.println(getClass().getName()+" "+selectedIds);
 		table t=(table)from;
-		table.ls.add(t.q.str());
+		data.ls.add(t.q.str());
 	}
 }
