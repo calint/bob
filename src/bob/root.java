@@ -46,16 +46,13 @@ public class root extends a{
 		update_serialized_size();
 		x.xu(s,sg);
 	}
-//	public void x_test(xwriter x,String param) throws Throwable{
-//		System.out.println("x_test: param:{"+param+"} value={"+test.str()+"}");
-//	}
 	private void update_serialized_size() throws IOException{
 		final byte[] ba=serialize(this);
 		s.set(Integer.toString(ba.length));
 		sg.set(Integer.toString(gzip(ba).length));
 	}
 
-	private static byte[] serialize(Object o){
+	public static byte[] serialize(Object o){
 		try{
 			final ByteArrayOutputStream bos=new ByteArrayOutputStream(256);
 			final ObjectOutputStream oos=new ObjectOutputStream(bos);
