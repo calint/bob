@@ -23,6 +23,7 @@ public class table extends a{
 		x.table("f").nl();
 		x.tr().th();
 		renderHeaders(x);
+		
 		checkboxes.clear();
 		for(final Object o:ls){
 			final String id=getIdFrom(o);
@@ -47,7 +48,8 @@ public class table extends a{
 	@Override protected void bubble(xwriter x,a from,Object o) throws Throwable{
 		// event bubbled from child
 		if(from instanceof checkbox){
-			final String name=((checkbox)from).name_unescaped();
+			// unescape name because it might contain escaped characters
+			final String name=a.unescape_html_name(((checkbox)from).name());
 			if("checked".equals(o)){
 				selectedIds.add(name);
 				return;
@@ -59,6 +61,7 @@ public class table extends a{
 		// event unknown by this element, bubble to parent
 		super.bubble(x,from,o);
 	}
+	// callback for the query field
 	public void x_(xwriter js,String s) throws Throwable{
 		System.out.println("query: "+q.str());
 		xwriter x=js.xub(this,true,false);

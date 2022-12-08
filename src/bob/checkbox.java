@@ -9,6 +9,7 @@ public class checkbox extends a{
 	final private static String on="▣";
 
 	public checkbox(a parent,String name,boolean checked){
+		// name might contain characters that need to be escaped
 		super(parent,a.escape_html_name(name),checked?on:off);
 		set(checked?on:off);
 	}
