@@ -34,7 +34,7 @@ public class table extends a{
 			x.hr();
 		}
 
-		x.ax(this,"up","••").inpax(q,null,this,null);
+		x.ax(this,"up","••").inpax(q,null,this,"q");
 		x.tag("is").p("$f('").p(q.id()).p("')").tage("is");
 		x.div_();
 
@@ -86,7 +86,7 @@ public class table extends a{
 		super.bubble_event(js,from,o);
 	}
 	// callback for the query field
-	public void x_(xwriter js,String s) throws Throwable{
+	public void x_q(xwriter js,String s) throws Throwable{
 		System.out.println("query: "+q.str());
 		xwriter x=js.xub(this,true,false);
 		to(x);
