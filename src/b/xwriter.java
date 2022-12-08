@@ -88,24 +88,7 @@ public final class xwriter{
 		return tage("code");
 	}
 //	public xwriter rend(final a e)throws Throwable{if(e==null)return this;e.to(this);return this;}
-	public xwriter inptxt(final a e){
-		return inp(e,"text",null,null,null,null,null,null,null);
-	}
-	public xwriter inptxt(final a e,final a axonreturn){
-		return inp(e,"text",null,null,axonreturn,null,null,null,null);
-	}
-	public xwriter inptxt(final a e,final a axonreturn,final String axp){
-		return inp(e,"text",null,null,axonreturn,axp,null,null,null);
-	}
-	public xwriter inptxt(final a e,final a axonreturn,final String axp,final String stylecls){
-		return inp(e,"text",null,stylecls,axonreturn,axp,null,null,null);
-	}
-	public xwriter inptxt(final a e,final a axonreturn,final String axp,final String txt,final String stylecls){
-		return inp(e,"text",null,stylecls,axonreturn,axp,txt,null,null);
-	}
-	public xwriter inpcolr(final a e){
-		return inp(e,"color",null,null,null,null,null,null,null);
-	}
+
 	public xwriter flush(){
 		try{
 			os.flush();
@@ -713,34 +696,70 @@ public final class xwriter{
 			attr("class",cls);
 		if(!isempty(style))
 			attr("style",style);
+
 		if(on_enter_callback_elem!=null){
-			final String ax=on_enter_callback_elem.id()+(on_enter_callback!=null?(" "+on_enter_callback):"");
-			attr("onkeypress","return $r(event,this,'"+ax+"')");
+			final StringBuilder sb=new StringBuilder(64);
+			sb.append("return $r(event,this,'");
+			if(on_enter_callback_elem!=null){
+				sb.append(on_enter_callback_elem.id());
+				if(!isempty(on_enter_callback)){
+					sb.append(' ').append(enc_js_in_attr(on_enter_callback));
+				}
+			}
+			sb.append("')");
+			attr("onkeypress",sb.toString());
 		}
-		final StringBuilder sb=new StringBuilder();
+		final StringBuilder sb=new StringBuilder(64);
 		if("checkbox".equals(type)){
 			if(value.equals(Boolean.TRUE.toString()))
 				attr("checked","checked");
 			sb.append("this.value=this.checked?'1':'0';$b(this)");
 			if(on_change_callback_elem!=null){
-				final String ax=on_enter_callback_elem.id()+(on_enter_callback!=null?(" "+on_change_callback):"");
-				sb.append(";$x('"+ax+"')");
+				sb.append(";$x('");
+				sb.append(on_change_callback_elem.id());
+				if(!isempty(on_change_callback)) {
+					sb.append(' ').append(on_change_callback);
+				}
+				sb.append("')");
 			}
 		}else{
 			sb.append("$b(this)");
 			if(on_change_callback_elem!=null){
-				final String ax=on_enter_callback_elem.id()+(on_enter_callback!=null?(" "+on_change_callback):"");
-				sb.append(";$x('"+ax+"')");
+				sb.append(";$x('");
+				sb.append(on_change_callback_elem.id());
+				if(!isempty(on_change_callback)){
+					sb.append(' ');
+					sb.append(enc_js_in_attr(on_change_callback));
+				}
+				sb.append("')");
 			}
 		}
-		attr("onchange",sb.toString());
+		attr("oninput",sb.toString());
 		return tagoe();// ? <input hidden value="false">
 	}
+	public xwriter inptxt(final a e){
+		return inp(e,null,null,null,null,null,null,null,null);
+	}
+	public xwriter inptxt(final a e,final a callback_elem_on_enter){
+		return inp(e,null,null,null,callback_elem_on_enter,null,null,null,null);
+	}
+	public xwriter inptxt(final a e,final a callback_elem_on_enter,final String callback){
+		return inp(e,null,null,null,callback_elem_on_enter,callback,null,null,null);
+	}
+	public xwriter inptxt(final a e,final a callback_elem_on_enter,final String callback,final String cls){
+		return inp(e,null,cls,null,callback_elem_on_enter,callback,null,null,null);
+	}
+	public xwriter inptxt(final a e,final a callback_elem_on_enter,final String callback,final String default_value,final String cls){
+		return inp(e,null,cls,null,callback_elem_on_enter,callback,default_value,null,null);
+	}
+	public xwriter inp_color(final a e){
+		return inp(e,"color",null,null,null,null,null,null,null);
+	}
 	public xwriter inpint(final a e){
-		return tago("input").attr("value",e.toString()).default_attrs_for_element(e).attr("type","text").attr("class","nbr").attr("size",5).attr("onchange","$b(this)").tagoe();
+		return tago("input").attr("value",e.toString()).default_attrs_for_element(e).attr("type","text").attr("class","nbr").attr("size",5).attr("oninput","$b(this)").tagoe();
 	}
 	public xwriter inpflt(final a e){
-		return tago("input").attr("value",e.toString()).default_attrs_for_element(e).attr("type","text").attr("class","nbr").attr("size",5).attr("onchange","$b(this)").tagoe();
+		return tago("input").attr("value",e.toString()).default_attrs_for_element(e).attr("type","text").attr("class","nbr").attr("size",5).attr("oninput","$b(this)").tagoe();
 	}
 	public xwriter inplng(final a e){
 		return inpint(e);
