@@ -3,6 +3,8 @@ package bob;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
 import b.a;
+import b.b;
+import b.req;
 import b.xwriter;
 
 public class root extends a{
@@ -10,8 +12,13 @@ public class root extends a{
 	public table t;
 	public a s;
 	public a test;
+	public a si; // server info
 	public root(){
 		update_serialized_size();
+		update_server_info();
+	}
+	private void update_server_info(){
+		si.set(b.id+" "+req.get().ip().toString());
 	}
 	public void to(final xwriter x) throws Throwable{
 		x.style();
@@ -27,13 +34,16 @@ public class root extends a{
 		x.divo(t);
 		t.to(x);
 		x.div_();
-		x.p("serialized size: ");
+		x.nl();
+		x.p("serialized: ");
 //		x.spanot(s,"bytes","background:yellow").p(" onclick=\"").js_x(this,"s \"'hello'\"",true).p("\"").tagoe().p(s.str()).span_();
 //		x.spano(s).p(s.str()).span_();
 		x.span(s);
 		x.p(" B ");
 //		x.ax(this,"s \"'hello'\"",":: refresh \"''\"");
 		x.ax(this,"s",":: refresh");
+		x.nl();
+		x.p("server: ").span(si);
 //		x.iso().js_x(this,"s \"'hello'\"",false).isc();
 //		x.divot(s,"bytes","background:yellow").p(" onclick=\"ui.alert('&quot;\\'hello\\'&quot;')").p("\"").tagoe().p(s).div_();
 //		x.divot(s,"bytes","background:yellow").p(s).div_();
@@ -59,7 +69,7 @@ public class root extends a{
 //		x.nl().inp(test,"file",null,null,null,null,null,null,null);
 //		x.nl().inp(test,"search",null,null,null,null,null,null,null);
 //		x.nl().inptxtarea(test,"txtarea");
-		x.nl().inptxtarea(test,null);
+//		x.nl().inptxtarea(test,null);
 	}
 
 	public void x_s(xwriter x,String param) throws Throwable{
