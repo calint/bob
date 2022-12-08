@@ -1,0 +1,23 @@
+package bob;
+
+import java.util.ArrayList;
+import b.a;
+
+/** Contains elements in a list. Used to create a namespace in user interface. */
+public final class container extends a{
+	private static final long serialVersionUID=1L;
+	private ArrayList<a>elements=new ArrayList<a>();
+	
+	public void clear(){
+		elements.clear();
+	}
+	public void add(a e) {
+		e.parent(this);
+		e.name(Integer.toString(elements.size()));
+		elements.add(e);
+	}
+	
+	@Override protected a find_child(String nm){
+		return elements.get(Integer.parseInt(nm));
+	}
+}

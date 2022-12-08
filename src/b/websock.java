@@ -33,7 +33,7 @@ public abstract class websock{
 	}
 
 	/** @param r the request that runs this websocket. */
-	final synchronized void init(final req r) throws Throwable{ // synchronized not needed because the racing that may occur with a call 'to process' is safe
+	final synchronized void init(final req r) throws Throwable{
 		this.rq=r;
 		this.socket_channel=r.socket_channel;
 		this.bb=r.bb;
@@ -201,14 +201,13 @@ public abstract class websock{
 		on_message(request_bb);
 		request_bb=null;
 	}
+
 	private void write() throws Throwable{
 		final long n=socket_channel.write(send_bba);
 //		System.out.println("websock "+Integer.toHexString(hashCode())+": sock_write: "+n+" bytes");
 		thdwatch.output+=n;
 		for(ByteBuffer b:send_bba){ // check if the write is complete.
 			if(b.hasRemaining()){
-				// if called from thdreq then request more writes otherwise return value is
-				// ignored
 				rq.selection_key.interestOps(SelectionKey.OP_WRITE);
 				rq.selection_key.selector().wakeup();
 				return;
@@ -234,12 +233,6 @@ public abstract class websock{
 
 	final protected void send(ByteBuffer bb,final boolean textmode) throws Throwable{
 		send(new ByteBuffer[]{bb},textmode);
-//		if(response_bba!=null)throw new Error("overwrite");//?
-//		// rfc6455#section-5.2
-//		// Base Framing Protocol
-//		final int ndata=bb.remaining();
-//		response_bba=new ByteBuffer[]{make_header(ndata,textmode),bb};
-//		sock_write(); // return ignored because bbos will be set to null when write is finished
 	}
 	final protected void send(final ByteBuffer[] bba,final boolean textmode) throws Throwable{
 		if(is_sending()){

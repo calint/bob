@@ -1,16 +1,9 @@
 package b;
-import static b.b.strenc;
 import static b.b.tobytes;
 import static b.b.tostr;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.Reader;
 import java.io.Serializable;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.lang.reflect.Field;
 public class a implements Serializable{
 	private a parent;
@@ -74,19 +67,19 @@ public class a implements Serializable{
 	public final a parent(){
 		return parent;
 	}
-	public final a parent(final Class<? extends a> cls){
-		if(parent==null)
-			return null;
-		if(cls.isAssignableFrom(parent.getClass()))
-			return parent;
-		return parent.parent(cls);
-	}
+//	public final a parent(final Class<? extends a> cls){
+//		if(parent==null)
+//			return null;
+//		if(cls.isAssignableFrom(parent.getClass()))
+//			return parent;
+//		return parent.parent(cls);
+//	}
 //	public final a pt(final a a){pt=a;return this;}
-	public final void attach(final a e,final String fld){
+	public final void attach(final a e,final String field_name){
 		e.parent=this;
-		e.name=fld;
+		e.name=field_name;
 		try{
-			getClass().getField(fld).set(this,e);
+			getClass().getField(field_name).set(this,e);
 		}catch(final Throwable t){
 			throw new Error(t);
 		}
@@ -143,9 +136,9 @@ public class a implements Serializable{
 		value=Double.toString(d);
 		return this;
 	}
-	public final a clear(){
-		return set((String)null);
-	}
+//	public final a clear(){
+//		return set((String)null);
+//	}
 	public final boolean is_empty(){
 		return value==null||value.length()==0;
 	}
@@ -173,66 +166,68 @@ public class a implements Serializable{
 
 	final public void to(final OutputStream os) throws IOException{
 		os.write(tobytes(tostr(value,"")));
-	}// ? impl s?.to(os)
-	final public void to(final path p,final boolean append) throws IOException{
-		final OutputStream os=p.outputstream(append);
-		to(os);
-		os.close();
 	}
-	final public void to(final path p) throws IOException{
-		to(p,false);
-	}
-	final public a from(final path p) throws Throwable{// ? impl
-		final ByteArrayOutputStream baos=new ByteArrayOutputStream((int)p.size());
-		p.to(baos);
-		baos.close();
-		set(baos.toString(strenc));
-		return this;
-	}
-	final public a from(final InputStream in) throws Throwable{
-		final InputStreamReader isr=new InputStreamReader(in,b.strenc);
-		final StringWriter sw=new StringWriter();
-		b.cp(isr,sw,null);
-		final String s=sw.toString();
-		set(s);
-		return this;
-	}
-	final public a from(final InputStream in,final String defaultIfError){
-		try{
-			from(in);
-		}catch(final Throwable t){
-			set(defaultIfError);
-		}
-		return this;
-	}
-	public a parent(final a e){
+//
+//	final public void to(final path p,final boolean append) throws IOException{
+//		final OutputStream os=p.outputstream(append);
+//		to(os);
+//		os.close();
+//	}
+
+//	final public void to(final path p) throws IOException{
+//		to(p,false);
+//	}
+//	final public a from(final path p) throws Throwable{// ? impl
+//		final ByteArrayOutputStream baos=new ByteArrayOutputStream((int)p.size());
+//		p.to(baos);
+//		baos.close();
+//		set(baos.toString(strenc));
+//		return this;
+//	}
+//	final public a from(final InputStream in) throws Throwable{
+//		final InputStreamReader isr=new InputStreamReader(in,b.strenc);
+//		final StringWriter sw=new StringWriter();
+//		b.cp(isr,sw,null);
+//		final String s=sw.toString();
+//		set(s);
+//		return this;
+//	}
+//	final public a from(final InputStream in,final String defaultIfError){
+//		try{
+//			from(in);
+//		}catch(final Throwable t){
+//			set(defaultIfError);
+//		}
+//		return this;
+//	}
+	public final a parent(final a e){
 		parent=e;
 		return this;
 	}// ? if pt ondetach?
-	public a name(final String s){
+	public final a name(final String s){
 		name=s;
 		return this;
 	}
-	final public void xrfsh(final xwriter x) throws Throwable{
-		to(x.xub(this,true,false));
-		x.xube();
-	}
+//	final public void xrfsh(final xwriter x) throws Throwable{
+//		to(x.xub(this,true,false));
+//		x.xube();
+//	}
 	/** implement to provide custom html document title */
 //	public interface titled{void title_to(xwriter x);}
-	final public Reader reader(){
-		return new StringReader(value==null?"":value);
-	}
+//	final public Reader reader(){
+//		return new StringReader(value==null?"":value);
+//	}
 	
-	final public static String escape_html_name(String name){
-		final String escaped=name.replace('+','§').replace(' ','+');
-//		final String escaped=name.replaceAll("\\+","%2b").replace(' ','+'); // ?  cannot replace with %2b because browser unescapes it in links
-		return escaped;
-	}
-
-	final public static String unescape_html_name(String name){
-		final String unescaped=name.replace('+',' ').replace('§','+');
-		return unescaped;
-	}
+//	final public static String html_escape(String name){
+//		final String escaped=name.replace('+','§').replace(' ','+');
+////		final String escaped=name.replaceAll("\\+","%2b").replace(' ','+'); // ?  cannot replace with %2b because browser unescapes it in links
+//		return escaped;
+//	}
+//
+//	final public static String html_unescape(String name){
+//		final String unescaped=name.replace('+',' ').replace('§','+');
+//		return unescaped;
+//	}
 	
 	private static final long serialVersionUID=1;
 }

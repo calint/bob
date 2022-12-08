@@ -4,16 +4,32 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import b.a;
 import b.xwriter;
 
 public class table extends a{
 	static final long serialVersionUID=1;
-	private HashSet<String> selectedIds=new HashSet<String>();
-	public a q;
-	private ArrayList<checkbox> checkboxes=new ArrayList<checkbox>();
+	private final HashSet<String> selectedIds=new HashSet<String>();
+	public a q; // query field
+
+	public container ans; // actions
+	public container cbs; // checkboxes
+
 	public void to(final xwriter x) throws Throwable{
 		x.p("<div style='text-align:center;padding-bottom:0.5em'>");
+		// add actions to container
+		final List<action> actions=getActionsList();
+		ans.clear();
+		for(action a:actions){
+			ans.add(a);
+			a.to(x);
+			x.p(" ");
+		}
+		if(!actions.isEmpty()){
+			x.hr();
+		}
+
 		x.ax(this,"up","••").inpax(q,null,this,null);
 		x.tag("is").p("$f('").p(q.id()).p("')").tage("is");
 		x.div_();
@@ -23,43 +39,48 @@ public class table extends a{
 		x.table("f").nl();
 		x.tr().th();
 		renderHeaders(x);
-		
-		checkboxes.clear();
+
+		cbs.clear();
 		for(final Object o:ls){
 			final String id=getIdFrom(o);
 			x.tr().td();
-			final checkbox cb=new checkbox(this,id,selectedIds.contains(id));
-			checkboxes.add(cb);
+			final checkbox cb=new checkbox(id,selectedIds.contains(id));
+			cbs.add(cb);
 			cb.to(x);
-			renderCells(x,o);
+			renderRowCells(x,o);
 			x.nl();
 		}
 		x.table_();
 	}
-	@Override protected a find_child(String name){
-		// finds a child that is not a field
-		for(final checkbox c:checkboxes){
-			if(c.name().equals(name)){
-				return c;
-			}
-		}
-		return null;
-	}
-	@Override protected void bubble_event(xwriter x,a from,Object o) throws Throwable{
+
+	@Override protected void bubble_event(xwriter js,a from,Object o) throws Throwable{
 		// event bubbled from child
 		if(from instanceof checkbox){
-			// unescape name because it might contain escaped characters
-			final String name=a.unescape_html_name(((checkbox)from).name());
+			final String id=((checkbox)from).getId();
 			if("checked".equals(o)){
-				selectedIds.add(name);
+				System.out.println("selected: "+id);
+				selectedIds.add(id);
 				return;
 			}else if("unchecked".equals(o)){
-				selectedIds.remove(name);
+				System.out.println("unselected: "+id);
+				selectedIds.remove(id);
 				return;
 			}
 		}
+		if(from instanceof action){
+//			if(selectedIds.isEmpty()){
+//				js.xalert("No items are selected.");
+//				return;
+//			}
+			final action a=(action)from;
+			a.process(this,selectedIds);
+			xwriter x=js.xub(this,true,false);
+			to(x);
+			js.xube();
+			return;
+		}
 		// event unknown by this element, bubble to parent
-		super.bubble_event(x,from,o);
+		super.bubble_event(js,from,o);
 	}
 	// callback for the query field
 	public void x_(xwriter js,String s) throws Throwable{
@@ -69,6 +90,10 @@ public class table extends a{
 		js.xube();
 	}
 	// --------------------------------------------------------------------------
+	public final Set<String> getSelectedIds(){
+		return selectedIds;
+	}
+	// --------------------------------------------------------------------------
 	final static List<String> ls=new ArrayList<String>();
 	static{
 		ls.add("file1.txt");
@@ -76,8 +101,14 @@ public class table extends a{
 		ls.add("another file.txt");
 	}
 	// --------------------------------------------------------------------------
+	protected List<action> getActionsList(){
+		final List<action> ls=new ArrayList<action>();
+		ls.add(new action_create());
+		ls.add(new action_delete());
+		return ls;
+	}
 	protected List<?> getList(){
-		final List<String>result=new ArrayList<String>();
+		final List<String> result=new ArrayList<String>();
 		final String qstr=q.str().toLowerCase();
 		for(Iterator<String> i=ls.iterator();i.hasNext();){
 			final String title=i.next();
@@ -95,7 +126,7 @@ public class table extends a{
 	protected void renderHeaders(xwriter x){
 		x.th().p("Name").th().p("Created").th().p("Size");
 	}
-	protected void renderCells(xwriter x,Object o){
+	protected void renderRowCells(xwriter x,Object o){
 		x.td().p(o.toString());
 		x.td().p("2022-12-06 15:33");
 		x.td().p("12 KB");

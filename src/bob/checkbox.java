@@ -7,11 +7,13 @@ public class checkbox extends a{
 	static final long serialVersionUID=1;
 	final private static String off="◻";
 	final private static String on="▣";
-
-	public checkbox(a parent,String name,boolean checked){
-		// name might contain characters that need to be escaped
-		super(parent,a.escape_html_name(name),checked?on:off);
+	final private String id;
+	public checkbox(String id,boolean checked){
 		set(checked?on:off);
+		this.id=id;
+	}
+	public String getId(){
+		return id;
 	}
 	public void to(xwriter x) throws Throwable{
 		x.spano(this);
