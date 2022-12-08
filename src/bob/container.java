@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import b.a;
 
-/** Contains elements in a list. Used to create a namespace in user interface. */
+/** Contains elements in a list. Used to create a name space for dynamically created elements. */
 public final class container extends a{
 	private static final long serialVersionUID=1L;
 	private ArrayList<a> elements=new ArrayList<a>();
