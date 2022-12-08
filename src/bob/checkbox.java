@@ -32,6 +32,6 @@ public class checkbox extends a{
 		checked=false;
 		set(off);
 		bubble(x,this,"unchecked");
-		x.xu(this);
+		x.xuo(this);
 	}
 }
