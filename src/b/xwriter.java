@@ -216,56 +216,30 @@ public final class xwriter{
 	public xwriter script_(){
 		return tage("script");
 	}
-	public xwriter spanx(final a e){
-		return spanx(e,null);
-	}
-	public xwriter spanx(final a e,final String style){
-		tago("span").attr("id",e.id());
-		if(style!=null)
-			attr("style",style);
-		return tagoe().tage("span");
-	}
-	public xwriter spano(final a e){
-		return tago("span").attr("id",e.id()).tagoe();
-	}
-	public xwriter span(final a e){
-		return span(e,null);
-	}
-	public xwriter span(final a e,final String style){
-		tago("span").attr("id",e.id());
-		if(style!=null)
-			attr("style",style);
-		tagoe();
-		try{
-			e.to(new osltgt(os));
-		}catch(Throwable t){
-			throw new Error(t);
-		}
-		return span_();
-	}
-	public xwriter spanh(final a e){
-		return spanh(e,null,null);
-	}
-	public xwriter spanh(final a e,final String cls){
-		return spanh(e,cls,null);
-	}
-	public xwriter spanh(final a e,final String cls,final String style){
-		tago("span").attr("id",e.id());
-		if(cls!=null)
-			attr("class",cls);
-		if(style!=null)
-			attr("style",style);
-		tagoe();
-		try{
-			e.to(os);
-		}catch(Throwable t){
-			throw new Error(t);
-		}
-		return span_();
-	}
-	public xwriter span_(){
-		return tage("span");
-	}
+//	public xwriter spanx(final a e){
+//		return spanx(e,null);
+//	}
+//	public xwriter spanx(final a e,final String style){
+//		tago("span").attr("id",e.id());
+//		if(style!=null)
+//			attr("style",style);
+//		return tagoe().tage("span");
+//	}
+//	public xwriter span(final a e){
+//		return span(e,null);
+//	}
+//	public xwriter span(final a e,final String style){
+//		tago("span").attr("id",e.id());
+//		if(style!=null)
+//			attr("style",style);
+//		tagoe();
+//		try{
+//			e.to(new osltgt(os));
+//		}catch(Throwable t){
+//			throw new Error(t);
+//		}
+//		return span_();
+//	}
 	public xwriter table(){
 		return tag("table");
 	}
@@ -672,17 +646,17 @@ public final class xwriter{
 	public xwriter xlocation(final String uri){
 		return p("location='").p(uri).pl("';");
 	}
-	public xwriter span(final String style){
-		return span("",style);
-	}
-	public xwriter span(final String cls,final String style){
-		tago("span");
-		if(!isempty(cls))
-			attr("class",cls);
-		if(!isempty(style))
-			attr("style",style);
-		return tagoe();
-	}
+//	public xwriter span(final String style){
+//		return span("",style);
+//	}
+//	public xwriter span(final String cls,final String style){
+//		tago("span");
+//		if(!isempty(cls))
+//			attr("class",cls);
+//		if(!isempty(style))
+//			attr("style",style);
+//		return tagoe();
+//	}
 	public xwriter nbsp(){
 		return p("&nbsp;");
 	}
@@ -721,4 +695,87 @@ public final class xwriter{
 			p(x);
 		return this;
 	}
+	// -----------------------------------------
+	// -------------- reviewed
+	// -----------------------------------------
+
+	/**
+	 * Opens a span tag with id, class and style allowing appending of additional attributes such as onclick etc. Tag must be closed with tagoe()
+	 * 
+	 * @param e     the element
+	 * @param cls   the class attribute
+	 * @param style the style attribute
+	 */
+	public xwriter spanot(final a e,String cls,String style){
+		tago("span").attr("id",e.id());
+		if(!isempty(cls))
+			attr("class",cls);
+		if(!isempty(style))
+			attr("style",style);
+		return this;
+	}
+	public xwriter spanot(final a e,String cls){
+		return spanot(e,cls,null);
+	}
+	public xwriter spanot(final a e){
+		return spanot(e,null,null);
+	}
+	/** Renders the span tag. Must be closed with a span_() call. */
+	public xwriter spano(final a e,String cls,String style){
+		spanot(e,cls,style);
+		return tagoe();
+	}
+	public xwriter spano(final a e,String cls){
+		return spano(e,cls,null);
+	}
+	public xwriter spano(final a e){
+		return spano(e,null,null);
+	}
+	/** Renders a complete span with the HTML escaped value. */
+	public xwriter span(final a e,final String cls,final String style){
+		spano(e,cls,style);
+		try{
+			e.to(new osltgt(os));
+		}catch(Throwable t){
+			throw new Error(t);
+		}
+		return span_();
+	}
+	public xwriter span(final a e,String cls){
+		return span(e,cls,null);
+	}
+	public xwriter span(final a e){
+		return span(e,null,null);
+	}
+	/** Renders a complete span with the unescaped value of the element. */
+	public xwriter span_html(final a e,final String cls,final String style){
+		spano(e,cls,style);
+		try{
+			e.to(os);
+		}catch(Throwable t){
+			throw new Error(t);
+		}
+		return span_();
+	}
+	public xwriter span_html(final a e,final String cls){
+		return span_html(e,cls,null);
+	}
+	public xwriter span_html(final a e){
+		return span_html(e,null,null);
+	}
+	/** Closes span tag. */
+	public xwriter span_(){
+		return tage("span");
+	}
+	/**
+	 * Renders javascript for a callback.
+	 * 
+	 * @param e     element to call
+	 * @param param first word is the method to call and remaining string is the parameter.
+	 */
+	public xwriter js_x(a e,String param){
+		p("$x('").p(e.id()).p(" ").p(encquot(param)).p("')");
+		return this;
+	}
+
 }

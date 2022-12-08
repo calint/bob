@@ -117,7 +117,7 @@ final public class sock extends websock{
 
 	private static HashMap<String,String> populate_content_map_from_buffer(final ByteBuffer content_bb) throws Throwable{
 		final HashMap<String,String> content=new HashMap<String,String>();
-		byte[] ba=content_bb.array();
+		final byte[] ba=content_bb.array();
 		int i=content_bb.position();
 		int n=content_bb.limit();
 //		System.out.println(new String(ba,i,n-i));
