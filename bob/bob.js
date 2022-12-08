@@ -5,9 +5,9 @@ $=function(eid){return document.getElementById(eid);}
 $d=function(v){console.log(v);}
 $s=function(eid,txt){
 	// extract inline script
-	const tag_bgn="<is>";
+	const tag_bgn='<is>';
 	const tag_bgn_len=tag_bgn.length;
-	const tag_end="</is>";
+	const tag_end='</is>';
 	const tag_end_len=tag_end.length;
 	const inlines=[];
 	let i=0;
@@ -17,7 +17,7 @@ $s=function(eid,txt){
 			break;
 		const i_end=txt.indexOf(tag_end,i_bgn+tag_bgn_len);
 		if(i_end==-1){
-			alert("Did not find end tag after index "+(i_bgn+tag_bgn_len));
+			alert('Did not find end tag after index '+(i_bgn+tag_bgn_len));
 			break;
 		}
 		const script=txt.substring(i_bgn+tag_bgn_len,i_end);
@@ -29,7 +29,7 @@ $s=function(eid,txt){
 	const e=$(eid);
 	if(ui.is_dbg_set)$d(eid+'{'+txt+'}');
 	if(!e){$d(eid+' notfound');return;}
-	if(e.nodeName=="INPUT"||e.nodeName=="TEXTAREA"||e.nodeName=="OUTPUT"){
+	if(e.nodeName=='INPUT'||e.nodeName=='TEXTAREA'||e.nodeName=='OUTPUT'){
 		e.value=txt;
 	}else{
 		e.innerHTML=txt;
@@ -44,12 +44,12 @@ $sv=function(eid,txt){
 	const e=$(eid);
 	if(ui.is_dbg_set)$d(eid+'{'+txt+'}');
 	if(!e){$d(eid+' notfound');return;}
-	if(e.nodeName=="INPUT"||e.nodeName=="TEXTAREA"||e.nodeName=="OUTPUT"){
+	if(e.nodeName=='INPUT'||e.nodeName=='TEXTAREA'||e.nodeName=='OUTPUT'){
 		e.value=txt;
 		$b(e);
 	}else{
 		e.innerHTML=txt;
-		if(e.contentEditable=="true")
+		if(e.contentEditable=='true')
 			$b(e);
 	}
 }
@@ -59,12 +59,12 @@ $o=function(eid,txt){
 }
 $p=function(eid,txt){
 	const e=$(eid);
-	if(e.nodeName=="INPUT"||e.nodeName=="TEXTAREA"||e.nodeName=="OUTPUT"){
+	if(e.nodeName=='INPUT'||e.nodeName=='TEXTAREA'||e.nodeName=='OUTPUT'){
 		e.value+=txt;
 		$b(e);
 	}else{
 		e.innerHTML+=txt;
-		if(e.contentEditable=="true")
+		if(e.contentEditable=='true')
 			$b(e);
 	}
 }
@@ -87,7 +87,7 @@ ui.onkey=function(ev){
 	if(cmd)eval(cmd);
 }
 ui.fmtsize=function(num){
-	return num.toString().replace(/\B(?=(\d{3})+\b)/g,",");
+	return num.toString().replace(/\B(?=(\d{3})+\b)/g,',');
 }
 ui.fmt_data_per_second=function(nbytes,ms){
 	let b_per_s=Math.floor(nbytes*1024/ms);
@@ -131,9 +131,6 @@ $x=function(pb){
 		return;
 	}
 	// todo if a new post is made before the previous has been completed?
-	ui._axc++;
-	$d("\nmessage #"+ui._axc);
-	$d("~~~~~~~ ~~~~~~~ ~~~~~~~ ~~~~~~~ ")
 	let post='$='+pb+'\r';
 	for(const id in ui._pbls){
 		//$d('field '+id);
@@ -147,31 +144,35 @@ $x=function(pb){
 		post+='\r';
 	}
 	ui._pbls=[];
+
+	ui._axc++;
+	$d('\nmessage #'+ui._axc+': '+post.length+' B');
+	$d('~~~~~~~ ~~~~~~~ ~~~~~~~ ~~~~~~~ ')
 	$d(post.replace('\r','\n'));
-	$d("~~~~~~~ ~~~~~~~ ~~~~~~~ ~~~~~~~ ");
+	$d('~~~~~~~ ~~~~~~~ ~~~~~~~ ~~~~~~~ ');
 	ui.is_busy=true;
 	ui.ws.send(post);
 }
 
-ui.ws=new WebSocket("ws"+(location.protocol=='https:'?"s":"")+"://"+location.host+"/bob/websocket");
+ui.ws=new WebSocket('ws'+(location.protocol=='https:'?'s':'')+'://'+location.host+'/bob/websocket');
 ui.ws.onopen=function(e){
-	$d("web socket: onopen");
+	$d('web socket: onopen');
 	ui.is_open=true;
 }
 ui.ws.onmessage=function(e){
-	$d("message length: "+e.data.length);
+	$d('response: '+e.data.length+' B');
 	$d(e.data);
 	if(e.data.length>0)
 		eval(e.data);
 	ui.is_busy=false;
-	$d("~~~~~~~ ~~~~~~~ ~~~~~~~ ~~~~~~~ ")
+	$d('~~~~~~~ ~~~~~~~ ~~~~~~~ ~~~~~~~ ')
 };
 ui.ws.onerror=function(e){
-	$d("web socket: onerror "+e+" data:"+e.data);
+	$d('web socket: onerror '+e+' data:'+e.data);
 	ui.alert('An error has occured while communicating with the server.')
 };
 ui.ws.onclose=function(e){
-	$d("web socket: onclose "+e);
+	$d('web socket: onclose '+e);
 	ui.is_open=false;
-	ui.alert("Connection to server lost.");
+	ui.alert('Connection to server lost.');
 };

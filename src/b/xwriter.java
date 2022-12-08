@@ -74,7 +74,7 @@ public final class xwriter{
 		return p(" ").p(name).p("=").p(value);
 	}
 	public xwriter attr(final String name,final String value){
-		return p(" ").p(name).p("=\"").p(encquot(value)).p("\"");
+		return p(" ").p(name).p("=\"").p(enc_quot(value)).p("\"");
 	}
 	public xwriter attr(final String name){
 		return p(" ").p(name);
@@ -660,11 +660,6 @@ public final class xwriter{
 	public xwriter nbsp(){
 		return p("&nbsp;");
 	}
-	private static String encquot(final String text){
-		if(text==null)
-			return "";
-		return text.replaceAll("\"","&quot;");
-	}
 	public xwriter spaned(final a e){
 		tago("span").attrdef(e).attr("contenteditable").p(" onkeydown=\"$b(this)\" spellcheck=false");
 //		p(" oncopy=\"var e=event;e.preventDefault();var r=window.getSelection();e.clipboardData.setData('text/plain',r);\"");
@@ -700,7 +695,7 @@ public final class xwriter{
 	// -----------------------------------------
 
 	/**
-	 * Opens a span tag with id, class and style allowing appending of additional attributes such as onclick etc. Tag must be closed with tagoe()
+	 * Opens a span tag with id, class and style allowing the appending of additional attributes such as onclick etc. Tag must be closed with tagoe()
 	 * 
 	 * @param e     the element
 	 * @param cls   the class attribute
@@ -747,13 +742,13 @@ public final class xwriter{
 	public xwriter span(final a e){
 		return span(e,null,null);
 	}
-	/** Renders a complete span with the unescaped value of the element. */
+	/** Renders a complete span with the unescaped value. */
 	public xwriter span_html(final a e,final String cls,final String style){
 		spano(e,cls,style);
 		try{
 			e.to(os);
 		}catch(Throwable t){
-			throw new Error(t);
+			throw new RuntimeException(t);
 		}
 		return span_();
 	}
@@ -768,14 +763,45 @@ public final class xwriter{
 		return tage("span");
 	}
 	/**
-	 * Renders javascript for a callback.
+	 * Renders JavaScript for a callback.
 	 * 
-	 * @param e     element to call
-	 * @param param first word is the method to call and remaining string is the parameter.
+	 * @param e                    element to call
+	 * @param param                first word is the method to call and remaining string is the parameter.
+	 * @param encode_for_attribute true to encode param for JavaScript in HTML attribute and false for JavaScript single quoted string.
 	 */
-	public xwriter js_x(a e,String param){
-		p("$x('").p(e.id()).p(" ").p(encquot(param)).p("')");
+	public xwriter js_x(a e,String param,boolean encode_for_attribute){
+		p("$x('").p(e.id());
+		if(!isempty(param)){
+			p(" ");
+			if(encode_for_attribute)
+				p(enc_js_str_in_attr(param));
+			else
+				p(enc_js_str(param));
+		}
+		p("');");
 		return this;
+	}
+
+	public xwriter js_x(a e,boolean encode_for_attribute){
+		return js_x(e,null,encode_for_attribute);
+	}
+
+	private static String enc_quot(final String text){
+		if(text==null)
+			return "";
+		return text.replaceAll("\"","&quot;");
+	}
+
+	private static String enc_js_str_in_attr(final String text){
+		if(text==null)
+			return "";
+		return text.replaceAll("'","\\\\'").replaceAll("\"","&quot;");
+	}
+
+	private static String enc_js_str(final String text){
+		if(text==null)
+			return "";
+		return text.replaceAll("'","\\\\'");
 	}
 
 }

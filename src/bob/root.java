@@ -20,25 +20,31 @@ public class root extends a{
 		x.css("table.f th","padding:.5em;text-align:left;background:#fefefe;color:black;border-bottom:1px solid green");
 		x.css("table.f td","padding:.5em;vertical-align:middle;border-left:1px dotted #ccc;border-bottom:1px dotted #ccc");
 		x.css("table.f td:first-child","border-left:0");
-//		x.css(t.q,"float:right;background:yellow;border:1px dotted #555;text-align:right;width:10em;margin-left:1em");
 		x.css(t.q,"background:yellow;border:1px dotted #555;width:13em;margin-left:1em;padding:.2em");
 		x.style_();
 		x.nl();
 		x.divo(t);
 		t.to(x);
 		x.div_();
-//		x.p("serialized size: ").span(s).p(" B ");
-		x.p("serialized size: ").span(s).p(" B ");
+		x.p("serialized size: ");
+//		x.spanot(s).p(" onclick=\"").js_x(this,"s onclick \"'hello'\"",true).p("\"").tagoe().p(s.str()).span_();
+//		x.spano(s).p(s.str()).span_();
+		x.span(s);
+//		x.tag("is");
+//		x.js_x(this,"s onclick \"h'ello",false);
+//		x.tage("is");		
+		x.p(" B ");
 		x.ax(this,"s",":: refresh");
+	}
+
+	public void x_s(xwriter x,String param) throws Throwable{
+		System.out.println("*** param:{"+param+"}");
+		update_serialized_size();
+		x.xu(s);
 	}
 
 	private void update_serialized_size(){
 		s.set(Integer.toString(serialize(this).length));
-	}
-
-	public void x_s(xwriter x,String param) throws Throwable{
-		update_serialized_size();
-		x.xu(s);
 	}
 
 	private static byte[] serialize(Object o){
