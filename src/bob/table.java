@@ -65,14 +65,14 @@ public class table extends a{
 		js.xube();
 	}
 	public void x_sel(xwriter js,String s) throws Throwable{
-		System.out.println("selected: '"+s+"'");
+		System.out.println("select: '"+s+"'");
 		selectedIds.add(s);
 		xwriter x=js.xub(this,true,false);
 		to(x);
 		js.xube();
 	}
 	public void x_unsel(xwriter js,String s) throws Throwable{
-		System.out.println("unselected: '"+s+"'");
+		System.out.println("unselect: '"+s+"'");
 		selectedIds.remove(s);
 		xwriter x=js.xub(this,true,false);
 		to(x);
@@ -97,7 +97,7 @@ public class table extends a{
 			result.add(title);
 		}
 
-		return ls;
+		return result;
 	}
 	protected String getIdFrom(Object o){
 		return o.toString();
