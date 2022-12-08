@@ -69,14 +69,6 @@ public final class xwriter{
 //	}
 //	public xwriter rend(final a e)throws Throwable{if(e==null)return this;e.to(this);return this;}
 
-	public xwriter flush(){
-		try{
-			os.flush();
-			return this;
-		}catch(final IOException e){
-			throw new Error(e);
-		}
-	}
 	public String toString(){
 		return os.toString();
 	}
@@ -870,6 +862,15 @@ public final class xwriter{
 	public xwriter js_x(a e,boolean encode_for_attribute){
 		return js_x(e,null,encode_for_attribute);
 	}
+	public xwriter flush(){
+		try{
+			os.flush();
+			return this;
+		}catch(final IOException e){
+			throw new RuntimeException(e);
+		}
+	}
+
 
 	private static String enc_quot(final String text){
 		if(text==null)
