@@ -9,9 +9,6 @@ public final class container extends a{
 	private static final long serialVersionUID=1L;
 	private ArrayList<a> elements=new ArrayList<a>();
 
-	public void clear(){
-		elements.clear();
-	}
 	public void add(a e){
 		e.parent(this);
 		e.name(Integer.toString(elements.size()));

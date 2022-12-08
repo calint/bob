@@ -44,7 +44,7 @@ public class table extends a{
 		x.tr().th();
 		renderHeaders(x);
 
-		cbs.clear();
+		cbs.elements().clear();
 		for(final Object o:ls){
 			final String id=getIdFrom(o);
 			x.tr().td();
