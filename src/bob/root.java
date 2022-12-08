@@ -1,7 +1,9 @@
 package bob;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.util.zip.GZIPOutputStream;
 import b.a;
 import b.b;
 import b.req;
@@ -10,10 +12,11 @@ import b.xwriter;
 public class root extends a{
 	static final long serialVersionUID=1;
 	public table t;
-	public a s;
+	public a s; // serialized size
+	public a sg; // gziped size
 	public a test;
 	public a si; // server info
-	public root(){
+	public root() throws IOException{
 		update_serialized_size();
 		update_server_info();
 	}
@@ -22,7 +25,7 @@ public class root extends a{
 	}
 	public void to(final xwriter x) throws Throwable{
 		x.style();
-		x.css("table.f","margin-left:auto;margin-right:auto");
+		x.css("table.f","margin-left:auto;margin-right:auto;text-align:left");
 		x.css("table.f tr:first-child","border:0;border-bottom:1px solid green;border-top:1px solid #070");
 		x.css("table.f tr:last-child","border:0;border-bottom:1px solid #040");
 		x.css("table.f th","padding:.5em;text-align:left;background:#fefefe;color:black;border-bottom:1px solid green");
@@ -39,6 +42,8 @@ public class root extends a{
 //		x.spanot(s,"bytes","background:yellow").p(" onclick=\"").js_x(this,"s \"'hello'\"",true).p("\"").tagoe().p(s.str()).span_();
 //		x.spano(s).p(s.str()).span_();
 		x.span(s);
+		x.p(" B  gziped: ");
+		x.span(sg);
 		x.p(" B ");
 //		x.ax(this,"s \"'hello'\"",":: refresh \"''\"");
 		x.ax(this,"s",":: refresh");
@@ -75,13 +80,15 @@ public class root extends a{
 	public void x_s(xwriter x,String param) throws Throwable{
 		System.out.println("*** param:{"+param+"}");
 		update_serialized_size();
-		x.xu(s);
+		x.xu(s,sg);
 	}
 //	public void x_test(xwriter x,String param) throws Throwable{
 //		System.out.println("x_test: param:{"+param+"} value={"+test.str()+"}");
 //	}
-	private void update_serialized_size(){
-		s.set(Integer.toString(serialize(this).length));
+	private void update_serialized_size() throws IOException{
+		final byte[] ba=serialize(this);
+		s.set(Integer.toString(ba.length));
+		sg.set(Integer.toString(gzip(ba).length));
 	}
 
 	private static byte[] serialize(Object o){
@@ -93,6 +100,22 @@ public class root extends a{
 			return bos.toByteArray();
 		}catch(Throwable t){
 			throw new RuntimeException(t);
+		}
+	}
+	public static byte[] gzip(byte[] ba) throws IOException{
+		ByteArrayOutputStream bos=new ByteArrayOutputStream(ba.length);
+		GZIPOutputStream gos=null;
+		try{
+			gos=new GZIPOutputStream(bos);
+			gos.write(ba,0,ba.length);
+			gos.finish();
+			gos.flush();
+			bos.flush();
+			return bos.toByteArray();
+		}finally{
+			if(gos!=null)
+				gos.close();
+			bos.close();
 		}
 	}
 }

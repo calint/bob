@@ -26,16 +26,13 @@ public class table extends a{
 	public void to(final xwriter x) throws Throwable{
 		x.p("<div style='text-align:center;padding-bottom:0.5em'>");
 		// add actions to container
+
+		x.ax(this,"up","••").inpax(q,null,this,"q").p(" ");
+		x.iso().p("$f('").p(q.id()).p("')").isc();
 		for(a e:ans.elements()){
 			e.to(x);
 			x.p(" ");
 		}
-		if(!ans.elements().isEmpty()){
-			x.hr();
-		}
-
-		x.ax(this,"up","••").inpax(q,null,this,"q");
-		x.tag("is").p("$f('").p(q.id()).p("')").tage("is");
 		x.div_();
 
 		final List<?> ls=getList();
