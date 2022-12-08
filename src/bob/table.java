@@ -84,7 +84,7 @@ public class table extends a{
 	}
 	// callback for the query field
 	public void x_q(xwriter js,String s) throws Throwable{
-		System.out.println("query: "+q.str());
+//		System.out.println("query: "+q.str());
 		xwriter x=js.xub(this,true,false);
 		to(x);
 		js.xube();

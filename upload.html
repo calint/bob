@@ -1,19 +1,16 @@
-<!doctype html>
-<pre>
-<input type="file" id="files" name="files[]" multiple onchange="send()">
-<div id="outp" style="border:1px dotted green"></div>
+<!doctype html><title>upload</title>
 <script>
 function send(){
 	document.getElementById('outp').innerHTML='';
-	var files=document.getElementById("files").files;
-	for(var i=0,f;f=files[i];i++){
+	const files=document.getElementById("files").files;
+	for(let i=0,f;f=files[i];i++){
 		document.getElementById('outp').innerHTML+=f.name+'  '+f.size+'\n<progress id=pb'+i+' value=0 style=width:100%></progress>\n';
 		upload(f.name,f,'pb'+i);
 	}
 }
 function upload(path,blobOrFile,progressbarId){
 	console.log(progressbarId);
-	var xhr=new XMLHttpRequest();
+	const xhr=new XMLHttpRequest();
 	xhr.onreadystatechange=function(){
 		console.log('onreadychange '+xhr.readyState+' status: '+xhr.status+' '+path);
 	};
@@ -35,5 +32,6 @@ function upload(path,blobOrFile,progressbarId){
 	xhr.onloadend=function(e){console.log('onloadend '+path+'  '+progressbarId+'  status:'+xhr.status);};
 	xhr.send(blobOrFile);
 }
-
 </script>
+<input type="file" id="files" name="files[]" multiple onchange="send()">
+<div id="outp" style="border:1px dotted green"></div>

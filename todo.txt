@@ -56,6 +56,7 @@ dbo
 [ ]   ms sql server?
 [ ]   ibm db2?
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
+[x] css not allowed in the body tag but is supported by major browsers. keep.
 [x] bob: review css for conformity
 [x] bob,b: adaptive design for mobile users. <meta name="viewport" content="width=device-width,initial-scale=1"/> 
 [x] content type for cached file from Map of suffix to content-type?

@@ -36,49 +36,13 @@ public class root extends a{
 		x.nl();
 		x.divo(t);
 		t.to(x);
-		x.div_();
-		x.nl();
-		x.p("serialized: ");
-//		x.spanot(s,"bytes","background:yellow").p(" onclick=\"").js_x(this,"s \"'hello'\"",true).p("\"").tagoe().p(s.str()).span_();
-//		x.spano(s).p(s.str()).span_();
-		x.span(s);
-		x.p(" B  gziped: ");
-		x.span(sg);
-		x.p(" B ");
-//		x.ax(this,"s \"'hello'\"",":: refresh \"''\"");
-		x.ax(this,"s",":: refresh");
-		x.nl();
+		x.div_().nl();
+		x.p("serialized: ").span(s).p(" B  gziped: ").span(sg).p(" B ").ax(this,"s",":: refresh").nl();
 		x.p("server: ").span(si);
-//		x.iso().js_x(this,"s \"'hello'\"",false).isc();
-//		x.divot(s,"bytes","background:yellow").p(" onclick=\"ui.alert('&quot;\\'hello\\'&quot;')").p("\"").tagoe().p(s).div_();
-//		x.divot(s,"bytes","background:yellow").p(s).div_();
-//		x.nl().inp(test,"text","txt","background:yellow",this,"test \"'hello'\"","default \"''\"",this,"test ' \"chg\" '");
-//		x.nl().inp(test,"text","txt","background:yellow",this,"test \"'hello'\"","default \"''\"",this,null);
-//		x.nl().inp(test,"text","txt","background:yellow",this,"test \"'hello'\"","default \"''\"",null,null);
-//		x.nl().inp(test,"text","txt","background:yellow",this,"test \"'hello'\"",null,null,null);
-//		x.nl().inp(test,"text","txt","background:yellow",this,null,null,null,null);
-//		x.nl().inp(test,"text","txt","background:yellow",null,null,null,null,null);
-//		x.nl().inp(test,"text","txt",null,null,null,null,null,null);
-//		x.nl().inp(test,"text",null,null,null,null,null,null,null);
-//		x.nl().inp(test,null,null,null,null,null,null,null,null);
-//		x.nl().inp(test,"checkbox",null,null,null,null,null,null,null);
-//		x.nl().inp(test,"checkbox",null,null,null,null,null,this,"test");
-//		x.nl().inp(test,"checkbox",null,null,null,null,null,this,null);
-//		x.nl().inp(test,"checkbox",null,null,this,"test \"'test param'\"",null,null,null);
-//		x.nl().inp(test,"checkbox",null,null,this,null,null,null,null);
-//		x.nl().inp(test,"date",null,null,this,null,null,null,null);
-//		x.nl().inp(test,"time",null,null,null,null,null,null,null);
-//		x.nl().inp(test,"number",null,null,null,null,null,null,null);
-//		x.nl().inp(test,"color",null,null,null,null,null,null,null);
-//		x.nl().inp(test,"image",null,null,null,null,null,null,null);
-//		x.nl().inp(test,"file",null,null,null,null,null,null,null);
-//		x.nl().inp(test,"search",null,null,null,null,null,null,null);
-//		x.nl().inptxtarea(test,"txtarea");
-//		x.nl().inptxtarea(test,null);
 	}
 
 	public void x_s(xwriter x,String param) throws Throwable{
-		System.out.println("*** param:{"+param+"}");
+//		System.out.println("*** param:{"+param+"}");
 		update_serialized_size();
 		x.xu(s,sg);
 	}
