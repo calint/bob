@@ -58,6 +58,8 @@ public class root extends a{
 //		x.nl().inp(test,"image",null,null,null,null,null,null,null);
 //		x.nl().inp(test,"file",null,null,null,null,null,null,null);
 //		x.nl().inp(test,"search",null,null,null,null,null,null,null);
+//		x.nl().inptxtarea(test,"txtarea");
+		x.nl().inptxtarea(test,null);
 	}
 
 	public void x_s(xwriter x,String param) throws Throwable{

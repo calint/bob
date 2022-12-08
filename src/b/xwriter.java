@@ -67,26 +67,6 @@ public final class xwriter{
 //		}
 //		return span_();
 //	}
-	public xwriter ul(){
-		return tag("ul");
-	}
-	public xwriter ul_(){
-		return tage("ul");
-	}
-	public xwriter li(){
-		return tag("li");
-	}
-	public xwriter li(final String cls){
-		if(cls==null)
-			return li();
-		return tago("li").attr("class",cls).tagoe();
-	}
-	public xwriter code(){
-		return tag("code");
-	}
-	public xwriter code_(){
-		return tage("code");
-	}
 //	public xwriter rend(final a e)throws Throwable{if(e==null)return this;e.to(this);return this;}
 
 	public xwriter flush(){
@@ -278,12 +258,6 @@ public final class xwriter{
 	}
 	public xwriter css(final a e,final String selector,final String style){
 		return css("#"+e.id()+" "+selector,style);
-	}
-	public xwriter ol(){
-		return tag("ol");
-	}
-	public xwriter ol_(){
-		return tage("ol");
 	}
 	public xwriter xlocation(final String uri){
 		return p("location='").p(uri).pl("';");
@@ -780,7 +754,7 @@ public final class xwriter{
 		final StringBuilder sb=new StringBuilder();
 		sb.append(callback_elem.id());
 		if(!isempty(callback))
-			sb.append(" ").append(callback);
+			sb.append(" ").append(enc_js_in_attr(callback));
 		final String sbs=sb.toString();
 		attr("oninput","$b(this);$x('"+sbs+"');return true;");
 		attr("onkeypress","return $r(event,this,'"+callback_elem.id()+" sel')");
@@ -788,9 +762,7 @@ public final class xwriter{
 	}
 	/** Input text area. */
 	public xwriter inptxtarea(final a e,final String cls){
-		tago("textarea").default_attrs_for_element(e).attr("onchange","$b(this)")
-//			.attr("onkeydown","$b(this);if(event.keyCode==9){console.log(this.id+' '+this.selectionStart);this.value=this.value.substring(0,this.selectionStart)+'   '+this.value.substring(this.selectionStart,this.value.length);console.log(this.selectionStart);this.selectionStart=this.selectionEnd=this.selectionStart-2;return false;}return true;")
-				.attr("onkeydown","$b(this)");
+		tago("textarea").default_attrs_for_element(e).attr("onchange","$b(this)").attr("onkeydown","$b(this)");
 
 		if(!isempty(cls))
 			attr("class",cls);
@@ -805,6 +777,32 @@ public final class xwriter{
 	}
 	public xwriter inptxtarea(final a e){
 		return inptxtarea(e,null);
+	}
+	public xwriter ul(){
+		return tag("ul");
+	}
+	public xwriter ul_(){
+		return tage("ul");
+	}
+	public xwriter li(final String cls){
+		if(isempty(cls))
+			return li();
+		return tago("li").attr("class",cls).tagoe();
+	}
+	public xwriter li(){
+		return li(null);
+	}
+	public xwriter ol(){
+		return tag("ol");
+	}
+	public xwriter ol_(){
+		return tage("ol");
+	}
+	public xwriter code(){
+		return tag("code");
+	}
+	public xwriter code_(){
+		return tage("code");
 	}
 	/**
 	 * @param e       element
