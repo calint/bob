@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import b.a;
 import b.xwriter;
 
@@ -73,10 +72,6 @@ public class table extends a{
 			}
 		}
 		if(from instanceof action){
-//			if(selectedIds.isEmpty()){
-//				js.xalert("No items are selected.");
-//				return;
-//			}
 			final action a=(action)from;
 			a.process(this,selectedIds);
 			xwriter x=js.xub(this,true,false);
@@ -95,9 +90,7 @@ public class table extends a{
 		js.xube();
 	}
 	// --------------------------------------------------------------------------
-	public final Set<String> getSelectedIds(){
-		return selectedIds;
-	}
+	// --------------------------------------------------------------------------
 	// --------------------------------------------------------------------------
 	final static List<String> ls=new ArrayList<String>();
 	static{
