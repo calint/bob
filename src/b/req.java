@@ -880,7 +880,7 @@ public final class req{
 					continue;
 				}
 				// ? indexofloop
-				final String[] paths=me.getKey().split(req.ajax_field_path_separator);
+				final String[] paths=me.getKey().split(a.id_path_separator);
 				a e=root_elem;
 				for(int n=1;n<paths.length;n++){
 					e=e.child(paths[n]);
@@ -910,7 +910,7 @@ public final class req{
 				}
 			}
 			// navigate to the target element
-			final String[] path=target_elem_id.split(req.ajax_field_path_separator);// ? indexofloop
+			final String[] path=target_elem_id.split(a.id_path_separator);// ? indexofloop
 			a target_elem=root_elem;
 			for(int n=1;n<path.length;n++){
 				target_elem=target_elem.child(path[n]);
@@ -1192,12 +1192,7 @@ public final class req{
 	private FileChannel upload_channel;
 	private String upload_lastmod_s;
 	websock websock;
-//	private boolean waiting_sock_thread_read;
-//	private boolean waiting_sock_thread_write;
-	// --
-	public final static String ajax_field_path_separator="-";
-
-	public static @conf int abuse_method_len=5;
+public static @conf int abuse_method_len=5;
 	public static @conf int abuse_uri_len=512;
 	public static @conf int abuse_prot_len=11;
 	public static @conf int abuse_header_name_len=32;

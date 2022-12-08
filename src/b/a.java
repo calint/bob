@@ -6,18 +6,11 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 public class a implements Serializable{
+	public final static String id_path_separator="-";
 	private a parent;
 	private String name;
 	private String value;
-//	public boolean equals(final Object o){
-//		if(!(o instanceof a))
-//			return false;
-//		final a a=(a)o;
-//		if(a.pt!=pt)return false;
-//		if(a.nm!=null&&!a.nm.equals(nm))return false;
-//		if(a.s!=null&&!a.s.equals(s))return false;
-//		return true;
-//	}
+
 	public a(){
 		autonew();
 	}
@@ -57,8 +50,8 @@ public class a implements Serializable{
 	public final String id(){
 		String s=name;
 		for(a p=this;p.parent!=null;p=p.parent)
-			s=tostr(p.parent.name,"")+req.ajax_field_path_separator+s;
-		return tostr(s,req.ajax_field_path_separator);
+			s=tostr(p.parent.name,"")+a.id_path_separator+s;
+		return tostr(s,a.id_path_separator);
 	}
 	public final String name(){
 		return name;

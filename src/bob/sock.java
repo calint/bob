@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 import b.a;
 import b.b;
-import b.req;
 import b.websock;
 import b.xwriter;
 
@@ -49,7 +48,7 @@ final public class sock extends websock{
 				continue;
 			}
 			// ? indexofloop
-			final String[] paths=me.getKey().split(req.ajax_field_path_separator);
+			final String[] paths=me.getKey().split(a.id_path_separator);
 			a e=root;
 			for(int n=1;n<paths.length;n++){
 				e=e.child(paths[n]);
@@ -79,7 +78,7 @@ final public class sock extends websock{
 			}
 		}
 		// navigate to the target element
-		final String[] path=target_elem_id.split(req.ajax_field_path_separator);// ? indexofloop
+		final String[] path=target_elem_id.split(a.id_path_separator);// ? indexofloop
 		a target_elem=root;
 		for(int n=1;n<path.length;n++){
 			target_elem=target_elem.child(path[n]);
