@@ -69,24 +69,6 @@ public final class xwriter{
 //	}
 //	public xwriter rend(final a e)throws Throwable{if(e==null)return this;e.to(this);return this;}
 
-	public String toString(){
-		return os.toString();
-	}
-	public xwriter hr(){
-		return tag("hr");
-	}
-	public xwriter spc(){
-		return p(' ');
-	}
-	public xwriter tab(){
-		return p('\t');
-	}
-	public xwriter enter(){
-		return p('\r');
-	}
-	public xwriter bell(){
-		return p('\07');
-	}
 	public xwriter inpax(final a e,final String stylecls,final a ax,final String onchangeaxp,final String onselectaxp){
 		tago("input").attr("value",e.toString()).default_attrs_for_element(e).attr("type","text");
 		if(!isempty(stylecls))
@@ -108,9 +90,6 @@ public final class xwriter{
 		for(int i=0;i<n;i++)
 			spc();
 		return this;
-	}
-	public xwriter ul(final String cls){
-		return tago("ul").attr("class",cls).tagoe();
 	}
 	public xwriter cssfont(final String name,final String url){
 		return p("@font-face{font-family:").p(name).p(";src:url(").p(url).p(");}");
@@ -153,13 +132,6 @@ public final class xwriter{
 		xreload_requested=true;
 		return this;
 	}
-	// called after element has been written to db
-	public void finish(){
-		if(xreload_requested)
-//			pl("location.reload(true);");
-			pl("location.href=location.href");
-		xreload_requested=false;
-	}
 	public xwriter xfocus(final a e){
 		return p("$f('").p(e.id()).pl("');");
 	}
@@ -168,9 +140,6 @@ public final class xwriter{
 	}
 	public xwriter xtitle(final String s){
 		return p("$t('").jsstr(b.isempty(s,"")).pl("');");
-	}
-	public xwriter xp(final a e,final String s){
-		return p("$p('").p(e.id()).p("','").jsstr(s).pl("');");
 	}
 	public xwriter el(){
 		return p("<div style=display:inline>");
@@ -247,9 +216,6 @@ public final class xwriter{
 	}
 	public xwriter dived(final a e) throws Throwable{
 		return dived(e,null,null,null);
-	}
-	public xwriter css(final a e,final String selector,final String style){
-		return css("#"+e.id()+" "+selector,style);
 	}
 	public xwriter xlocation(final String uri){
 		return p("location='").p(uri).pl("';");
@@ -411,6 +377,9 @@ public final class xwriter{
 	}
 	public xwriter css(final String selector,final String style){
 		return p(selector).p("{").p(style).p("}");
+	}
+	public xwriter css(final a e,final String selector,final String style){
+		return css("#"+e.id()+" "+selector,style);
 	}
 	public xwriter css(final a e,final String style){
 		return p("#").p(e.id()).p("{").p(style).p("}");
@@ -683,7 +652,7 @@ public final class xwriter{
 			if(on_change_callback_elem!=null){
 				sb.append(";$x('");
 				sb.append(on_change_callback_elem.id());
-				if(!isempty(on_change_callback)) {
+				if(!isempty(on_change_callback)){
 					sb.append(' ').append(on_change_callback);
 				}
 				sb.append("')");
@@ -770,8 +739,14 @@ public final class xwriter{
 	public xwriter inptxtarea(final a e){
 		return inptxtarea(e,null);
 	}
+	public xwriter ul(final String cls){
+		tago("ul");
+		if(!isempty(cls))
+			attr("class",cls);
+		return tagoe();
+	}
 	public xwriter ul(){
-		return tag("ul");
+		return ul(null);
 	}
 	public xwriter ul_(){
 		return tage("ul");
@@ -862,6 +837,25 @@ public final class xwriter{
 	public xwriter js_x(a e,boolean encode_for_attribute){
 		return js_x(e,null,encode_for_attribute);
 	}
+	public xwriter hr(){
+		return tag("hr");
+	}
+	public xwriter spc(){
+		return p(' ');
+	}
+	public xwriter tab(){
+		return p('\t');
+	}
+	public xwriter enter(){
+		return p('\r');
+	}
+	public xwriter bell(){
+		return p('\07');
+	}
+	/** Prints to element content. */
+	public xwriter xp(final a e,final String s){
+		return p("$p('").p(e.id()).p("','").jsstr(s).pl("');");
+	}
 	public xwriter flush(){
 		try{
 			os.flush();
@@ -870,7 +864,15 @@ public final class xwriter{
 			throw new RuntimeException(e);
 		}
 	}
-
+	/** Called before closing being the last script dont. Used to avoid racing between DbTransaction.commit() and reloading the page. */
+	public void finish(){
+		if(xreload_requested)
+			pl("location.href=location.href");
+		xreload_requested=false;
+	}
+	public String toString(){
+		return os.toString();
+	}
 
 	private static String enc_quot(final String text){
 		if(text==null)
