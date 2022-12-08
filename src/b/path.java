@@ -153,7 +153,7 @@ public final class path implements Serializable{
 			return true;
 		if(st!=null)
 			try{
-				st.setsts("deleteting "+file.toString());
+				st.sts_set("deleteting "+file.toString());
 			}catch(final Throwable t){
 				throw new Error(t);
 			}

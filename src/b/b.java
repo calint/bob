@@ -288,7 +288,7 @@ final public class b{
 			out.write(buf,0,count);
 			n+=count;
 			if(sts!=null)
-				sts.setsts(Long.toString(n));
+				sts.sts_set(Long.toString(n));
 		}
 		return n;
 	}
@@ -302,7 +302,7 @@ final public class b{
 			out.write(buf,0,count);
 			n+=count;
 			if(sts!=null)
-				sts.setsts(Long.toString(n));
+				sts.sts_set(Long.toString(n));
 		}
 		return n;
 	}

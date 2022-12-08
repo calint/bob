@@ -1,5 +1,5 @@
 package b;
 public interface sts{
-	void setsts(String s) throws Throwable;
-	void flush() throws Throwable;
+	void sts_set(String s) throws Throwable;
+	void sts_flush() throws Throwable;
 }
