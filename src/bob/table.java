@@ -45,7 +45,7 @@ public class table extends a{
 		}
 		return null;
 	}
-	@Override protected void bubble(xwriter x,a from,Object o) throws Throwable{
+	@Override protected void bubble_event(xwriter x,a from,Object o) throws Throwable{
 		// event bubbled from child
 		if(from instanceof checkbox){
 			// unescape name because it might contain escaped characters
@@ -59,7 +59,7 @@ public class table extends a{
 			}
 		}
 		// event unknown by this element, bubble to parent
-		super.bubble(x,from,o);
+		super.bubble_event(x,from,o);
 	}
 	// callback for the query field
 	public void x_(xwriter js,String s) throws Throwable{

@@ -24,12 +24,12 @@ public class checkbox extends a{
 	}
 	public void x_s(xwriter x,String param) throws Throwable{
 		set(on);
-		bubble(x,this,"checked"); // bubble event
+		bubble_event(x,this,"checked"); // bubble event
 		x.xuo(this); // replace outer html element with this id with the output of this element
 	}
 	public void x_u(xwriter x,String param) throws Throwable{
 		set(off);
-		bubble(x,this,"unchecked"); // bubble event
+		bubble_event(x,this,"unchecked"); // bubble event
 		x.xuo(this); // replace outer html element with this id with the output of this element
 	}
 }

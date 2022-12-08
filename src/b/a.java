@@ -103,15 +103,15 @@ public class a implements Serializable{
 		return null;
 	}
 	/** Bubbles event to parent. Override this to receive events from children. */
-	protected void bubble(final xwriter x,final a from,final Object o) throws Throwable{
+	protected void bubble_event(final xwriter x,final a from,final Object o) throws Throwable{
 		if(parent!=null)
-			parent.bubble(x,from,o);
+			parent.bubble_event(x,from,o);
 	}
-	final protected void bubble(final xwriter x,final a from) throws Throwable{
-		bubble(x,from,null);
+	final protected void bubble_event(final xwriter x,final a from) throws Throwable{
+		bubble_event(x,from,null);
 	}
-	final protected void bubble(final xwriter x) throws Throwable{
-		bubble(x,this,null);
+	final protected void bubble_event(final xwriter x) throws Throwable{
+		bubble_event(x,this,null);
 	}
 
 	public void to(final xwriter x) throws Throwable{
