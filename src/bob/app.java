@@ -1,10 +1,7 @@
 package bob;
 
 import b.bapp;
-import c.health_check;
 import c.shell;
-import c.websocket;
-import c.websocket2;
 import db.Db;
 import db.test.Book;
 import db.test.DataBinary;
@@ -41,12 +38,12 @@ public final class app implements bapp {
 		
 		b.b.set_file_suffix_to_content_type("java","text/plain");
 		
-		b.b.set_path_to_class("/",shell.class);
-		b.b.set_path_to_class("/websocket",websocket.class);
-		b.b.set_path_to_class("/websocket2",websocket2.class);
+		b.b.set_path_to_class("/shell",shell.class);
+//		b.b.set_path_to_class("/websocket",websocket.class);
+//		b.b.set_path_to_class("/websocket2",websocket2.class);
 		b.b.set_path_to_class("/bob/websocket",bob.sock.class);
-		b.b.set_path_to_class("/health-check",health_check.class);
-		b.b.set_path_to_class("/dbo/test/test_dbo",c.test_dbo.class);
+//		b.b.set_path_to_class("/health-check",health_check.class);
+//		b.b.set_path_to_class("/dbo/test/test_dbo",c.test_dbo.class);
 		
 		// qa
 		b.b.set_path_to_class("/b/test/t1",b.test.t1.class);

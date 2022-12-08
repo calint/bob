@@ -15,9 +15,9 @@ b
 [ ]   dbo: connection pool
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 dbo
+[ ] Db.tableNameForJavaClass does not include package name
 [o] javadoc
 [o] review code. search for "// todo" "// !" "// ?"
-[ ] Db.tableNameForJavaClass does not include package name
 [ ] Query.TableAliasMap: User -> u. if u present try us etc
 [o] removing referenced DbObject. check and possibly fail or update to null? DbClass.List<RelRef>. setting on db update_referring
 [x]   updates referring tables column to null
@@ -27,10 +27,6 @@ dbo
 [ ] Db.instance().makeConsistent() deleting RefN orphans, setting null on missing Ref etc 
 [ ] Db.instance().delete(Index) Db.instance().create(Index) for faster imports?
 [ ] check RelRef.set(id) vs RelRef.set(DbObject) check type? requires get() for id. still not safe. maybe when Db.mode_safe_ref_set=true
-[o] better connection pool
-[x]   thread safe
-[x]   wait if connection pool is empty or create new connections? wait.
-[ ]   close connection after a number of recycles and create a new one
 [o] Index(DbField...)
 [x]    Collation asc (default)
 [ ]    Collation desc
@@ -80,5 +76,9 @@ dbo
 [x] try b with 1B input buffer
 [x] try b with socket small in/out buffers
 -------------------------------------------------------------------------------
+[x] better connection pool
+[x]   thread safe
+[x]   wait if connection pool is empty or create new connections? wait.
+[x]   close connection after a number of recycles and create a new one
 [x] log_sql()
 [x] tn.get(new Class[]{User.class,File.class},...) returns List<DbObject[]>
