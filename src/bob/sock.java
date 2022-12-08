@@ -121,6 +121,7 @@ final public class sock extends websock{
 		byte[] ba=content_bb.array();
 		int i=content_bb.position();
 		int n=content_bb.limit();
+		System.out.println(new String(ba,i,n-i));
 //		System.out.println(new String(ba,i,n-i));
 		String name="";
 		int s=0;

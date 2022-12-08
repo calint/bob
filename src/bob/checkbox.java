@@ -8,15 +8,10 @@ public class checkbox extends a{
 	final private static String off="◻";
 	final private static String on="▣";
 	private boolean checked;
-	private String name_unescaped;
 
 	public checkbox(a parent,String name,boolean checked){
 		super(parent,a.escape_html_name(name),checked?on:off);
 		this.checked=checked;
-		this.name_unescaped=name;
-	}
-	public String name_unescaped(){
-		return name_unescaped;
 	}
 	public void to(xwriter x) throws Throwable{
 		x.spano(this);

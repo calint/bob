@@ -224,7 +224,15 @@ public class a implements Serializable{
 	}
 	
 	final public static String escape_html_name(String name){
-		return name.replace(' ','+'); // todo escape +
+		final String escaped=name.replace('+','§').replace(' ','+');
+//		final String escaped=name.replaceAll("\\+","%2b").replace(' ','+'); // ?  cannot replace with %2b because browser unescapes it in links
+		return escaped;
+	}
+	
+	final public String name_unescaped(){
+		final String unescaped=name.replace('+',' ').replace('§','+');
+//		final String unescaped=name.replace('+',' ').replaceAll("%2b","+");
+		return unescaped;
 	}
 
 
