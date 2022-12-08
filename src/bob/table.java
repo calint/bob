@@ -36,6 +36,7 @@ public class table extends a{
 		x.table_();
 	}
 	@Override protected a find_child(String name){
+		// finds a child that is not a field
 		for(final checkbox c:checkboxes){
 			if(c.name().equals(name)){
 				return c;
@@ -60,20 +61,6 @@ public class table extends a{
 	}
 	public void x_(xwriter js,String s) throws Throwable{
 		System.out.println("query: "+q.str());
-		xwriter x=js.xub(this,true,false);
-		to(x);
-		js.xube();
-	}
-	public void x_sel(xwriter js,String s) throws Throwable{
-		System.out.println("select: '"+s+"'");
-		selectedIds.add(s);
-		xwriter x=js.xub(this,true,false);
-		to(x);
-		js.xube();
-	}
-	public void x_unsel(xwriter js,String s) throws Throwable{
-		System.out.println("unselect: '"+s+"'");
-		selectedIds.remove(s);
 		xwriter x=js.xub(this,true,false);
 		to(x);
 		js.xube();
