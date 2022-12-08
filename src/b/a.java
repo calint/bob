@@ -13,9 +13,9 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
 public class a implements Serializable{
-	private a pt;
-	private String nm;
-	private String s;
+	private a parent;
+	private String name;
+	private String value;
 //	public boolean equals(final Object o){
 //		if(!(o instanceof a))
 //			return false;
@@ -29,14 +29,14 @@ public class a implements Serializable{
 		autonew();
 	}
 	public a(final a parent,final String name){
-		pt=parent;
-		nm=name;
+		this.parent=parent;
+		this.name=name;
 		autonew();
 	}
 	public a(final a parent,final String name,final String value){
-		pt=parent;
-		nm=name;
-		s=value;
+		this.parent=parent;
+		this.name=name;
+		this.value=value;
 		autonew();
 	}
 	private void autonew(){
@@ -54,123 +54,125 @@ public class a implements Serializable{
 					a=(a)f.getType().getConstructor().newInstance();
 					f.set(this,a);
 				}
-				a.nm=f.getName();
-				a.pt=this;
+				a.name=f.getName();
+				a.parent=this;
 			}
 		}catch(final Throwable e){
 			throw new Error(e);
 		}
 	}
 	public final String id(){
-		String s=nm;
-		for(a p=this;p.pt!=null;p=p.pt)
-			s=tostr(p.pt.nm,"")+req.ajax_field_path_separator+s;
+		String s=name;
+		for(a p=this;p.parent!=null;p=p.parent)
+			s=tostr(p.parent.name,"")+req.ajax_field_path_separator+s;
 		return tostr(s,req.ajax_field_path_separator);
 	}
-	public final String nm(){
-		return nm;
+	public final String name(){
+		return name;
 	}
 //	public final a nm(final String nm){this.nm=nm;return this;}
-	public final a pt(){
-		return pt;
+	public final a parent(){
+		return parent;
 	}
-	public final a pt(final Class<? extends a> cls){
-		if(pt==null)
+	public final a parent(final Class<? extends a> cls){
+		if(parent==null)
 			return null;
-		if(cls.isAssignableFrom(pt.getClass()))
-			return pt;
-		return pt.pt(cls);
+		if(cls.isAssignableFrom(parent.getClass()))
+			return parent;
+		return parent.parent(cls);
 	}
 //	public final a pt(final a a){pt=a;return this;}
 	public final void attach(final a e,final String fld){
-		e.pt=this;
-		e.nm=fld;
+		e.parent=this;
+		e.name=fld;
 		try{
 			getClass().getField(fld).set(this,e);
 		}catch(final Throwable t){
 			throw new Error(t);
 		}
 	}
-	public final a chld(final String id){
+	public final a child(final String id){
 		try{
 			return (a)getClass().getField(id).get(this);
 		}catch(Throwable e){
 		}
-		return chldq(id);
+		return find_child(id);
 	}
-	protected a chldq(final String nm){
+	/** Override this if element contains children that are not defined in fields. */
+	protected a find_child(final String nm){
 		return null;
 	}
-	protected void ev(final xwriter x,final a from,final Object o) throws Throwable{
-		if(pt!=null)
-			pt.ev(x,from,o);
+	/** Bubbles event to parent. Override this to receive events from children. */
+	protected void bubble(final xwriter x,final a from,final Object o) throws Throwable{
+		if(parent!=null)
+			parent.bubble(x,from,o);
 	}
-	final protected void ev(final xwriter x,final a from) throws Throwable{
-		ev(x,from,null);
+	final protected void bubble(final xwriter x,final a from) throws Throwable{
+		bubble(x,from,null);
 	}
-	final protected void ev(final xwriter x) throws Throwable{
-		ev(x,this,null);
+	final protected void bubble(final xwriter x) throws Throwable{
+		bubble(x,this,null);
 	}
 
 	public void to(final xwriter x) throws Throwable{
-		if(s==null)
+		if(value==null)
 			return;
-		x.p(s);
+		x.p(value);
 	}
 	public final a set(final String s){
-		this.s=s;
+		this.value=s;
 		return this;
 	}
 	public final a set(final a e){
-		this.s=e.toString();
+		this.value=e.toString();
 		return this;
 	}
 	public final a set(final int i){
-		s=Integer.toString(i);
+		value=Integer.toString(i);
 		return this;
 	}
 	public final a set(final float f){
-		s=Float.toString(f);
+		value=Float.toString(f);
 		return this;
 	}
 	public final a set(final long i){
-		s=Long.toString(i);
+		value=Long.toString(i);
 		return this;
 	}
 	public final a set(final double d){
-		s=Double.toString(d);
+		value=Double.toString(d);
 		return this;
 	}
-	public final a clr(){
+	public final a clear(){
 		return set((String)null);
 	}
-	public final boolean isempty(){
-		return s==null||s.length()==0;
+	public final boolean is_empty(){
+		return value==null||value.length()==0;
 	}
 	public String toString(){
-		return s==null?"":s;
+		return value==null?"":value;
 	}
 	public final String str(){
-		return s==null?"":s;
+		return value==null?"":value;
 	}
 	public final int toint(){
-		return isempty()?0:Integer.parseInt(toString());
+		return is_empty()?0:Integer.parseInt(toString());
 	}
 	public final float toflt(){
-		return isempty()?0:Float.parseFloat(toString());
+		return is_empty()?0:Float.parseFloat(toString());
 	}
 	public final long tolong(){
-		return isempty()?0:Long.parseLong(toString());
+		return is_empty()?0:Long.parseLong(toString());
 	}
 	public final short toshort(){
-		return isempty()?0:Short.parseShort(toString());
+		return is_empty()?0:Short.parseShort(toString());
 	}
 	public final double todbl(){
-		return isempty()?0:Double.parseDouble(toString());
+		return is_empty()?0:Double.parseDouble(toString());
 	}
 
 	final public void to(final OutputStream os) throws IOException{
-		os.write(tobytes(tostr(s,"")));
+		os.write(tobytes(tostr(value,"")));
 	}// ? impl s?.to(os)
 	final public void to(final path p,final boolean append) throws IOException{
 		final OutputStream os=p.outputstream(append);
@@ -203,12 +205,12 @@ public class a implements Serializable{
 		}
 		return this;
 	}
-	public a pt(final a e){
-		pt=e;
+	public a parent(final a e){
+		parent=e;
 		return this;
 	}// ? if pt ondetach?
-	public a nm(final String s){
-		nm=s;
+	public a name(final String s){
+		name=s;
 		return this;
 	}
 	final public void xrfsh(final xwriter x) throws Throwable{
@@ -218,8 +220,13 @@ public class a implements Serializable{
 	/** implement to provide custom html document title */
 //	public interface titled{void title_to(xwriter x);}
 	final public Reader reader(){
-		return new StringReader(s==null?"":s);
+		return new StringReader(value==null?"":value);
 	}
+	
+	final public static String escape_html_name(String name){
+		return name.replace(' ','+'); // todo escape +
+	}
+
 
 	private static final long serialVersionUID=1;
 }

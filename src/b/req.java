@@ -883,7 +883,7 @@ public final class req{
 				final String[] paths=me.getKey().split(req.ajax_field_path_separator);
 				a e=root_elem;
 				for(int n=1;n<paths.length;n++){
-					e=e.chld(paths[n]);
+					e=e.child(paths[n]);
 					if(e==null)
 						throw new RuntimeException("not found: "+me.getKey());
 				}
@@ -913,7 +913,7 @@ public final class req{
 			final String[] path=target_elem_id.split(req.ajax_field_path_separator);// ? indexofloop
 			a target_elem=root_elem;
 			for(int n=1;n<path.length;n++){
-				target_elem=target_elem.chld(path[n]);
+				target_elem=target_elem.child(path[n]);
 				if(target_elem==null)
 					break;
 			}

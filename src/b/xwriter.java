@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 public final class xwriter{
+	private final OutputStream os;
 	public xwriter(final OutputStream os){
 		this.os=os;
 	}
@@ -481,7 +482,7 @@ public final class xwriter{
 		return tagoe();
 	}
 	public xwriter inputax(final a e){
-		return inpax(e,null,e.pt(),null);
+		return inpax(e,null,e.parent(),null);
 	}
 	public xwriter output_holder(final a e){
 		return tago("output").attr("id",e.id()).tagoe().tage("output");
@@ -685,7 +686,6 @@ public final class xwriter{
 	public xwriter nbsp(){
 		return p("&nbsp;");
 	}
-	private final OutputStream os;
 	private static String encquot(final String text){
 		if(text==null)
 			return "";

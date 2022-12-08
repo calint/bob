@@ -52,7 +52,7 @@ final public class sock extends websock{
 			final String[] paths=me.getKey().split(req.ajax_field_path_separator);
 			a e=root;
 			for(int n=1;n<paths.length;n++){
-				e=e.chld(paths[n]);
+				e=e.child(paths[n]);
 				if(e==null)
 					throw new RuntimeException("not found: "+me.getKey());
 			}
@@ -82,7 +82,7 @@ final public class sock extends websock{
 		final String[] path=target_elem_id.split(req.ajax_field_path_separator);// ? indexofloop
 		a target_elem=root;
 		for(int n=1;n<path.length;n++){
-			target_elem=target_elem.chld(path[n]);
+			target_elem=target_elem.child(path[n]);
 			if(target_elem==null)
 				break;
 		}
@@ -91,6 +91,8 @@ final public class sock extends websock{
 		if(target_elem==null){
 			x.xalert("element not found:\n"+target_elem_id);
 			x.finish();
+			final String msg=x.toString();
+			send(msg);
 			return;
 		}
 		// invoke method on target element with arguments

@@ -85,7 +85,7 @@ final public class b{
 	public static @conf boolean print_stats_at_startup=true;
 	public static @conf boolean firewall_on=true;
 	public static @conf boolean firewall_paths_on=true;
-	public static @conf boolean log_client_disconnects=true;
+	public static @conf boolean log_client_disconnects=false;
 	public static @conf String sessions_dir="u";
 
 	public static PrintStream out=System.out;

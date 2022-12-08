@@ -9,11 +9,9 @@ import b.xwriter;
 
 public class table extends a{
 	static final long serialVersionUID=1;
-	final static String icon_not_selected="◻";
-	final static String icon_selected="▣";
-
 	private HashSet<String> selectedIds=new HashSet<String>();
 	public a q;
+	private ArrayList<checkbox>checkboxes=new ArrayList<checkbox>();
 	public void to(final xwriter x) throws Throwable{
 		x.p("<div style='text-align:center;padding-bottom:0.5em'>");
 		x.ax(this,"up","••").inpax(q,null,this,null);
@@ -25,19 +23,35 @@ public class table extends a{
 		x.table("f").nl();
 		x.tr().th();
 		renderHeaders(x);
+		checkboxes.clear();
 		for(final Object o:ls){
 			final String id=getIdFrom(o);
 			x.tr().td();
-			final boolean selected=selectedIds.contains(id);
-			if(selected){
-				x.ax(this,"unsel",id,icon_selected);
-			}else{
-				x.ax(this,"sel",id,icon_not_selected);
-			}
+			final checkbox cb=new checkbox(this,id,selectedIds.contains(id));
+			checkboxes.add(cb);
+			cb.to(x);
 			renderCells(x,o);
 			x.nl();
 		}
 		x.table_();
+	}
+	@Override protected a find_child(String name){
+		for(final checkbox c:checkboxes) {
+			if(c.name().equals(name)) {
+				return c;
+			}
+		}
+		return null;
+	}
+	@Override protected void bubble(xwriter x,a from,Object o) throws Throwable{
+		if(from instanceof checkbox) {
+			final String name=((checkbox)from).name_unescaped();
+			if("checked".equals(o)) {
+				selectedIds.add(name);
+			}else if("unchecked".equals(o)) {
+				selectedIds.remove(name);
+			}
+		}
 	}
 	public void x_(xwriter js,String s) throws Throwable{
 		System.out.println("query: "+q.str());
@@ -59,7 +73,6 @@ public class table extends a{
 		to(x);
 		js.xube();
 	}
-	
 	//--------------------------------------------------------------------------
 	protected List<?> getList(){
 		final List<String> ls=new ArrayList<String>();
