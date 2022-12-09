@@ -1,0 +1,4 @@
+# edit this file with ip addresses and ports of the cluster
+# the user name and password from run.cfg will be used to connect
+localhost:3306
+localhost:3307

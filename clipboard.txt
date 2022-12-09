@@ -13,7 +13,16 @@ cd /
 git clone https://github.com/calint/bob
 
 
-# mysql 
+# mysql allow connection from any host
+# nano /etc/mysql/mysql.conf.d/mysqld.cnf
+# bind-address		= 0.0.0.0
+# mysqlx-bind-address	= 0.0.0.0
+
+# then
+systemctl restart mysql
+
+
+
 create database testdb;
 create user 'c'@'%' identified by 'password';
 grant all on testdb.* to 'c'@'%';

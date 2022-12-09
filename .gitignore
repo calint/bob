@@ -4,5 +4,5 @@
 /books_data.csv
 /documents--2022-11-22.tgz
 /servers-ips.txt
-/run-do.cfg
-/dbcluster.txt
+/dbcluster-digitalocean.txt
+/run-digitalocean.cfg
