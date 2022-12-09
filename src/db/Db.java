@@ -361,7 +361,7 @@ public final class Db{
 		for(int j=1;j<n;j++){
 			final int id=ints.get(j);
 			if(id!=prev)
-				throw new RuntimeException("expected generated ids to be same");
+				throw new RuntimeException("expected generated ids to be same. got: "+ints);
 			prev=id;
 		}
 		return prev;
