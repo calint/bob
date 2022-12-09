@@ -380,26 +380,27 @@ final public class b{
 		}
 		final PrintStream ps=new PrintStream(out);
 		ps.println(hello);
-		for(final NetworkInterface ni:Collections.list(NetworkInterface.getNetworkInterfaces())){
-			final String nm=ni.getName();
-			if(nm.startsWith("lo"))
-				continue;
-			p("              url: ");
-			for(final InetAddress ia:Collections.list(ni.getInetAddresses())){
-				final String s=ia.getHostAddress();
-				if(!s.matches("\\d+\\.\\d+\\.\\d+\\.\\d+"))
-					continue;
-				p("http://");
-				p(s);
-				if(!server_port.equals("80")){
-					p(":");
-					p(server_port);
-				}
-				p("/");
-				break;
-			}
-			p("\n");
-		}
+//		for(final NetworkInterface ni:Collections.list(NetworkInterface.getNetworkInterfaces())){
+//			final String nm=ni.getName();
+//			if(nm.startsWith("lo"))
+//				continue;
+//			ps.println("              url: ");
+//			for(final InetAddress ia:Collections.list(ni.getInetAddresses())){
+//				final String s=ia.getHostAddress();
+//				if(!s.matches("\\d+\\.\\d+\\.\\d+\\.\\d+"))
+//					continue;
+//				p("http://");
+//				p(s);
+//				if(!server_port.equals("80")){
+//					p(":");
+//					p(server_port);
+//				}
+//				p("/");
+//				break;
+//			}
+//			p("\n");
+//		}
+		ps.println("               id: "+id);
 		ps.println("             time: "+tolastmodstr(t_ms));
 		ps.println("             port: "+server_port);
 		ps.println("            input: "+(thdwatch.input>>10)+" KB");
@@ -421,7 +422,6 @@ final public class b{
 		ps.println("          threads: "+thdreq.all_request_threads.size());
 		ps.println("            cores: "+Runtime.getRuntime().availableProcessors());
 //		ps.println("            cloud: "+cloud_bees);
-		ps.println("               id: "+id);
 	}
 	public static int rndint(final int from,final int tonotincl){
 		return (int)(Math.random()*(tonotincl-from)+from);
