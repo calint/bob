@@ -8,7 +8,8 @@ URL=http://localhost:8888
 echo bob
 ab -n $NREQ -c $CON $URL/ > bob-get-from-cache.txt
 ab -n $NREQ -c $CON $URL/qa/files/far_side_dog_ok.jpg > bob-get-medium-file.txt
-ab -n $NREQ -c $CON $URL/b/test/t1 > bob-dynamic-hello-world.txt
+ab -n $NREQ -c $CON $URL/b/test/t1 > bob-stateless-hello-world.txt
+ab -n $NREQ -c $CON $URL/b/test/t4 > bob-statefull-hello-world.txt
 
 URL=http://localhost
 

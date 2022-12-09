@@ -1,6 +1,4 @@
 b
-[ ] page that does not save state or access session
-[ ]   annotation regarding transaction and state saving, @stateless does not initiate transaction or reads/writes path object
 [ ] bob.js: server is busy message box when typing fast
 [ ] fix for client that makes many threaded requests and then stalls them to starve server of threads or create too many. ddos.
 [ ] req state to enum
@@ -52,6 +50,8 @@ dbo
 [ ]   ms sql server?
 [ ]   ibm db2?
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
+[x] page that does not save state or access session
+[x]   annotation regarding transaction and state saving, @stateless does not initiate transaction or reads/writes path object
 [x] performance testing in qa
 [x]   jmeter
 [x]   ab

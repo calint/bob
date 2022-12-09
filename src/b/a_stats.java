@@ -1,6 +1,8 @@
 package b;
 
-public class a_stats extends a implements bin{
+import b.req.stateless;
+
+public @stateless class a_stats extends a implements bin{
 	private static final long serialVersionUID=1L;
 
 	@Override public String content_type(){

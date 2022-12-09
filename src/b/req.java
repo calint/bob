@@ -4,6 +4,8 @@ import static b.b.pl;
 import static b.b.tobytes;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.InvocationTargetException;
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
@@ -847,10 +849,16 @@ public final class req{
 		if(content_bb!=null)
 			populate_content_map_from_buffer();
 
-		final DbTransaction tn=Db.initCurrentTransaction();
+		final boolean is_stateless=cls.getAnnotation(stateless.class)!=null;
+
+		final DbTransaction tn;
+		if(!is_stateless)
+			tn=Db.initCurrentTransaction();
+		else
+			tn=null;
 //		System.out.println("dbo: connection pool: "+Db.instance().getConnectionPoolSize());
 		try{
-			run_page_do(tn,cls);
+			run_page_do(is_stateless,tn,cls);
 		}catch(Throwable t){
 			tn.rollback();
 			while(t.getCause()!=null)
@@ -859,16 +867,23 @@ public final class req{
 				throw(RuntimeException)t;
 			throw new RuntimeException(t);
 		}finally{
-			Db.deinitCurrentTransaction();
+			if(!is_stateless)
+				Db.deinitCurrentTransaction();
 		}
 
 		state=state_next_request;
 	}
 
 	/** Called from run_page(). */
-	private void run_page_do(final DbTransaction tn,final Class<?> cls) throws Throwable{
-		final sessionobj dbo_root_elem=get_session_path(path_str);
-		a root_elem=(a)dbo_root_elem.object();
+	private void run_page_do(final boolean is_stateless,final DbTransaction tn,final Class<?> cls) throws Throwable{
+		final sessionobj dbo_root_elem;
+		a root_elem=null;
+		if(!is_stateless){
+			dbo_root_elem=get_session_path(path_str);
+			root_elem=(a)dbo_root_elem.object();
+		}else{
+			dbo_root_elem=null;
+		}
 		if(root_elem==null){
 			root_elem=(a)cls.getConstructor().newInstance();
 		}
@@ -954,8 +969,10 @@ public final class req{
 			b.log(t);
 			x.pre().p(b.stacktrace(t));
 		}
-		dbo_root_elem.object(root_elem);
-		tn.flush();
+		if(!is_stateless){
+			dbo_root_elem.object(root_elem);
+			tn.flush();
+		}
 		x.finish();
 		os.finish();
 	}
@@ -1193,7 +1210,7 @@ public final class req{
 	private FileChannel upload_channel;
 	private String upload_lastmod_s;
 	websock websock;
-public static @conf int abuse_method_len=5;
+	public static @conf int abuse_method_len=5;
 	public static @conf int abuse_uri_len=512;
 	public static @conf int abuse_prot_len=11;
 	public static @conf int abuse_header_name_len=32;
@@ -1261,4 +1278,8 @@ public static @conf int abuse_method_len=5;
 	private final static String text_html_utf8="text/html;charset=utf-8";
 	private final static String text_plain="text/plain";// ? utf8 encoding?
 //	private final static String text_plain_utf8="text/plain;charset=utf-8";
+
+	/** Elements will not initiate DbTransaction or read and write the state to the session object. */
+	public static @Retention(RetentionPolicy.RUNTIME) @interface stateless{
+	}
 }
