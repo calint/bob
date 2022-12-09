@@ -64,23 +64,23 @@ public final class req{
 				thdwatch.input+=n;
 			}
 			while(ba_rem>0){
-				switch(state){
+				switch(st){
 				default:
 					throw new RuntimeException();
-				case state_next_request:
+				case next_request:
 					reset();
-					state=state_method;
+					st=state.method;
 					// fallthrough
-				case state_method:
+				case method:
 					parse_method();
 					break;
-				case state_uri:
+				case uri:
 					parse_uri();
 					break;
-				case state_prot:
+				case prot:
 					parse_prot();
 					break;
-				case state_header_name:
+				case header_name:
 					parse_header_name();
 					// parse_header_name()->do_after_header() might have changed the state and started transfer
 					if(is_transfer()){
@@ -93,10 +93,10 @@ public final class req{
 						return; // ! will hang client on chained requests
 					}
 					break;
-				case state_header_value:
+				case header_value:
 					parse_header_value();
 					break;
-				case state_content_read:
+				case content_read:
 					parse_content_read();
 					// state might have changed
 					if(is_waiting_run_page()){
@@ -105,12 +105,12 @@ public final class req{
 						return; // ! will hang client on chained requests
 					}
 					break;
-				case state_content_upload:
+				case content_upload:
 					parse_content_upload();
 					break;
 				}
 			}
-			if(state==state_next_request&&!is_connection_keepalive()){
+			if(st==state.next_request&&!is_connection_keepalive()){
 				close();
 				return;
 			}
@@ -155,7 +155,7 @@ public final class req{
 			final byte b=ba[ba_pos++];
 			ba_rem--;
 			if(b==' '){
-				state=state_uri;
+				st=state.uri;
 				break;
 			}
 		}
@@ -172,7 +172,7 @@ public final class req{
 			final byte b=ba[ba_pos++];
 			ba_rem--;
 			if(b==' '){
-				state=state_prot;
+				st=state.prot;
 				break;
 			}
 			if(b=='\n'){
@@ -220,7 +220,7 @@ public final class req{
 			path_str=b.urldecode(uri_encoded.substring(0,i));
 			query_str=uri_encoded.substring(i+1);
 		}
-		state=state_header_name;
+		st=state.header_name;
 	}
 
 	private void parse_header_name() throws Throwable{
@@ -231,7 +231,7 @@ public final class req{
 			if(b==':'){
 				header_value_sb.setLength(0);
 				header_value_length=0;
-				state=state_header_value;
+				st=state.header_value;
 				break;
 			}else if(b=='\n'){
 				do_after_header();
@@ -261,7 +261,7 @@ public final class req{
 				}
 				header_name_sb.setLength(0);
 				header_name_length=0;
-				state=state_header_name;
+				st=state.header_name;
 				break;
 			}
 			header_value_sb.append((char)b);
@@ -335,7 +335,7 @@ public final class req{
 				}
 				upload_channel=upload_path.filechannel();
 				bb.position(ba_pos);
-				state=state_content_upload;
+				st=state.content_upload;
 				parse_content_upload();
 				return;
 			}
@@ -351,7 +351,7 @@ public final class req{
 				throw new RuntimeException("abusecontentlen "+content_remaining_to_read);
 			}
 			content_bb=ByteBuffer.allocate((int)content_remaining_to_read);
-			state=state_content_read;
+			st=state.content_read;
 			parse_content_read();
 			return;
 		}
@@ -370,7 +370,7 @@ public final class req{
 			return;
 
 		// try creating an instance of 'a' on a separate thread
-		state=state_waiting_run_page;
+		st=state.waiting_run_page;
 		return;
 	}
 
@@ -517,7 +517,7 @@ public final class req{
 		else
 			transfer_file_remaining=range_to-range_from+1; // zero indexed inclusive adjustment
 
-		state=state_transfer_file;
+		st=state.transfer_file;
 		do_transfer_file(); // ? return value ignored
 		return true;
 	}
@@ -669,7 +669,7 @@ public final class req{
 			bb[bi++]=ByteBuffer.wrap(content);
 		final long n=send_packet(bb,bi);
 		thdwatch.output+=n;
-		state=state_next_request;
+		st=state.next_request;
 	}
 
 	private int send_packet(final ByteBuffer[] bba,final int n) throws Throwable{
@@ -688,15 +688,15 @@ public final class req{
 			n+=b.remaining();
 		transfer_buffers=bba;
 		transfer_buffers_remaining=n;
-		state=state_transfer_buffers;
+		st=state.transfer_buffers;
 		do_transfer_buffers();
 	}
 
 	/** @return true if transfer is done, false if more writes are needed. */
 	void do_transfer() throws Throwable{
-		if(state==state_transfer_file)
+		if(st==state.transfer_file)
 			do_transfer_file();
-		else if(state==state_transfer_buffers)
+		else if(st==state.transfer_buffers)
 			do_transfer_buffers();
 		else
 			throw new IllegalStateException();
@@ -711,7 +711,7 @@ public final class req{
 			transfer_buffers_remaining-=c;
 			thdwatch.output+=c;
 		}
-		state=state_next_request;
+		st=state.next_request;
 	}
 
 	/** @return true if if transfer is done, more writes are needed. */
@@ -739,7 +739,7 @@ public final class req{
 				return;
 			}
 		transfer_file_channel.close();
-		state=state_next_request;
+		st=state.next_request;
 		return;
 	}
 
@@ -752,7 +752,7 @@ public final class req{
 		ba_rem-=c;
 		if(content_remaining_to_read==0){
 			content_bb.flip();
-			state=state_waiting_run_page;
+			st=state.waiting_run_page;
 		}
 	}
 
@@ -818,7 +818,7 @@ public final class req{
 
 	/** Called from the request thread. */
 	void run_page() throws Throwable{
-		state=state_run_page;
+		st=state.run_page;
 
 		final Class<?> cls=b.get_class_for_path(path_str);
 		if(cls==null){
@@ -837,7 +837,7 @@ public final class req{
 
 		if(websock.class.isAssignableFrom(cls)){// start a socket
 //			System.out.println("request "+Integer.toHexString(hashCode())+": socket at "+path_str);
-			state=state_sock;
+			st=state.sock;
 			websock=(websock)cls.getConstructor().newInstance();
 			bb.position(ba_pos); // set the position to the end of processed data. the buffer will be used by websock.
 			websock.init(this);
@@ -866,7 +866,7 @@ public final class req{
 				Db.deinitCurrentTransaction();
 		}
 
-		state=state_next_request;
+		st=state.next_request;
 	}
 
 	/** Called from run_page(). */
@@ -1032,7 +1032,7 @@ public final class req{
 
 	// ? separation of concerns, this request is a sock or a 'a'
 	boolean is_sock(){
-		return state==state_sock;
+		return st==state.sock;
 	}
 
 //	// threaded socks
@@ -1078,11 +1078,11 @@ public final class req{
 	}
 
 	boolean is_transfer(){
-		return state==state_transfer_file||state==state_transfer_buffers;
+		return st==state.transfer_file||st==state.transfer_buffers;
 	}
 
 	boolean is_waiting_run_page(){
-		return state==state_waiting_run_page;
+		return st==state.waiting_run_page;
 	}
 
 	void close(){
@@ -1171,7 +1171,7 @@ public final class req{
 
 	SelectionKey selection_key;
 	SocketChannel socket_channel;
-	private int state=state_method;
+	private state st=state.method;
 	final ByteBuffer bb=ByteBuffer.allocate(b.reqinbuf_B);
 	private byte[] ba;
 	private int ba_rem;
@@ -1258,20 +1258,23 @@ public final class req{
 	private final static String s_range="range";
 	private final static String s_slash="/";
 	private final static byte[] ba_page_header_pre_title="<!doctype html><meta name=viewport content=\"width=device-width,initial-scale=1\"><meta charset=utf-8><link rel=stylesheet href=/x.css><script src=/x.js></script>".getBytes();
-	private final static int state_next_request=0;
-	private final static int state_method=1;
-	private final static int state_uri=2;
-	private final static int state_prot=3;
-	private final static int state_header_name=4;
-	private final static int state_header_value=5;
-	private final static int state_content_read=6;
-	private final static int state_transfer_file=7;
-	private final static int state_transfer_buffers=8;
-	private final static int state_waiting_run_page=9;
-	private final static int state_run_page=10;
-	private final static int state_content_upload=11;
-	private final static int state_sock=12;
+//	private final static int state_next_request=0;
+//	private final static int state_method=1;
+//	private final static int state_uri=2;
+//	private final static int state_prot=3;
+//	private final static int state_header_name=4;
+//	private final static int state_header_value=5;
+//	private final static int state_content_read=6;
+//	private final static int state_transfer_file=7;
+//	private final static int state_transfer_buffers=8;
+//	private final static int state_waiting_run_page=9;
+//	private final static int state_run_page=10;
+//	private final static int state_content_upload=11;
+//	private final static int state_sock=12;
 	private final static String text_html_utf8="text/html;charset=utf-8";
 	private final static String text_plain="text/plain";// ? utf8 encoding?
 //	private final static String text_plain_utf8="text/plain;charset=utf-8";
+	enum state{
+		next_request,method,uri,prot,header_name,header_value,content_read,transfer_file,transfer_buffers,waiting_run_page,run_page,content_upload,sock
+	}
 }

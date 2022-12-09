@@ -71,6 +71,4 @@ ssh root@<ip> 'cd /bob && git pull https://github.com/calint/bob && ./build.sh &
 
 sudo tcpdump -i lo port 8888 -X
 
-
-
-
+ssh root@ journalctl -u bob -e | grep http404 | cut -b 79-180 | sort -u | less

@@ -1,7 +1,6 @@
 b
 [ ] bob.js: server is busy message box when typing fast
 [ ] fix for client that makes many threaded requests and then stalls them to starve server of threads or create too many. ddos.
-[ ] req state to enum
 [ ] thread pool: get first, create if none available
 [ ] fix "// todo" comments
 [ ]   websock: implement ping/pong
@@ -50,6 +49,7 @@ dbo
 [ ]   ms sql server?
 [ ]   ibm db2?
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
+[x] req state to enum
 [x] page that does not save state or access session
 [x]   annotation regarding transaction and state saving, @stateless does not initiate transaction or reads/writes path object
 [x] performance testing in qa
