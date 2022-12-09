@@ -1,28 +1,31 @@
 <!doctype html><meta name=viewport content="width=device-width,initial-scale=1"><meta charset=utf-8><link rel=stylesheet href=/x.css><script src=/x.js></script>
 <title>b.test.t3</title>
 1 <is>$x('- s "\'hello\'"');</is>
-2 <div id="-f" class="bytes" style="background:yellow" onclick="ui.alert('&quot;\'hello\'&quot;')"></div>
-3 <div id="-f" class="bytes" style="background:yellow"></div>
-4 <input value="default &quot;''&quot;" id="-f" type="text" class="txt" style="background:yellow" onkeypress="return $r(event,this,'- test &quot;\'hello\'&quot;')" oninput="$b(this);$x('- test \' &quot;chg&quot; \'')">
-5 <input value="default &quot;''&quot;" id="-f" type="text" class="txt" style="background:yellow" onkeypress="return $r(event,this,'- test &quot;\'hello\'&quot;')" oninput="$b(this);$x('-')">
-6 <input value="default &quot;''&quot;" id="-f" type="text" class="txt" style="background:yellow" onkeypress="return $r(event,this,'- test &quot;\'hello\'&quot;')" oninput="$b(this)">
-7 <input value="" id="-f" type="text" class="txt" style="background:yellow" onkeypress="return $r(event,this,'- test &quot;\'hello\'&quot;')" oninput="$b(this)">
-8 <input value="" id="-f" type="text" class="txt" style="background:yellow" onkeypress="return $r(event,this,'-')" oninput="$b(this)">
-9 <input value="" id="-f" type="text" class="txt" style="background:yellow" oninput="$b(this)">
-10 <input value="" id="-f" type="text" class="txt" oninput="$b(this)">
-11 <input value="" id="-f" type="text" oninput="$b(this)">
-12 <input value="" id="-f" oninput="$b(this)">
-13 <input value="" id="-f" type="checkbox" oninput="this.value=this.checked?'1':'0';$b(this)">
-14 <input value="" id="-f" type="checkbox" oninput="this.value=this.checked?'1':'0';$b(this);$x('- test')">
-15 <input value="" id="-f" type="checkbox" oninput="this.value=this.checked?'1':'0';$b(this);$x('-')">
-16 <input value="" id="-f" type="checkbox" onkeypress="return $r(event,this,'- test &quot;\'test param\'&quot;')" oninput="this.value=this.checked?'1':'0';$b(this)">
-17 <input value="" id="-f" type="checkbox" onkeypress="return $r(event,this,'-')" oninput="this.value=this.checked?'1':'0';$b(this)">
-18 <input value="" id="-f" type="date" onkeypress="return $r(event,this,'-')" oninput="$b(this)">
-19 <input value="" id="-f" type="time" oninput="$b(this)">
-20 <input value="" id="-f" type="number" oninput="$b(this)">
-21 <input value="" id="-f" type="color" oninput="$b(this)">
-22 <input value="" id="-f" type="image" oninput="$b(this)">
-23 <input value="" id="-f" type="file" oninput="$b(this)">
-24 <input value="" id="-f" type="search" oninput="$b(this)">
-25 <textarea id="-f" onchange="$b(this)" onkeydown="$b(this)" class="txtarea" wrap="off" spellcheck="false"></textarea>
-26 <textarea id="-f" onchange="$b(this)" onkeydown="$b(this)" wrap="off" spellcheck="false"></textarea>
+2 <div id="-f" class="bytes" style="background:yellow" onclick="ui.alert('&quot;\'hello\'&quot;')">"'value'"</div>
+3 <div id="-f" class="bytes" style="background:yellow">"'value'"</div>
+4 <input value="&quot;'value'&quot;" id="-f" type="text" class="txt" style="background:yellow" onkeypress="return $r(event,this,'- test &quot;\'hello\'&quot;')" oninput="$b(this);$x('- test \' &quot;chg&quot; \'')">
+5 <input value="&quot;'value'&quot;" id="-f" type="text" class="txt" style="background:yellow" onkeypress="return $r(event,this,'- test &quot;\'hello\'&quot;')" oninput="$b(this);$x('-')">
+6 <input value="&quot;'value'&quot;" id="-f" type="text" class="txt" style="background:yellow" onkeypress="return $r(event,this,'- test &quot;\'hello\'&quot;')" oninput="$b(this)">
+7 <input value="&quot;'value'&quot;" id="-f" type="text" class="txt" style="background:yellow" onkeypress="return $r(event,this,'- test &quot;\'hello\'&quot;')" oninput="$b(this)">
+8 <input value="&quot;'value'&quot;" id="-f" type="text" class="txt" style="background:yellow" onkeypress="return $r(event,this,'-')" oninput="$b(this)">
+9 <input value="&quot;'value'&quot;" id="-f" type="text" class="txt" style="background:yellow" oninput="$b(this)">
+10 <input value="&quot;'value'&quot;" id="-f" type="text" class="txt" oninput="$b(this)">
+11 <input value="&quot;'value'&quot;" id="-f" type="text" oninput="$b(this)">
+12 <input value="&quot;'value'&quot;" id="-f" oninput="$b(this)">
+13 <input value="&quot;'value'&quot;" id="-f" type="checkbox" oninput="this.value=this.checked?'1':'0';$b(this)">
+14 <input value="&quot;'value'&quot;" id="-f" type="checkbox" oninput="this.value=this.checked?'1':'0';$b(this);$x('- test')">
+15 <input value="&quot;'value'&quot;" id="-f" type="checkbox" oninput="this.value=this.checked?'1':'0';$b(this);$x('-')">
+16 <input value="&quot;'value'&quot;" id="-f" type="checkbox" onkeypress="return $r(event,this,'- test &quot;\'test param\'&quot;')" oninput="this.value=this.checked?'1':'0';$b(this)">
+17 <input value="&quot;'value'&quot;" id="-f" type="checkbox" onkeypress="return $r(event,this,'-')" oninput="this.value=this.checked?'1':'0';$b(this)">
+18 <input value="&quot;'value'&quot;" id="-f" type="date" onkeypress="return $r(event,this,'-')" oninput="$b(this)">
+19 <input value="&quot;'value'&quot;" id="-f" type="time" oninput="$b(this)">
+20 <input value="&quot;'value'&quot;" id="-f" type="number" oninput="$b(this)">
+21 <input value="&quot;'value'&quot;" id="-f" type="color" oninput="$b(this)">
+22 <input value="&quot;'value'&quot;" id="-f" type="image" oninput="$b(this)">
+23 <input value="&quot;'value'&quot;" id="-f" type="file" oninput="$b(this)">
+24 <input value="&quot;'value'&quot;" id="-f" type="search" oninput="$b(this)">
+25 <textarea id="-f" onchange="$b(this)" onkeydown="$b(this)" class="txtarea" wrap="off" spellcheck="false">"'value'"</textarea>
+26 <textarea id="-f" onchange="$b(this)" onkeydown="$b(this)" wrap="off" spellcheck="false">"'value'"</textarea>
+27 <input value="&quot;'value'&quot;" id="-f" class="txt" onkeypress="return $r(event,this,'- sel &quot;\'hello\'&quot;')" oninput="$b(this);$x('- test &quot;\'hello\'&quot;')">
+28 <a href="url&quot;'test'&quot;">link</a>
+

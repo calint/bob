@@ -40,9 +40,6 @@ public class root extends a{
 		x.p("serialized: ").span(s).p(" B  gziped: ").span(sg).p(" B ").ax(this,"s",":: refresh").nl();
 		x.p("server: ").span(si);
 		x.nl().nl();
-		x.p("27 ").inpax(test,"txt",this,"test \"'hello'\"","sel \"'hello'\"").nl();
-		x.p("28 ").a("url\"'test'\"","link").nl();
-
 	}
 
 	public void x_s(xwriter x,String param) throws Throwable{
