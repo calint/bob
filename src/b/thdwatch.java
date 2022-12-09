@@ -50,15 +50,18 @@ final public class thdwatch extends Thread{
 					_out.println();
 					print_fieldnames_to(_out,"\n");
 				}
-				_threads=thdreq.all_request_threads.size();
-				final Runtime rt=Runtime.getRuntime();
-				_memfree=rt.freeMemory();
-				mem=rt.totalMemory()-_memfree;// ? doesnotmatchjprofiler
-				que=b.pending_requests_list().size();
+				update();
 				print_fields_to(_out,"\r");
 			}catch(final Throwable t){
-				t.printStackTrace();
+				b.log(t);
 			}
+	}
+	public static void update() {
+		final Runtime rt=Runtime.getRuntime();
+		_memfree=rt.freeMemory();
+		mem=rt.totalMemory()-_memfree;// ? doesnotmatchjprofiler
+		que=b.pending_requests_list().size();		
+		_threads=thdreq.all_request_threads.size();
 	}
 	public static void print_fieldnames_to(final OutputStream os,final String eol) throws IOException{
 		for(final Field f:_fields){
@@ -116,5 +119,19 @@ final public class thdwatch extends Thread{
 			os.write(ba_eol);
 		}
 		os.write(ba_eor);
+	}
+	public static void print_fields3_to(final OutputStream os) throws Throwable{
+		final byte[]nl="\n".getBytes();
+		for(final Field f:_fields){
+			String s=f.getName();
+			if(s.startsWith("_"))
+				continue;
+			os.write(s.getBytes());
+			os.write(": ".getBytes());
+			s=f.get(null).toString();
+			os.write(s.getBytes());
+			os.write(nl);
+		}
+		os.write(nl);
 	}
 }

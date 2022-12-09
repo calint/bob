@@ -13,7 +13,7 @@ dbo
 [ ] cluster
 [ ]   connections to multiple servers
 [ ]   write to all
-[ ]   read round robin
+[ ]   read round robin. solved by the load balancer.
 [ ]   step 1. all writes through a synchronized block writing to the other servers sequentially
 [ ]   step 2. all writes through a synchronized block writing to the other servers in parallel
 [ ]   step 3. 

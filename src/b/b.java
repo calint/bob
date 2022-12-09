@@ -161,8 +161,8 @@ final public class b{
 						thdwatch.iocon++;
 						final req r=new req();
 						r.socket_channel=ssc.accept();
-						final InetSocketAddress sa=(InetSocketAddress)r.socket_channel.getRemoteAddress();
-						System.out.println("accepted: "+sa.getAddress().getHostAddress());
+//						final InetSocketAddress sa=(InetSocketAddress)r.socket_channel.getRemoteAddress();
+//						System.out.println("accepted: "+sa.getAddress().getHostAddress());
 						r.socket_channel.configureBlocking(false);
 
 //						r.socket_channel.socket().setReceiveBufferSize(1);

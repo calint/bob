@@ -10,10 +10,12 @@ public @stateless class a_stats extends a implements bin{
 	}
 
 	@Override public void to(xwriter x) throws Throwable{
-		b.stats_to(x.outputstream());
-		x.nl();
-		thdwatch.print_fieldnames_to(x.outputstream(),"\n");
-		thdwatch.print_fields_to(x.outputstream(),"\n");
+		thdwatch.update();
+//		thdwatch.print_fieldnames_to(x.outputstream(),"\n");
+//		thdwatch.print_fields_to(x.outputstream(),"\n");
+//		x.nl();
+//		b.stats_to(x.outputstream());
+		thdwatch.print_fields3_to(x.outputstream());
 	}
 
 }
