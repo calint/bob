@@ -17,10 +17,10 @@ public class test1 extends TestCase {
 		super(use_current_transaction);
 	}
 
-	@Override
-	protected boolean isResetDatabase() {
-		return true;
-	}
+//	@Override
+//	protected boolean isResetDatabase() {
+//		return true;
+//	}
 
 	@Override
 	public void doRun() throws Throwable {
@@ -292,7 +292,11 @@ public class test1 extends TestCase {
 		final User u10 = (User) tn.create(User.class);
 		u10.setName("John Doe");
 		tn.commit();
+		tn.delete(u9);
 		tn.delete(u10);
+		
+		// clean up
+		
 
 	}
 }

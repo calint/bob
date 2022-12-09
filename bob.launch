@@ -18,7 +18,7 @@
     <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_CLASSPATH_ONLY_JAR" value="false"/>
     <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="b.b"/>
     <stringAttribute key="org.eclipse.jdt.launching.MODULE_NAME" value="bob"/>
-    <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="bapp_jdbc_host 164.92.227.183:3306 bapp_jdbc_db testdb bapp_jdbc_user c bapp_jdbc_password password bapp_jdbc_ncons 10"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="bapp_jdbc_host localhost:3306 bapp_jdbc_db testdb bapp_jdbc_user c bapp_jdbc_password password bapp_jdbc_ncons 10"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="bob"/>
     <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-noverify"/>
 </launchConfiguration>
