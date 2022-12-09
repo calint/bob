@@ -840,6 +840,7 @@ public final class req{
 			websock=(websock)cls.getConstructor().newInstance();
 			bb.position(ba_pos); // set the position to the end of processed data. the buffer will be used by websock.
 			websock.init(this);
+			thdwatch.socks++;
 			return;
 		}
 

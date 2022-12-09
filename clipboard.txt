@@ -17,7 +17,7 @@ git pull https://github.com/calint/bob
 
 # if files have been changed locally
 git checkout -p stash .
-git stash
+#git stash
 			
 			
 	# alternative on developer machine

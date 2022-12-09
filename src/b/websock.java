@@ -117,6 +117,7 @@ public abstract class websock{
 					if(opcode==8){// rfc6455#section-5.5.1
 						st=state.closed;
 						rq.close();
+						thdwatch.socks--;
 						return;
 					}
 					// todo handle the other opcodes
