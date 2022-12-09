@@ -26,16 +26,18 @@ EOF
 systemctl enable bob
 
 # mysql allow connection from any host
-# /etc/mysql/mysql.conf.d/mysqld.cnf
-#    bind-address		= 0.0.0.0
-#    mysqlx-bind-address	= 0.0.0.0
+# 	nano /etc/mysql/mysql.conf.d/mysqld.cnf
+#		bind-address		= 0.0.0.0
+#   	mysqlx-bind-address	= 0.0.0.0
+# restart mysql
+# 	systemctl restart mysql
+
+# edit dbcluster.txt and add ip:port of cluster members
+# cat > /bob/dbcluster.txt
+
 
 # mysql create database, user and grant access
-# 	create database testdb;
-# 	create user 'c'@'%' identified by 'password';
-# 	grant all on testdb.* to 'c'@'%';
-
-
+# 	create database testdb;create user 'c'@'%' identified by 'password';grant all on testdb.* to 'c'@'%';
 
 # change the run.cfg with login for db
 # MYSQL_HOST=localhost:3306
