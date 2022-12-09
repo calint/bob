@@ -2,7 +2,8 @@
 set -e
 
 # on server
-apt-get -y install default-jdk git
+apt-get update
+apt-get -y install default-jdk git default-mysql-server
 cd /
 git clone https://github.com/calint/bob
 cd /bob
@@ -11,16 +12,24 @@ sh build.sh
 cat > /etc/systemd/system/bob.service << EOF
 [Unit]
 Description=bob
+After=mysql.service
 
 [Service]
 WorkingDirectory=/bob/
 ExecStart=/bob/run.sh
+
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
 systemctl enable bob
+
+create database testdb;
+create user 'c'@'%' identified by 'password';
+grant all on testdb.* to 'c'@'%';
+
+
 
 # change the run.cfg with login for db
 

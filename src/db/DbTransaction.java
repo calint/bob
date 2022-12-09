@@ -75,15 +75,20 @@ public final class DbTransaction {
 			sb.append("insert into ").append(Db.tableNameForJavaClass(cls)).append(" values()");
 
 			final String sql = sb.toString();
-			Db.log_sql(sql);
-			stmt.execute(sql, Statement.RETURN_GENERATED_KEYS);
-			final ResultSet rs = stmt.getGeneratedKeys();
-			if (rs.next()) {
-				final int id = rs.getInt(1);
+			if(!Db.is_cluster_mode) {
+				Db.log_sql(sql);
+				stmt.execute(sql, Statement.RETURN_GENERATED_KEYS);
+				final ResultSet rs = stmt.getGeneratedKeys();
+				if (rs.next()) {
+					final int id = rs.getInt(1);
+					o.fieldValues.put(DbObject.id, id);
+				} else
+					throw new RuntimeException("expected generated id");
+				rs.close();
+			}else {
+				final int id = Db.instance().execClusterSqlInsert(sql);
 				o.fieldValues.put(DbObject.id, id);
-			} else
-				throw new RuntimeException("expected generated id");
-			rs.close();
+			}
 
 			// init default values
 			final DbClass dbcls = Db.instance().dbClassForJavaClass(cls);
@@ -125,14 +130,22 @@ public final class DbTransaction {
 				final StringBuilder sb = new StringBuilder(256);
 				sb.append("update ").append(r.tableName).append(" set ").append(r.name).append("=null")
 						.append(" where ").append(r.name).append('=').append(id);
-				execSql(sb);
+				if(!Db.is_cluster_mode) {
+					execSql(sb);
+				}else {
+					Db.instance().execClusterSql(sb.toString());
+				}
 			}
 		}
 
 		// delete this
 		final StringBuilder sb = new StringBuilder(256);
 		sb.append("delete from ").append(dbcls.tableName).append(" where id=").append(id);
-		execSql(sb);
+		if(!Db.is_cluster_mode) {
+			execSql(sb);
+		}else {
+			Db.instance().execClusterSql(sb.toString());
+		}
 		dirtyObjects.remove(o);
 		if (cache_enabled)
 			cache.remove(o);
@@ -337,7 +350,8 @@ public final class DbTransaction {
 		flush();
 		if (cache_enabled) // will keep memory usage down at batch imports
 			cache.clear();
-		con.commit();
+		if(!Db.is_cluster_mode)
+			con.commit();
 	}
 
 	public void rollback() {
@@ -345,6 +359,8 @@ public final class DbTransaction {
 		rollbacked = true;
 //		if (cache_enabled)
 //			cache.clear();
+		if(Db.is_cluster_mode)
+			return;
 		try {
 			con.rollback();
 			Db.log("*** rollback done");
@@ -388,7 +404,11 @@ public final class DbTransaction {
 		}
 		sb.setLength(sb.length() - 1);
 		sb.append(" where id=").append(o.id());
-		execSql(sb);
+		if(!Db.is_cluster_mode) {
+			execSql(sb);
+		}else {
+			Db.instance().execClusterSql(sb.toString());
+		}
 		o.dirtyFields.clear();
 	}
 

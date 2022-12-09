@@ -27,8 +27,8 @@ public final class app implements bapp {
 	public void init() throws Throwable {
 //		Db.enable_log = false;
 		Db.log(getClass().getName() + ": init");
-		Db.enable_log=false;
-		Db.enable_log_sql=false;
+//		Db.enable_log=false;
+//		Db.enable_log_sql=false;
 		final Db db = Db.instance();
 		db.register(User.class);
 		db.register(File.class);
@@ -45,7 +45,7 @@ public final class app implements bapp {
 //		b.b.set_path_to_class("/websocket2",websocket2.class);
 		b.b.set_path_to_class("/bob/websocket",bob.sock.class);
 //		b.b.set_path_to_class("/health-check",health_check.class);
-//		b.b.set_path_to_class("/dbo/test/test_dbo",c.test_dbo.class);
+		b.b.set_path_to_class("/dbo/test/test_dbo",c.test_dbo.class);
 		b.b.set_path_to_class("/stats",b.a_stats.class);
 		
 		// qa
