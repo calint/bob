@@ -197,8 +197,9 @@ public class a implements Serializable{
 //	}
 	public final a parent(final a e){
 		parent=e;
+		// ? if parent on_detach(a)?
 		return this;
-	}// ? if pt ondetach?
+	}
 	public final a name(final String s){
 		name=s;
 		return this;
