@@ -1,0 +1,42 @@
+This is ApacheBench, Version 2.3 <$Revision: 1901567 $>
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, http://www.apache.org/
+
+Benchmarking localhost (be patient)
+
+
+Server Software:        nginx/1.22.0
+Server Hostname:        localhost
+Server Port:            80
+
+Document Path:          /qa/files/far_side_dog_ok.jpg
+Document Length:        128201 bytes
+
+Concurrency Level:      1000
+Time taken for tests:   12.668 seconds
+Complete requests:      100000
+Failed requests:        0
+Total transferred:      12844900000 bytes
+HTML transferred:       12820100000 bytes
+Requests per second:    7893.93 [#/sec] (mean)
+Time per request:       126.680 [ms] (mean)
+Time per request:       0.127 [ms] (mean, across all concurrent requests)
+Transfer rate:          990201.95 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0   19  49.4     16    1052
+Processing:    12  106  18.8    108     328
+Waiting:        0   10  10.5      8     221
+Total:         25  125  52.7    126    1165
+
+Percentage of the requests served within a certain time (ms)
+  50%    126
+  66%    128
+  75%    129
+  80%    129
+  90%    131
+  95%    133
+  98%    135
+  99%    138
+ 100%   1165 (longest request)
