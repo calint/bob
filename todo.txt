@@ -9,17 +9,18 @@ b
 [ ]   dbo: connection pool
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 dbo
+[o] cluster
+[x]   connections to multiple servers
+[x]   write to all
+[x]   read round robin. solved by the load balancer.
+[x]   file with ips to the other cluster members
+[x]   transactions on auto-commit
+[x]   establish one jdbc connection to the other servers
+[x]   all writes through a synchronized block writing to the other servers sequentially
+[x]   step 2. all writes through a synchronized block writing to the other servers in parallel
+[ ]   step 3. cluster server that synchronizes writes
+[ ]      
 [ ] Db.tableNameForJavaClass does not include package name
-[ ] cluster
-[ ]   connections to multiple servers
-[ ]   write to all
-[ ]   read round robin. solved by the load balancer.
-[ ]   file with ips to the other cluster members
-[ ]   transactions on auto-commit
-[ ]   establish one jdbc connection to the other servers
-[ ]   all writes through a synchronized block writing to the other servers sequentially
-[ ]   step 2. all writes through a synchronized block writing to the other servers in parallel
-[ ]   step 3. 
 [o] javadoc
 [o] review code. search for "// todo" "// !" "// ?"
 [ ] Query.TableAliasMap: User -> u. if u present try us etc
