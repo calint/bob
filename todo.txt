@@ -1,6 +1,5 @@
 b
 [ ] bob.js: server is busy message box when typing fast
-[o] xwriter: review
 [ ] fix for client that makes many threaded requests and then stalls them to starve server of threads or create too many. ddos.
 [ ] req state to enum
 [ ] thread pool: get first, create if none available
@@ -56,6 +55,7 @@ dbo
 [ ]   ms sql server?
 [ ]   ibm db2?
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
+[x] xwriter: review
 [x] css not allowed in the body tag but is supported by major browsers. keep.
 [x] bob: review css for conformity
 [x] bob,b: adaptive design for mobile users. <meta name="viewport" content="width=device-width,initial-scale=1"/> 

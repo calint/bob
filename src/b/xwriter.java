@@ -10,50 +10,18 @@ public final class xwriter{
 			return "";
 		return text.replaceAll("'","\\\\'").replaceAll("\"","&quot;");
 	}
-
 	private static String enc_js_str(final String text){
 		if(text==null)
 			return "";
 		return text.replaceAll("'","\\\\'");
 	}
-//	public xwriter ed(final a e,final String type){
-//	tago(type).default_attrs_for_element(e).attr("contenteditable").p(" onkeydown=\"$b(this)\" spellcheck=false");
-////	p(" oncopy=\"var e=event;e.preventDefault();var r=window.getSelection();e.clipboardData.setData('text/plain',r);\"");
-//	p(" onpaste=\"var e=event;e.preventDefault();var t=e.clipboardData.getData('text/plain');document.execCommand('inserttext',false,t);\"");
-//	tagoe();
-//	try{
-//		e.to(new osltgt(os));
-//	}catch(Throwable t){
-//		throw new Error(t);
-//	}
-//	return tage(type);
-//}
-//public xwriter p_data_size(final long i){
-//	long x=i;
-//	final long megs=(x>>20);
-//	if(megs>0){
-//		x-=(megs<<20);
-//		p(megs).p(" MB");
-//		return this;
-//	}
-//	final long kilos=(x>>10);
-//	if(kilos>0){
-//		x-=(kilos<<10);
-//		p(kilos).p(" KB");
-//		return this;
-//	}
-//	if(x>0)
-//		p(x).p(" B");
-//	return this;
-//}
 	private static String enc_quot(final String text){
 		if(text==null)
 			return "";
 		return text.replaceAll("\"","&quot;");
 	}
 	private final OutputStream os;
-	// reload page races with element serialization to db
-	private boolean xreload_requested=false;
+	private boolean xreload_requested=false; // reload page races with element serialization to db
 	public xwriter(){
 		os=new ByteArrayOutputStream();
 	}
@@ -102,7 +70,7 @@ public final class xwriter{
 	public xwriter code_(){
 		return tage("code");
 	}
-public xwriter css(final a e,final String style){
+	public xwriter css(final a e,final String style){
 		return p("#").p(e.id()).p("{").p(style).p("}");
 	}
 	public xwriter css(final a e,final String selector,final String style){
@@ -283,7 +251,7 @@ public xwriter css(final a e,final String style){
 	public xwriter inpflt(final a e){
 		return tago("input").attr("value",e.toString()).default_attrs_for_element(e).attr("type","text").attr("class","nbr").attr("size",5).attr("oninput","$b(this)").tagoe();
 	}
-	//	public xwriter inp_color(final a e){
+	// public xwriter inp_color(final a e){
 //		return inp(e,"color",null,null,null,null,null,null,null);
 //	}
 	public xwriter inpint(final a e){
@@ -298,7 +266,6 @@ public xwriter css(final a e,final String style){
 	public xwriter inptxt(final a e,final a callback_elem_on_enter){
 		return inp(e,null,null,null,callback_elem_on_enter,null,null,null,null);
 	}
-
 	public xwriter inptxt(final a e,final a callback_elem_on_enter,final String callback){
 		return inp(e,null,null,null,callback_elem_on_enter,callback,null,null,null);
 	}
@@ -480,7 +447,7 @@ public xwriter css(final a e,final String style){
 		return span_();
 	}
 
-/** Closes span tag. */
+	/** Closes span tag. */
 	public xwriter span_(){
 		return tage("span");
 	}
@@ -573,7 +540,7 @@ public xwriter css(final a e,final String style){
 	public xwriter tage(final String name){
 		return p("</").p(name).p(">");
 	}
-	//	public xwriter tag(final String name,final String id){
+	// public xwriter tag(final String name,final String id){
 //		return p("<").p(name).p(" id=").p(id).p(">");
 //	}
 	/** Opens a tag. Example tago("a") outputs "<a" */
@@ -698,7 +665,6 @@ public xwriter css(final a e,final String style){
 	public xwriter xu(final String id,final String s){
 		return p("$s('").p(id).p("','").jsstr(s).pl("');");
 	}
-
 	/**
 	 * @param e       element
 	 * @param inner   true if update inner HTML, false if update outter element.
@@ -709,16 +675,43 @@ public xwriter css(final a e,final String style){
 		p("$").p(inner?"s":"o").p("('").p(e.id()).p("','");
 		return new xwriter(new osjsstr(escltgt?new osltgt(os):os));
 	}
-
 	/** Completes an xub(...) operation. */
 	public xwriter xube(){
 		return pl("');");
 	}
-
 	/** Updates element outer HTML. */
 	public xwriter xuo(final a e) throws Throwable{
 		e.to(xub(e,false,false));
 		return xube();
 	}
-
+//	public xwriter ed(final a e,final String type){
+//	tago(type).default_attrs_for_element(e).attr("contenteditable").p(" onkeydown=\"$b(this)\" spellcheck=false");
+////	p(" oncopy=\"var e=event;e.preventDefault();var r=window.getSelection();e.clipboardData.setData('text/plain',r);\"");
+//	p(" onpaste=\"var e=event;e.preventDefault();var t=e.clipboardData.getData('text/plain');document.execCommand('inserttext',false,t);\"");
+//	tagoe();
+//	try{
+//		e.to(new osltgt(os));
+//	}catch(Throwable t){
+//		throw new Error(t);
+//	}
+//	return tage(type);
+//}
+//public xwriter p_data_size(final long i){
+//	long x=i;
+//	final long megs=(x>>20);
+//	if(megs>0){
+//		x-=(megs<<20);
+//		p(megs).p(" MB");
+//		return this;
+//	}
+//	final long kilos=(x>>10);
+//	if(kilos>0){
+//		x-=(kilos<<10);
+//		p(kilos).p(" KB");
+//		return this;
+//	}
+//	if(x>0)
+//		p(x).p(" B");
+//	return this;
+//}
 }
