@@ -4,6 +4,8 @@ import static b.b.tostr;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Field;
 public class a implements Serializable{
 	public final static String id_path_separator="-";
@@ -222,5 +224,8 @@ public class a implements Serializable{
 //		return unescaped;
 //	}
 	
+	/** Element will not initiate DbTransaction or read and write the state to the session object. */
+	public static @Retention(RetentionPolicy.RUNTIME) @interface stateless{
+	}
 	private static final long serialVersionUID=1;
 }

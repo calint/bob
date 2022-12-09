@@ -4,8 +4,6 @@ import static b.b.pl;
 import static b.b.tobytes;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.InvocationTargetException;
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
@@ -20,6 +18,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import b.a.stateless;
 import b.b.conf;
 import db.Db;
 import db.DbObject;
@@ -1278,8 +1277,4 @@ public final class req{
 	private final static String text_html_utf8="text/html;charset=utf-8";
 	private final static String text_plain="text/plain";// ? utf8 encoding?
 //	private final static String text_plain_utf8="text/plain;charset=utf-8";
-
-	/** Elements will not initiate DbTransaction or read and write the state to the session object. */
-	public static @Retention(RetentionPolicy.RUNTIME) @interface stateless{
-	}
 }
