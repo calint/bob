@@ -1,7 +1,7 @@
 package b.test;
 
 import b.a;
-import b.req.stateless;
+import b.a.stateless;
 import b.xwriter;
 
 /** hello world */
