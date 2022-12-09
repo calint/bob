@@ -13,30 +13,30 @@ Document Path:          /qa/files/far_side_dog_ok.jpg
 Document Length:        128201 bytes
 
 Concurrency Level:      1000
-Time taken for tests:   12.980 seconds
+Time taken for tests:   12.758 seconds
 Complete requests:      100000
 Failed requests:        0
 Total transferred:      12828900000 bytes
 HTML transferred:       12820100000 bytes
-Requests per second:    7703.99 [#/sec] (mean)
-Time per request:       129.803 [ms] (mean)
-Time per request:       0.130 [ms] (mean, across all concurrent requests)
-Transfer rate:          965172.79 [Kbytes/sec] received
+Requests per second:    7838.17 [#/sec] (mean)
+Time per request:       127.581 [ms] (mean)
+Time per request:       0.128 [ms] (mean, across all concurrent requests)
+Transfer rate:          981983.62 [Kbytes/sec] received
 
 Connection Times (ms)
               min  mean[+/-sd] median   max
-Connect:        0   13   2.9     13      30
-Processing:    16  117   9.1    117     166
-Waiting:        1   13   9.6     12     114
-Total:         32  129   8.2    130     191
+Connect:        0   16  61.2     12    1043
+Processing:     7  111  13.0    114     321
+Waiting:        1   12   7.9     11      96
+Total:         24  127  62.1    127    1171
 
 Percentage of the requests served within a certain time (ms)
-  50%    130
-  66%    131
-  75%    132
-  80%    132
-  90%    135
-  95%    140
-  98%    149
-  99%    155
- 100%    191 (longest request)
+  50%    127
+  66%    129
+  75%    130
+  80%    130
+  90%    132
+  95%    135
+  98%    144
+  99%    167
+ 100%   1171 (longest request)
