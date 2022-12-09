@@ -33,8 +33,8 @@ grant all on testdb.* to 'c'@'%';
 git pull https://github.com/calint/bob
 
 # if files have been changed locally e.g. run.cfg
-git checkout -p stash .
-#git stash
+git stash
+#git checkout -p stash .
 			
 # on server
 cd /bob

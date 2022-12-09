@@ -16,10 +16,10 @@ public class test3 extends TestCase {
 		super(use_current_transaction);
 	}
 
-	@Override
-	protected boolean isResetDatabase() {
-		return true;
-	}
+//	@Override
+//	protected boolean isResetDatabase() {
+//		return true;
+//	}
 
 	@Override
 	public void doRun() throws Throwable {
