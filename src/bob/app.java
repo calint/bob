@@ -27,6 +27,8 @@ public final class app implements bapp {
 	public void init() throws Throwable {
 //		Db.enable_log = false;
 		Db.log(getClass().getName() + ": init");
+		Db.enable_log=false;
+		Db.enable_log_sql=false;
 		final Db db = Db.instance();
 		db.register(User.class);
 		db.register(File.class);
