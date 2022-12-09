@@ -14,6 +14,9 @@ dbo
 [ ]   connections to multiple servers
 [ ]   write to all
 [ ]   read round robin
+[ ]   step 1. all writes through a synchronized block writing to the other servers sequentially
+[ ]   step 2. all writes through a synchronized block writing to the other servers in parallel
+[ ]   step 3. 
 [o] javadoc
 [o] review code. search for "// todo" "// !" "// ?"
 [ ] Query.TableAliasMap: User -> u. if u present try us etc

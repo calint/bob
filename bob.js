@@ -172,7 +172,11 @@ ui.ws.onerror=function(e){
 	ui.alert('An error has occured while communicating with the server.')
 };
 ui.ws.onclose=function(e){
-	$d('web socket: onclose '+e);
+	$d('web socket: onclose '+e.reason);
 	ui.is_open=false;
-	ui.alert('Connection to server lost.');
+	if(e.wasClean){
+		ui.alert('Connection to server closed.');
+	}else{
+		ui.alert('Connection to server lost.');
+	}
 };
