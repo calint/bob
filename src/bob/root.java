@@ -39,6 +39,10 @@ public class root extends a{
 		x.div_().nl();
 		x.p("serialized: ").span(s).p(" B  gziped: ").span(sg).p(" B ").ax(this,"s",":: refresh").nl();
 		x.p("server: ").span(si);
+		x.nl().nl();
+		x.p("27 ").inpax(test,"txt",this,"test \"'hello'\"","sel \"'hello'\"").nl();
+		x.p("28 ").a("url\"'test'\"","link").nl();
+
 	}
 
 	public void x_s(xwriter x,String param) throws Throwable{
@@ -79,4 +83,12 @@ public class root extends a{
 			bos.close();
 		}
 	}
+	
+	public void x_test(xwriter x,String param) {
+		System.out.println("test param{"+param+"}");
+	}
+	public void x_sel(xwriter x,String param) {
+		System.out.println("sel param{"+param+"}");
+	}
+
 }

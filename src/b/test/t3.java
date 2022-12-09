@@ -8,6 +8,9 @@ public class t3 extends a{
 	static final long serialVersionUID=3;
 	public a f;
 
+	public t3(){
+		f.set("\"'value'\"");
+	}
 	public void to(final xwriter x) throws Throwable{
 		x.nl().title(getClass().getName()).nl();
 		x.p("1 ").iso().js_x(this,"s \"'hello'\"",false).isc().nl();
@@ -36,5 +39,14 @@ public class t3 extends a{
 		x.p("24 ").inp(f,"search",null,null,null,null,null,null,null).nl();
 		x.p("25 ").inptxtarea(f,"txtarea").nl();
 		x.p("26 ").inptxtarea(f,null).nl();
+		x.p("27 ").inpax(f,"txt",this,"test \"'hello'\"","sel \"'hello'\"").nl();
+		x.p("28 ").a("url\"'test'\"","link").nl();
+		x.nl();
+	}
+	public void x_test(xwriter x,String param){
+		System.out.println("test param{"+param+"}");
+	}
+	public void x_sel(xwriter x,String param){
+		System.out.println("sel param{"+param+"}");
 	}
 }

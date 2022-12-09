@@ -317,7 +317,7 @@ final public class b{
 			if(t instanceof java.net.SocketException){
 				final String msg=t.getMessage();
 				if("Connection reset".equals(msg))
-					return;				
+					return;
 			}
 			if(t instanceof java.io.IOException){
 				final String msg=t.getMessage();
@@ -327,7 +327,7 @@ final public class b{
 					return;
 				if("An existing connection was forcibly closed by the remote host".equals(msg))
 					return;
-				}
+			}
 		}
 		err.println(b.stacktraceline(t));
 	}
@@ -471,8 +471,14 @@ final public class b{
 	public static boolean isempty(final String s){
 		return s==null||s.length()==0;
 	}
-	public static String isempty(final String o,final String def){
-		return isempty(o)?def:o;
+	public static String isempty(final String s,final String def){
+		if(isempty(s)){
+			if(def==null)
+				return "";
+			else
+				return def;
+		}
+		return s;
 	}
 //	public static long get_session_bits_for_sessionid(final String sesid){// ? dubious function
 //		//? file(system){sha1(sessionid),bits}

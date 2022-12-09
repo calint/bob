@@ -90,7 +90,7 @@ curl -s $QA_BASE_URL/b/test/t1 > res
 if ! cmp -s $DIR_CMP/8 res; then exit 1; fi
 echo " ok"
 #--------------------------------------------------------
-TEST_NAME="input elements: "
+TEST_NAME="xwriter elements: "
 echo -n $TEST_NAME
 curl -s $QA_BASE_URL/b/test/t3 > res
 if ! cmp -s $DIR_CMP/9 res; then exit 1; fi
