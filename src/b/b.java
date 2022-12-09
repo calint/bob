@@ -142,9 +142,6 @@ final public class b{
 		req.init_static();
 		if(thd_watch)
 			new thdwatch().start();
-		else
-			stats_to(out);
-		b.pl("");
 		b.pl("port open: "+b.server_port);
 		final Selector sel=Selector.open();
 		ssc.register(sel,SelectionKey.OP_ACCEPT);
