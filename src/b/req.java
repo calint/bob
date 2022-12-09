@@ -850,11 +850,7 @@ public final class req{
 
 		final boolean is_stateless=cls.getAnnotation(stateless.class)!=null;
 
-		final DbTransaction tn;
-		if(!is_stateless)
-			tn=Db.initCurrentTransaction();
-		else
-			tn=null;
+		final DbTransaction tn=is_stateless?null:Db.initCurrentTransaction();
 //		System.out.println("dbo: connection pool: "+Db.instance().getConnectionPoolSize());
 		try{
 			run_page_do(is_stateless,tn,cls);
@@ -875,16 +871,17 @@ public final class req{
 
 	/** Called from run_page(). */
 	private void run_page_do(final boolean is_stateless,final DbTransaction tn,final Class<?> cls) throws Throwable{
+		a root_elem;
 		final sessionobj dbo_root_elem;
-		a root_elem=null;
-		if(!is_stateless){
+		if(is_stateless){
+			dbo_root_elem=null;
+			root_elem=(a)cls.getConstructor().newInstance();
+		}else{
 			dbo_root_elem=get_session_path(path_str);
 			root_elem=(a)dbo_root_elem.object();
-		}else{
-			dbo_root_elem=null;
-		}
-		if(root_elem==null){
-			root_elem=(a)cls.getConstructor().newInstance();
+			if(root_elem==null){
+				root_elem=(a)cls.getConstructor().newInstance();
+			}
 		}
 		if(!content.isEmpty()){
 			// ajax post
