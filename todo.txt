@@ -11,6 +11,10 @@ b
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 dbo
 [ ] Db.tableNameForJavaClass does not include package name
+[ ] cluster
+[ ]   connections to multiple servers
+[ ]   write to all
+[ ]   read round robin
 [o] javadoc
 [o] review code. search for "// todo" "// !" "// ?"
 [ ] Query.TableAliasMap: User -> u. if u present try us etc
@@ -38,10 +42,6 @@ dbo
 [ ] components
 [ ]   example: DbClass.addComponent(DbClassComponent) where DbClassComponent has fields, relations and indexes
 [ ] refactor commands. example: rename main.User main.Person, rename main.User.name fullName, delete main.User.hashCode etc
-[ ] cluster
-[ ]   connections to multiple servers
-[ ]   write to all
-[ ]   read round robin
 [o] drivers for other (open source) rdbms. see https://www.databasestar.com/sql-data-types/
 [x]   mysql
 [ ]   sqlite
