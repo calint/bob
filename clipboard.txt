@@ -15,15 +15,10 @@ git clone https://github.com/calint/bob
 # to update from git with HEAD
 git pull https://github.com/calint/bob
 
-# if files have been changed locally
+# if files have been changed locally e.g. run.cfg
 git checkout -p stash .
 #git stash
 			
-			
-	# alternative on developer machine
-	cd ~/w/
-	rsync -auv -e ssh --progress bob/ root@1.2.3.4:/bob
-
 # on server
 cd /bob
 sh build.sh
@@ -32,7 +27,6 @@ sh build.sh
 ######################################
 [Unit]
 Description=bob
-After=mysql.service
 
 [Service]
 WorkingDirectory=/bob/
