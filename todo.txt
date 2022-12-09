@@ -1,10 +1,10 @@
 b
+[ ] page that does not save state or access session
+[ ]   annotation regarding transaction and state saving, @stateless does not initiate transaction or reads/writes path object
 [ ] bob.js: server is busy message box when typing fast
 [ ] fix for client that makes many threaded requests and then stalls them to starve server of threads or create too many. ddos.
 [ ] req state to enum
 [ ] thread pool: get first, create if none available
-[ ] page that does not save state or access session
-[ ]   annotation regarding transaction and state saving
 [ ] fix "// todo" comments
 [ ]   websock: implement ping/pong
 [ ] use java.util.concurrent
