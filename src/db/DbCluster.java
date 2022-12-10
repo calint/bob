@@ -86,6 +86,8 @@ public class DbCluster{
 		// start threads and join
 		for(ClientThread t:clientThreads){
 			t.start();
+		}
+		for(ClientThread t:clientThreads){
 			t.join();
 		}
 
