@@ -3,7 +3,6 @@ package db;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Modifier;
@@ -367,7 +366,7 @@ public final class Db{
 	private static byte[] ba_nl="\n".getBytes();
 
 //	private final Object lock=new Object();
-	public int execClusterSqlInsert(final String sql) throws Throwable{
+	public synchronized int execClusterSqlInsert(final String sql) throws Throwable{
 //		final ArrayList<Integer> ints=new ArrayList<Integer>(clusterStatements.size());
 //		synchronized(lock){
 //			int i=0;
@@ -403,7 +402,7 @@ public final class Db{
 		return id;
 	}
 
-	public void execClusterSql(final String sql){
+	public synchronized void execClusterSql(final String sql){
 //		synchronized(lock){
 //			int i=0;
 //			for(final Statement s:clusterStatements){
