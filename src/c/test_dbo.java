@@ -21,7 +21,7 @@ public class test_dbo extends a{
 		runTest(x,new import_games(true));
 		runTest(x,new test3(true));
 		final long dt=System.currentTimeMillis()-t0;
-		x.p("done: ").p(dt/1000).pl(" s");
+		x.p("done: ").p(dt).pl(" ms");
 	}
 
 	private void runTest(xwriter x,TestCase c) throws Throwable{
