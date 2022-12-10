@@ -11,6 +11,15 @@ fi
 echo $CFG
 . ./$CFG
 
-cmd="java -cp bin:lib/mysql-connector-java-5.1.49.jar b.b bapp_jdbc_host $MYSQL_HOST server_port $B_PORT thread_pool_size $B_NTHREADS bapp_jdbc_db $MYSQL_DB bapp_jdbc_user $MYSQL_USER bapp_jdbc_password $MYSQL_PASSWORD bapp_jdbc_ncons $MYSQL_NCONS"
+cmd="java -cp bin:lib/mysql-connector-java-5.1.49.jar b.b \
+	bapp_cluster_relay_ip $CLUSTER_RELAY_IP \
+	bapp_cluster_relay_port $CLUSTER_RELAY_PORT \
+	bapp_jdbc_host $MYSQL_HOST \
+	server_port $B_PORT \
+	thread_pool_size $B_NTHREADS \
+	bapp_jdbc_db $MYSQL_DB \
+	bapp_jdbc_user $MYSQL_USER \
+	bapp_jdbc_password $MYSQL_PASSWORD \
+	bapp_jdbc_ncons $MYSQL_NCONS"
 echo \> $cmd
 $cmd

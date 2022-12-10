@@ -90,6 +90,8 @@ final public class b{
 	public static PrintStream err=System.err;
 
 	public static String bapp_class="bob.app";
+	public static String bapp_cluster_relay_ip="127.0.0.1";
+	public static String bapp_cluster_relay_port="8889";
 	public static String bapp_jdbc_host="localhost:3306";
 	public static String bapp_jdbc_db="dbo";
 	public static String bapp_jdbc_user="user";
@@ -130,7 +132,7 @@ final public class b{
 			b.bapp=(bapp)Class.forName(b.bapp_class).getConstructor().newInstance();
 			b.bapp.init();
 		}
-		db.init("jdbc:mysql://"+b.bapp_jdbc_host+"/"+b.bapp_jdbc_db+"?verifyServerCertificate=false&useSSL=true&ssl-mode=REQUIRED",b.bapp_jdbc_user,b.bapp_jdbc_password,Integer.parseInt(b.bapp_jdbc_ncons));
+		db.init(bapp_cluster_relay_ip,Integer.parseInt(bapp_cluster_relay_port),"jdbc:mysql://"+b.bapp_jdbc_host+"/"+b.bapp_jdbc_db+"?verifyServerCertificate=false&useSSL=true&ssl-mode=REQUIRED",b.bapp_jdbc_user,b.bapp_jdbc_password,Integer.parseInt(b.bapp_jdbc_ncons));
 
 		final ServerSocketChannel ssc=ServerSocketChannel.open();
 		ssc.configureBlocking(false);

@@ -1,10 +1,12 @@
 package db;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Modifier;
+import java.net.Socket;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -14,14 +16,15 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
-import b.b;
 
 /** The database. */
 public final class Db{
 	private static final ThreadLocal<DbTransaction> tn=new ThreadLocal<DbTransaction>();
 
 	public static boolean is_cluster_mode=true;
-	public static String cluster_members_ip_path="dbcluster.txt";
+//	public static String cluster_members_ip_path="dbcluster.txt";
+	public String clusterWriterIp="127.0.0.1";
+	public int clusterWriterPort=8889;
 
 	/** Enables the log(...) method. */
 	public static boolean enable_log=true;
@@ -179,7 +182,7 @@ public final class Db{
 		tn.remove();
 	}
 
-	public static synchronized void log(Throwable t){
+	public static void log(Throwable t){
 		while(t.getCause()!=null)
 			t=t.getCause();
 		System.err.println(stacktraceline(t));
@@ -202,8 +205,8 @@ public final class Db{
 	private final ArrayList<DbClass> dbclasses=new ArrayList<DbClass>();
 	private final HashMap<Class<? extends DbObject>,DbClass> clsToDbClsMap=new HashMap<Class<? extends DbObject>,DbClass>();
 	final ArrayList<RelRefNMeta> relRefNMeta=new ArrayList<RelRefNMeta>();
-	private final ArrayList<Connection> clusterConnections=new ArrayList<Connection>();
-	private final ArrayList<Statement> clusterStatements=new ArrayList<Statement>();
+//	private final ArrayList<Connection> clusterConnections=new ArrayList<Connection>();
+//	private final ArrayList<Statement> clusterStatements=new ArrayList<Statement>();
 
 	/** If true undeclared columns are deleted. */
 	public boolean enable_delete_unused_columns=true;
@@ -240,10 +243,13 @@ public final class Db{
 	 * @param password
 	 * @param ncons    number of connections in the pool
 	 */
-	public void init(final String url,final String user,final String password,final int ncons) throws Throwable{
+	public void init(final String clusterWriterIp,final int clusterWriterPort,final String url,final String user,final String password,final int ncons) throws Throwable{
 		jdbcUrl=url;
 		jdbcUser=user;
 		jdbcPasswd=password;
+		this.clusterWriterIp=clusterWriterIp;
+		this.clusterWriterPort=clusterWriterPort;
+
 		Db.log("--- - - - ---- - - - - - -- -- --- -- --- ---- -- -- - - -");
 		Db.log("connection: "+url);
 		Db.log("      user: "+user);
@@ -302,83 +308,121 @@ public final class Db{
 		if(!is_cluster_mode)
 			return;
 
-		final FileReader fr=new FileReader(cluster_members_ip_path);
-		final BufferedReader bfr=new BufferedReader(fr);
-		String line;
+//		final FileReader fr=new FileReader(cluster_members_ip_path);
+//		final BufferedReader bfr=new BufferedReader(fr);
+//		String line;
+//		while(true){
+//			line=bfr.readLine();
+//			if(line==null)
+//				break;
+//			line=line.trim();
+//			if(line.length()==0)
+//				continue;
+//			if(line.startsWith("#"))
+//				continue;
+//			log("connecting to: "+line);
+//			final String cs="jdbc:mysql://"+line+"/"+b.bapp_jdbc_db+"?verifyServerCertificate=false&useSSL=true&ssl-mode=REQUIRED";
+//			Connection c=null;
+//			while(true){
+//				try{
+//					c=DriverManager.getConnection(cs,jdbcUser,jdbcPasswd);
+//					break;
+//				}catch(Throwable t){
+//					try{
+//						System.err.println("dbo: cannot create connection. waiting. "+stacktraceline(t));
+//						Thread.sleep(1000);
+//					}catch(InterruptedException e){
+//						log(e);
+//					}
+//				}
+//			}
+//			clusterConnections.add(c);
+//			clusterStatements.add(c.createStatement());
+//		}
+//		bfr.close();
+//		log("connected to other cluster members");
 		while(true){
-			line=bfr.readLine();
-			if(line==null)
+			log("connecting to cluster writer at "+clusterWriterIp+":"+clusterWriterPort);
+			try{
+				clusterSocket=new Socket(clusterWriterIp,clusterWriterPort);
+				clusterSocketReader=new BufferedReader(new InputStreamReader(clusterSocket.getInputStream()));
+				clusterSocketOs=clusterSocket.getOutputStream();
 				break;
-			line=line.trim();
-			if(line.length()==0)
-				continue;
-			if(line.startsWith("#"))
-				continue;
-			log("connecting to: "+line);
-			final String cs="jdbc:mysql://"+line+"/"+b.bapp_jdbc_db+"?verifyServerCertificate=false&useSSL=true&ssl-mode=REQUIRED";
-			Connection c=null;
-			while(true){
+			}catch(Throwable t){
+				log(t);
 				try{
-					c=DriverManager.getConnection(cs,jdbcUser,jdbcPasswd);
-					break;
-				}catch(Throwable t){
-					try{
-						System.err.println("dbo: cannot create connection. waiting. "+stacktraceline(t));
-						Thread.sleep(1000);
-					}catch(InterruptedException e){
-						log(e);
-					}
+					Thread.sleep(1000);
+				}catch(InterruptedException e){
+					log(e);
 				}
 			}
-			clusterConnections.add(c);
-			clusterStatements.add(c.createStatement());
+			log("connected");
 		}
-		bfr.close();
-		log("connected to other cluster members");
 	}
+	Socket clusterSocket;
+	BufferedReader clusterSocketReader;
+	OutputStream clusterSocketOs;
+	private static byte[] ba_nl="\n".getBytes();
 
-	private final Object lock=new Object();
+//	private final Object lock=new Object();
 	public int execClusterSqlInsert(final String sql) throws Throwable{
-		final ArrayList<Integer> ints=new ArrayList<Integer>(clusterStatements.size());
-		synchronized(lock){
-			int i=0;
-			for(final Statement s:clusterStatements){
-				i++;
-				log_sql(i+": "+sql);
-				s.execute(sql,Statement.RETURN_GENERATED_KEYS);
-				final ResultSet rs=s.getGeneratedKeys();
-				if(rs.next()){
-					ints.add(rs.getInt(1));
-					rs.close();
-				}else
-					throw new RuntimeException("expected generated id");
-			}
-		}
-
-		// check that it is the same id
-		int prev=ints.get(0);
-		final int n=ints.size();
-		for(int j=1;j<n;j++){
-			final int id=ints.get(j);
-			if(id!=prev)
-				throw new RuntimeException("expected generated ids to be same. got: "+ints);
-			prev=id;
-		}
-		return prev;
+//		final ArrayList<Integer> ints=new ArrayList<Integer>(clusterStatements.size());
+//		synchronized(lock){
+//			int i=0;
+//			for(final Statement s:clusterStatements){
+//				i++;
+//				log_sql(i+": "+sql);
+//				s.execute(sql,Statement.RETURN_GENERATED_KEYS);
+//				final ResultSet rs=s.getGeneratedKeys();
+//				if(rs.next()){
+//					ints.add(rs.getInt(1));
+//					rs.close();
+//				}else
+//					throw new RuntimeException("expected generated id");
+//			}
+//		}
+//
+//		// check that it is the same id
+//		int prev=ints.get(0);
+//		final int n=ints.size();
+//		for(int j=1;j<n;j++){
+//			final int id=ints.get(j);
+//			if(id!=prev)
+//				throw new RuntimeException("expected generated ids to be same. got: "+ints);
+//			prev=id;
+//		}
+//		return prev;
+		clusterSocketOs.write(sql.getBytes());
+		clusterSocketOs.write(ba_nl);
+		clusterSocketOs.flush();
+		final String idStr=clusterSocketReader.readLine();
+		final int id=Integer.parseInt(idStr);
+		return id;
 	}
 
 	public void execClusterSql(final String sql){
-		synchronized(lock){
-			int i=0;
-			for(final Statement s:clusterStatements){
-				i++;
-				log_sql(i+": "+sql);
-				try{
-					s.execute(sql);
-				}catch(Throwable t){
-					throw new RuntimeException(t);
-				}
-			}
+//		synchronized(lock){
+//			int i=0;
+//			for(final Statement s:clusterStatements){
+//				i++;
+//				log_sql(i+": "+sql);
+//				try{
+//					s.execute(sql);
+//				}catch(Throwable t){
+//					throw new RuntimeException(t);
+//				}
+//			}
+//		}
+		try{
+//			log(sql);
+			clusterSocketOs.write(sql.getBytes());
+			clusterSocketOs.write(ba_nl);
+			final String ack=clusterSocketReader.readLine();
+			if(ack.length()!=0)
+				throw new RuntimeException("unknown reply: {"+ack+"}");
+
+		}catch(Throwable t){
+			throw new RuntimeException(t);
 		}
 	}
 

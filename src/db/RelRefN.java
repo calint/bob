@@ -28,7 +28,11 @@ public final class RelRefN extends DbRelation {
 		if(!Db.is_cluster_mode) {
 			Db.currentTransaction().execSql(sb);
 		}else {
-			Db.instance().execClusterSql(sb.toString());
+			try {
+				Db.instance().execClusterSqlInsert(sb.toString());
+			}catch(Throwable t) {
+				throw new RuntimeException(t);
+			}
 		}
 	}
 
