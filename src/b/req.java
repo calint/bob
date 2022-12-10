@@ -855,7 +855,8 @@ public final class req{
 		try{
 			run_page_do(is_stateless,tn,cls);
 		}catch(Throwable t){
-			tn.rollback();
+			if(!is_stateless)
+				tn.rollback();
 			while(t.getCause()!=null)
 				t=t.getCause();
 			if(t instanceof RuntimeException)

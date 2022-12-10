@@ -52,6 +52,10 @@ public abstract class TestCase implements Runnable {
 		return true;
 	}
 
+	protected int numberOfTestRuns() {
+		return 1;
+	}
+
 	public String getTestName() {
 		return getClass().getName();
 	}
@@ -66,13 +70,18 @@ public abstract class TestCase implements Runnable {
 		final String cachests = cacheon ? " on" : "off";
 		tn.cache_enabled = cacheon;
 		try {
+			final int n = numberOfTestRuns();
 			final long t0 = System.currentTimeMillis();
-			doRun();
-			tn.commit();
+			for (int i = 0; i < n; i++) {
+				System.out.println(getClass().getName() + ": test run " + (i+1) + " of " + n);
+				doRun();
+				tn.commit();
+			}
 			final long t1 = System.currentTimeMillis();
 			final long dt = t1 - t0;
-			final long dt_s = dt / 1000;
-			System.out.println(getTestName() + " [cache " + cachests + "]: passed (" + dt_s + "s)");
+//			final long dt_s = dt / 1000;
+//			System.out.println(getTestName() + " [cache " + cachests + "]: passed (" + dt_s + "s)");
+			System.out.println(getTestName() + " [cache " + cachests + "]: passed (" + dt + "ms)");
 		} catch (Throwable t1) {
 			if (!use_current_transaction) {
 				tn.rollback();

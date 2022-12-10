@@ -3,18 +3,25 @@ package db.test;
 import java.sql.Timestamp;
 import java.util.List;
 
+import b.a.stateless;
 import db.Db;
 import db.DbObject;
 import db.DbTransaction;
 import db.Query;
 
 public class test1 extends TestCase {
+	
 	public test1() {
 		this(false);
 	}
 
 	public test1(final boolean use_current_transaction) {
 		super(use_current_transaction);
+	}
+
+	@Override
+	protected int numberOfTestRuns() {
+		return 100;
 	}
 
 //	@Override
@@ -108,10 +115,11 @@ public class test1 extends TestCase {
 		}
 //		u1.setGroupPic(0);
 
+		// test full text indexer
 		final Book b1 = (Book) tn.create(Book.class);
 		final DataText d = b1.getData(false);
 		if (d != null)
-			throw new RuntimeException("expected null got " + d);
+			throw new RuntimeException();
 
 		final DataText dt1 = b1.getData(true);
 		dt1.setData("book data fulltext indexed");
@@ -126,7 +134,10 @@ public class test1 extends TestCase {
 		final List<DbObject> ls2 = tn.get(DataText.class, q1, null, null);
 		if (ls2.size() != 0)
 			throw new RuntimeException("expected 0 results got " + ls1.size());
-
+		
+		tn.delete(b1);
+		//--
+		
 		final File f7 = (File) tn.create(File.class);
 		final DataBinary bin1 = f7.getData(true);
 		final byte[] ba1 = new byte[] { 1, 2, 3, 4, 5 };
@@ -140,7 +151,7 @@ public class test1 extends TestCase {
 		if (bin1 == bin2) {
 			// note: it seems that JVM reuses instances and bin1 == bin2 might be true
 			if (bin1.getData() == bin2.getData()) {
-				throw new RuntimeException("didn't expect this");
+				throw new RuntimeException();
 			}
 		}
 
@@ -253,49 +264,44 @@ public class test1 extends TestCase {
 		if (!ls8.isEmpty())
 			throw new RuntimeException();
 
-		final List<DbObject> ls9 = tn.get(Book.class, null, null, null);
-		for (final DbObject o : ls9) {
-			tn.delete(o);
-		}
-
-		final User u8 = (User) tn.create(User.class);
-		final File f8 = u8.createFile(); // AggN
-		f8.getData(true);
-		u8.createGame();
-		u8.createGame();
-		tn.delete(u8); // d1, g1, g2 gets deleted with "delete from" instead of get delete because they
-		// don't not aggregate
-
-		final User u9 = (User) tn.create(User.class);
-		final File f9 = (File) tn.create(File.class);
-		f9.setName("dog ok");
-		f9.loadFile("qa/files/far_side_dog_ok.jpg");
-		u9.setGroupPic(f9);
-		tn.commit();
-		final File f10 = u9.getGroupPic();
-		f10.writeFile("qa/dog_ok.jpg");
-
-		// ! on unix only
-		final int procres = Runtime.getRuntime().exec("diff qa/files/far_side_dog_ok.jpg qa/dog_ok.jpg").waitFor();
-		if (procres != 0)
-			throw new RuntimeException();
-		if (!new java.io.File("qa/dog_ok.jpg").delete())
-			throw new RuntimeException();
-
-		tn.delete(f10);
-		final File f11 = u9.getGroupPic(); // might have dangling reference
-		if (f11 != null)
-			throw new RuntimeException();
-
-		// bugfix: user created committed (cache cleared) then deleted where delete
+		// bigger blob
+//		final User u8 = (User) tn.create(User.class);
+//		final File f8 = u8.createFile(); // AggN
+//		f8.getData(true);
+//		u8.createGame();
+//		u8.createGame();
+//		tn.delete(u8); // d1, g1, g2 gets deleted with "delete from" instead of get delete because they
+//		// don't not aggregate
+//
+//		final User u9 = (User) tn.create(User.class);
+//		final File f9 = (File) tn.create(File.class);
+//		f9.setName("dog ok");
+//		f9.loadFile("qa/files/far_side_dog_ok.jpg");
+//		u9.setGroupPic(f9);
+//		tn.commit();
+//		final File f10 = u9.getGroupPic();
+//		f10.writeFile("qa/dog_ok.jpg");
+//
+//		// ! on unix only
+//		final int procres = Runtime.getRuntime().exec("diff qa/files/far_side_dog_ok.jpg qa/dog_ok.jpg").waitFor();
+//		if (procres != 0)
+//			throw new RuntimeException();
+//		if (!new java.io.File("qa/dog_ok.jpg").delete())
+//			throw new RuntimeException();
+//
+//		tn.delete(f10);
+//		final File f11 = u9.getGroupPic(); // might have dangling reference
+//		if (f11 != null)
+//			throw new RuntimeException();
+//
+//		tn.delete(u9);
+		//-- bigger blob done
+		
+		// bugfix: user created, committed (cache cleared) then deleted where delete
 		// tries to remove it from the cache
 		final User u10 = (User) tn.create(User.class);
 		u10.setName("John Doe");
 		tn.commit();
-		tn.delete(u9);
 		tn.delete(u10);
-
-		// clean up
-
 	}
 }
