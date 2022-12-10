@@ -125,16 +125,15 @@ final public class b{
 
 		// initiate db
 		Db.initInstance();
-		final Db db=Db.instance();
-		db.is_cluster_mode=bapp_cluster_mode;
-		db.register(session.class);
-		db.register(sessionobj.class);
+		Db.is_cluster_mode=bapp_cluster_mode;
+		Db.register(session.class);
+		Db.register(sessionobj.class);
 		// initiate application
 		if(b.bapp_class!=null){
 			b.bapp=(bapp)Class.forName(b.bapp_class).getConstructor().newInstance();
 			b.bapp.init();
 		}
-		db.init("jdbc:mysql://"+b.bapp_jdbc_host+"/"+b.bapp_jdbc_db+"?verifyServerCertificate=false&useSSL=true&ssl-mode=REQUIRED",b.bapp_jdbc_user,b.bapp_jdbc_password,b.bapp_jdbc_ncons,bapp_cluster_ip,bapp_cluster_port);
+		Db.init("jdbc:mysql://"+b.bapp_jdbc_host+"/"+b.bapp_jdbc_db+"?verifyServerCertificate=false&useSSL=true&ssl-mode=REQUIRED",b.bapp_jdbc_user,b.bapp_jdbc_password,b.bapp_jdbc_ncons,bapp_cluster_ip,bapp_cluster_port);
 
 		final ServerSocketChannel ssc=ServerSocketChannel.open();
 		ssc.configureBlocking(false);

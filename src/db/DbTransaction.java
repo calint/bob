@@ -55,7 +55,7 @@ public final class DbTransaction {
 		pooledCon = pc;
 		con = pc.getConnection();
 		stmt = con.createStatement();
-		cache_enabled = Db.instance().enable_cache;
+		cache_enabled = Db.enable_cache;
 	}
 
 	public Statement getJdbcStatement() {
@@ -86,12 +86,12 @@ public final class DbTransaction {
 					throw new RuntimeException("expected generated id");
 				rs.close();
 			}else {
-				final int id = Db.instance().execClusterSqlInsert(sql);
+				final int id = Db.execClusterSqlInsert(sql);
 				o.fieldValues.put(DbObject.id, id);
 			}
 
 			// init default values
-			final DbClass dbcls = Db.instance().dbClassForJavaClass(cls);
+			final DbClass dbcls = Db.dbClassForJavaClass(cls);
 			for (final DbField f : dbcls.allFields) {
 				f.putDefaultValue(o.fieldValues);
 			}
@@ -105,10 +105,10 @@ public final class DbTransaction {
 		}
 	}
 
-	public void delete(final DbObject o) {
+	public void delete(final DbObject o){
 		flush();
 
-		final DbClass dbcls = Db.instance().dbClassForJavaClass(o.getClass());
+		final DbClass dbcls = Db.dbClassForJavaClass(o.getClass());
 		if (dbcls.cascadeDelete) {
 			for (final DbRelation r : dbcls.allRelations) {
 				if (r.cascadeDeleteNeeded()) {
@@ -125,7 +125,7 @@ public final class DbTransaction {
 		}
 
 		// update referring fields to null
-		if (Db.instance().enable_update_referring_tables) {
+		if (Db.enable_update_referring_tables) {
 			for (final RelRef r : dbcls.referingRef) {
 				final StringBuilder sb = new StringBuilder(256);
 				sb.append("update ").append(r.tableName).append(" set ").append(r.name).append("=null")
@@ -133,7 +133,7 @@ public final class DbTransaction {
 				if(!Db.is_cluster_mode) {
 					execSql(sb);
 				}else {
-					Db.instance().execClusterSql(sb.toString());
+					Db.execClusterSql(sb.toString());
 				}
 			}
 		}
@@ -144,7 +144,7 @@ public final class DbTransaction {
 		if(!Db.is_cluster_mode) {
 			execSql(sb);
 		}else {
-			Db.instance().execClusterSql(sb.toString());
+			Db.execClusterSql(sb.toString());
 		}
 		dirtyObjects.remove(o);
 		if (cache_enabled)
@@ -162,7 +162,7 @@ public final class DbTransaction {
 			qry.sql_build(sbwhere, tam);
 		}
 
-		final DbClass dbcls = Db.instance().dbClassForJavaClass(cls);
+		final DbClass dbcls = Db.dbClassForJavaClass(cls);
 		final StringBuilder sb = new StringBuilder(256);
 		sb.append("select ").append(tam.getAliasForTableName(dbcls.tableName)).append(".* from ");
 		tam.sql_appendSelectFromTables(sb);
@@ -220,14 +220,13 @@ public final class DbTransaction {
 			qry.sql_build(sbwhere, tam);
 		}
 
-		final Db db = Db.instance();
 		final int n = classes.length;
 		if (n < 1) {
 			throw new RuntimeException("classes array is empty");
 		}
 		final DbClass[] dbclasses = new DbClass[n];
 		for (int i = 0; i < n; i++) {
-			dbclasses[i] = db.dbClassForJavaClass(classes[i]);
+			dbclasses[i] = Db.dbClassForJavaClass(classes[i]);
 		}
 
 		final StringBuilder sb = new StringBuilder(256);
@@ -329,7 +328,7 @@ public final class DbTransaction {
 			sb.append(sbwhere);
 			sb.setLength(sb.length() - 1);
 		} else {
-			final DbClass dbcls = Db.instance().dbClassForJavaClass(cls);
+			final DbClass dbcls = Db.dbClassForJavaClass(cls);
 			sb.append(dbcls.tableName);
 		}
 
@@ -407,7 +406,7 @@ public final class DbTransaction {
 		if(!Db.is_cluster_mode) {
 			execSql(sb);
 		}else {
-			Db.instance().execClusterSql(sb.toString());
+			Db.execClusterSql(sb.toString());
 		}
 		o.dirtyFields.clear();
 	}

@@ -24,14 +24,14 @@ public abstract class TestCase implements Runnable {
 			} catch (Throwable e) {
 				throw new RuntimeException(e);
 			}
-			Db.instance().reset();
+			Db.reset();
 		}
 
 		if (isRunWithCache())
 			doTest(true);
 
 		if (rst)
-			Db.instance().reset();
+			Db.reset();
 
 		if (isRunWithoutCache())
 			doTest(false);

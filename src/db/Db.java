@@ -22,8 +22,8 @@ public final class Db{
 	private static final ThreadLocal<DbTransaction> tn=new ThreadLocal<DbTransaction>();
 
 	public static boolean is_cluster_mode=false;
-	public String clusterIp="127.0.0.1";
-	public int clusterPort=8889;
+	public static String clusterIp="127.0.0.1";
+	public static int clusterPort=8889;
 
 	/** Enables the log(...) method. */
 	public static boolean enable_log=true;
@@ -43,22 +43,29 @@ public final class Db{
 			return;
 		System.out.println(s);
 	}
-	private static Db inst;
+//	private static Db inst;
 
 	public static long pooled_connection_max_age_in_ms=10*60*1000;
 //	public static long pooled_connection_max_age_in_ms = 10 * 1000;
 
 	/** Called once to create the singleton instance. */
+//	public static void initInstance() throws Throwable{
+//		Db.log("dbo: init instance");
+//		inst=new Db();
+//		inst.register(DbObject.class);
+//	}
+
+	/** Called once to create the singleton instance. */
 	public static void initInstance() throws Throwable{
 		Db.log("dbo: init instance");
-		inst=new Db();
-		inst.register(DbObject.class);
+//		inst=new Db();
+		register(DbObject.class);
 	}
 
 	/** @return instance created at initInstance(). */
-	public static Db instance(){
-		return inst;
-	}
+//	public static Db instance(){
+//		return inst;
+//	}
 
 	/**
 	 * Initiates thread local for currentTransaction(). The transaction can be retrieved anywhere in the thread using Db.currentTransaction().
@@ -69,15 +76,15 @@ public final class Db{
 //		Db.log("dbo: init transaction on "+Thread.currentThread());
 		PooledConnection pc;
 		// get pooled connection
-		synchronized(inst.conpool){
-			while(inst.conpool.isEmpty()){ // spurious interrupt might happen
+		synchronized(conpool){
+			while(conpool.isEmpty()){ // spurious interrupt might happen
 				try{
-					inst.conpool.wait();
+					conpool.wait();
 				}catch(InterruptedException e){
 					log(e);
 				}
 			}
-			pc=inst.conpool.removeFirst();
+			pc=conpool.removeFirst();
 		}
 		if(pc.getAgeInMs()>Db.pooled_connection_max_age_in_ms){
 			// connection exceeded life time. create a new connection.
@@ -89,7 +96,7 @@ public final class Db{
 			}
 			while(true){
 				try{
-					final Connection c=Db.instance().createJdbcConnection();
+					final Connection c=Db.createJdbcConnection();
 					final PooledConnection pc2=new PooledConnection(c);
 					final DbTransaction t=new DbTransaction(pc2);
 					tn.set(t);
@@ -111,7 +118,7 @@ public final class Db{
 			// something went wrong initiating transaction
 			// create a new connection
 			try{
-				final Connection c=Db.instance().createJdbcConnection();
+				final Connection c=createJdbcConnection();
 				final PooledConnection pc2=new PooledConnection(c);
 				final DbTransaction t=new DbTransaction(pc2);
 				tn.set(t);
@@ -164,19 +171,19 @@ public final class Db{
 //			throw new RuntimeException(
 //					"Statement should be closed here. DbTransaction.finishTransaction() not called?");
 		if(connection_is_ok){
-			synchronized(inst.conpool){
-				inst.conpool.addFirst(tx.pooledCon);
-				inst.conpool.notify();
+			synchronized(conpool){
+				conpool.addFirst(tx.pooledCon);
+				conpool.notify();
 			}
 			tn.remove();
 			return;
 		}
 		// this connection threw exception while deinit. make a new one
-		final Connection c=Db.instance().createJdbcConnection();
+		final Connection c=createJdbcConnection();
 		final PooledConnection pc=new PooledConnection(c);
-		synchronized(inst.conpool){
-			inst.conpool.addFirst(pc);
-			inst.conpool.notify();
+		synchronized(conpool){
+			conpool.addFirst(pc);
+			conpool.notify();
 		}
 		tn.remove();
 	}
@@ -200,35 +207,33 @@ public final class Db{
 	}
 
 	// --- -- - -- -- - - --- - -- -- - -- --- - - - -- - - -- - -- -- -- - -- - - -
-	private final LinkedList<PooledConnection> conpool=new LinkedList<PooledConnection>();
-	private final ArrayList<DbClass> dbclasses=new ArrayList<DbClass>();
-	private final HashMap<Class<? extends DbObject>,DbClass> clsToDbClsMap=new HashMap<Class<? extends DbObject>,DbClass>();
-	final ArrayList<RelRefNMeta> relRefNMeta=new ArrayList<RelRefNMeta>();
-//	private final ArrayList<Connection> clusterConnections=new ArrayList<Connection>();
-//	private final ArrayList<Statement> clusterStatements=new ArrayList<Statement>();
+	private static final LinkedList<PooledConnection> conpool=new LinkedList<PooledConnection>();
+	private static final ArrayList<DbClass> dbclasses=new ArrayList<DbClass>();
+	private static final HashMap<Class<? extends DbObject>,DbClass> clsToDbClsMap=new HashMap<Class<? extends DbObject>,DbClass>();
+	static final ArrayList<RelRefNMeta> relRefNMeta=new ArrayList<RelRefNMeta>();
 
 	/** If true undeclared columns are deleted. */
-	public boolean enable_delete_unused_columns=true;
+	public static boolean enable_delete_unused_columns=true;
 
 	/** If true undeclared indexes are deleted. */
-	public boolean enable_drop_undeclared_indexes=true;
+	public static boolean enable_drop_undeclared_indexes=true;
 
 	/**
 	 * Object delete triggers the updating of referring columns to null. Racing conditions may occur.
 	 */
-	public boolean enable_update_referring_tables=true;
+	public static boolean enable_update_referring_tables=true;
 
 	/**
 	 * Objects retrieved from the database are cached. This ensures that get(...) returns the same instance of a previously retrieved object.
 	 */
-	public boolean enable_cache=true;
+	public static boolean enable_cache=true;
 
-	private String jdbcUrl;
-	private String jdbcUser;
-	private String jdbcPasswd;
+	private static String jdbcUrl;
+	private static String jdbcUser;
+	private static String jdbcPasswd;
 
 	/** Registers DbObject class to be persisted. */
-	public void register(final Class<? extends DbObject> cls) throws Throwable{
+	public static void register(final Class<? extends DbObject> cls) throws Throwable{
 		final DbClass dbcls=new DbClass(cls);
 		dbclasses.add(dbcls);
 		clsToDbClsMap.put(cls,dbcls);
@@ -242,12 +247,12 @@ public final class Db{
 	 * @param password
 	 * @param ncons    number of connections in the pool
 	 */
-	public void init(final String url,final String user,final String password,final int ncons,final String clusterIp,final int clusterPort) throws Throwable{
+	public static void init(final String url,final String user,final String password,final int ncons,final String cluster_ip,final int cluster_port) throws Throwable{
 		jdbcUrl=url;
 		jdbcUser=user;
 		jdbcPasswd=password;
-		this.clusterIp=clusterIp;
-		this.clusterPort=clusterPort;
+		clusterIp=cluster_ip;
+		clusterPort=cluster_port;
 
 		Db.log("--- - - - ---- - - - - - -- -- --- -- --- ---- -- -- - - -");
 		Db.log("   cluster: "+is_cluster_mode);
@@ -308,39 +313,6 @@ public final class Db{
 		if(!is_cluster_mode)
 			return;
 
-//		final FileReader fr=new FileReader(cluster_members_ip_path);
-//		final BufferedReader bfr=new BufferedReader(fr);
-//		String line;
-//		while(true){
-//			line=bfr.readLine();
-//			if(line==null)
-//				break;
-//			line=line.trim();
-//			if(line.length()==0)
-//				continue;
-//			if(line.startsWith("#"))
-//				continue;
-//			log("connecting to: "+line);
-//			final String cs="jdbc:mysql://"+line+"/"+b.bapp_jdbc_db+"?verifyServerCertificate=false&useSSL=true&ssl-mode=REQUIRED";
-//			Connection c=null;
-//			while(true){
-//				try{
-//					c=DriverManager.getConnection(cs,jdbcUser,jdbcPasswd);
-//					break;
-//				}catch(Throwable t){
-//					try{
-//						System.err.println("dbo: cannot create connection. waiting. "+stacktraceline(t));
-//						Thread.sleep(1000);
-//					}catch(InterruptedException e){
-//						log(e);
-//					}
-//				}
-//			}
-//			clusterConnections.add(c);
-//			clusterStatements.add(c.createStatement());
-//		}
-//		bfr.close();
-//		log("connected to other cluster members");
 		while(true){
 			log("connecting to cluster "+clusterIp+":"+clusterPort);
 			try{
@@ -351,7 +323,6 @@ public final class Db{
 				log("connected");
 				break;
 			}catch(Throwable t){
-//				log(t);
 				try{
 					Thread.sleep(1000);
 				}catch(InterruptedException e){
@@ -360,40 +331,12 @@ public final class Db{
 			}
 		}
 	}
-	Socket clusterSocket;
-	BufferedReader clusterSocketReader;
-	BufferedOutputStream clusterSocketOs;
+	static Socket clusterSocket;
+	static BufferedReader clusterSocketReader;
+	static BufferedOutputStream clusterSocketOs;
 	private static byte[] ba_nl="\n".getBytes();
 
-//	private final Object lock=new Object();
-	public synchronized int execClusterSqlInsert(final String sql) throws Throwable{
-//		final ArrayList<Integer> ints=new ArrayList<Integer>(clusterStatements.size());
-//		synchronized(lock){
-//			int i=0;
-//			for(final Statement s:clusterStatements){
-//				i++;
-//				log_sql(i+": "+sql);
-//				s.execute(sql,Statement.RETURN_GENERATED_KEYS);
-//				final ResultSet rs=s.getGeneratedKeys();
-//				if(rs.next()){
-//					ints.add(rs.getInt(1));
-//					rs.close();
-//				}else
-//					throw new RuntimeException("expected generated id");
-//			}
-//		}
-//
-//		// check that it is the same id
-//		int prev=ints.get(0);
-//		final int n=ints.size();
-//		for(int j=1;j<n;j++){
-//			final int id=ints.get(j);
-//			if(id!=prev)
-//				throw new RuntimeException("expected generated ids to be same. got: "+ints);
-//			prev=id;
-//		}
-//		return prev;
-//		log("forwarding: "+sql.substring(0,sql.length()>80?80:sql.length()));
+	public static synchronized int execClusterSqlInsert(final String sql) throws Throwable{
 		clusterSocketOs.write(sql.getBytes());
 		clusterSocketOs.write(ba_nl);
 		clusterSocketOs.flush();
@@ -402,21 +345,8 @@ public final class Db{
 		return id;
 	}
 
-	public synchronized void execClusterSql(final String sql){
-//		synchronized(lock){
-//			int i=0;
-//			for(final Statement s:clusterStatements){
-//				i++;
-//				log_sql(i+": "+sql);
-//				try{
-//					s.execute(sql);
-//				}catch(Throwable t){
-//					throw new RuntimeException(t);
-//				}
-//			}
-//		}
+	public static synchronized void execClusterSql(final String sql){
 		try{
-//			log("forwarding: "+sql.substring(0,sql.length()>80?80:sql.length()));
 			clusterSocketOs.write(sql.getBytes());
 			clusterSocketOs.write(ba_nl);
 			clusterSocketOs.flush();
@@ -432,7 +362,7 @@ public final class Db{
 	/**
 	 * @return a new JDBC connection. The method will block until a connection has been created.
 	 */
-	public Connection createJdbcConnection(){
+	public static Connection createJdbcConnection(){
 		Connection c=null;
 		while(true){
 			try{
@@ -451,25 +381,7 @@ public final class Db{
 		}
 	}
 
-	public Connection createJdbcConnection(final String host){
-		Connection c=null;
-		while(true){
-			try{
-				c=DriverManager.getConnection(jdbcUrl,jdbcUser,jdbcPasswd);
-				c.setAutoCommit(false);
-				return c;
-			}catch(Throwable t){
-				try{
-					System.err.println("dbo: cannot create connection. waiting. "+stacktraceline(t));
-					Thread.sleep(1000);
-				}catch(InterruptedException e){
-					log(e);
-				}
-			}
-		}
-	}
-
-	private void printDbMetaInfo(final DatabaseMetaData dbm) throws SQLException{
+	private static void printDbMetaInfo(final DatabaseMetaData dbm) throws SQLException{
 		// output tables, columns, indexes
 		final ResultSet rstbls=dbm.getTables(null,null,null,new String[]{"TABLE"});
 		while(rstbls.next()){
@@ -499,7 +411,7 @@ public final class Db{
 		rstbls.close();
 	}
 
-	private void ensureTablesAndIndexes(final Connection con,final DatabaseMetaData dbm) throws Throwable{
+	private static void ensureTablesAndIndexes(final Connection con,final DatabaseMetaData dbm) throws Throwable{
 		// ensure RefN tables exist and match to definition
 		final Statement stmt=con.createStatement();
 
@@ -564,7 +476,7 @@ public final class Db{
 	/**
 	 * Deletes and recreates all tables and indexes. Used by testing framework.
 	 */
-	public void reset(){
+	public static void reset(){
 		Db.log("*** reseting database");
 		Connection con=null;
 		try{
@@ -603,9 +515,8 @@ public final class Db{
 	}
 
 	/** Sets singleton instance to null and closes the connections in the pool. */
-	public void shutdown(){
+	public static void shutdown(){
 		Db.log("dbo: shutdown");
-		Db.inst=null;
 		synchronized(conpool){
 			for(final PooledConnection pc:conpool){
 				try{
@@ -625,7 +536,7 @@ public final class Db{
 		return tblnm;
 	}
 
-	DbClass dbClassForJavaClass(final Class<?> c){
+	static DbClass dbClassForJavaClass(final Class<?> c){
 		return clsToDbClsMap.get(c);
 	}
 
@@ -634,11 +545,11 @@ public final class Db{
 //	}
 
 	/** @return the {@link DbClass} for the Java class */
-	public DbClass getDbClassForJavaClass(final Class<? extends DbObject> cls){
+	public static DbClass getDbClassForJavaClass(final Class<? extends DbObject> cls){
 		return clsToDbClsMap.get(cls);
 	}
 
-	public int getConnectionPoolSize(){
+	public static int getConnectionPoolSize(){
 		synchronized(conpool){
 			return conpool.size();
 		}

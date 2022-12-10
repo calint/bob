@@ -11,7 +11,7 @@ public final class RelAgg extends DbRelation {
 	void init(final DbClass dbcls) {
 		relFld = new FldRel();
 		relFld.cls = cls;
-		final DbClass dbc = Db.instance().getDbClassForJavaClass(cls);
+		final DbClass dbc = Db.getDbClassForJavaClass(cls);
 		relFld.tableName = dbc.tableName;
 		relFld.name = name;
 		dbcls.allFields.add(relFld);
@@ -47,12 +47,12 @@ public final class RelAgg extends DbRelation {
 	}
 
 	@Override
-	void cascadeDelete(final DbObject ths) {
+	void cascadeDelete(final DbObject ths){
 		final int toId = getId(ths);
 		if (toId == 0)
 			return;
 		// need to delete
-		final DbClass dbClsTo = Db.instance().dbClassForJavaClass(toCls);
+		final DbClass dbClsTo = Db.dbClassForJavaClass(toCls);
 		if (dbClsTo.cascadeDelete) {
 			final DbObject o = get(ths, false);
 			if (o == null)
@@ -67,7 +67,7 @@ public final class RelAgg extends DbRelation {
 		if(!Db.is_cluster_mode) {
 			Db.currentTransaction().execSql(sb);
 		}else {
-			Db.instance().execClusterSql(sb.toString());
+			Db.execClusterSql(sb.toString());
 		}
 	}
 }

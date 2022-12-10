@@ -28,14 +28,13 @@ public final class app implements bapp {
 		Db.log(getClass().getName() + ": init");
 //		Db.enable_log=false;
 		Db.enable_log_sql=false;
-		final Db db = Db.instance();
-		db.register(User.class);
-		db.register(File.class);
-		db.register(DataBinary.class);
-		db.register(DataText.class);
-		db.register(Book.class);
-		db.register(Game.class);
-		db.register(TestObj.class);
+		Db.register(User.class);
+		Db.register(File.class);
+		Db.register(DataBinary.class);
+		Db.register(DataText.class);
+		Db.register(Book.class);
+		Db.register(Game.class);
+		Db.register(TestObj.class);
 		
 		b.b.set_file_suffix_to_content_type("java","text/plain");
 		
@@ -72,6 +71,6 @@ public final class app implements bapp {
 	@Override
 	public void shutdown() throws Throwable {
 		Db.log(getClass().getName() + ": shutdown");
-		Db.instance().shutdown();
+		Db.shutdown();
 	}
 }

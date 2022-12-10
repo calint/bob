@@ -92,7 +92,7 @@ public final class DbClass {
 		if (!scls.equals(Object.class)) {
 			init_rec(lsfld, lsrel, lsix, scls);
 		}
-		final DbClass dbcls = Db.instance().dbClassForJavaClass(cls);
+		final DbClass dbcls = Db.dbClassForJavaClass(cls);
 		lsfld.addAll(dbcls.declaredFields);
 		lsrel.addAll(dbcls.declaredRelations);
 		lsix.addAll(dbcls.declaredIndexes);
@@ -130,7 +130,7 @@ public final class DbClass {
 
 	private void ensureColumns(final Statement stmt, final DatabaseMetaData dbm) throws Throwable {
 		addMissingColumns(stmt, dbm);
-		if (Db.instance().enable_delete_unused_columns)
+		if (Db.enable_delete_unused_columns)
 			deleteUnusedColumns(stmt, dbm);
 		arrangeColumns(stmt, dbm);
 		ensureColumnTypesAndSize(stmt, dbm);

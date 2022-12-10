@@ -14,7 +14,7 @@ public final class RelAggN extends DbRelation {
 		relFld = new FldRel();
 		relFld.cls = toCls;
 		relFld.name = dbcls.tableName + "_" + name;
-		final DbClass toDbCls = Db.instance().dbClassForJavaClass(toCls);
+		final DbClass toDbCls = Db.dbClassForJavaClass(toCls);
 		relFld.tableName = toDbCls.tableName;
 		toDbCls.allFields.add(relFld);
 
@@ -24,7 +24,7 @@ public final class RelAggN extends DbRelation {
 		ix.name = relFld.name;
 		ix.tableName = relFld.tableName;
 
-		final DbClass dbc = Db.instance().getDbClassForJavaClass(toCls);
+		final DbClass dbc = Db.getDbClassForJavaClass(toCls);
 		dbc.allIndexes.add(ix);
 	}
 
@@ -63,7 +63,7 @@ public final class RelAggN extends DbRelation {
 
 	@Override
 	void cascadeDelete(final DbObject ths) {
-		final DbClass dbClsTo = Db.instance().dbClassForJavaClass(toCls);
+		final DbClass dbClsTo = Db.dbClassForJavaClass(toCls);
 		if (dbClsTo.cascadeDelete) {
 			final List<DbObject> ls = get(ths, null, null, null);
 			for (final DbObject o : ls) {
@@ -79,7 +79,7 @@ public final class RelAggN extends DbRelation {
 		if(!Db.is_cluster_mode) {
 			Db.currentTransaction().execSql(sb);
 		}else {
-			Db.instance().execClusterSql(sb.toString());
+			Db.execClusterSql(sb.toString());
 		}
 	}
 }

@@ -17,8 +17,8 @@ public final class RelRefN extends DbRelation {
 	@Override
 	void init(final DbClass c) {
 		rrm = new RelRefNMeta(c.javaClass, name, toCls);
-		Db.instance().relRefNMeta.add(rrm);
-		final DbClass todbcls = Db.instance().dbClassForJavaClass(toCls);
+		Db.relRefNMeta.add(rrm);
+		final DbClass todbcls = Db.dbClassForJavaClass(toCls);
 		todbcls.referingRefN.add(this);
 	}
 
@@ -29,7 +29,7 @@ public final class RelRefN extends DbRelation {
 			Db.currentTransaction().execSql(sb);
 		}else {
 			try {
-				Db.instance().execClusterSqlInsert(sb.toString());
+				Db.execClusterSqlInsert(sb.toString());
 			}catch(Throwable t) {
 				throw new RuntimeException(t);
 			}
@@ -60,7 +60,7 @@ public final class RelRefN extends DbRelation {
 		if(!Db.is_cluster_mode) {
 			Db.currentTransaction().execSql(sb);
 		}else {
-			Db.instance().execClusterSql(sb.toString());
+			Db.execClusterSql(sb.toString());
 		}
 	}
 
@@ -70,7 +70,7 @@ public final class RelRefN extends DbRelation {
 		if(!Db.is_cluster_mode) {
 			Db.currentTransaction().execSql(sb);
 		}else {
-			Db.instance().execClusterSql(sb.toString());
+			Db.execClusterSql(sb.toString());
 		}
 	}
 
@@ -80,7 +80,7 @@ public final class RelRefN extends DbRelation {
 		if(!Db.is_cluster_mode) {
 			Db.currentTransaction().execSql(sb);
 		}else {
-			Db.instance().execClusterSql(sb.toString());
+			Db.execClusterSql(sb.toString());
 		}
 	}
 

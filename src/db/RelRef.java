@@ -13,12 +13,12 @@ public final class RelRef extends DbRelation {
 	void init(final DbClass c) {
 		relFld = new FldRel();
 		relFld.cls = cls;
-		final DbClass dbc = Db.instance().getDbClassForJavaClass(cls);
+		final DbClass dbc = Db.getDbClassForJavaClass(cls);
 		relFld.tableName = dbc.tableName;
 		relFld.name = name;
 		c.allFields.add(relFld);
 
-		if (Db.instance().enable_update_referring_tables) {
+		if (Db.enable_update_referring_tables) {
 			// add an index on the referring field
 			final Index ix = new Index(relFld);
 			ix.cls = cls;
@@ -27,7 +27,7 @@ public final class RelRef extends DbRelation {
 			dbc.allIndexes.add(ix);
 		}
 
-		final DbClass todbcls = Db.instance().dbClassForJavaClass(toCls);
+		final DbClass todbcls = Db.dbClassForJavaClass(toCls);
 		todbcls.referingRef.add(this);
 	}
 
