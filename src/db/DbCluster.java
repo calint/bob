@@ -127,9 +127,10 @@ public class DbCluster{
 	public static synchronized int execClusterSqlInsert(final String sql) throws Throwable{
 		final ArrayList<Integer> ints=new ArrayList<Integer>(clusterStatements.size());
 		int i=0;
+		log_sql(sql);
 		for(final Statement s:clusterStatements){
 			i++;
-			log_sql(i+": "+sql);
+			log_sql("send to "+i);
 			s.execute(sql,Statement.RETURN_GENERATED_KEYS);
 			final ResultSet rs=s.getGeneratedKeys();
 			if(rs.next()){
@@ -153,9 +154,10 @@ public class DbCluster{
 
 	public static synchronized void execClusterSql(final String sql){
 		int i=0;
+		log_sql(sql);
 		for(final Statement s:clusterStatements){
 			i++;
-			log_sql(i+": "+sql);
+			log("send to "+i);
 			try{
 				s.execute(sql);
 			}catch(Throwable t){

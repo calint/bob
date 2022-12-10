@@ -417,6 +417,7 @@ public final class Db{
 //			log(sql);
 			clusterSocketOs.write(sql.getBytes());
 			clusterSocketOs.write(ba_nl);
+			clusterSocketOs.flush();
 			final String ack=clusterSocketReader.readLine();
 			if(ack.length()!=0)
 				throw new RuntimeException("unknown reply: {"+ack+"}");
