@@ -111,8 +111,10 @@ public class DbCluster{
 			while(true){
 				try{
 					final String sql=br.readLine();
-					if(sql==null)
+					if(sql==null){
+						log("disconnected: "+socket.getInetAddress());
 						return;
+					}
 					if(sql.startsWith("insert ")){
 						final int id=execClusterSqlInsert(sql);
 						os.write((id+"\n").getBytes());
@@ -123,6 +125,7 @@ public class DbCluster{
 					os.write(ba_nl);
 					os.flush();
 				}catch(Throwable t){
+					log("disconnected with exception:"+socket.getInetAddress());
 					log(t);
 					return;
 				}
@@ -132,7 +135,6 @@ public class DbCluster{
 
 	public static synchronized int execClusterSqlInsert(final String sql) throws Throwable{
 		final ArrayList<Integer> ints=new ArrayList<Integer>(clusterStatements.size());
-//		int i=0;
 		log_sql(sql);
 		for(final Statement s:clusterStatements){
 			s.execute(sql,Statement.RETURN_GENERATED_KEYS);
