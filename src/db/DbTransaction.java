@@ -75,7 +75,7 @@ public final class DbTransaction {
 			sb.append("insert into ").append(Db.tableNameForJavaClass(cls)).append(" values()");
 
 			final String sql = sb.toString();
-			if(!Db.is_cluster_mode) {
+			if (!Db.is_cluster_mode) {
 				Db.log_sql(sql);
 				stmt.execute(sql, Statement.RETURN_GENERATED_KEYS);
 				final ResultSet rs = stmt.getGeneratedKeys();
@@ -85,7 +85,7 @@ public final class DbTransaction {
 				} else
 					throw new RuntimeException("expected generated id");
 				rs.close();
-			}else {
+			} else {
 				final int id = Db.execClusterSqlInsert(sql);
 				o.fieldValues.put(DbObject.id, id);
 			}
@@ -105,7 +105,7 @@ public final class DbTransaction {
 		}
 	}
 
-	public void delete(final DbObject o){
+	public void delete(final DbObject o) {
 		flush();
 
 		final DbClass dbcls = Db.dbClassForJavaClass(o.getClass());
@@ -130,9 +130,9 @@ public final class DbTransaction {
 				final StringBuilder sb = new StringBuilder(256);
 				sb.append("update ").append(r.tableName).append(" set ").append(r.name).append("=null")
 						.append(" where ").append(r.name).append('=').append(id);
-				if(!Db.is_cluster_mode) {
+				if (!Db.is_cluster_mode) {
 					execSql(sb);
-				}else {
+				} else {
 					Db.execClusterSql(sb.toString());
 				}
 			}
@@ -141,9 +141,9 @@ public final class DbTransaction {
 		// delete this
 		final StringBuilder sb = new StringBuilder(256);
 		sb.append("delete from ").append(dbcls.tableName).append(" where id=").append(id);
-		if(!Db.is_cluster_mode) {
+		if (!Db.is_cluster_mode) {
 			execSql(sb);
-		}else {
+		} else {
 			Db.execClusterSql(sb.toString());
 		}
 		dirtyObjects.remove(o);
@@ -349,7 +349,7 @@ public final class DbTransaction {
 		flush();
 		if (cache_enabled) // will keep memory usage down at batch imports
 			cache.clear();
-		if(!Db.is_cluster_mode)
+		if (!Db.is_cluster_mode)
 			con.commit();
 	}
 
@@ -358,7 +358,7 @@ public final class DbTransaction {
 		rollbacked = true;
 //		if (cache_enabled)
 //			cache.clear();
-		if(Db.is_cluster_mode)
+		if (Db.is_cluster_mode)
 			return;
 		try {
 			con.rollback();
@@ -403,9 +403,9 @@ public final class DbTransaction {
 		}
 		sb.setLength(sb.length() - 1);
 		sb.append(" where id=").append(o.id());
-		if(!Db.is_cluster_mode) {
+		if (!Db.is_cluster_mode) {
 			execSql(sb);
-		}else {
+		} else {
 			Db.execClusterSql(sb.toString());
 		}
 		o.dirtyFields.clear();

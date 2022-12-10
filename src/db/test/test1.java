@@ -294,9 +294,8 @@ public class test1 extends TestCase {
 		tn.commit();
 		tn.delete(u9);
 		tn.delete(u10);
-		
+
 		// clean up
-		
 
 	}
 }

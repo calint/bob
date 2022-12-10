@@ -76,9 +76,9 @@ public final class RelAggN extends DbRelation {
 		sb.append("delete from ").append(dbClsTo.tableName).append(" where ").append(relFld.name).append("=")
 				.append(ths.id());
 
-		if(!Db.is_cluster_mode) {
+		if (!Db.is_cluster_mode) {
 			Db.currentTransaction().execSql(sb);
-		}else {
+		} else {
 			Db.execClusterSql(sb.toString());
 		}
 	}

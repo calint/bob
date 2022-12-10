@@ -47,7 +47,7 @@ public final class RelAgg extends DbRelation {
 	}
 
 	@Override
-	void cascadeDelete(final DbObject ths){
+	void cascadeDelete(final DbObject ths) {
 		final int toId = getId(ths);
 		if (toId == 0)
 			return;
@@ -64,9 +64,9 @@ public final class RelAgg extends DbRelation {
 		final StringBuilder sb = new StringBuilder(128);
 		sb.append("delete from ").append(dbClsTo.tableName).append(" where ").append(DbObject.id.name).append("=")
 				.append(toId);
-		if(!Db.is_cluster_mode) {
+		if (!Db.is_cluster_mode) {
 			Db.currentTransaction().execSql(sb);
-		}else {
+		} else {
 			Db.execClusterSql(sb.toString());
 		}
 	}
