@@ -90,13 +90,14 @@ final public class b{
 	public static PrintStream err=System.err;
 
 	public static String bapp_class="bob.app";
-	public static String bapp_cluster_relay_ip="127.0.0.1";
-	public static String bapp_cluster_relay_port="8889";
 	public static String bapp_jdbc_host="localhost:3306";
 	public static String bapp_jdbc_db="dbo";
 	public static String bapp_jdbc_user="user";
 	public static String bapp_jdbc_password="password";
-	public static String bapp_jdbc_ncons="10";
+	public static int bapp_jdbc_ncons=10;
+	public static boolean bapp_cluster_mode=false;
+	public static String bapp_cluster_ip="127.0.0.1";
+	public static int bapp_cluster_port=8889;
 	public static bapp bapp=null;
 
 	private final static HashMap<String,Class<?>> path_to_class_map=new HashMap<String,Class<?>>();
@@ -125,6 +126,7 @@ final public class b{
 		// initiate db
 		Db.initInstance();
 		final Db db=Db.instance();
+		db.is_cluster_mode=bapp_cluster_mode;
 		db.register(session.class);
 		db.register(sessionobj.class);
 		// initiate application
@@ -132,7 +134,7 @@ final public class b{
 			b.bapp=(bapp)Class.forName(b.bapp_class).getConstructor().newInstance();
 			b.bapp.init();
 		}
-		db.init(bapp_cluster_relay_ip,Integer.parseInt(bapp_cluster_relay_port),"jdbc:mysql://"+b.bapp_jdbc_host+"/"+b.bapp_jdbc_db+"?verifyServerCertificate=false&useSSL=true&ssl-mode=REQUIRED",b.bapp_jdbc_user,b.bapp_jdbc_password,Integer.parseInt(b.bapp_jdbc_ncons));
+		db.init("jdbc:mysql://"+b.bapp_jdbc_host+"/"+b.bapp_jdbc_db+"?verifyServerCertificate=false&useSSL=true&ssl-mode=REQUIRED",b.bapp_jdbc_user,b.bapp_jdbc_password,b.bapp_jdbc_ncons,bapp_cluster_ip,bapp_cluster_port);
 
 		final ServerSocketChannel ssc=ServerSocketChannel.open();
 		ssc.configureBlocking(false);

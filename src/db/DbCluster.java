@@ -67,7 +67,7 @@ public class DbCluster{
 		}
 		bfr.close();
 		log("connected to cluster databases");
-		log("listening for "+clusterConnections.size()+" clients");
+		log("waiting for "+clusterConnections.size()+" clients");
 
 		// open server socket
 		final ServerSocket serverSocket=new ServerSocket(server_port);

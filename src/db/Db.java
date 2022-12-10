@@ -21,10 +21,9 @@ import java.util.LinkedList;
 public final class Db{
 	private static final ThreadLocal<DbTransaction> tn=new ThreadLocal<DbTransaction>();
 
-	public static boolean is_cluster_mode=true;
-//	public static String cluster_members_ip_path="dbcluster.txt";
-	public String clusterWriterIp="127.0.0.1";
-	public int clusterWriterPort=8889;
+	public static boolean is_cluster_mode=false;
+	public String clusterIp="127.0.0.1";
+	public int clusterPort=8889;
 
 	/** Enables the log(...) method. */
 	public static boolean enable_log=true;
@@ -243,14 +242,15 @@ public final class Db{
 	 * @param password
 	 * @param ncons    number of connections in the pool
 	 */
-	public void init(final String clusterWriterIp,final int clusterWriterPort,final String url,final String user,final String password,final int ncons) throws Throwable{
+	public void init(final String url,final String user,final String password,final int ncons,final String clusterIp,final int clusterPort) throws Throwable{
 		jdbcUrl=url;
 		jdbcUser=user;
 		jdbcPasswd=password;
-		this.clusterWriterIp=clusterWriterIp;
-		this.clusterWriterPort=clusterWriterPort;
+		this.clusterIp=clusterIp;
+		this.clusterPort=clusterPort;
 
 		Db.log("--- - - - ---- - - - - - -- -- --- -- --- ---- -- -- - - -");
+		Db.log("   cluster: "+is_cluster_mode);
 		Db.log("connection: "+url);
 		Db.log("      user: "+user);
 		Db.log("  password: "+(password==null?"[none]":"[not displayed]"));
@@ -342,9 +342,9 @@ public final class Db{
 //		bfr.close();
 //		log("connected to other cluster members");
 		while(true){
-			log("connecting to cluster writer at "+clusterWriterIp+":"+clusterWriterPort);
+			log("connecting to cluster "+clusterIp+":"+clusterPort);
 			try{
-				clusterSocket=new Socket(clusterWriterIp,clusterWriterPort);
+				clusterSocket=new Socket(clusterIp,clusterPort);
 				clusterSocket.setTcpNoDelay(true);
 				clusterSocketReader=new BufferedReader(new InputStreamReader(clusterSocket.getInputStream()));
 				clusterSocketOs=new BufferedOutputStream(clusterSocket.getOutputStream(),1024*1);
