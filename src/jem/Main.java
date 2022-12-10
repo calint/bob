@@ -3,7 +3,6 @@ package jem;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 
-import db.Db;
 import db.DbObject;
 
 /**
