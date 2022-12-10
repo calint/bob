@@ -415,7 +415,7 @@ public final class Db{
 //			}
 //		}
 		try{
-			log("forwarding: "+sql.substring(0,sql.length()>8080?sql.length()));
+			log("forwarding: "+sql.substring(0,sql.length()>80?80:sql.length()));
 			clusterSocketOs.write(sql.getBytes());
 			clusterSocketOs.write(ba_nl);
 			clusterSocketOs.flush();
