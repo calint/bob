@@ -73,7 +73,7 @@ public abstract class TestCase implements Runnable {
 			final int n = numberOfTestRuns();
 			final long t0 = System.currentTimeMillis();
 			for (int i = 0; i < n; i++) {
-				System.out.println(getClass().getName() + ": test run " + (i + 1) + " of " + n);
+				System.out.println(getClass().getName() + ": run " + (i + 1) + " of " + n);
 				doRun();
 				tn.commit();
 			}

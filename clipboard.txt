@@ -85,10 +85,18 @@ cd /bob && git pull https://github.com/calint/bob && ./build.sh && systemctl res
 
 ssh root@<ip> 'cd /bob && git pull https://github.com/calint/bob && ./build.sh && systemctl restart bob'
 
-
 sudo tcpdump -i lo port 8888 -X
 
 ssh root@ journalctl -u bob -e | grep http404 | cut -b 79-180 | sort -u | less
 
 cd /bob && echo "drop database testdb;create database testdb;"|mysql && git pull && sh build-and-run.sh 
 
+
+test1 cache on
+no-cluster    cluster    cluster-nio
+6867ms        20106ms    17273ms
+6526ms        19227ms    19175ms
+5989ms        13960ms    18826ms
+5429ms        19495ms    18736ms
+5864ms        19215ms    19012ms
+              

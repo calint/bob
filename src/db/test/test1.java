@@ -20,7 +20,7 @@ public class test1 extends TestCase {
 
 	@Override
 	protected int numberOfTestRuns() {
-		return 10;
+		return 100;
 	}
 
 //	@Override
