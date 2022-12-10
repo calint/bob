@@ -16,7 +16,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import b.b;
 
-public class DbCluster {
+public class Cluster {
 	public static boolean enable_log = true;
 	public static boolean enable_log_sql = false;
 	public static int server_port = 8889;
@@ -27,7 +27,7 @@ public class DbCluster {
 
 	public static void main(String[] args) throws Throwable {
 		if (args.length < 4) {
-			System.out.println("Usage: java db.DbCluster <ip:port file> <dbname> <user> <password>");
+			System.out.println("Usage: java db.Cluster <ip:port file> <dbname> <user> <password>");
 			return;
 		}
 		// connect to cluster members

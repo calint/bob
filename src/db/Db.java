@@ -349,6 +349,9 @@ public final class Db {
 		clusterSocketOs.write(ba_nl);
 		clusterSocketOs.flush();
 		final String idStr = clusterSocketReader.readLine();
+		if(idStr==null) {
+			throw new RuntimeException("lost connection to cluster");
+		}
 		final int id = Integer.parseInt(idStr);
 		return id;
 	}

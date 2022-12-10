@@ -354,7 +354,7 @@ public final class DbTransaction {
 	}
 
 	public void rollback() {
-		Db.log("*** rollback transaction");
+//		Db.log("*** rollback transaction");
 		rollbacked = true;
 //		if (cache_enabled)
 //			cache.clear();
@@ -362,7 +362,7 @@ public final class DbTransaction {
 			return;
 		try {
 			con.rollback();
-			Db.log("*** rollback done");
+//			Db.log("*** rollback done");
 		} catch (Throwable t) {
 			throw new RuntimeException(t);// ? this can be ignored?
 		}
