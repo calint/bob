@@ -392,6 +392,7 @@ public final class Db{
 //			prev=id;
 //		}
 //		return prev;
+		log("forwarding: "+sql.substring(0,100));
 		clusterSocketOs.write(sql.getBytes());
 		clusterSocketOs.write(ba_nl);
 		clusterSocketOs.flush();
@@ -414,7 +415,7 @@ public final class Db{
 //			}
 //		}
 		try{
-//			log(sql);
+			log("forwarding: "+sql.substring(0,100));
 			clusterSocketOs.write(sql.getBytes());
 			clusterSocketOs.write(ba_nl);
 			clusterSocketOs.flush();
