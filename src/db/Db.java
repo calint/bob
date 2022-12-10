@@ -1,5 +1,6 @@
 package db;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -347,7 +348,7 @@ public final class Db{
 				clusterSocket=new Socket(clusterWriterIp,clusterWriterPort);
 				clusterSocket.setTcpNoDelay(true);
 				clusterSocketReader=new BufferedReader(new InputStreamReader(clusterSocket.getInputStream()));
-				clusterSocketOs=clusterSocket.getOutputStream();
+				clusterSocketOs=new BufferedOutputStream(clusterSocket.getOutputStream(),1024*1);
 				break;
 			}catch(Throwable t){
 				log(t);
@@ -362,7 +363,7 @@ public final class Db{
 	}
 	Socket clusterSocket;
 	BufferedReader clusterSocketReader;
-	OutputStream clusterSocketOs;
+	BufferedOutputStream clusterSocketOs;
 	private static byte[] ba_nl="\n".getBytes();
 
 //	private final Object lock=new Object();

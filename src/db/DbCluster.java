@@ -1,10 +1,10 @@
 package db;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.ServerSocket;
@@ -99,13 +99,13 @@ public class DbCluster{
 		private static byte[] ba_nl="\n".getBytes();
 		Socket socket;
 		InputStream is;
-		OutputStream os;
+		BufferedOutputStream os;
 		BufferedReader br;
 		public ClientThread(Socket socket) throws Throwable{
 			this.socket=socket;
 			is=socket.getInputStream();
-			os=socket.getOutputStream();
-			br=new BufferedReader(new InputStreamReader(is));
+			os=new BufferedOutputStream(socket.getOutputStream(),32);
+			br=new BufferedReader(new InputStreamReader(is),1024);
 		}
 		@Override public void run(){
 			try{
