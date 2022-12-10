@@ -18,11 +18,11 @@ import b.b;
 
 public class DbCluster{
 	public static boolean enable_log=true;
-	public static boolean enable_log_sql=true;
+	public static boolean enable_log_sql=false;
 	public static int server_port=8889;
 	private static final ArrayList<Connection> clusterConnections=new ArrayList<Connection>();
 	private static final ArrayList<Statement> clusterStatements=new ArrayList<Statement>();
-	private static final ArrayList<String> clusterMembers=new ArrayList<String>();
+//	private static final ArrayList<String> clusterMembers=new ArrayList<String>();
 	private static final ArrayList<ClientThread> clientThreads=new ArrayList<ClientThread>();
 
 	public static void main(String[] args) throws Throwable{
@@ -54,8 +54,8 @@ public class DbCluster{
 					break;
 				}catch(Throwable t){
 					try{
-						System.err.println("dbo: cannot create connection. waiting. "+b.stacktraceline(t));
-						Thread.sleep(1000);
+						System.err.println("dbcluster: cannot connect to "+line+". waiting.");
+						Thread.sleep(5000);
 					}catch(InterruptedException e){
 						log(e);
 					}
@@ -63,7 +63,7 @@ public class DbCluster{
 			}
 			clusterConnections.add(c);
 			clusterStatements.add(c.createStatement());
-			clusterMembers.add(line);
+//			clusterMembers.add(line);
 		}
 		bfr.close();
 		log("connected to cluster databases");
@@ -108,9 +108,11 @@ public class DbCluster{
 			br=new BufferedReader(new InputStreamReader(is),1024);
 		}
 		@Override public void run(){
-			try{
-				while(true){
+			while(true){
+				try{
 					final String sql=br.readLine();
+					if(sql==null)
+						return;
 					if(sql.startsWith("insert ")){
 						final int id=execClusterSqlInsert(sql);
 						os.write((id+"\n").getBytes());
@@ -120,20 +122,19 @@ public class DbCluster{
 					execClusterSql(sql);
 					os.write(ba_nl);
 					os.flush();
+				}catch(Throwable t){
+					log(t);
+					return;
 				}
-			}catch(Throwable t){
-				t.printStackTrace();
 			}
 		}
 	}
 
 	public static synchronized int execClusterSqlInsert(final String sql) throws Throwable{
 		final ArrayList<Integer> ints=new ArrayList<Integer>(clusterStatements.size());
-		int i=0;
+//		int i=0;
 		log_sql(sql);
 		for(final Statement s:clusterStatements){
-			i++;
-			log_sql("send to "+i);
 			s.execute(sql,Statement.RETURN_GENERATED_KEYS);
 			final ResultSet rs=s.getGeneratedKeys();
 			if(rs.next()){
@@ -155,17 +156,10 @@ public class DbCluster{
 		return prev;
 	}
 
-	public static synchronized void execClusterSql(final String sql){
-		int i=0;
+	public static synchronized void execClusterSql(final String sql) throws Throwable{
 		log_sql(sql);
 		for(final Statement s:clusterStatements){
-			i++;
-			log("send to "+i);
-			try{
-				s.execute(sql);
-			}catch(Throwable t){
-				throw new RuntimeException(t);
-			}
+			s.execute(sql);
 		}
 	}
 

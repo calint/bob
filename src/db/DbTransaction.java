@@ -381,7 +381,7 @@ public final class DbTransaction {
 	public void flush() { // ? public?
 		if (dirtyObjects.isEmpty())
 			return;
-		Db.log("*** flushing " + dirtyObjects.size() + " objects");
+//		Db.log("*** flushing " + dirtyObjects.size() + " objects");
 		try {
 			for (final DbObject o : dirtyObjects) {
 				updateDbFromDbObject(o);
@@ -391,7 +391,7 @@ public final class DbTransaction {
 		}
 
 		dirtyObjects.clear();
-		Db.log("*** done flushing");
+//		Db.log("*** done flushing");
 	}
 
 	private void updateDbFromDbObject(final DbObject o) throws Throwable {

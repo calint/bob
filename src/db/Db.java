@@ -67,7 +67,7 @@ public final class Db{
 	 * @return the created transaction
 	 */
 	public static DbTransaction initCurrentTransaction(){ // ? so ugly
-		Db.log("dbo: init transaction on "+Thread.currentThread());
+//		Db.log("dbo: init transaction on "+Thread.currentThread());
 		PooledConnection pc;
 		// get pooled connection
 		synchronized(inst.conpool){
@@ -135,7 +135,7 @@ public final class Db{
 	 * Removes the transaction from the thread local and the JDBC connection is returned to the pool.
 	 */
 	public static void deinitCurrentTransaction(){ // ? so ugly
-		Db.log("dbo: deinit transaction on "+Thread.currentThread());
+//		Db.log("dbo: deinit transaction on "+Thread.currentThread());
 		final DbTransaction tx=tn.get();
 		boolean connection_is_ok=true;
 		if(!tx.rollbacked){
@@ -348,16 +348,16 @@ public final class Db{
 				clusterSocket.setTcpNoDelay(true);
 				clusterSocketReader=new BufferedReader(new InputStreamReader(clusterSocket.getInputStream()));
 				clusterSocketOs=new BufferedOutputStream(clusterSocket.getOutputStream(),1024*1);
+				log("connected");
 				break;
 			}catch(Throwable t){
-				log(t);
+//				log(t);
 				try{
 					Thread.sleep(1000);
 				}catch(InterruptedException e){
 					log(e);
 				}
 			}
-			log("connected");
 		}
 	}
 	Socket clusterSocket;
@@ -393,7 +393,7 @@ public final class Db{
 //			prev=id;
 //		}
 //		return prev;
-		log("forwarding: "+sql.substring(0,sql.length()>80?80:sql.length()));
+//		log("forwarding: "+sql.substring(0,sql.length()>80?80:sql.length()));
 		clusterSocketOs.write(sql.getBytes());
 		clusterSocketOs.write(ba_nl);
 		clusterSocketOs.flush();
@@ -416,7 +416,7 @@ public final class Db{
 //			}
 //		}
 		try{
-			log("forwarding: "+sql.substring(0,sql.length()>80?80:sql.length()));
+//			log("forwarding: "+sql.substring(0,sql.length()>80?80:sql.length()));
 			clusterSocketOs.write(sql.getBytes());
 			clusterSocketOs.write(ba_nl);
 			clusterSocketOs.flush();
