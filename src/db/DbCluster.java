@@ -75,6 +75,7 @@ public class DbCluster{
 		int nclients=0;
 		while(true){
 			final Socket socket=serverSocket.accept();
+			socket.setTcpNoDelay(true);
 			log("accept: "+socket.getRemoteSocketAddress());
 			clientThreads.add(new ClientThread(socket));
 			nclients++;

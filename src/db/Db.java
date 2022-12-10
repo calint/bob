@@ -345,6 +345,7 @@ public final class Db{
 			log("connecting to cluster writer at "+clusterWriterIp+":"+clusterWriterPort);
 			try{
 				clusterSocket=new Socket(clusterWriterIp,clusterWriterPort);
+				clusterSocket.setTcpNoDelay(true);
 				clusterSocketReader=new BufferedReader(new InputStreamReader(clusterSocket.getInputStream()));
 				clusterSocketOs=clusterSocket.getOutputStream();
 				break;
