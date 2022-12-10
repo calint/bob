@@ -18,7 +18,6 @@ After=mysql.service
 WorkingDirectory=/bob/
 ExecStart=/bob/run.sh
 
-
 [Install]
 WantedBy=multi-user.target
 EOF
@@ -52,9 +51,9 @@ systemctl enable bob
 # git stash
 # git pull
 
-# reboot (logs from the service won't be available otherwise)
-# add droplet to mysql cluster trusted sources
 # add droplet to load balancer
+# add droplet to mysql cluster trusted sources
+# reboot (logs from the service won't be available otherwise)
 
 # systemctl start bob
 # journalctl -u bob -f

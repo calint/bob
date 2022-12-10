@@ -3,7 +3,6 @@ package db.test;
 import java.sql.Timestamp;
 import java.util.List;
 
-import b.a.stateless;
 import db.Db;
 import db.DbObject;
 import db.DbTransaction;
