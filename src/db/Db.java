@@ -21,7 +21,7 @@ import java.util.LinkedList;
 public final class Db{
 	private static final ThreadLocal<DbTransaction> tn=new ThreadLocal<DbTransaction>();
 
-	public static boolean is_cluster_mode=false;
+	public static boolean is_cluster_mode=true;
 //	public static String cluster_members_ip_path="dbcluster.txt";
 	public String clusterWriterIp="127.0.0.1";
 	public int clusterWriterPort=8889;
