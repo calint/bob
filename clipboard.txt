@@ -90,6 +90,5 @@ sudo tcpdump -i lo port 8888 -X
 
 ssh root@ journalctl -u bob -e | grep http404 | cut -b 79-180 | sort -u | less
 
-drop database testdb;create database testdb;"|mysql && git pull && sh build-and-run.sh
-
+cd /bob && echo "drop database testdb;create database testdb;"|mysql && git pull && sh build-and-run.sh 
 

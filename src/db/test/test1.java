@@ -21,7 +21,7 @@ public class test1 extends TestCase {
 
 	@Override
 	protected int numberOfTestRuns() {
-		return 100;
+		return 10;
 	}
 
 //	@Override
