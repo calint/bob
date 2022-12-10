@@ -12,6 +12,7 @@ echo $CFG
 . ./$CFG
 
 cmd="java -cp bin:lib/mysql-connector-java-5.1.49.jar b.b \
+	bapp_cluster_mode $CLUSTER_MODE \
 	bapp_cluster_ip $CLUSTER_IP \
 	bapp_cluster_port $CLUSTER_PORT \
 	bapp_jdbc_host $MYSQL_HOST \
