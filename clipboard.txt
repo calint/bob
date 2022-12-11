@@ -93,7 +93,7 @@ cd /bob && echo "drop database testdb;create database testdb;"|mysql && git pull
 
 
 test1 100 runs, cluster 1 member
-no-cluster    cluster    cluster-nio  no-cluster (no autocommit)
+no-cluster    cluster    cluster-nio  no-cluster (autocommit)
 6867ms        20106ms    17273ms      18528ms
 6526ms        19227ms    19175ms      17792ms
 5989ms        13960ms    18826ms      18052ms   
