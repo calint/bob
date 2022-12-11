@@ -16,6 +16,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import b.b;
 
+/** Experimental cluster hub. */
 public class Cluster {
 	public static boolean enable_log = true;
 	public static boolean enable_log_sql = false;

@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import b.b;
-
+/** Experimental cluster hub. */
 public class ClusterNIO {
 	public static boolean enable_log = true;
 	public static boolean enable_log_sql = false;
@@ -175,7 +175,7 @@ public class ClusterNIO {
 	public static synchronized int execClusterSqlInsert(final String sql) throws Throwable {
 		final ArrayList<Integer> ints = new ArrayList<Integer>(stmts.size());
 		log_sql(sql);
-		for (final Statement s : stmts) {
+		for (final Statement s : stmts) { // ? thread
 			s.execute(sql, Statement.RETURN_GENERATED_KEYS);
 			final ResultSet rs = s.getGeneratedKeys();
 			if (rs.next()) {
@@ -199,7 +199,7 @@ public class ClusterNIO {
 
 	public static synchronized void execClusterSql(final String sql) throws Throwable {
 		log_sql(sql);
-		for (final Statement s : stmts) {
+		for (final Statement s : stmts) { // ? thread
 			s.execute(sql);
 		}
 	}
