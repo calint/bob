@@ -103,7 +103,7 @@ no-cluster    cluster    cluster-nio  no-cluster (autocommit)
 
 b.test.t4  ab -c1 -n1000 http://localhost:8888/b/test/t4
 [#/sec] (mean)
-cluster-nio    cluster    no-cluser  no-cluster (autocommit)
+cluster-nio    cluster    no-cluster  no-cluster (autocommit)
 60.45          57.79      131.61     66.56
 60.45          62.05      147.17     66.37
 63.73          62.05      156.10     66.25
