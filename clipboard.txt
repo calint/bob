@@ -77,7 +77,7 @@ MYSQL_USER=c
 MYSQL_PASSWORD=password
 MYSQL_NCONS=100
 B_NTHREADS=100
-PORT=8888
+B_PORT=8888
 
 journalctl -u bob | grep ClassNotFoundException | cut -c 1-200
 
