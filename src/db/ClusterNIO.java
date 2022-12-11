@@ -157,7 +157,7 @@ public class ClusterNIO {
 	static void close(SocketChannel sc) {
 		Socket s = sc.socket();
 		SocketAddress sa = s.getRemoteSocketAddress();
-		System.out.println("exception while processing: " + sa);
+		System.out.println("closing: " + sa);
 		try {
 			sc.close();
 		} catch (IOException e) {

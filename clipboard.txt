@@ -92,23 +92,24 @@ ssh root@ journalctl -u bob -e | grep http404 | cut -b 79-180 | sort -u | less
 cd /bob && echo "drop database testdb;create database testdb;"|mysql && git pull && sh build-and-run.sh 
 
 
-test1 cache on
-no-cluster    cluster    cluster-nio
-6867ms        20106ms    17273ms
-6526ms        19227ms    19175ms
-5989ms        13960ms    18826ms
-5429ms        19495ms    18736ms
-5864ms        19215ms    19012ms
+test1 100 runs, cache on
+no-cluster    cluster    cluster-nio  no-cluster (no autocommit)
+6867ms        20106ms    17273ms      18528ms
+6526ms        19227ms    19175ms      17792ms
+5989ms        13960ms    18826ms      18052ms   
+5429ms        19495ms    18736ms      13415ms
+5864ms        19215ms    19012ms      18080ms
 
 
 b.test.t4  ab -c1 -n1000 http://localhost:8888/b/test/t4
 [#/sec] (mean)
-cluster-nio    cluster    no-cluser
-60.45          57.79      131.61              
-60.45          62.05      147.17
-63.73          62.05      156.10
-61.89          77.72      155.92
-63.27          64.10      168.09
+cluster-nio    cluster    no-cluser  no-cluster (autocommit)
+60.45          57.79      131.61     66.56
+60.45          62.05      147.17     66.37
+63.73          62.05      156.10     66.25
+61.89          77.72      155.92     67.28
+63.27          64.10      168.09     66.29
+
 
 
 

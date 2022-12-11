@@ -15,10 +15,10 @@ public @stateless class test_dbo extends a{
 		x.style().css("body","padding:0 10em 0 4em").style_();
 		final long t0=System.currentTimeMillis();
 		runTest(x,new test1());
-		runTest(x,new test2());
+//		runTest(x,new test2());
 //		runTest(x,new import_books(false));
 //		runTest(x,new import_games(false));
-		runTest(x,new test3());
+//		runTest(x,new test3());
 		final long dt=System.currentTimeMillis()-t0;
 		x.p("done: ").p(dt).pl(" ms");
 	}
