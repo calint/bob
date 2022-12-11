@@ -100,12 +100,12 @@ public class ClusterNIO {
 					keys.remove();
 					continue;
 				}
-				SocketChannel socketChannel = (SocketChannel) sk.channel();
+				SocketChannel sc = (SocketChannel) sk.channel();
 				ClientState cs = (ClientState) sk.attachment();
 				try {
 					cs.process(sk);
 				} catch (Throwable t) {
-					close(socketChannel);
+					close(sc);
 					t.printStackTrace();
 				}
 				keys.remove();
@@ -114,12 +114,7 @@ public class ClusterNIO {
 	}
 
 	final static class ClientState {
-		enum state {
-			read, write
-		};
-
 		ByteBuffer bb = ByteBuffer.allocate(64 * 1024);
-		state st = state.read;
 		StringBuilder sb = new StringBuilder(1024);
 		ByteBuffer bb_nl = ByteBuffer.wrap("\n".getBytes());
 
@@ -170,7 +165,7 @@ public class ClusterNIO {
 		}
 	}
 
-	public static synchronized int execClusterSqlInsert(final String sql) throws Throwable {
+	public static int execClusterSqlInsert(final String sql) throws Throwable {
 		final ArrayList<Integer> ints = new ArrayList<Integer>(stmts.size());
 		log_sql(sql);
 		for (final Statement s : stmts) { // ? thread
@@ -195,7 +190,7 @@ public class ClusterNIO {
 		return prev;
 	}
 
-	public static synchronized void execClusterSql(final String sql) throws Throwable {
+	public static void execClusterSql(final String sql) throws Throwable {
 		log_sql(sql);
 		for (final Statement s : stmts) { // ! thread
 			s.execute(sql);
