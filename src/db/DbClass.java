@@ -122,6 +122,9 @@ public final class DbClass {
 		}
 		sb.setLength(sb.length() - 1);
 		sb.append(")");
+		if(Db.engine!=null) {
+			sb.append("engine=").append(Db.engine);
+		}
 
 		final String sql = sb.toString();
 		Db.log_sql(sql);

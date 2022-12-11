@@ -39,6 +39,9 @@ final class RelRefNMeta {
 		final StringBuilder sb = new StringBuilder(256);
 		sb.append("create table ").append(tableName).append("(id int primary key auto_increment").append(',')
 				.append(fromColName).append(" int,").append(toColName).append(" int)");
+		if(Db.engine!=null) {
+			sb.append("engine=").append(Db.engine);
+		}
 		final String sql = sb.toString();
 		Db.log_sql(sql);
 		stmt.execute(sql);

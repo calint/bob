@@ -93,7 +93,7 @@ public class Cluster {
 		for (ClientThread t : clientThreads) {
 			t.join();
 		}
-
+		log("all clients have diconnected.");
 		serverSocket.close();
 	}
 

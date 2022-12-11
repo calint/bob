@@ -10,7 +10,7 @@ import db.FldStr;
 import db.Index;
 
 public final class sessionobj extends DbObject{
-	public final static FldStr path=new FldStr(255,"");
+	public final static FldStr path=new FldStr(250,"");
 	public final static FldSerializable object=new FldSerializable();
 	public final static Index ixPath=new Index(path);
 

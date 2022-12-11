@@ -21,10 +21,22 @@ import java.util.LinkedList;
 public final class Db {
 	private static final ThreadLocal<DbTransaction> tn = new ThreadLocal<DbTransaction>();
 
+	/** true if in cluster */
 	public static boolean cluster_on = false;
-	public static String cluster_ip = "127.0.0.1";
-	public static int cluster_port = 8889;
 
+	/** address to cluster writer */
+	public static String cluster_ip = "127.0.0.1";
+	
+	public static int cluster_port = 8889;
+	
+	/** null is default (InnoDB) */
+	public static String engine=null;
+//	public static String engine="myisam";
+
+	/** default is false */
+	public static boolean autocommit=false;
+//	public static boolean autocommit=true;
+	
 	/** Enables the log(...) method. */
 	public static boolean enable_log = true;
 
@@ -378,7 +390,7 @@ public final class Db {
 		while (true) {
 			try {
 				c = DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcPasswd);
-				if (!cluster_on)
+				if (!cluster_on && !autocommit)
 					c.setAutoCommit(false);
 				return c;
 			} catch (Throwable t) {

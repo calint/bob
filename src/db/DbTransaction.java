@@ -349,8 +349,9 @@ public final class DbTransaction {
 		flush();
 		if (cache_enabled) // will keep memory usage down at batch imports
 			cache.clear();
-		if (!Db.cluster_on)
-			con.commit();
+		if (Db.cluster_on || Db.autocommit)
+			return;
+		con.commit();
 	}
 
 	public void rollback() {
@@ -358,7 +359,7 @@ public final class DbTransaction {
 		rollbacked = true;
 //		if (cache_enabled)
 //			cache.clear();
-		if (Db.cluster_on)
+		if (Db.cluster_on || Db.autocommit)
 			return;
 		try {
 			con.rollback();
