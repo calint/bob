@@ -364,7 +364,6 @@ public final class Db {
 			final String ack = clusterSocketReader.readLine();
 			if (ack.length() != 0)
 				throw new RuntimeException("unknown reply: {" + ack + "}");
-
 		} catch (Throwable t) {
 			throw new RuntimeException(t);
 		}

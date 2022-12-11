@@ -118,8 +118,8 @@ public class ClusterNIO {
 		StringBuilder sb = new StringBuilder(1024);
 		ByteBuffer bb_nl = ByteBuffer.wrap("\n".getBytes());
 
-		public void process(SelectionKey selectionKey) throws Throwable {
-			SocketChannel sc = (SocketChannel) selectionKey.channel();
+		public void process(SelectionKey sk) throws Throwable {
+			SocketChannel sc = (SocketChannel) sk.channel();
 			bb.clear();
 			int read = sc.read(bb);
 			if (read == -1) {
