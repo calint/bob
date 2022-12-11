@@ -1,7 +1,7 @@
 package b;
 
-import static b.b.pl;
 import static b.b.tobytes;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
 import b.a.stateless;
 import b.b.conf;
 import db.Db;
@@ -831,7 +832,7 @@ public final class req{
 		if(!set_session_id_from_cookie()){
 			session_id=make_new_session_id();
 			session_id_set=true;
-			pl("new session "+session_id);
+//			pl("new session "+session_id);
 			thdwatch.sessions++;
 		}
 
@@ -853,7 +854,7 @@ public final class req{
 		final DbTransaction tn=is_stateless?null:Db.initCurrentTransaction();
 //		System.out.println("dbo: connection pool: "+Db.instance().getConnectionPoolSize());
 		try{
-			run_page_do(is_stateless,tn,cls);
+			run_page_do(tn,cls);
 		}catch(Throwable t){
 			if(!is_stateless)
 				tn.rollback();
@@ -871,10 +872,10 @@ public final class req{
 	}
 
 	/** Called from run_page(). */
-	private void run_page_do(final boolean is_stateless,final DbTransaction tn,final Class<?> cls) throws Throwable{
+	private void run_page_do(final DbTransaction tn,final Class<?> cls) throws Throwable{
 		a root_elem;
 		final sessionobj dbo_root_elem;
-		if(is_stateless){
+		if(tn==null){
 			dbo_root_elem=null;
 			root_elem=(a)cls.getConstructor().newInstance();
 		}else{
@@ -966,7 +967,7 @@ public final class req{
 			b.log(t);
 			x.pre().p(b.stacktrace(t));
 		}
-		if(!is_stateless){
+		if(tn!=null){
 			dbo_root_elem.object(root_elem);
 			tn.flush();
 		}

@@ -125,7 +125,7 @@ final public class b{
 
 		// initiate db
 		Db.initInstance();
-		Db.is_cluster_mode=bapp_cluster_mode;
+		Db.cluster_on=bapp_cluster_mode;
 		Db.register(session.class);
 		Db.register(sessionobj.class);
 		// initiate application

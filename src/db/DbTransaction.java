@@ -75,7 +75,7 @@ public final class DbTransaction {
 			sb.append("insert into ").append(Db.tableNameForJavaClass(cls)).append(" values()");
 
 			final String sql = sb.toString();
-			if (!Db.is_cluster_mode) {
+			if (!Db.cluster_on) {
 				Db.log_sql(sql);
 				stmt.execute(sql, Statement.RETURN_GENERATED_KEYS);
 				final ResultSet rs = stmt.getGeneratedKeys();
@@ -130,7 +130,7 @@ public final class DbTransaction {
 				final StringBuilder sb = new StringBuilder(256);
 				sb.append("update ").append(r.tableName).append(" set ").append(r.name).append("=null")
 						.append(" where ").append(r.name).append('=').append(id);
-				if (!Db.is_cluster_mode) {
+				if (!Db.cluster_on) {
 					execSql(sb);
 				} else {
 					Db.execClusterSql(sb.toString());
@@ -141,7 +141,7 @@ public final class DbTransaction {
 		// delete this
 		final StringBuilder sb = new StringBuilder(256);
 		sb.append("delete from ").append(dbcls.tableName).append(" where id=").append(id);
-		if (!Db.is_cluster_mode) {
+		if (!Db.cluster_on) {
 			execSql(sb);
 		} else {
 			Db.execClusterSql(sb.toString());
@@ -349,7 +349,7 @@ public final class DbTransaction {
 		flush();
 		if (cache_enabled) // will keep memory usage down at batch imports
 			cache.clear();
-		if (!Db.is_cluster_mode)
+		if (!Db.cluster_on)
 			con.commit();
 	}
 
@@ -358,7 +358,7 @@ public final class DbTransaction {
 		rollbacked = true;
 //		if (cache_enabled)
 //			cache.clear();
-		if (Db.is_cluster_mode)
+		if (Db.cluster_on)
 			return;
 		try {
 			con.rollback();
@@ -403,7 +403,7 @@ public final class DbTransaction {
 		}
 		sb.setLength(sb.length() - 1);
 		sb.append(" where id=").append(o.id());
-		if (!Db.is_cluster_mode) {
+		if (!Db.cluster_on) {
 			execSql(sb);
 		} else {
 			Db.execClusterSql(sb.toString());

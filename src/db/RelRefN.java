@@ -25,7 +25,7 @@ public final class RelRefN extends DbRelation {
 	public void add(final DbObject from, final int toId) {
 		final StringBuilder sb = new StringBuilder(256);
 		rrm.sql_addToTable(sb, from.id(), toId);
-		if (!Db.is_cluster_mode) {
+		if (!Db.cluster_on) {
 			Db.currentTransaction().execSql(sb);
 		} else {
 			try {
@@ -57,7 +57,7 @@ public final class RelRefN extends DbRelation {
 	public void remove(final DbObject from, final int toId) {
 		final StringBuilder sb = new StringBuilder(256);
 		rrm.sql_deleteFromTable(sb, from.id(), toId);
-		if (!Db.is_cluster_mode) {
+		if (!Db.cluster_on) {
 			Db.currentTransaction().execSql(sb);
 		} else {
 			Db.execClusterSql(sb.toString());
@@ -67,7 +67,7 @@ public final class RelRefN extends DbRelation {
 	void removeAll(final int id) {
 		final StringBuilder sb = new StringBuilder(256);
 		rrm.sql_deleteAllFromTable(sb, id);
-		if (!Db.is_cluster_mode) {
+		if (!Db.cluster_on) {
 			Db.currentTransaction().execSql(sb);
 		} else {
 			Db.execClusterSql(sb.toString());
@@ -77,7 +77,7 @@ public final class RelRefN extends DbRelation {
 	void deleteReferencesTo(final int id) {
 		final StringBuilder sb = new StringBuilder(256);
 		rrm.sql_deleteReferencesTo(sb, id);
-		if (!Db.is_cluster_mode) {
+		if (!Db.cluster_on) {
 			Db.currentTransaction().execSql(sb);
 		} else {
 			Db.execClusterSql(sb.toString());

@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import b.b;
+
 /** Experimental cluster hub. */
 public class ClusterNIO {
 	public static boolean enable_log = true;
@@ -74,7 +75,7 @@ public class ClusterNIO {
 		}
 		bfr.close();
 		log("connected to cluster databases");
-		
+
 		runServer();
 	}
 
@@ -111,29 +112,29 @@ public class ClusterNIO {
 			}
 		}
 	}
-	
+
 	final static class ClientState {
 		enum state {
 			read, write
 		};
 
-		ByteBuffer byteBuffer = ByteBuffer.allocate(64 * 1024);
+		ByteBuffer bb = ByteBuffer.allocate(64 * 1024);
 		state st = state.read;
 		StringBuilder sb = new StringBuilder(1024);
 		ByteBuffer bb_nl = ByteBuffer.wrap("\n".getBytes());
 
 		public void process(SelectionKey selectionKey) throws Throwable {
 			SocketChannel sc = (SocketChannel) selectionKey.channel();
-			byteBuffer.clear();
-			int read = sc.read(byteBuffer);
+			bb.clear();
+			int read = sc.read(bb);
 			if (read == -1) {
 				close(sc);
 				return;
 			}
-			byteBuffer.flip();
-			byte ch=byteBuffer.get(byteBuffer.limit()-1);
+			bb.flip();
+			byte ch = bb.get(bb.limit() - 1);
 			if (ch == '\n') { // if last character is \n then the read is done
-				sb.append(new String(byteBuffer.array(), byteBuffer.position(), byteBuffer.limit()-1));
+				sb.append(new String(bb.array(), bb.position(), bb.limit() - 1));
 				String sql = sb.toString();
 				if (sql.startsWith("insert ")) {
 					int id = execClusterSqlInsert(sql);
@@ -152,25 +153,22 @@ public class ClusterNIO {
 					}
 					sb.setLength(0);
 				}
-//				selectionKey.interestOps(SelectionKey.OP_READ);
 				return;
 			}
-			sb.append(new String(byteBuffer.array(), byteBuffer.position(), byteBuffer.limit()));
-//			selectionKey.interestOps(SelectionKey.OP_READ);
+			sb.append(new String(bb.array(), bb.position(), bb.limit()));
 		}
 	}
 
-	static void close(SocketChannel socketChannel) {
-		Socket socket = socketChannel.socket();
-		SocketAddress remoteSocketAddress = socket.getRemoteSocketAddress();
-		System.out.println("exception while processing: " + remoteSocketAddress);
+	static void close(SocketChannel sc) {
+		Socket s = sc.socket();
+		SocketAddress sa = s.getRemoteSocketAddress();
+		System.out.println("exception while processing: " + sa);
 		try {
-			socketChannel.close();
+			sc.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-
 
 	public static synchronized int execClusterSqlInsert(final String sql) throws Throwable {
 		final ArrayList<Integer> ints = new ArrayList<Integer>(stmts.size());
@@ -199,7 +197,7 @@ public class ClusterNIO {
 
 	public static synchronized void execClusterSql(final String sql) throws Throwable {
 		log_sql(sql);
-		for (final Statement s : stmts) { // ? thread
+		for (final Statement s : stmts) { // ! thread
 			s.execute(sql);
 		}
 	}

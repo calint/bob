@@ -3,7 +3,7 @@ package b.test;
 import b.a;
 import b.xwriter;
 
-/** large chuncked write that will require multiple writes. */
+/** large chunked write that will require multiple writes. */
 public class t2 extends a{
 	static final long serialVersionUID=3;
 

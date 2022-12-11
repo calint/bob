@@ -21,9 +21,9 @@ import java.util.LinkedList;
 public final class Db {
 	private static final ThreadLocal<DbTransaction> tn = new ThreadLocal<DbTransaction>();
 
-	public static boolean is_cluster_mode = false;
-	public static String clusterIp = "127.0.0.1";
-	public static int clusterPort = 8889;
+	public static boolean cluster_on = false;
+	public static String cluster_ip = "127.0.0.1";
+	public static int cluster_port = 8889;
 
 	/** Enables the log(...) method. */
 	public static boolean enable_log = true;
@@ -258,11 +258,11 @@ public final class Db {
 		jdbcUrl = url;
 		jdbcUser = user;
 		jdbcPasswd = password;
-		clusterIp = cluster_ip;
-		clusterPort = cluster_port;
+		Db.cluster_ip = cluster_ip;
+		Db.cluster_port = cluster_port;
 
 		Db.log("--- - - - ---- - - - - - -- -- --- -- --- ---- -- -- - - -");
-		Db.log("   cluster: " + is_cluster_mode);
+		Db.log("   cluster: " + cluster_on);
 		Db.log("connection: " + url);
 		Db.log("      user: " + user);
 		Db.log("  password: " + (password == null ? "[none]" : "[not displayed]"));
@@ -317,13 +317,13 @@ public final class Db {
 
 		Db.log("--- - - - ---- - - - - - -- -- --- -- --- ---- -- -- - - -");
 
-		if (!is_cluster_mode)
+		if (!cluster_on)
 			return;
 
 		while (true) {
-			log("connecting to cluster " + clusterIp + ":" + clusterPort);
+			log("connecting to cluster " + cluster_ip + ":" + cluster_port);
 			try {
-				clusterSocket = new Socket(clusterIp, clusterPort);
+				clusterSocket = new Socket(cluster_ip, cluster_port);
 				clusterSocket.setTcpNoDelay(true);
 				clusterSocketReader = new BufferedReader(new InputStreamReader(clusterSocket.getInputStream()));
 				clusterSocketOs = new BufferedOutputStream(clusterSocket.getOutputStream(), 1024 * 1);
@@ -349,7 +349,7 @@ public final class Db {
 		clusterSocketOs.write(ba_nl);
 		clusterSocketOs.flush();
 		final String idStr = clusterSocketReader.readLine();
-		if(idStr==null) {
+		if (idStr == null) {
 			throw new RuntimeException("lost connection to cluster");
 		}
 		final int id = Integer.parseInt(idStr);
@@ -379,7 +379,7 @@ public final class Db {
 		while (true) {
 			try {
 				c = DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcPasswd);
-				if (!is_cluster_mode)
+				if (!cluster_on)
 					c.setAutoCommit(false);
 				return c;
 			} catch (Throwable t) {
