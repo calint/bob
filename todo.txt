@@ -17,9 +17,9 @@ dbo
 [x]   transactions on auto-commit
 [x]   establish one jdbc connection to the other servers
 [x]   all writes through a synchronized block writing to the other servers sequentially
-[x]   step 2. all writes through a synchronized block writing to the other servers in parallel
+[x]   step 2. all writes through a synchronized block
 [x]   step 3. cluster server that synchronizes writes
-[ ]   cluster server does sql on one thread per connection      
+[ ]   cluster server does sql in parallel
 [ ] Db.tableNameForJavaClass does not include package name
 [o] javadoc
 [o] review code. search for "// todo" "// !" "// ?"
