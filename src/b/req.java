@@ -1139,8 +1139,8 @@ public final class req{
 	}
 
 	public String toString(){
-//		return hashCode()+"\n"+new String(bb.array(),bb.position(),bb.remaining());
-		return new String(ba,ba_pos,ba_rem)+(content_bb==null?"":new String(content_bb.slice().array()));
+		return hashCode()+"\n"+new String(bb.array(),bb.position(),bb.remaining());
+//		return new String(ba,ba_pos,ba_rem)+(content_bb==null?"":new String(content_bb.slice().array()));
 	}
 
 	public static req get(){

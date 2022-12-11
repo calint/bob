@@ -99,4 +99,17 @@ no-cluster    cluster    cluster-nio
 5989ms        13960ms    18826ms
 5429ms        19495ms    18736ms
 5864ms        19215ms    19012ms
-              
+
+
+b.test.t4  ab -c1 -n1000 http://localhost:8888/b/test/t4
+[#/sec] (mean)
+cluster-nio    cluster    no-cluser
+60.45          57.79      131.61              
+60.45          62.05      147.17
+63.73          62.05      156.10
+61.89          77.72      155.92
+63.27          64.10      168.09
+
+
+
+
