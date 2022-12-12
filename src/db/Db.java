@@ -26,17 +26,17 @@ public final class Db {
 
 	/** address to cluster writer */
 	public static String cluster_ip = "127.0.0.1";
-	
+
 	public static int cluster_port = 8889;
-	
+
 	/** null is default (InnoDB) */
-	public static String engine=null;
+	public static String engine = null;
 //	public static String engine="myisam";
 
 	/** default is false */
-	public static boolean autocommit=false;
+	public static boolean autocommit = false;
 //	public static boolean autocommit=true;
-	
+
 	/** Enables the log(...) method. */
 	public static boolean enable_log = true;
 
@@ -339,8 +339,16 @@ public final class Db {
 				clusterSocket.setTcpNoDelay(true);
 				clusterSocketReader = new BufferedReader(new InputStreamReader(clusterSocket.getInputStream()));
 				clusterSocketOs = new BufferedOutputStream(clusterSocket.getOutputStream(), 1024 * 1);
-				log("connected");
-				break;
+				log("connected. waiting for cluster to give go ahead.");
+				final String ack = clusterSocketReader.readLine();
+				if (ack == null) {
+					throw new RuntimeException("cluster disconnected. re-trying");
+				}
+				if (ack.length() == 0) {
+					log("cluster started.");
+					break;
+				}
+				throw new RuntimeException("unknown reply from cluster.");
 			} catch (Throwable t) {
 				try {
 					Thread.sleep(1000);
@@ -374,7 +382,7 @@ public final class Db {
 			clusterSocketOs.write(ba_nl);
 			clusterSocketOs.flush();
 			final String ack = clusterSocketReader.readLine();
-			if(ack==null) { // lost connection to server
+			if (ack == null) { // lost connection to server
 				throw new RuntimeException("lost connection to cluster"); // ? take db off-line
 			}
 			if (ack.length() != 0)
