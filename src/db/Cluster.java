@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /** Experimental cluster hub. */
-public class Cluster {
+public final class Cluster {
 	public static boolean enable_log = true;
 	public static boolean enable_log_sql = false;
 	public static int server_port = 8889;
