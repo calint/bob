@@ -24,12 +24,11 @@ EOF
 
 systemctl enable bob
 
+# edit the firewall and allow access to the mysql port to your servers and your ip
 # mysql allow connection from any host
 # 	nano /etc/mysql/mysql.conf.d/mysqld.cnf
-#		bind-address		= 0.0.0.0
-#   	mysqlx-bind-address	= 0.0.0.0
-# restart mysql
-# 	systemctl restart mysql
+#		bind-address		= *
+# systemctl restart mysql
 
 # edit dbcluster.txt and add ip:port of cluster members
 # cat > /bob/dbcluster.txt

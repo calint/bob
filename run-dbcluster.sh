@@ -11,6 +11,6 @@ fi
 echo $CFG
 . ./$CFG
 
-cmd="java -cp bin:lib/mysql-connector-java-5.1.49.jar db.Cluster dbcluster.txt $MYSQL_DB $MYSQL_USER $MYSQL_PASSWORD"
+cmd="java -cp bin:lib/mysql-connector-java-5.1.49.jar db.ClusterNIO dbcluster.txt $MYSQL_DB $MYSQL_USER $MYSQL_PASSWORD"
 echo \> $cmd
 $cmd
