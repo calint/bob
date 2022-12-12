@@ -90,7 +90,7 @@ final public class b{
 	public static PrintStream err=System.err;
 
 	public static String bapp_class="bob.app";
-	public static String bapp_jdbc_host="localhost:3306";
+	public static String bapp_jdbc_host="localhost";
 	public static String bapp_jdbc_db="dbo";
 	public static String bapp_jdbc_user="user";
 	public static String bapp_jdbc_password="password";
@@ -133,7 +133,7 @@ final public class b{
 			b.bapp=(bapp)Class.forName(b.bapp_class).getConstructor().newInstance();
 			b.bapp.init();
 		}
-		Db.init("jdbc:mysql://"+b.bapp_jdbc_host+"/"+b.bapp_jdbc_db+"?verifyServerCertificate=false&useSSL=true&ssl-mode=REQUIRED",b.bapp_jdbc_user,b.bapp_jdbc_password,b.bapp_jdbc_ncons,bapp_cluster_ip,bapp_cluster_port);
+		Db.init("jdbc:mysql://"+bapp_jdbc_host+":3306/"+bapp_jdbc_db+"?verifyServerCertificate=false&useSSL=true&ssl-mode=REQUIRED",bapp_jdbc_user,bapp_jdbc_password,bapp_jdbc_ncons,bapp_cluster_ip,bapp_cluster_port);
 
 		final ServerSocketChannel ssc=ServerSocketChannel.open();
 		ssc.configureBlocking(false);

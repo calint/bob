@@ -2,6 +2,7 @@
 set -e
 DIR=$(dirname "$0")
 cd $DIR
+java -version
 rm -rf bin
 mkdir bin
 find src -type f | grep '\.java$' > sources.txt

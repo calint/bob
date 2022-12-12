@@ -18,6 +18,6 @@
     <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_CLASSPATH_ONLY_JAR" value="false"/>
     <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="db.Cluster"/>
     <stringAttribute key="org.eclipse.jdt.launching.MODULE_NAME" value="bob"/>
-    <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="dbcluster.txt testdb c password"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="cluster.cfg testdb c password"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="bob"/>
 </launchConfiguration>
