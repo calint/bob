@@ -374,6 +374,9 @@ public final class Db {
 			clusterSocketOs.write(ba_nl);
 			clusterSocketOs.flush();
 			final String ack = clusterSocketReader.readLine();
+			if(ack==null) { // lost connection to server
+				throw new RuntimeException("lost connection to cluster"); // ? take db off-line
+			}
 			if (ack.length() != 0)
 				throw new RuntimeException("unknown reply: {" + ack + "}");
 		} catch (Throwable t) {

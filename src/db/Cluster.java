@@ -14,7 +14,6 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
-import b.b;
 
 /** Experimental cluster hub. */
 public class Cluster {
@@ -180,7 +179,7 @@ public class Cluster {
 	public static void log(Throwable t) {
 		while (t.getCause() != null)
 			t = t.getCause();
-		System.err.println(b.stacktraceline(t));
+		System.err.println(stacktraceline(t));
 	}
 
 	public static void log_sql(String s) {

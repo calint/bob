@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.StandardSocketOptions;
 import java.nio.ByteBuffer;
@@ -21,8 +20,6 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Iterator;
-
-import b.b;
 
 /** Experimental cluster hub. */
 public class ClusterNIO {
@@ -55,10 +52,11 @@ public class ClusterNIO {
 			log("connecting to: " + line);
 			final String cs = "jdbc:mysql://" + line + "/" + args[1]
 					+ "?verifyServerCertificate=false&useSSL=true&ssl-mode=REQUIRED";
-			Connection c = null;
 			while (true) {
 				try {
-					c = DriverManager.getConnection(cs, args[2], args[3]);
+					Connection c = DriverManager.getConnection(cs, args[2], args[3]);
+					cons.add(c);
+					stmts.add(c.createStatement());
 					break;
 				} catch (Throwable t) {
 					try {
@@ -69,23 +67,27 @@ public class ClusterNIO {
 					}
 				}
 			}
-			cons.add(c);
-			stmts.add(c.createStatement());
 //			clusterMembers.add(line);
 		}
 		bfr.close();
-		log("connected to cluster databases");
+		log("connected to cluster databases.");
 
 		runServer();
 	}
+
+	private static ArrayList<SocketChannel> socketChannels = new ArrayList<SocketChannel>();
 
 	private static void runServer() throws IOException, ClosedChannelException {
 		log("waiting for " + cons.size() + " clients");
 		ServerSocketChannel ssc = ServerSocketChannel.open();
 		ssc.configureBlocking(false);
-		ssc.socket().bind(new InetSocketAddress(server_port));
+		ssc.bind(new InetSocketAddress(server_port));
+
 		Selector selector = Selector.open();
-		ssc.register(selector, SelectionKey.OP_ACCEPT);
+		SelectionKey ssk = ssc.register(selector, SelectionKey.OP_ACCEPT);
+		// wait for clients to connect
+		int client_count = 0;
+		final int nclients = cons.size();
 		while (true) {
 			selector.select();
 			Iterator<SelectionKey> keys = selector.selectedKeys().iterator();
@@ -93,27 +95,51 @@ public class ClusterNIO {
 				SelectionKey sk = (SelectionKey) keys.next();
 				if (sk.isAcceptable()) {
 					SocketChannel sc = ssc.accept();
-					log("accept: " + sc.getRemoteAddress());
 					sc.configureBlocking(false);
 					sc.setOption(StandardSocketOptions.TCP_NODELAY, true);
-					sc.register(sk.selector(), SelectionKey.OP_READ, new ClientState());
+					socketChannels.add(sc);
 					keys.remove();
+					client_count++;
+					log("accepted: " + sc.getRemoteAddress() + " (" + client_count + " of " + nclients + ")");
 					continue;
+				} else {
+					throw new RuntimeException("expected selection key to be accept");
 				}
-				SocketChannel sc = (SocketChannel) sk.channel();
+			}
+			if (client_count == nclients)
+				break;
+		}
+		ssk.cancel(); // done with accepting connections
+		ssc.close();
+
+		log("clients connected. starting loop.");
+		// register client channels for read
+		for (SocketChannel sc : socketChannels) {
+			sc.register(selector, SelectionKey.OP_READ, new ClientState());
+		}
+		while (true) {
+			selector.select();
+			Iterator<SelectionKey> keys = selector.selectedKeys().iterator();
+			while (keys.hasNext()) {
+				SelectionKey sk = (SelectionKey) keys.next();
 				ClientState cs = (ClientState) sk.attachment();
-				try {
-					cs.process(sk);
-				} catch (Throwable t) {
-					close(sc);
-					t.printStackTrace();
+				if (sk.isReadable()) {
+					try {
+						cs.process(sk);
+					} catch (Throwable t) {
+						close((SocketChannel) sk.channel());
+						log(t);
+					}
+				} else {
+					throw new RuntimeException("expected selection key to be read");
 				}
 				keys.remove();
 			}
 		}
+
 	}
 
-	final static class ClientState {
+	private final static class ClientState {
 		ByteBuffer bb = ByteBuffer.allocate(64 * 1024);
 		StringBuilder sb = new StringBuilder(1024);
 		ByteBuffer bb_nl = ByteBuffer.wrap("\n".getBytes());
@@ -155,17 +181,16 @@ public class ClusterNIO {
 	}
 
 	static void close(SocketChannel sc) {
-		Socket s = sc.socket();
-		SocketAddress sa = s.getRemoteSocketAddress();
-		System.out.println("closing: " + sa);
+		SocketAddress sa = sc.socket().getRemoteSocketAddress();
+		System.out.println("disconnected: " + sa);
 		try {
 			sc.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			log(e);
 		}
 	}
 
-	public static int execClusterSqlInsert(final String sql) throws Throwable {
+	static int execClusterSqlInsert(final String sql) throws Throwable {
 		final ArrayList<Integer> ints = new ArrayList<Integer>(stmts.size());
 		log_sql(sql);
 		for (final Statement s : stmts) { // ? thread
@@ -190,7 +215,7 @@ public class ClusterNIO {
 		return prev;
 	}
 
-	public static void execClusterSql(final String sql) throws Throwable {
+	static void execClusterSql(final String sql) throws Throwable {
 		log_sql(sql);
 		for (final Statement s : stmts) { // ! thread
 			s.execute(sql);
@@ -207,7 +232,7 @@ public class ClusterNIO {
 	public static void log(Throwable t) {
 		while (t.getCause() != null)
 			t = t.getCause();
-		System.err.println(b.stacktraceline(t));
+		System.err.println(stacktraceline(t));
 	}
 
 	public static void log_sql(String s) {

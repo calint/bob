@@ -620,9 +620,9 @@ public final class req{
 			bb[i++]=ByteBuffer.wrap(ba_crlf2);
 			final long from_position=c.content_position();
 			if(range_to==-1){
-				bb[i++]=c.byte_buffer().slice().position((int)(from_position+range_from)).limit((int)(from_position+len));
+				bb[i++]=(ByteBuffer)c.byte_buffer().slice().position((int)(from_position+range_from)).limit((int)(from_position+len));
 			}else{
-				bb[i++]=c.byte_buffer().slice().position((int)(from_position+range_from)).limit((int)(from_position+range_to+1)); // 0 indexed and inclusive
+				bb[i++]=(ByteBuffer)c.byte_buffer().slice().position((int)(from_position+range_from)).limit((int)(from_position+range_to+1)); // 0 indexed and inclusive
 			}
 			transfer_buffers(bb);
 			return;
