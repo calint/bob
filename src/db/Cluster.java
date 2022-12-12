@@ -58,11 +58,11 @@ public class Cluster {
 			return;
 		}
 		// connect to cluster members
-		log("reading config: " + args[0]);
+		log("database '" + args[1] + "' user '" + args[2] + "' password [not displayed]");
+		log("reading members ip file '" + args[0] + "'");
 		final FileReader fr = new FileReader(args[0]);
 		final BufferedReader bfr = new BufferedReader(fr);
 		String line;
-		log("creating clients '" + args[1] + "' user '" + args[2] + "' password '" + args[3] + "'");
 		while (true) {
 			line = bfr.readLine();
 			if (line == null)
@@ -74,13 +74,14 @@ public class Cluster {
 				continue;
 			final Client ct = new Client(line, args[1], args[2], args[3]);
 			clients.add(ct);
-			log("client registered: " + ct.address);
+			log("  connecting to database at " + ct.address);
 			ct.connectToDatabase();
 		}
 		bfr.close();
-		log("all clients connected to databases.");
+		log("connected to databases.");
 
-		log("waiting for " + clients.size() + " clients to connect.");
+		final int nclients = clients.size();
+		log("waiting for " + nclients + " client" + (nclients > 1 ? "s" : "") + " to connect.");
 		ServerSocketChannel ssc = ServerSocketChannel.open();
 		ssc.configureBlocking(false);
 		ssc.bind(new InetSocketAddress(server_port));
@@ -89,7 +90,6 @@ public class Cluster {
 		SelectionKey ssk = ssc.register(selector, SelectionKey.OP_ACCEPT);
 		// wait for clients to connect
 		int client_count = 0;
-		final int nclients = clients.size();
 		while (true) {
 			selector.select();
 			Iterator<SelectionKey> keys = selector.selectedKeys().iterator();
@@ -104,7 +104,7 @@ public class Cluster {
 					ct.socketChannel = sc;
 					keys.remove();
 					client_count++;
-					log("accepted: " + ct.address + " (" + client_count + " of " + nclients + ")");
+					log("  client " + ct.address + " connected (" + client_count + " of " + nclients + ")");
 					continue;
 				} else {
 					throw new RuntimeException("expected selection key to be accept");
@@ -116,7 +116,7 @@ public class Cluster {
 		ssk.cancel(); // done with accepting connections
 		ssc.close();
 
-		log("clients connected. starting cluster.");
+		log("starting cluster.");
 		// register client channels for read
 		final byte[] ba_nl = "\n".getBytes();
 		for (Client ct : clients) {
@@ -198,6 +198,7 @@ public class Cluster {
 			return 0;
 		}
 	}
+
 	private static Client findClientByAddress(String address) {
 		for (Client ct : clients) {
 			if (ct.address.equals(address))
@@ -205,6 +206,7 @@ public class Cluster {
 		}
 		throw new RuntimeException("client with address '" + address + "' is not registered.");
 	}
+
 	private final static class Client {
 		private String address;
 		private ByteBuffer bb = ByteBuffer.allocate(64 * 1024);
@@ -242,14 +244,13 @@ public class Cluster {
 		}
 
 		public void connectToDatabase() {
-			log("connecting to database at " + address);
 			final String cs = "jdbc:mysql://" + address + ":3306/" + dbname
 					+ "?verifyServerCertificate=false&useSSL=true&ssl-mode=REQUIRED";
 			while (true) {
 				try {
 					connection = DriverManager.getConnection(cs, user, password);
 					statement = connection.createStatement();
-					log("connected to database at " + address);
+//					log("connected to database at " + address);
 					break;
 				} catch (Throwable t) {
 					try {
