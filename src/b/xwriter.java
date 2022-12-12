@@ -294,11 +294,11 @@ public final class xwriter{
 		return tage("textarea");
 	}
 	/** Alias for inline_js_close() */
-	public xwriter isc(){
+	public xwriter is_(){
 		return inline_js_close();
 	}
 	/** Alias for inline_js_open() */
-	public xwriter iso(){
+	public xwriter is(){
 		return inline_js_open();
 	}
 	public xwriter js_x(a e,boolean encode_for_attribute){

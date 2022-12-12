@@ -13,7 +13,7 @@ public class t3 extends a{
 	}
 	public void to(final xwriter x) throws Throwable{
 		x.nl().title(getClass().getName()).nl();
-		x.p("1 ").iso().js_x(this,"s \"'hello'\"",false).isc().nl();
+		x.p("1 ").is().js_x(this,"s \"'hello'\"",false).is_().nl();
 		x.p("2 ").divot(f,"bytes","background:yellow").p(" onclick=\"ui.alert('&quot;\\'hello\\'&quot;')").p("\"").tagoe().p(f).div_().nl();
 		x.p("3 ").divot(f,"bytes","background:yellow").tagoe().p(f).div_().nl();
 		x.p("4 ").inp(f,"text","txt","background:yellow",this,"test \"'hello'\"","default \"''\"",this,"test ' \"chg\" '").nl();

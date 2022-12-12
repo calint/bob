@@ -24,11 +24,9 @@ public class table extends a{
 	}
 
 	public void to(final xwriter x) throws Throwable{
-		x.p("<div style='text-align:center;padding-bottom:0.5em'>");
-		// add actions to container
-
+		x.divo((String)null,"text-align:center;padding-bottom:0.5em");
 		x.ax(this,"up","••").inpax(q,null,this,"q").p(" ");
-		x.iso().p("$f('").p(q.id()).p("')").isc();
+		x.is().p("$f('").p(q.id()).p("')").is_();
 		for(a e:ans.elements()){
 			e.to(x);
 			x.p(" ");
