@@ -1,4 +1,5 @@
 b
+[ ] class_init extended to be able to set statics on any class
 [ ] bob.js: server is busy message box when typing fast
 [ ] fix for client that makes many threaded requests and then stalls them to starve server of threads or create too many. ddos.
 [ ] thread pool: get first, create if none available
@@ -7,7 +8,6 @@ b
 [ ] use java.util.concurrent
 [ ]   b: request queue, thread pool
 [ ]   dbo: connection pool
-[ ] class_init extended to be able to set statics on any class
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 dbo
 [o] cluster
@@ -23,9 +23,7 @@ dbo
 [x]   cluster server does sql in parallel
 [ ] restore member with mysqldump
 [ ]   pause the cluster writes
-[ ]   mysqldump
-[ ]   scp file
-[ ]   ssh load file
+[ ]   mysqldump testdb | mysql -h ... etc
 [ ]   start bob
 [ ]   cluster listen
 [ ]   resume cluster writes 
