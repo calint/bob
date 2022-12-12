@@ -89,20 +89,20 @@ public class ClusterNIO {
 		return stacktrace(e).replace('\n', ' ').replace('\r', ' ').replaceAll("\\s+", " ").replaceAll(" at ", " @ ");
 	}
 
-	static void close(SocketChannel sc) {
-		try {
-			InetSocketAddress sa = (InetSocketAddress) sc.getRemoteAddress();
-			System.out.println("disconnected: " + sa.getHostString());
-			sc.close();
-		} catch (IOException e) {
-			log(e);
-		}
-	}
+//	static void close(SocketChannel sc) {
+//		try {
+//			InetSocketAddress sa = (InetSocketAddress) sc.getRemoteAddress();
+//			System.out.println("disconnected: " + sa.getHostString());
+//			sc.close();
+//		} catch (IOException e) {
+//			log(e);
+//		}
+//	}
 
 	static void execClusterSql(final String sql) throws Throwable {
 		log_sql(sql);
 		final ArrayList<Client> broken_clients = new ArrayList<Client>();
-		for (final Client ct : clients) { // ! thread
+		for (Client ct : clients) { // ! thread
 			try {
 				ct.statement.execute(sql);
 			} catch (Throwable t) {
@@ -110,7 +110,7 @@ public class ClusterNIO {
 			}
 		}
 		for (Client c : broken_clients) {
-			log("connection broke. removing: " + c.address);
+			log("client broken. removing: " + c.address);
 			clients.remove(c);
 		}
 	}
@@ -119,7 +119,7 @@ public class ClusterNIO {
 		final ArrayList<Integer> ints = new ArrayList<Integer>(clients.size());
 		final ArrayList<Client> broken_clients = new ArrayList<Client>();
 		log_sql(sql);
-		for (final Client ct : clients) { // ! thread
+		for (Client ct : clients) { // ! thread
 			try {
 				ct.statement.execute(sql, Statement.RETURN_GENERATED_KEYS);
 				final ResultSet rs = ct.statement.getGeneratedKeys();
@@ -206,9 +206,9 @@ public class ClusterNIO {
 				Client cs = (Client) sk.attachment();
 				if (sk.isReadable()) {
 					try {
-						cs.process(sk);
+						cs.process();
 					} catch (Throwable t) {
-						close((SocketChannel) sk.channel());
+						cs.close();
 						log(t);
 					}
 				} else {
@@ -220,18 +220,18 @@ public class ClusterNIO {
 
 	}
 
-	private static Client findClientByAddress(String hostString) {
+	private static Client findClientByAddress(String address) {
 		for (Client ct : clients) {
-			if (ct.address.equals(hostString))
+			if (ct.address.equals(address))
 				return ct;
 		}
-		throw new RuntimeException("client with address '" + hostString + "' is not registered.");
+		throw new RuntimeException("client with address '" + address + "' is not registered.");
 	}
 
 	private final static class Client {
 		ByteBuffer bb = ByteBuffer.allocate(64 * 1024);
+		StringBuilder sb = new StringBuilder(64 * 1024);
 		ByteBuffer bb_nl = ByteBuffer.wrap("\n".getBytes());
-		StringBuilder sb = new StringBuilder(1024);
 		Connection connection;
 		Statement statement;
 		SocketChannel socketChannel;
@@ -248,12 +248,11 @@ public class ClusterNIO {
 			log("client: " + address);
 		}
 
-		public void process(SelectionKey sk) throws Throwable {
-			SocketChannel sc = (SocketChannel) sk.channel();
+		public void process() throws Throwable {
 			bb.clear();
-			int read = sc.read(bb);
+			int read = socketChannel.read(bb);
 			if (read == -1) {
-				close(sc);
+				close();
 				return;
 			}
 			bb.flip();
@@ -264,7 +263,7 @@ public class ClusterNIO {
 				if (sql.startsWith("insert ")) {
 					int id = execClusterSqlInsert(sql);
 					ByteBuffer bb = ByteBuffer.wrap((id + "\n").getBytes());
-					sc.write(bb);
+					socketChannel.write(bb);
 					if (bb.remaining() != 0) {
 						throw new RuntimeException("could not fully write buffer");
 					}
@@ -272,7 +271,7 @@ public class ClusterNIO {
 				} else {
 					execClusterSql(sql);
 					bb_nl.clear();
-					sc.write(bb_nl);
+					socketChannel.write(bb_nl);
 					if (bb_nl.remaining() != 0) {
 						throw new RuntimeException("could not fully write buffer");
 					}
@@ -301,7 +300,15 @@ public class ClusterNIO {
 					}
 				}
 			}
+		}
 
+		public void close() {
+			try {
+				System.out.println("disconnected: " + address);
+				socketChannel.close();
+			} catch (IOException e) {
+				log(e);
+			}
 		}
 	}
 
