@@ -344,7 +344,7 @@ public final class Cluster {
 					synchronized(clients) {
 						clients.remove(client);
 					}
-					// last thread done notifies the executors to continue
+					// last thread done notifies the executor to continue
 					synchronized (sem) {
 						activeThreads--;
 						if (activeThreads == 0) {
