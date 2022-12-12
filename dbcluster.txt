@@ -1,4 +1,2 @@
-# configuration for DbCluster
-# contains a list of host and ports to the members database
-# user name and password from run.cfg will be used to connect
-localhost:3306
+# configuration for cluster. a list IP addresses of cluster members
+127.0.0.1
