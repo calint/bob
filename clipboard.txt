@@ -12,7 +12,7 @@ ssh root@ journalctl -u bob -e | grep http404 | cut -b 79-180 | sort -u | less
 cd /bob && echo "drop database testdb;create database testdb;"|mysql && git pull && sh build-and-run.sh 
 
 
-cluster 1 member
+cluster 1 member, localhost
 test1 100 runs
 no-cluster    cluster    cluster-nio  no-cluster (autocommit)
 6867ms        20106ms    17273ms      18528ms
@@ -21,7 +21,7 @@ no-cluster    cluster    cluster-nio  no-cluster (autocommit)
 5429ms        19495ms    18736ms      13415ms
 5864ms        19215ms    19012ms      18080ms
 
-cluster 1 member
+cluster 1 member, localhost
 b.test.t4  ab -c1 -n1000 http://localhost:8888/b/test/t4
 [#/sec] (mean)
 cluster-nio    cluster    no-cluster  no-cluster (autocommit)
@@ -31,7 +31,7 @@ cluster-nio    cluster    no-cluster  no-cluster (autocommit)
 61.89          77.72      155.92      67.28
 63.27          64.10      168.09      66.29
 
-cluster 1 member
+cluster 1 member, localhost
 test1 100 runs, mysam, cluster 1 member
 no-cluster     cluster-nio   cluster
 8838ms         13230ms       11508ms
@@ -40,7 +40,7 @@ no-cluster     cluster-nio   cluster
 8939ms         9831ms        9295ms
 8618ms         9688ms        9541ms
 
-cluster 1 member
+cluster, 1 member, localhost
 b.test.t4 mysam ab -c1 -n1000 http://localhost:8888/b/test/t4
 cluster-nio    no-cluster
 [#/sec]        [#/sec]
@@ -50,7 +50,7 @@ cluster-nio    no-cluster
 103.26         103.17
 97.26          111.35
 
-cluster 1 member
+cluster, 1 member, localhost
 mysam http://localhost:8888/dbo/test/test_dbo
 cluster   no-cluster
 [ms]      [ms]
@@ -61,6 +61,22 @@ cluster   no-cluster
 19429     17344
 20295     17482
 19632     17115
+
+
+cluster, 2 members, digitalocean
+mysam /dbo/test/test_dbo
+cluster   no-cluster
+[ms]      [ms]
+57856     31568
+57746     27087
+55063     27451
+56176     26107
+73768     24813
+58643     26594
+68369     25730
+59102     28854
+57379     24646
+62398     27026
 
 
 

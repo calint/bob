@@ -34,8 +34,8 @@ systemctl enable bob
 # mysql create database, user and grant access
 # 	create database testdb;create user 'c'@'%' identified by 'password';grant all on testdb.* to 'c'@'%';
 
-# edit dbcluster.txt and add IPs of cluster members
-# cat > /bob/dbcluster.txt
+# edit and add IPs of cluster members
+# cat > /bob/cluster.cfg
 
 # change the run.cfg with login for db
 # MYSQL_HOST=localhost:3306
