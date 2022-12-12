@@ -139,6 +139,7 @@ public final class Cluster {
 						ct.close();
 						System.out.println("disconnected: " + ct.address);
 						clients.remove(ct);
+						// ! activeClients--, if 0 notify
 						if (!t.getMessage().startsWith("client disconnected"))
 							log(t);
 					}
