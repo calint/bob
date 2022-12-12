@@ -25,7 +25,13 @@ public class Cluster {
 	public static boolean enable_log = true;
 	public static boolean enable_log_sql = false;
 	public static int server_port = 8889;
+	/** Counter used to synchronize. */
+	private static int activeThreads;
 	private static final ArrayList<Client> clients = new ArrayList<Client>();
+	/** Synchronization object. */
+	private static Object sem = new Object();
+	/** Current SQL executed by the cluster */
+	private static String sql;
 
 	/** Prints the string to System.out */
 	public static void log(String s) {
@@ -118,10 +124,6 @@ public class Cluster {
 			final int c = ct.socketChannel.write(ByteBuffer.wrap(ba_nl));
 			if (c != ba_nl.length)
 				throw new RuntimeException("Could not write full message to client.");
-
-		}
-		log("processing events.");
-		for (Client ct : clients) {
 			ct.thread.start();
 		}
 		while (true) {
@@ -160,217 +162,6 @@ public class Cluster {
 		return stacktrace(e).replace('\n', ' ').replace('\r', ' ').replaceAll("\\s+", " ").replaceAll(" at ", " @ ");
 	}
 
-//	static void execClusterSql(final String sql) throws Throwable {
-//		log_sql(sql);
-//		final ArrayList<Client> broken_clients = new ArrayList<Client>();
-//		for (Client ct : clients) { // ! thread
-//			try {
-//				ct.statement.execute(sql);
-//			} catch (Throwable t) {
-//				broken_clients.add(ct);
-//			}
-//		}
-//		for (Client c : broken_clients) {
-//			log("client broken. removing: " + c.address);
-//			clients.remove(c);
-//		}
-//	}
-//
-//	static int execClusterSqlInsert(final String sql) throws Throwable {
-//		final ArrayList<Integer> ints = new ArrayList<Integer>(clients.size());
-//		final ArrayList<Client> broken_clients = new ArrayList<Client>();
-//		log_sql(sql);
-//		for (Client ct : clients) { // ! thread
-//			try {
-//				ct.statement.execute(sql, Statement.RETURN_GENERATED_KEYS);
-//				final ResultSet rs = ct.statement.getGeneratedKeys();
-//				if (rs.next()) {
-//					ints.add(rs.getInt(1));
-//					rs.close();
-//				} else
-//					throw new RuntimeException("expected generated id");
-//			} catch (Throwable t) {
-//				broken_clients.add(ct);
-//			}
-//		}
-//		for (Client ct : broken_clients) {
-//			log("connection broke. removing: " + ct.address);
-//			clients.remove(ct);
-//		}
-//		if (ints.isEmpty()) {
-//			throw new RuntimeException("expected generated ids list is empty");
-//		}
-//		// check that it is the same id
-//		int prev = ints.get(0);
-//		final int n = ints.size();
-//		for (int j = 1; j < n; j++) {
-//			final int id = ints.get(j);
-//			if (id != prev)
-//				throw new RuntimeException("expected generated ids to be same. got: " + ints);
-//			prev = id;
-//		}
-//		return prev;
-//	}
-
-	private static Client findClientByAddress(String address) {
-		for (Client ct : clients) {
-			if (ct.address.equals(address))
-				return ct;
-		}
-		throw new RuntimeException("client with address '" + address + "' is not registered.");
-	}
-
-	private final static class Client {
-		ByteBuffer bb = ByteBuffer.allocate(64 * 1024);
-		StringBuilder sb = new StringBuilder(64 * 1024);
-		ByteBuffer bb_nl = ByteBuffer.wrap("\n".getBytes());
-		Connection connection;
-		Statement statement;
-		SocketChannel socketChannel;
-		String address;
-		String dbname;
-		String user;
-		String password;
-		ClientThread thread;
-
-		public Client(String address, String dbname, String user, String password) {
-			this.address = address;
-			this.dbname = dbname;
-			this.user = user;
-			this.password = password;
-			this.thread = new ClientThread(this, address);
-		}
-
-		public void process() throws Throwable {
-			bb.clear();
-			int read = socketChannel.read(bb);
-			if (read == -1) {
-				throw new RuntimeException("client disconnected " + address);
-			}
-			bb.flip();
-			byte ch = bb.get(bb.limit() - 1);
-			if (ch == '\n') { // if last character is \n then the read is done
-				sb.append(new String(bb.array(), bb.position(), bb.limit() - 1));
-				String sql = sb.toString();
-				final int id = execSql(sql);
-				if (id != 0) {
-					ByteBuffer bb = ByteBuffer.wrap((id + "\n").getBytes());
-					socketChannel.write(bb);
-					if (bb.remaining() != 0) {
-						throw new RuntimeException("could not fully write buffer");
-					}
-				} else {
-					bb_nl.clear();
-					socketChannel.write(bb_nl);
-					if (bb_nl.remaining() != 0) {
-						throw new RuntimeException("could not fully write buffer");
-					}
-				}
-				sb.setLength(0);
-				return;
-			}
-			sb.append(new String(bb.array(), bb.position(), bb.limit()));
-		}
-
-		public void connectToDatabase() {
-			log("connecting to database at " + address);
-			final String cs = "jdbc:mysql://" + address + ":3306/" + dbname
-					+ "?verifyServerCertificate=false&useSSL=true&ssl-mode=REQUIRED";
-			while (true) {
-				try {
-					connection = DriverManager.getConnection(cs, user, password);
-					statement = connection.createStatement();
-					log("connected to database at " + address);
-					break;
-				} catch (Throwable t) {
-					try {
-						System.err.println("cannot connect to database at " + address + ". waiting.");
-						Thread.sleep(5000);
-					} catch (InterruptedException e) {
-						log(e);
-					}
-				}
-			}
-		}
-
-		public void close() {
-			thread.stopped = true;
-			thread.interrupt();
-			try {
-				socketChannel.close();
-			} catch (IOException e) {
-				log(e);
-			}
-			try {
-				connection.close();
-			} catch (SQLException e) {
-				log(e);
-			}
-		}
-	}
-
-	private final static class ClientThread extends Thread {
-		boolean stopped;
-		Client client;
-		int autogeneratedId;
-		String prevSql;
-
-		public ClientThread(Client client, String name) {
-			super(name);
-			this.client = client;
-		}
-
-		@Override
-		public void run() {
-			while (true) {
-				if (stopped)
-					break;
-				// wait for new sql or stopped
-				synchronized (sem) {
-					while (!stopped && prevSql == sql) {
-						try {
-							sem.wait();
-						} catch (InterruptedException ok) {
-						}
-					}
-				}
-				prevSql = sql;
-				if (stopped) // thread might be flagged for stop and interrupted the wait
-					break;
-				Cluster.log_sql(this + ": " + sql);
-				try {
-					if (sql.startsWith("insert ")) {
-						client.statement.execute(sql, Statement.RETURN_GENERATED_KEYS);
-						final ResultSet rs = client.statement.getGeneratedKeys();
-						if (rs.next()) {
-							autogeneratedId = rs.getInt(1);
-							rs.close();
-						} else
-							throw new RuntimeException("expected generated id");
-					} else {
-						client.statement.execute(sql);
-					}
-				} catch (SQLException e) {
-					// close client
-					e.printStackTrace();
-					client.close();
-					return;
-				}
-				// last thread done notifies the SqlExecutors to continue
-				synchronized (sem) {
-					activeThreads--;
-					if (activeThreads == 0) {
-						sem.notify();
-					}
-				}
-			}
-		}
-	}
-
-	static Object sem = new Object();
-	static int activeThreads;
-	static String sql;
-
 	static int execSql(final String sql) {
 //		for (Client ct : clients) {
 //			ct.thread.sql = sql;
@@ -405,6 +196,160 @@ public class Cluster {
 			return prev;
 		} else {
 			return 0;
+		}
+	}
+	private static Client findClientByAddress(String address) {
+		for (Client ct : clients) {
+			if (ct.address.equals(address))
+				return ct;
+		}
+		throw new RuntimeException("client with address '" + address + "' is not registered.");
+	}
+	private final static class Client {
+		private String address;
+		private ByteBuffer bb = ByteBuffer.allocate(64 * 1024);
+		private ByteBuffer bb_nl = ByteBuffer.wrap("\n".getBytes());
+		private Connection connection;
+		private String dbname;
+		private String password;
+		private StringBuilder sb = new StringBuilder(64 * 1024);
+		private SocketChannel socketChannel;
+		private Statement statement;
+		private ClientThread thread;
+		private String user;
+
+		public Client(String address, String dbname, String user, String password) {
+			this.address = address;
+			this.dbname = dbname;
+			this.user = user;
+			this.password = password;
+			this.thread = new ClientThread(this, address);
+		}
+
+		public void close() {
+			thread.stopped = true;
+			thread.interrupt();
+			try {
+				socketChannel.close();
+			} catch (IOException e) {
+				log(e);
+			}
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				log(e);
+			}
+		}
+
+		public void connectToDatabase() {
+			log("connecting to database at " + address);
+			final String cs = "jdbc:mysql://" + address + ":3306/" + dbname
+					+ "?verifyServerCertificate=false&useSSL=true&ssl-mode=REQUIRED";
+			while (true) {
+				try {
+					connection = DriverManager.getConnection(cs, user, password);
+					statement = connection.createStatement();
+					log("connected to database at " + address);
+					break;
+				} catch (Throwable t) {
+					try {
+						System.err.println("cannot connect to database at " + address + ". waiting.");
+						Thread.sleep(5000);
+					} catch (InterruptedException e) {
+						log(e);
+					}
+				}
+			}
+		}
+
+		public void process() throws Throwable {
+			bb.clear();
+			int read = socketChannel.read(bb);
+			if (read == -1) {
+				throw new RuntimeException("client disconnected " + address);
+			}
+			bb.flip();
+			byte ch = bb.get(bb.limit() - 1);
+			if (ch == '\n') { // if last character is \n then the read is done
+				sb.append(new String(bb.array(), bb.position(), bb.limit() - 1));
+				String sql = sb.toString();
+				final int id = execSql(sql);
+				if (id != 0) {
+					ByteBuffer bb = ByteBuffer.wrap((id + "\n").getBytes());
+					socketChannel.write(bb);
+					if (bb.remaining() != 0) {
+						throw new RuntimeException("could not fully write buffer");
+					}
+				} else {
+					bb_nl.clear();
+					socketChannel.write(bb_nl);
+					if (bb_nl.remaining() != 0) {
+						throw new RuntimeException("could not fully write buffer");
+					}
+				}
+				sb.setLength(0);
+				return;
+			}
+			sb.append(new String(bb.array(), bb.position(), bb.limit()));
+		}
+	}
+
+	private final static class ClientThread extends Thread {
+		private int autogeneratedId;
+		private Client client;
+		private String prevSql;
+		private boolean stopped;
+
+		public ClientThread(Client client, String name) {
+			super(name);
+			this.client = client;
+		}
+
+		@Override
+		public void run() {
+			while (true) {
+				if (stopped)
+					break;
+				// wait for new sql or stopped
+				synchronized (sem) {
+					while (!stopped && prevSql == sql) {
+						try {
+							sem.wait();
+						} catch (InterruptedException ok) {
+						}
+					}
+				}
+				if (stopped) // thread might be flagged for stop after interrupt
+					break;
+				prevSql = sql;
+				Cluster.log_sql(this + ": " + sql);
+				try {
+					if (sql.startsWith("insert ")) {
+						client.statement.execute(sql, Statement.RETURN_GENERATED_KEYS);
+						final ResultSet rs = client.statement.getGeneratedKeys();
+						if (rs.next()) {
+							autogeneratedId = rs.getInt(1);
+							rs.close();
+						} else
+							throw new RuntimeException("expected generated id");
+					} else {
+						client.statement.execute(sql);
+						autogeneratedId = 0;
+					}
+				} catch (SQLException e) {
+					// close client
+					e.printStackTrace();
+					client.close();
+					return;
+				}
+				// last thread done notifies the SqlExecutors to continue
+				synchronized (sem) {
+					activeThreads--;
+					if (activeThreads == 0) {
+						sem.notify();
+					}
+				}
+			}
 		}
 	}
 }
