@@ -121,6 +121,9 @@ public class Cluster {
 
 		}
 		log("processing events.");
+		for (Client ct : clients) {
+			ct.thread.start();
+		}
 		while (true) {
 			selector.select();
 			Iterator<SelectionKey> keys = selector.selectedKeys().iterator();
@@ -157,57 +160,57 @@ public class Cluster {
 		return stacktrace(e).replace('\n', ' ').replace('\r', ' ').replaceAll("\\s+", " ").replaceAll(" at ", " @ ");
 	}
 
-	static void execClusterSql(final String sql) throws Throwable {
-		log_sql(sql);
-		final ArrayList<Client> broken_clients = new ArrayList<Client>();
-		for (Client ct : clients) { // ! thread
-			try {
-				ct.statement.execute(sql);
-			} catch (Throwable t) {
-				broken_clients.add(ct);
-			}
-		}
-		for (Client c : broken_clients) {
-			log("client broken. removing: " + c.address);
-			clients.remove(c);
-		}
-	}
-
-	static int execClusterSqlInsert(final String sql) throws Throwable {
-		final ArrayList<Integer> ints = new ArrayList<Integer>(clients.size());
-		final ArrayList<Client> broken_clients = new ArrayList<Client>();
-		log_sql(sql);
-		for (Client ct : clients) { // ! thread
-			try {
-				ct.statement.execute(sql, Statement.RETURN_GENERATED_KEYS);
-				final ResultSet rs = ct.statement.getGeneratedKeys();
-				if (rs.next()) {
-					ints.add(rs.getInt(1));
-					rs.close();
-				} else
-					throw new RuntimeException("expected generated id");
-			} catch (Throwable t) {
-				broken_clients.add(ct);
-			}
-		}
-		for (Client ct : broken_clients) {
-			log("connection broke. removing: " + ct.address);
-			clients.remove(ct);
-		}
-		if (ints.isEmpty()) {
-			throw new RuntimeException("expected generated ids list is empty");
-		}
-		// check that it is the same id
-		int prev = ints.get(0);
-		final int n = ints.size();
-		for (int j = 1; j < n; j++) {
-			final int id = ints.get(j);
-			if (id != prev)
-				throw new RuntimeException("expected generated ids to be same. got: " + ints);
-			prev = id;
-		}
-		return prev;
-	}
+//	static void execClusterSql(final String sql) throws Throwable {
+//		log_sql(sql);
+//		final ArrayList<Client> broken_clients = new ArrayList<Client>();
+//		for (Client ct : clients) { // ! thread
+//			try {
+//				ct.statement.execute(sql);
+//			} catch (Throwable t) {
+//				broken_clients.add(ct);
+//			}
+//		}
+//		for (Client c : broken_clients) {
+//			log("client broken. removing: " + c.address);
+//			clients.remove(c);
+//		}
+//	}
+//
+//	static int execClusterSqlInsert(final String sql) throws Throwable {
+//		final ArrayList<Integer> ints = new ArrayList<Integer>(clients.size());
+//		final ArrayList<Client> broken_clients = new ArrayList<Client>();
+//		log_sql(sql);
+//		for (Client ct : clients) { // ! thread
+//			try {
+//				ct.statement.execute(sql, Statement.RETURN_GENERATED_KEYS);
+//				final ResultSet rs = ct.statement.getGeneratedKeys();
+//				if (rs.next()) {
+//					ints.add(rs.getInt(1));
+//					rs.close();
+//				} else
+//					throw new RuntimeException("expected generated id");
+//			} catch (Throwable t) {
+//				broken_clients.add(ct);
+//			}
+//		}
+//		for (Client ct : broken_clients) {
+//			log("connection broke. removing: " + ct.address);
+//			clients.remove(ct);
+//		}
+//		if (ints.isEmpty()) {
+//			throw new RuntimeException("expected generated ids list is empty");
+//		}
+//		// check that it is the same id
+//		int prev = ints.get(0);
+//		final int n = ints.size();
+//		for (int j = 1; j < n; j++) {
+//			final int id = ints.get(j);
+//			if (id != prev)
+//				throw new RuntimeException("expected generated ids to be same. got: " + ints);
+//			prev = id;
+//		}
+//		return prev;
+//	}
 
 	private static Client findClientByAddress(String address) {
 		for (Client ct : clients) {
@@ -228,12 +231,14 @@ public class Cluster {
 		String dbname;
 		String user;
 		String password;
+		ClientThread thread;
 
 		public Client(String address, String dbname, String user, String password) {
 			this.address = address;
 			this.dbname = dbname;
 			this.user = user;
 			this.password = password;
+			this.thread = new ClientThread(this, address);
 		}
 
 		public void process() throws Throwable {
@@ -247,23 +252,21 @@ public class Cluster {
 			if (ch == '\n') { // if last character is \n then the read is done
 				sb.append(new String(bb.array(), bb.position(), bb.limit() - 1));
 				String sql = sb.toString();
-				if (sql.startsWith("insert ")) {
-					int id = execClusterSqlInsert(sql);
+				final int id = execSql(sql);
+				if (id != 0) {
 					ByteBuffer bb = ByteBuffer.wrap((id + "\n").getBytes());
 					socketChannel.write(bb);
 					if (bb.remaining() != 0) {
 						throw new RuntimeException("could not fully write buffer");
 					}
-					sb.setLength(0);
 				} else {
-					execClusterSql(sql);
 					bb_nl.clear();
 					socketChannel.write(bb_nl);
 					if (bb_nl.remaining() != 0) {
 						throw new RuntimeException("could not fully write buffer");
 					}
-					sb.setLength(0);
 				}
+				sb.setLength(0);
 				return;
 			}
 			sb.append(new String(bb.array(), bb.position(), bb.limit()));
@@ -291,6 +294,8 @@ public class Cluster {
 		}
 
 		public void close() {
+			thread.stopped = true;
+			thread.interrupt();
 			try {
 				socketChannel.close();
 			} catch (IOException e) {
@@ -304,4 +309,100 @@ public class Cluster {
 		}
 	}
 
+	private final static class ClientThread extends Thread {
+		boolean stopped;
+		Client client;
+		int autogeneratedId;
+		String sql;
+
+		public ClientThread(Client client, String name) {
+			super(name);
+			this.client = client;
+		}
+
+		@Override
+		public void run() {
+			while (true) {
+				if (stopped)
+					break;
+				// wait for new sql or stopped
+				synchronized (sem) {
+					while (!stopped && sql == null) {
+						try {
+							sem.wait();
+						} catch (InterruptedException ok) {
+						}
+					}
+				}
+				if (stopped) // thread might be flagged for stop and interrupted the wait
+					break;
+				Cluster.log_sql(this + ": " + sql);
+				try {
+					if (sql.startsWith("insert ")) {
+						client.statement.execute(sql, Statement.RETURN_GENERATED_KEYS);
+						final ResultSet rs = client.statement.getGeneratedKeys();
+						if (rs.next()) {
+							autogeneratedId = rs.getInt(1);
+							rs.close();
+						} else
+							throw new RuntimeException("expected generated id");
+					} else {
+						client.statement.execute(sql);
+					}
+				} catch (SQLException e) {
+					// close client
+					e.printStackTrace();
+					client.close();
+					return;
+				}
+				sql = null;
+				// last thread done notifies the SqlExecutors to continue
+				synchronized (sem) {
+					activeThreads--;
+					if (activeThreads == 0) {
+						sem.notify();
+					}
+				}
+			}
+		}
+	}
+
+	static Object sem = new Object();
+	static int activeThreads;
+
+	static int execSql(String sql) {
+		for (Client ct : clients) {
+			ct.thread.sql = sql;
+		}
+		// notify all threads to execute sql
+		synchronized (sem) {
+			activeThreads = clients.size();
+			sem.notifyAll();
+		}
+		// wait for the threads to finish
+		synchronized (sem) {
+			while (activeThreads != 0) {
+				try {
+					sem.wait();
+				} catch (InterruptedException ok) {
+				}
+			}
+		}
+		if (sql.startsWith("insert ")) {
+			final int n = clients.size();
+			if (n == 0)
+				throw new RuntimeException("no threads");
+			int prev = clients.get(0).thread.autogeneratedId;
+			for (int i = 0; i < n; i++) {
+				final int id = clients.get(i).thread.autogeneratedId;
+				if (id != prev)
+					throw new RuntimeException(
+							"autogenerated ids do not match " + prev + " vs " + id + " after sql " + sql);
+				prev = id;
+			}
+			return prev;
+		} else {
+			return 0;
+		}
+	}
 }

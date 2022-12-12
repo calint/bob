@@ -30,12 +30,12 @@ public final class Db {
 	public static int cluster_port = 8889;
 
 	/** null is default (InnoDB) */
-	public static String engine = null;
-//	public static String engine="myisam";
+//	public static String engine = null;
+	public static String engine="myisam";
 
 	/** default is false */
-	public static boolean autocommit = false;
-//	public static boolean autocommit=true;
+//	public static boolean autocommit = false;
+	public static boolean autocommit=true;
 
 	/** Enables the log(...) method. */
 	public static boolean enable_log = true;
