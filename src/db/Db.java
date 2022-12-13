@@ -589,8 +589,10 @@ public final class Db {
 	}
 
 	public static String getJdbcConnectionString(String address, String dbname, String user, String passwd) {
+//		final String s = "jdbc:mysql://" + address + ":3306/" + dbname + "?user=" + user + "&password=" + passwd
+//				+ "&verifyServerCertificate=false&useSSL=true&ssl-mode=REQUIRED";
 		final String s = "jdbc:mysql://" + address + ":3306/" + dbname + "?user=" + user + "&password=" + passwd
-				+ "&verifyServerCertificate=false&useSSL=true&ssl-mode=REQUIRED";
+				+ "&useSSL=false";
 		// System.out.println(s);
 		return s;
 	}

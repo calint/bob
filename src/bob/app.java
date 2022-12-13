@@ -23,8 +23,8 @@ public final class app implements bapp {
 	}
 
 	/** called by b at startup */
-	@Override
 	public void init() throws Throwable {
+		Class.forName("com.mysql.jdbc.Driver"); // ! java 1.5
 		Db.log(getClass().getName() + ": init");
 //		Db.enable_log=false;
 		Db.enable_log_sql=false;
@@ -68,7 +68,6 @@ public final class app implements bapp {
 	}
 
 	/** called by b at shutdown */
-	@Override
 	public void shutdown() throws Throwable {
 		Db.log(getClass().getName() + ": shutdown");
 		Db.shutdown();

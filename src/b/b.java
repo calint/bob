@@ -16,7 +16,6 @@ import java.lang.reflect.Field;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
-import java.net.StandardSocketOptions;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.channels.SelectionKey;
@@ -28,6 +27,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.TimeZone;
+
 import db.Db;
 final public class b{
 	public final static String strenc="utf-8";
@@ -172,7 +172,9 @@ final public class b{
 //						r.socket_channel.socket().setSendBufferSize(1);
 
 						if(tcpnodelay) // todo for performance in benchmarks. remove in production.
-							r.socket_channel.setOption(StandardSocketOptions.TCP_NODELAY,true);
+//							r.socket_channel.setOption(StandardSocketOptions.TCP_NODELAY,true);
+							r.socket_channel.socket().setTcpNoDelay(true);
+						
 						r.selection_key=r.socket_channel.register(sel,0,r);
 						process(r);
 						continue;

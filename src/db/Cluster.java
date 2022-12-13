@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.InetSocketAddress;
-import java.net.StandardSocketOptions;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
@@ -59,6 +58,7 @@ public final class Cluster {
 	}
 
 	public static void main(String[] args) throws Throwable {
+		Class.forName("com.mysql.jdbc.Driver"); // ! java 1.5
 		if (args.length < 4) {
 			System.out.println("Usage: java db.ClusterNIO <ip:port file> <dbname> <user> <password>");
 			return;
@@ -91,7 +91,8 @@ public final class Cluster {
 		log("waiting for " + nclients + " client" + (nclients > 1 ? "s" : "") + " to connect.");
 		ServerSocketChannel ssc = ServerSocketChannel.open();
 		ssc.configureBlocking(false);
-		ssc.bind(new InetSocketAddress(server_port));
+		final InetSocketAddress isa=new InetSocketAddress(server_port);
+		ssc.socket().bind(isa);
 
 		Selector selector = Selector.open();
 		SelectionKey ssk = ssc.register(selector, SelectionKey.OP_ACCEPT);
@@ -105,9 +106,12 @@ public final class Cluster {
 				if (sk.isAcceptable()) {
 					SocketChannel sc = ssc.accept();
 					sc.configureBlocking(false);
-					sc.setOption(StandardSocketOptions.TCP_NODELAY, true);
-					InetSocketAddress sa = (InetSocketAddress) sc.getRemoteAddress();
-					Client ct = findClientByAddress(sa.getHostString());
+					sc.socket().setTcpNoDelay(true);
+//					sc.setOption(StandardSocketOptions.TCP_NODELAY, true);
+//					InetSocketAddress sa = (InetSocketAddress) sc.getRemoteAddress();
+//					Client ct = findClientByAddress(sa.getHostString());
+					final String host=sc.socket().getInetAddress().getHostAddress();
+					Client ct = findClientByAddress(host);
 					ct.socketChannel = sc;
 					keys.remove();
 					client_count++;

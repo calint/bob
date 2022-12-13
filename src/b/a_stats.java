@@ -5,7 +5,7 @@ import b.a.stateless;
 public @stateless class a_stats extends a implements bin{
 	private static final long serialVersionUID=1L;
 
-	@Override public String content_type(){
+	public String content_type(){
 		return "text/plain;charset=utf-8";
 	}
 
