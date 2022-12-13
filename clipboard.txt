@@ -14,7 +14,7 @@ cd /bob && echo "drop database testdb;create database testdb;"|mysql && git pull
 SHOW VARIABLES WHERE Variable_Name IN ('connect_timeout', 'interactive_timeout', 'wait_timeout');
 
 
-localhost, cluster 1 member 
+localhost, cluster 1 node 
 test1 100 runs
 no-cluster    cluster    cluster-nio  no-cluster (autocommit)
 6867ms        20106ms    17273ms      18528ms
@@ -23,7 +23,7 @@ no-cluster    cluster    cluster-nio  no-cluster (autocommit)
 5429ms        19495ms    18736ms      13415ms
 5864ms        19215ms    19012ms      18080ms
 
-localhost, cluster 1 member
+localhost, cluster 1 node
 ab -c1 -n1000 http://localhost:8888/b/test/t4
 [#/sec] (mean)
 cluster-nio    cluster    no-cluster  no-cluster (autocommit)
@@ -33,7 +33,7 @@ cluster-nio    cluster    no-cluster  no-cluster (autocommit)
 61.89          77.72      155.92      67.28
 63.27          64.10      168.09      66.29
 
-localhost, mysam, cluster 1 member
+localhost, mysam, cluster 1 node
 test1 100 runs
 no-cluster     cluster-nio   cluster
 8838ms         13230ms       11508ms
@@ -42,7 +42,7 @@ no-cluster     cluster-nio   cluster
 8939ms         9831ms        9295ms
 8618ms         9688ms        9541ms
 
-localhost, mysam, cluster, 1 member
+localhost, mysam, cluster, 1 node
 ab -c1 -n1000 http://localhost:8888/b/test/t4
 cluster-nio    no-cluster
 [#/sec]        [#/sec]
@@ -52,7 +52,7 @@ cluster-nio    no-cluster
 103.26         103.17
 97.26          111.35
 
-localhost, mysam, cluster 1 member, 
+localhost, mysam, cluster 1 node, 
 http://localhost:8888/dbo/test/test_dbo
 cluster   no-cluster  cluster (seq)
 [ms]      [ms]        [ms]
@@ -65,7 +65,7 @@ cluster   no-cluster  cluster (seq)
 19632     17115       18748
 
 
-digitalocean, mysam, cluster 2 members
+digitalocean, mysam, cluster 2 nodes
 /dbo/test/test_dbo
 cluster   no-cluster  cluster (seq)   cluster (par)
 [ms]      [ms]        [ms]            [ms]
@@ -79,4 +79,9 @@ cluster   no-cluster  cluster (seq)   cluster (par)
 59102     28854       114881          77593
 57379     24646       127372          87361
 62398     27026       102071          61499
+
+digitalocean, mysam, cluster 4 nodes
+/dbo/test/test_dbo
+cluster (seq)   cluster (par)
+[ms]            [ms]
 
