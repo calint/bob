@@ -206,9 +206,9 @@ public final class Cluster {
 		synchronized (sem) {
 			activeThreads = clients.size();
 			sem.notifyAll();
-		}
-		// wait for the threads to finish
-		synchronized (sem) {
+//		}
+//		// wait for the threads to finish
+//		synchronized (sem) {
 			System.out.println("active threads before wait: " + activeThreads);
 			while (activeThreads != 0) {
 				try {
@@ -484,6 +484,7 @@ public final class Cluster {
 					activeThreads--;
 					Cluster.log_sql(this + ": active threads " + activeThreads);
 					if (activeThreads == 0) {
+						Cluster.log_sql(this + ": notify");
 						sem.notify();
 					}
 				}
