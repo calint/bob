@@ -11,8 +11,7 @@ cat servers-ips.txt | sed -r '/^\s*$/d' | sed -r '/^\s*#/d' | while read IP; do
 done
 
 IP=$(cat servers-ips.txt | sed -r '/^\s*$/d' | sed -r '/^\s*#/d' | head -n1)
-	CMD='systemctl restart bob-cluster'
-	echo $IP: $CMD
-	ssh -n root@$IP $CMD
-	echo
-done
+CMD='systemctl restart bob-cluster'
+echo $IP: $CMD
+ssh -n root@$IP $CMD
+echo
