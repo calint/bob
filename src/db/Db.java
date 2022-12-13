@@ -102,7 +102,7 @@ public final class Db {
 		}
 		if (pc.getAgeInMs() > Db.pooled_connection_max_age_in_ms) {
 			// connection exceeded life time. create a new connection.
-			Db.log("dbo: connection " + Integer.toHexString(pc.hashCode()) + " exceeded life time. Creating new.");
+//			Db.log("dbo: connection " + Integer.toHexString(pc.hashCode()) + " exceeded life time. Creating new.");
 			try {
 				pc.getConnection().close();
 			} catch (Throwable t) {
