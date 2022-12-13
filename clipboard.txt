@@ -73,17 +73,17 @@ cluster   no-cluster  cluster (seq)
 
 digitalocean, mysam, cluster 2 members
 /dbo/test/test_dbo
-cluster   no-cluster  cluster (seq)
-[ms]      [ms]        [ms]
-57856     31568
-57746     27087
-55063     27451
-56176     26107
-73768     24813
-58643     26594
-68369     25730
-59102     28854
-57379     24646
-62398     27026
+cluster   no-cluster  cluster (seq)   cluster (par)
+[ms]      [ms]        [ms]            [ms]
+57856     31568       135043
+57746     27087       100352
+55063     27451       93978
+56176     26107       134990
+73768     24813       99446
+58643     26594       91095
+68369     25730       119031
+59102     28854       114881
+57379     24646       127372
+62398     27026       102071
 
 

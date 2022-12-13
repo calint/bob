@@ -23,7 +23,7 @@ import java.util.Iterator;
 /** Experimental cluster hub. */
 public final class Cluster {
 	/** true if sql statements to cluster members are executed in parallel */
-	public static boolean execute_in_parallel = false;
+	public static boolean execute_in_parallel = true;
 	public static long connection_refresh_intervall_ms = 60 * 60 * 1000;
 	public static boolean enable_log = true;
 	public static boolean enable_log_sql = false;
@@ -171,7 +171,7 @@ public final class Cluster {
 		return stacktrace(e).replace('\n', ' ').replace('\r', ' ').replaceAll("\\s+", " ").replaceAll(" at ", " @ ");
 	}
 
-	static int execSql(final String sql) {
+	private static int execSql(final String sql) {
 		if (!execute_in_parallel)
 			return execSql_serial(sql);
 
@@ -316,7 +316,9 @@ public final class Cluster {
 			this.dbname = dbname;
 			this.user = user;
 			this.password = password;
-			this.thread = new ClientThread(this, address);
+			if (execute_in_parallel) {
+				this.thread = new ClientThread(this, address);
+			}
 		}
 
 		public void close() {
