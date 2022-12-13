@@ -84,6 +84,6 @@ digitalocean, mysam, cluster 4 nodes
 /dbo/test/test_dbo
 cluster (seq)   cluster (par)
 [ms]            [ms]
-205663
+205663          
 193834
-
+266692

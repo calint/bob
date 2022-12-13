@@ -22,8 +22,8 @@ import java.util.Iterator;
 /** Experimental cluster hub. */
 public final class Cluster {
 	/** true if sql statements to cluster nodes are executed in parallel */
-	public static boolean execute_in_parallel = false;
-//	public static boolean execute_in_parallel = true;
+//	public static boolean execute_in_parallel = false;
+	public static boolean execute_in_parallel = true;
 	public static long connection_refresh_intervall_ms = 60 * 60 * 1000;
 	public static boolean enable_log = true;
 //	public static boolean enable_log_sql = true;
