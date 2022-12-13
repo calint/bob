@@ -31,11 +31,11 @@ public final class Db {
 
 	/** null is default (InnoDB) */
 //	public static String engine = null;
-	public static String engine="myisam";
+	public static String engine = "myisam";
 
 	/** default is false */
 //	public static boolean autocommit = false;
-	public static boolean autocommit=true;
+	public static boolean autocommit = true;
 
 	/** Enables the log(...) method. */
 	public static boolean enable_log = true;
@@ -246,9 +246,7 @@ public final class Db {
 	 */
 	public static boolean enable_cache = true;
 
-	private static String jdbcUrl;
-	private static String jdbcUser;
-	private static String jdbcPasswd;
+	private static String jdbc_connection_string;
 
 	/** Registers DbObject class to be persisted. */
 	public static void register(final Class<? extends DbObject> cls) throws Throwable {
@@ -260,24 +258,25 @@ public final class Db {
 	/**
 	 * Initiates the registered classes and connects to the database.
 	 * 
-	 * @param url      JDBC URL to the database
+	 * @param host       server host.
+	 * @param dbname     database.
 	 * @param user
 	 * @param password
-	 * @param ncons    number of connections in the pool
+	 * @param ncons      number of connections in the pool
+	 * @param cluster_ip null if none.
+	 * @param clust_port 0 if none.
 	 */
-	public static void init(final String url, final String user, final String password, final int ncons,
-			final String cluster_ip, final int cluster_port) throws Throwable {
-		jdbcUrl = url;
-		jdbcUser = user;
-		jdbcPasswd = password;
+	public static void init(final String host, final String dbname, final String user, final String password,
+			final int ncons, final String cluster_ip, final int cluster_port) throws Throwable {
+		jdbc_connection_string = getJdbcConnectionString(host, dbname, user, password);
 		Db.cluster_ip = cluster_ip;
 		Db.cluster_port = cluster_port;
 
 		Db.log("--- - - - ---- - - - - - -- -- --- -- --- ---- -- -- - - -");
 		Db.log("   cluster: " + cluster_on);
-		Db.log("connection: " + url);
-		Db.log("      user: " + user);
-		Db.log("  password: " + (password == null ? "[none]" : "[not displayed]"));
+		Db.log("connection: " + jdbc_connection_string);
+//		Db.log("      user: " + user);
+//		Db.log("  password: " + (password == null ? "[none]" : "[not displayed]"));
 		final Connection con = createJdbcConnection();
 
 		final DatabaseMetaData dbm = con.getMetaData();
@@ -400,7 +399,7 @@ public final class Db {
 		Connection c = null;
 		while (true) {
 			try {
-				c = DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcPasswd);
+				c = DriverManager.getConnection(jdbc_connection_string);
 				if (!cluster_on && !autocommit)
 					c.setAutoCommit(false);
 				return c;
@@ -587,5 +586,12 @@ public final class Db {
 		synchronized (conpool) {
 			return conpool.size();
 		}
+	}
+
+	public static String getJdbcConnectionString(String address, String dbname, String user, String passwd) {
+		final String s = "jdbc:mysql://" + address + ":3306/" + dbname + "?user=" + user + "&password=" + passwd
+				+ "&verifyServerCertificate=false&useSSL=true&ssl-mode=REQUIRED";
+		// System.out.println(s);
+		return s;
 	}
 }

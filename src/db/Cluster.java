@@ -22,16 +22,16 @@ import java.util.Iterator;
 
 /** Experimental cluster hub. */
 public final class Cluster {
+	public static long connection_refresh_intervall_ms = 60 * 60 * 1000;
 	public static boolean enable_log = true;
 	public static boolean enable_log_sql = false;
 	public static int server_port = 8889;
-	/** Timestamp for when the connections where created. */
-	private static long connections_last_refresh_ms;
-	public static long connection_refresh_intervall_ms = 60 * 60 * 1000;
-//	public static long connectionRefreshIntervallMs = 10 * 1000;
+	//	public static long connectionRefreshIntervallMs = 10 * 1000;
 	/** Counter used to synchronize. */
 	private static int activeThreads;
 	private static final ArrayList<Client> clients = new ArrayList<Client>();
+	/** Timestamp for when the connections where created. */
+	private static long connections_last_refresh_ms;
 	/** Synchronization object. */
 	private static Object sem = new Object();
 	/** Current SQL executed by the cluster */
@@ -156,33 +156,6 @@ public final class Cluster {
 		}
 	}
 
-	private static void refreshConnectionsIfNecessary() {
-		final long t1 = System.currentTimeMillis();
-		final long dt = t1 - connections_last_refresh_ms;
-		if (dt < connection_refresh_intervall_ms)
-			return;
-		log("refreshing connections.");
-		connections_last_refresh_ms = t1;
-		ArrayList<Client> brokenClients = null;
-		for (Client ct : clients) {
-			try {
-				ct.refreshConnection();
-			} catch (SQLException e) {
-				if (brokenClients == null) {
-					brokenClients = new ArrayList<Client>();
-				}
-				brokenClients.add(ct);
-				continue;
-			}
-		}
-		if (brokenClients == null)
-			return;
-		for (Client ct : brokenClients) {
-			ct.close();
-			clients.remove(ct);
-		}
-	}
-
 	public static String stacktrace(final Throwable e) {
 		final StringWriter sw = new StringWriter();
 		final PrintWriter out = new PrintWriter(sw);
@@ -240,11 +213,31 @@ public final class Cluster {
 		throw new RuntimeException("client with address '" + address + "' is not registered.");
 	}
 
-	public static String getJdbcConnectionString(String address, String dbname, String user, String passwd) {
-		final String s = "jdbc:mysql://" + address + ":3306/" + dbname + "?user=" + user + "&password=" + passwd
-				+ "&verifyServerCertificate=false&useSSL=true&ssl-mode=REQUIRED";
-//		System.out.println(s);
-		return s;
+	private static void refreshConnectionsIfNecessary() {
+		final long t1 = System.currentTimeMillis();
+		final long dt = t1 - connections_last_refresh_ms;
+		if (dt < connection_refresh_intervall_ms)
+			return;
+		log("refreshing connections.");
+		connections_last_refresh_ms = t1;
+		ArrayList<Client> brokenClients = null;
+		for (Client ct : clients) {
+			try {
+				ct.refreshConnection();
+			} catch (SQLException e) {
+				if (brokenClients == null) {
+					brokenClients = new ArrayList<Client>();
+				}
+				brokenClients.add(ct);
+				continue;
+			}
+		}
+		if (brokenClients == null)
+			return;
+		for (Client ct : brokenClients) {
+			ct.close();
+			clients.remove(ct);
+		}
 	}
 
 	private final static class Client {
@@ -284,7 +277,7 @@ public final class Cluster {
 		}
 
 		public void connectToDatabase() {
-			final String cs = getJdbcConnectionString(address, dbname, user, password);
+			final String cs = Db.getJdbcConnectionString(address, dbname, user, password);
 			while (true) {
 				try {
 					connection = DriverManager.getConnection(cs);
@@ -301,17 +294,6 @@ public final class Cluster {
 					}
 				}
 			}
-		}
-
-		public void refreshConnection() throws SQLException {
-			try {
-				connection.close();
-			} catch (SQLException e) {
-				log(e);
-			}
-			final String cs = getJdbcConnectionString(address, dbname, user, password);
-			connection = DriverManager.getConnection(cs);
-			statement = connection.createStatement();
 		}
 
 		public void process() throws Throwable {
@@ -343,6 +325,17 @@ public final class Cluster {
 				return;
 			}
 			sb.append(new String(bb.array(), bb.position(), bb.limit()));
+		}
+
+		public void refreshConnection() throws SQLException {
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				log(e);
+			}
+			final String cs = Db.getJdbcConnectionString(address, dbname, user, password);
+			connection = DriverManager.getConnection(cs);
+			statement = connection.createStatement();
 		}
 	}
 

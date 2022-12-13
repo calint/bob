@@ -133,7 +133,7 @@ final public class b{
 			b.bapp=(bapp)Class.forName(b.bapp_class).getConstructor().newInstance();
 			b.bapp.init();
 		}
-		Db.init("jdbc:mysql://"+bapp_jdbc_host+":3306/"+bapp_jdbc_db+"?verifyServerCertificate=false&useSSL=true&ssl-mode=REQUIRED",bapp_jdbc_user,bapp_jdbc_password,bapp_jdbc_ncons,bapp_cluster_ip,bapp_cluster_port);
+		Db.init(bapp_jdbc_host,bapp_jdbc_db,bapp_jdbc_user,bapp_jdbc_password,bapp_jdbc_ncons,bapp_cluster_ip,bapp_cluster_port);
 
 		final ServerSocketChannel ssc=ServerSocketChannel.open();
 		ssc.configureBlocking(false);
