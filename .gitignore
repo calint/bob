@@ -6,3 +6,5 @@
 /servers-ips.txt
 /dbcluster-digitalocean.txt
 /run-digitalocean.cfg
+/cluster-digitalocean.cfg
+/run.cfg.do
