@@ -21,12 +21,13 @@ dbo
 [x]   step 2. all writes through a synchronized block
 [x]   step 3. cluster server that synchronizes all writes
 [x]   cluster server does sql in parallel
-[ ] restore member with mysqldump
-[ ]   pause the cluster writes
-[ ]   mysqldump testdb | mysql -h ... etc
-[ ]   start bob
-[ ]   cluster listen
-[ ]   resume cluster writes 
+[ ]   refresh connection every nth ms
+[ ]   restore member with mysqldump
+[ ]     pause the cluster writes
+[ ]     mysqldump testdb | mysql -h ... etc
+[ ]     start bob
+[ ]     cluster listen
+[ ]     resume cluster writes 
 [ ] Db.tableNameForJavaClass does not include package name
 [o] javadoc
 [o] review code. search for "// todo" "// !" "// ?"

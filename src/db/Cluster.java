@@ -25,6 +25,10 @@ public final class Cluster {
 	public static boolean enable_log = true;
 	public static boolean enable_log_sql = false;
 	public static int server_port = 8889;
+	/** Timestamp for when the connections where created. */
+	private static long connections_last_refresh_ms;
+	public static long connection_refresh_intervall_ms = 60 * 60 * 1000;
+//	public static long connectionRefreshIntervallMs = 10 * 1000;
 	/** Counter used to synchronize. */
 	private static int activeThreads;
 	private static final ArrayList<Client> clients = new ArrayList<Client>();
@@ -79,6 +83,7 @@ public final class Cluster {
 		}
 		bfr.close();
 		log("connected to databases.");
+		connections_last_refresh_ms = System.currentTimeMillis();
 
 		final int nclients = clients.size();
 		log("waiting for " + nclients + " client" + (nclients > 1 ? "s" : "") + " to connect.");
@@ -127,7 +132,8 @@ public final class Cluster {
 			ct.thread.start();
 		}
 		while (true) {
-			selector.select();
+			selector.select(10 * 1000); // unblock every 10th second
+			refreshConnectionsIfNecessary();
 			Iterator<SelectionKey> keys = selector.selectedKeys().iterator();
 			while (keys.hasNext()) {
 				SelectionKey sk = keys.next();
@@ -147,6 +153,33 @@ public final class Cluster {
 				}
 				keys.remove();
 			}
+		}
+	}
+
+	private static void refreshConnectionsIfNecessary() {
+		final long t1 = System.currentTimeMillis();
+		final long dt = t1 - connections_last_refresh_ms;
+		if (dt < connection_refresh_intervall_ms)
+			return;
+		log("refreshing connections.");
+		connections_last_refresh_ms = t1;
+		ArrayList<Client> brokenClients = null;
+		for (Client ct : clients) {
+			try {
+				ct.refreshConnection();
+			} catch (SQLException e) {
+				if (brokenClients == null) {
+					brokenClients = new ArrayList<Client>();
+				}
+				brokenClients.add(ct);
+				continue;
+			}
+		}
+		if (brokenClients == null)
+			return;
+		for (Client ct : brokenClients) {
+			ct.close();
+			clients.remove(ct);
 		}
 	}
 
@@ -207,6 +240,13 @@ public final class Cluster {
 		throw new RuntimeException("client with address '" + address + "' is not registered.");
 	}
 
+	public static String getJdbcConnectionString(String address, String dbname, String user, String passwd) {
+		final String s = "jdbc:mysql://" + address + ":3306/" + dbname + "?user=" + user + "&password=" + passwd
+				+ "&verifyServerCertificate=false&useSSL=true&ssl-mode=REQUIRED";
+//		System.out.println(s);
+		return s;
+	}
+
 	private final static class Client {
 		private String address;
 		private ByteBuffer bb = ByteBuffer.allocate(64 * 1024);
@@ -244,23 +284,34 @@ public final class Cluster {
 		}
 
 		public void connectToDatabase() {
-			final String cs = "jdbc:mysql://" + address + ":3306/" + dbname
-					+ "?verifyServerCertificate=false&useSSL=true&ssl-mode=REQUIRED";
+			final String cs = getJdbcConnectionString(address, dbname, user, password);
 			while (true) {
 				try {
-					connection = DriverManager.getConnection(cs, user, password);
+					connection = DriverManager.getConnection(cs);
 					statement = connection.createStatement();
 //					log("connected to database at " + address);
 					break;
-				} catch (Throwable t) {
+				} catch (SQLException t) {
 					try {
 						System.err.println("cannot connect to database at " + address + ". waiting.");
+						log(t);
 						Thread.sleep(5000);
 					} catch (InterruptedException e) {
 						log(e);
 					}
 				}
 			}
+		}
+
+		public void refreshConnection() throws SQLException {
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				log(e);
+			}
+			final String cs = getJdbcConnectionString(address, dbname, user, password);
+			connection = DriverManager.getConnection(cs);
+			statement = connection.createStatement();
 		}
 
 		public void process() throws Throwable {
@@ -341,7 +392,7 @@ public final class Cluster {
 					// close client
 					log(e);
 					client.close();
-					synchronized(clients) {
+					synchronized (clients) {
 						clients.remove(client);
 					}
 					// last thread done notifies the executor to continue
