@@ -26,8 +26,8 @@ public final class Cluster {
 	public static boolean execute_in_parallel = true;
 	public static long connection_refresh_intervall_ms = 60 * 60 * 1000;
 	public static boolean enable_log = true;
-	public static boolean enable_log_sql = true;
-//	public static boolean enable_log_sql = false;
+//	public static boolean enable_log_sql = true;
+	public static boolean enable_log_sql = false;
 	public static int server_port = 8889;
 	// public static long connectionRefreshIntervallMs = 10 * 1000;
 	/** Counter used to synchronize. */
@@ -209,14 +209,14 @@ public final class Cluster {
 //		}
 //		// wait for the threads to finish
 //		synchronized (sem) {
-			System.out.println("active threads before wait: " + activeThreads);
+//			System.out.println("active threads before wait: " + activeThreads);
 			while (activeThreads != 0) {
 				try {
 					sem.wait();
 				} catch (InterruptedException ok) {
 				}
 			}
-			System.out.println("active threads after wait: " + activeThreads);
+//			System.out.println("active threads after wait: " + activeThreads);
 		}
 		if (sql.startsWith("insert ")) {
 			final int n = clients.size();
