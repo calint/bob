@@ -30,13 +30,13 @@ public final class Cluster {
 	public static boolean enable_log_sql = false;
 	public static int server_port = 8889;
 	// public static long connectionRefreshIntervallMs = 10 * 1000;
-	/** Counter used to synchronize. */
-	private static volatile int activeThreads;
 	private static final ArrayList<Client> clients = new ArrayList<Client>();
 	/** Timestamp for when the connections where created. */
 	private static long connections_last_refresh_ms;
 	/** Synchronization object. */
 	private static Object sem = new Object();
+	/** Counter used to synchronize. */
+	private static volatile int activeThreads;
 	/** Current SQL executed by the cluster */
 	private static volatile String current_sql;
 
