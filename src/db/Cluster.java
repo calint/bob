@@ -209,13 +209,14 @@ public final class Cluster {
 		}
 		// wait for the threads to finish
 		synchronized (sem) {
-			System.out.println("active threads: " + activeThreads);
+			System.out.println("active threads before wait: " + activeThreads);
 			while (activeThreads != 0) {
 				try {
 					sem.wait();
 				} catch (InterruptedException ok) {
 				}
 			}
+			System.out.println("active threads after wait: " + activeThreads);
 		}
 		if (sql.startsWith("insert ")) {
 			final int n = clients.size();
