@@ -8,7 +8,7 @@ IPS=$(cat servers-ips.txt | sed -r '/^\s*$/d' | sed -r '/^\s*#/d')
 for IP in $IPS; do
 	CMD='cd /bob && git stash && git pull https://github.com/calint/bob && ./build.sh'
 	echo $IP: $CMD
-	ssh -n root@$IP $CMD &
+	ssh -n root@$IP "$CMD" &
 done
 
 wait
@@ -25,12 +25,12 @@ wait
 IP=$(set -- $IPS && echo $1)
 CMD='systemctl restart bob-cluster'
 echo $IP: $CMD
-ssh root@$IP $CMD
+ssh root@$IP "$CMD"
 
 for IP in $IPS; do
 	CMD='systemctl restart bob'
 	echo $IP: $CMD
-	ssh -n root@$IP $CMD &
+	ssh -n root@$IP "$CMD" &
 done
 
 wait

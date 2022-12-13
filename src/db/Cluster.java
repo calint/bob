@@ -25,7 +25,8 @@ public final class Cluster {
 	public static boolean execute_in_parallel = true;
 	public static long connection_refresh_intervall_ms = 60 * 60 * 1000;
 	public static boolean enable_log = true;
-	public static boolean enable_log_sql = false;
+	public static boolean enable_log_sql = true;
+//	public static boolean enable_log_sql = false;
 	public static int server_port = 8889;
 	// public static long connectionRefreshIntervallMs = 10 * 1000;
 	/** Counter used to synchronize. */
