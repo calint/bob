@@ -142,14 +142,21 @@ public final class Cluster {
 				ct.thread.start();
 			}
 		}
-		// ! racing. wait for all the threads to be in the sem before starting
-		final byte[] ba_nl = "\n".getBytes();
+		// ? racing. wait for all the threads to be in the sem before starting
+		
+		// register for read 
 		for (Client ct : clients) {
 			ct.socketChannel.register(selector, SelectionKey.OP_READ, ct);
+		}
+
+		// give go ahead
+		final byte[] ba_nl = "\n".getBytes();
+		for (Client ct : clients) {
 			final int c = ct.socketChannel.write(ByteBuffer.wrap(ba_nl));
 			if (c != ba_nl.length)
 				throw new RuntimeException("Could not write full message to client.");
 		}
+
 		// processing
 		while (true) {
 			selector.select(10 * 1000); // unblock every 10th second
