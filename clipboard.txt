@@ -87,3 +87,4 @@ cluster (seq)   cluster (par)
 205663          
 193834
 266692
+212564

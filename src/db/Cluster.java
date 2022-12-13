@@ -38,7 +38,7 @@ public final class Cluster {
 	/** Synchronization object. */
 	private static Object sem = new Object();
 	/** Current SQL executed by the cluster */
-	private static String current_sql;
+	private static volatile String current_sql;
 
 	public static String dbname;
 	public static String user;
