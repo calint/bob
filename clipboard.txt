@@ -101,7 +101,7 @@ cluster (seq)   cluster (par)
                 76124
                 84535
                 91653
-                
+                78726
                 
                 
                 

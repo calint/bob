@@ -38,8 +38,10 @@ public final class Cluster {
 	/** Counter used to synchronize. */
 //	private static volatile int activeThreads; // ? why volatile if it is updated in synchronized block
 	private static int activeThreads; // ? why volatile if it is updated in synchronized block
+//	/** Current SQL executed by the cluster */
+//	private static volatile String current_sql;
 	/** Current SQL executed by the cluster */
-	private static volatile String current_sql;
+	private static String current_sql;
 
 	public static String dbname;
 	public static String user;
@@ -202,8 +204,8 @@ public final class Cluster {
 		if (!execute_in_parallel)
 			return execSql_serial(sql);
 
-		current_sql = sql;
 		synchronized (sem) {
+			current_sql = sql;
 			activeThreads = clients.size();
 			// notify all threads to execute sql
 			sem.notifyAll();
