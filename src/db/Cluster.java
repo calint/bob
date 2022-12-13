@@ -482,6 +482,7 @@ public final class Cluster {
 				// last thread done notifies the executor to continue
 				synchronized (sem) {
 					activeThreads--;
+					Cluster.log_sql(this + ": active threads " + activeThreads);
 					if (activeThreads == 0) {
 						sem.notify();
 					}
