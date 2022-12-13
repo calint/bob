@@ -36,7 +36,8 @@ public final class Cluster {
 	/** Synchronization object. */
 	private static Object sem = new Object();
 	/** Counter used to synchronize. */
-	private static volatile int activeThreads;
+//	private static volatile int activeThreads; // ? why volatile if it is updated in synchronized block
+	private static int activeThreads; // ? why volatile if it is updated in synchronized block
 	/** Current SQL executed by the cluster */
 	private static volatile String current_sql;
 
