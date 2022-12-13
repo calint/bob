@@ -98,7 +98,7 @@ public final class Cluster {
 
 		final int nclients = clients.size();
 		log("waiting for " + nclients + " client" + (nclients > 1 ? "s" : "") + " to connect.");
-		
+
 		final ServerSocketChannel ssc = ServerSocketChannel.open();
 		ssc.configureBlocking(false);
 		final InetSocketAddress isa = new InetSocketAddress(server_port);
@@ -145,8 +145,8 @@ public final class Cluster {
 			}
 		}
 		// ? racing. wait for all the threads to be in the sem before starting
-		
-		// register for read 
+
+		// register for read
 		for (Client ct : clients) {
 			ct.socketChannel.register(selector, SelectionKey.OP_READ, ct);
 		}
@@ -209,6 +209,7 @@ public final class Cluster {
 		}
 		// wait for the threads to finish
 		synchronized (sem) {
+			System.out.println("active threads: " + activeThreads);
 			while (activeThreads != 0) {
 				try {
 					sem.wait();
