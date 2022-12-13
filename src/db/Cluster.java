@@ -96,13 +96,14 @@ public final class Cluster {
 
 		final int nclients = clients.size();
 		log("waiting for " + nclients + " client" + (nclients > 1 ? "s" : "") + " to connect.");
-		ServerSocketChannel ssc = ServerSocketChannel.open();
+		
+		final ServerSocketChannel ssc = ServerSocketChannel.open();
 		ssc.configureBlocking(false);
 		final InetSocketAddress isa = new InetSocketAddress(server_port);
 		ssc.socket().bind(isa);
 
-		Selector selector = Selector.open();
-		SelectionKey ssk = ssc.register(selector, SelectionKey.OP_ACCEPT);
+		final Selector selector = Selector.open();
+		final SelectionKey ssk = ssc.register(selector, SelectionKey.OP_ACCEPT);
 		// wait for clients to connect
 		int client_count = 0;
 		while (true) {
@@ -136,16 +137,20 @@ public final class Cluster {
 
 		log("starting cluster.");
 		// register client channels for read and give go ahead
+		if (execute_in_parallel) {
+			for (Client ct : clients) {
+				ct.thread.start();
+			}
+		}
+		// ! racing. wait for all the threads to be in the sem before starting
 		final byte[] ba_nl = "\n".getBytes();
 		for (Client ct : clients) {
-			if (execute_in_parallel)
-				ct.thread.start();
 			ct.socketChannel.register(selector, SelectionKey.OP_READ, ct);
 			final int c = ct.socketChannel.write(ByteBuffer.wrap(ba_nl));
 			if (c != ba_nl.length)
 				throw new RuntimeException("Could not write full message to client.");
 		}
-		// ! racing. wait for all the threads to be in the sem before starting processing
+		// processing
 		while (true) {
 			selector.select(10 * 1000); // unblock every 10th second
 			refreshConnectionsIfNecessary();
