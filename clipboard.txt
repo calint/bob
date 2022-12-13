@@ -80,20 +80,19 @@ cluster   no-cluster  cluster (seq)   cluster (par)
 57379     24646       127372          87361
 62398     27026       102071          61499
 
-digitalocean, mysam, cluster 4 nodes
+digitalocean, mysam, cluster
 /dbo/test/test_dbo
-cluster (seq)   cluster (par)
-[ms]            [ms]
-205663          167378
-193834          158077
-266692          145235
-212564          89079
-                106115
-                66789
-                71192
-                71044
-                89101
-                92687
+cluster (seq)   cluster 4 (par)  cluster 8 (par)
+[ms]            [ms]             [ms]
+205663          167378           145749
+193834          158077           119280
+266692          145235           150158
+                106115           155272
+                66789            137096
+                71192            133770
+                71044            144028
+                89101            115448
+                92687            
                 78379
                 86372
                 80014
