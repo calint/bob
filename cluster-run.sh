@@ -10,7 +10,7 @@ else
 fi
 echo $CFG
 . ./$CFG
-
+java -version
 cmd="java -cp bin:lib/mysql-connector-java-5.1.49.jar db.Cluster cluster.cfg $MYSQL_DB $MYSQL_USER $MYSQL_PASSWORD"
 echo \> $cmd
 $cmd

@@ -11,6 +11,8 @@ fi
 echo $CFG
 . ./$CFG
 
+java -version
+
 cmd="java -cp bin:lib/mysql-connector-java-5.1.49.jar b.b \
 	server_port $B_PORT \
 	thread_pool_size $B_NTHREADS \
