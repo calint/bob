@@ -38,6 +38,10 @@ public final class Cluster {
 	/** Current SQL executed by the cluster */
 	private static String current_sql;
 
+	public static String dbname;
+	public static String user;
+	public static String password;
+
 	/** Prints the string to System.out */
 	public static void log(String s) {
 		if (!enable_log)
@@ -63,8 +67,11 @@ public final class Cluster {
 			System.out.println("Usage: java db.ClusterNIO <ip:port file> <dbname> <user> <password>");
 			return;
 		}
+		dbname = args[1];
+		user = args[2];
+		password = args[3];
 		// connect to cluster members
-		log("database '" + args[1] + "' user '" + args[2] + "' password [not displayed]");
+		log("database '" + dbname + "' user '" + user + "' password [not displayed]");
 		log("reading members ip file '" + args[0] + "'");
 		final FileReader fr = new FileReader(args[0]);
 		final BufferedReader bfr = new BufferedReader(fr);
@@ -78,7 +85,7 @@ public final class Cluster {
 				continue;
 			if (line.startsWith("#"))
 				continue;
-			final Client ct = new Client(line, args[1], args[2], args[3]);
+			final Client ct = new Client(line);
 			clients.add(ct);
 			log("  connecting to database at " + ct.address);
 			ct.connectToDatabase();
@@ -91,7 +98,7 @@ public final class Cluster {
 		log("waiting for " + nclients + " client" + (nclients > 1 ? "s" : "") + " to connect.");
 		ServerSocketChannel ssc = ServerSocketChannel.open();
 		ssc.configureBlocking(false);
-		final InetSocketAddress isa=new InetSocketAddress(server_port);
+		final InetSocketAddress isa = new InetSocketAddress(server_port);
 		ssc.socket().bind(isa);
 
 		Selector selector = Selector.open();
@@ -110,7 +117,7 @@ public final class Cluster {
 //					sc.setOption(StandardSocketOptions.TCP_NODELAY, true);
 //					InetSocketAddress sa = (InetSocketAddress) sc.getRemoteAddress();
 //					Client ct = findClientByAddress(sa.getHostString());
-					final String host=sc.socket().getInetAddress().getHostAddress();
+					final String host = sc.socket().getInetAddress().getHostAddress();
 					Client ct = findClientByAddress(host);
 					ct.socketChannel = sc;
 					keys.remove();
@@ -307,19 +314,13 @@ public final class Cluster {
 		private ByteBuffer bb = ByteBuffer.allocate(64 * 1024);
 		private ByteBuffer bb_nl = ByteBuffer.wrap("\n".getBytes());
 		private Connection connection;
-		private String dbname;
-		private String password;
 		private StringBuilder sb = new StringBuilder(64 * 1024);
 		private SocketChannel socketChannel;
 		private Statement statement;
 		private ClientThread thread;
-		private String user;
 
-		public Client(String address, String dbname, String user, String password) {
+		public Client(String address) {
 			this.address = address;
-			this.dbname = dbname;
-			this.user = user;
-			this.password = password;
 			if (execute_in_parallel) {
 				this.thread = new ClientThread(this, address);
 			}
