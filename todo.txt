@@ -1,6 +1,7 @@
 b
 [ ] class_init extended to be able to set statics on any class
 [ ] bob.js: server is busy message box when typing fast
+[ ]   server busy ui element
 [ ] fix for client that makes many threaded requests and then stalls them to starve server of threads or create too many. ddos.
 [ ] thread pool: get first, create if none available
 [ ] fix "// todo" comments
@@ -15,15 +16,15 @@ dbo
 [x]   connections to multiple servers
 [x]   write to all
 [x]   read round robin. solved by the load balancer.
-[x]   file with ips to the other cluster members
+[x]   file with ips of cluster nodes
 [x]   transactions on auto-commit
 [x]   establish one jdbc connection to the other servers
 [x]   all writes through a synchronized block writing to the other servers sequentially
 [x]   step 2. all writes through a synchronized block
 [x]   step 3. cluster server that synchronizes all writes
 [x]   cluster server does sql in parallel
-[ ]   refresh connection every nth ms
-[ ]   restore member with mysqldump
+[x]   refresh connection every nth ms
+[ ]   restore node with mysqldump
 [ ]     pause the cluster writes
 [ ]     mysqldump testdb | mysql -h ... etc
 [ ]     start bob

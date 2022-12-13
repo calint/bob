@@ -21,7 +21,7 @@ import java.util.Iterator;
 
 /** Experimental cluster hub. */
 public final class Cluster {
-	/** true if sql statements to cluster members are executed in parallel */
+	/** true if sql statements to cluster nodes are executed in parallel */
 	public static boolean execute_in_parallel = true;
 	public static long connection_refresh_intervall_ms = 60 * 60 * 1000;
 	public static boolean enable_log = true;
@@ -70,9 +70,9 @@ public final class Cluster {
 		dbname = args[1];
 		user = args[2];
 		password = args[3];
-		// connect to cluster members
+		// connect to cluster nodes
 		log("database '" + dbname + "' user '" + user + "' password [not displayed]");
-		log("reading members ip file '" + args[0] + "'");
+		log("reading nodes ip file '" + args[0] + "'");
 		final FileReader fr = new FileReader(args[0]);
 		final BufferedReader bfr = new BufferedReader(fr);
 		String line;

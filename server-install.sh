@@ -34,7 +34,7 @@ systemctl enable bob
 # mysql create database, user and grant access
 # 	create database testdb;create user 'c'@'%' identified by 'password';grant all on testdb.* to 'c'@'%';
 
-# edit and add IPs of cluster members
+# edit and add IPs of cluster nodes
 # cat > /bob/cluster.cfg
 
 # change the run.cfg with login for db
