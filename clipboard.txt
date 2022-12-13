@@ -82,9 +82,9 @@ cluster   no-cluster  cluster (seq)   cluster (par)
 
 digitalocean, mysam, cluster
 /dbo/test/test_dbo
-cluster (seq)   cluster 4 (par)  cluster 8 (par)
-[ms]            [ms]             [ms]
-205663          167378           145749
+cluster (seq)   cluster 4 (par)  cluster 8 (par)   cluster 8 (seq)
+[ms]            [ms]             [ms]              [ms]
+205663          167378           145749            
 193834          158077           119280
 266692          145235           150158
                 106115           155272
@@ -92,15 +92,15 @@ cluster (seq)   cluster 4 (par)  cluster 8 (par)
                 71192            133770
                 71044            144028
                 89101            115448
-                92687            
-                78379
-                86372
-                80014
-                73625
-                76124
-                84535
-                91653
-                78726
+                92687            149826
+                78379            164321
+                86372            131075
+                80014            129390
+                73625            163615
+                76124            147083            
+                84535            134758
+                91653            165878
+                78726            169482
                 
                 
                 
