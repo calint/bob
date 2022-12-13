@@ -6,10 +6,9 @@ cd $DIR
 IPS=$(cat servers-ips.txt | sed -r '/^\s*$/d' | sed -r '/^\s*#/d')
 
 for IP in $IPS; do
-	CMD='cd /bob && git pull https://github.com/calint/bob && ./build.sh && systemctl restart bob'
-	echo $IP: $CMD
-	ssh -n root@$IP $CMD &
-	echo
+	echo $IP
+	scp run.cfg.do root@$IP:/bob/run.cfg &
+	scp cluster.cfg.do root@$IP:/bob/cluster.cfg &
 done
 
 wait

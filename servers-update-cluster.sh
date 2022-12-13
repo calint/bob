@@ -6,7 +6,7 @@ cd $DIR
 IPS=$(cat servers-ips.txt | sed -r '/^\s*$/d' | sed -r '/^\s*#/d')
 
 for IP in $IPS; do
-	CMD='cd /bob && git pull https://github.com/calint/bob && ./build.sh'
+	CMD='cd /bob && git stash && git pull https://github.com/calint/bob && ./build.sh'
 	echo $IP: $CMD
 	ssh -n root@$IP $CMD &
 done
@@ -15,16 +15,23 @@ wait
 echo
 
 for IP in $IPS; do
+	echo $IP: scp ...
+	scp -q run.cfg.do root@$IP:/bob/run.cfg &
+	scp -q cluster.cfg.do root@$IP:/bob/cluster.cfg &
+done
+
+wait
+
+IP=$(set -- $IPS && echo $1)
+CMD='systemctl restart bob-cluster'
+echo $IP: $CMD
+ssh root@$IP $CMD
+
+for IP in $IPS; do
 	CMD='systemctl restart bob'
 	echo $IP: $CMD
 	ssh -n root@$IP $CMD &
 done
 
 wait
-echo
-
-IP=$(cat servers-ips.txt | sed -r '/^\s*$/d' | sed -r '/^\s*#/d' | head -n1)
-CMD='systemctl restart bob-cluster'
-echo $IP: $CMD
-ssh root@$IP $CMD
 echo
