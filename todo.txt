@@ -10,6 +10,7 @@ b
 [ ]   dbo: connection pool
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 dbo
+[o] review code. search for "// todo" "// !" "// ?"
 [o] cluster
 [x]   connections to multiple servers
 [x]   write to all
@@ -30,7 +31,6 @@ dbo
 [ ]     resume cluster writes 
 [ ] Db.tableNameForJavaClass does not include package name
 [o] javadoc
-[o] review code. search for "// todo" "// !" "// ?"
 [ ] Query.TableAliasMap: User -> u. if u present try us etc
 [o] removing referenced DbObject. check and possibly fail or update to null? DbClass.List<RelRef>. setting on db update_referring
 [x]   updates referring tables column to null

@@ -145,6 +145,7 @@ public final class Cluster {
 			if (c != ba_nl.length)
 				throw new RuntimeException("Could not write full message to client.");
 		}
+		// ! racing. wait for all the threads to be in the sem before starting processing
 		while (true) {
 			selector.select(10 * 1000); // unblock every 10th second
 			refreshConnectionsIfNecessary();
