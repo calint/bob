@@ -79,36 +79,3 @@ cluster   no-cluster
 62398     27026
 
 
-
-
-
-
-
-
-
-Dec 13 07:42:57 ramvark--1 cluster-run.sh[625]: java.sql.SQLException: Could not retrieve transaction read-only status from server
-Dec 13 07:42:57 ramvark--1 cluster-run.sh[625]:         at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:965)
-Dec 13 07:42:57 ramvark--1 cluster-run.sh[625]:         at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:898)
-Dec 13 07:42:57 ramvark--1 cluster-run.sh[625]:         at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:887)
-Dec 13 07:42:57 ramvark--1 cluster-run.sh[625]:         at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:861)
-Dec 13 07:42:57 ramvark--1 cluster-run.sh[625]:         at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:878)
-Dec 13 07:42:57 ramvark--1 cluster-run.sh[625]:         at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:874)
-Dec 13 07:42:57 ramvark--1 cluster-run.sh[625]:         at com.mysql.jdbc.ConnectionImpl.isReadOnly(ConnectionImpl.java:3523)
-Dec 13 07:42:57 ramvark--1 cluster-run.sh[625]:         at com.mysql.jdbc.ConnectionImpl.isReadOnly(ConnectionImpl.java:3490)
-Dec 13 07:42:57 ramvark--1 cluster-run.sh[625]:         at com.mysql.jdbc.StatementImpl.executeInternal(StatementImpl.java:759)
-Dec 13 07:42:57 ramvark--1 cluster-run.sh[625]:         at com.mysql.jdbc.StatementImpl.execute(StatementImpl.java:729)
-Dec 13 07:42:57 ramvark--1 cluster-run.sh[625]:         at db.Cluster$ClientThread.run(Cluster.java:337)
-Dec 13 07:42:57 ramvark--1 cluster-run.sh[625]: Caused by: java.sql.SQLException: The client was disconnected by the server because of inactivity. See wait_timeout and interactive_timeout for configuring this b>
-Dec 13 07:42:57 ramvark--1 cluster-run.sh[625]:         at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:965)
-Dec 13 07:42:57 ramvark--1 cluster-run.sh[625]:         at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3933)
-Dec 13 07:42:57 ramvark--1 cluster-run.sh[625]:         at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3869)
-Dec 13 07:42:57 ramvark--1 cluster-run.sh[625]:         at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2524)
-Dec 13 07:42:57 ramvark--1 cluster-run.sh[625]:         at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2675)
-Dec 13 07:42:57 ramvark--1 cluster-run.sh[625]:         at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2465)
-Dec 13 07:42:57 ramvark--1 cluster-run.sh[625]:         at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2439)
-Dec 13 07:42:57 ramvark--1 cluster-run.sh[625]:         at com.mysql.jdbc.StatementImpl.executeQuery(StatementImpl.java:1365)
-Dec 13 07:42:57 ramvark--1 cluster-run.sh[625]:         at com.mysql.jdbc.ConnectionImpl.isReadOnly(ConnectionImpl.java:3515)
-Dec 13 07:42:57 ramvark--1 cluster-run.sh[625]:         ... 4 more
-
-
-
