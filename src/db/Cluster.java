@@ -31,7 +31,7 @@ public final class Cluster {
 	public static int server_port = 8889;
 	// public static long connectionRefreshIntervallMs = 10 * 1000;
 	/** Counter used to synchronize. */
-	private static int activeThreads;
+	private static volatile int activeThreads;
 	private static final ArrayList<Client> clients = new ArrayList<Client>();
 	/** Timestamp for when the connections where created. */
 	private static long connections_last_refresh_ms;
