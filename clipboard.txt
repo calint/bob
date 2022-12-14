@@ -101,7 +101,8 @@ cluster (seq)   cluster 4 (par)  cluster 8 (par)   cluster 8 (seq)
                 84535            134758
                 91653            165878
                 78726            169482
-                
+                                 131810
+                                 155717
                 
                 
                 
