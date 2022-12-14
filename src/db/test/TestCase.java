@@ -77,12 +77,12 @@ public abstract class TestCase implements Runnable {
 				final long t2 = System.currentTimeMillis();
 				doRun();
 				final long t3 = System.currentTimeMillis();
-				out.println(" "+(t3-t2)+"ms");
+				out.println(" "+(t3-t2)+" ms");
 				tn.commit();
 			}
 			final long t1 = System.currentTimeMillis();
 			final long dt = t1 - t0;
-			out.println(getTestName() + " [cache " + cachests + "]: passed (" + dt + "ms)");
+			out.println(getTestName() + " [cache " + cachests + "]: passed (" + dt + " ms)");
 //			out.flush();
 		} catch (Throwable t1) {
 			if (!use_current_transaction) {
