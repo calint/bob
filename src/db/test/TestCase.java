@@ -1,11 +1,15 @@
 package db.test;
 
+import java.io.PrintStream;
+
 import db.Db;
 import db.DbTransaction;
 
 public abstract class TestCase implements Runnable {
 	private final boolean use_current_transaction;
-
+	public PrintStream out=System.out;
+	public int number_of_runs=1;
+	
 	public TestCase() {
 		this(false);
 	}
@@ -52,10 +56,6 @@ public abstract class TestCase implements Runnable {
 		return true;
 	}
 
-	protected int numberOfTestRuns() {
-		return 1;
-	}
-
 	public String getTestName() {
 		return getClass().getName();
 	}
@@ -70,23 +70,26 @@ public abstract class TestCase implements Runnable {
 		final String cachests = cacheon ? " on" : "off";
 		tn.cache_enabled = cacheon;
 		try {
-			final int n = numberOfTestRuns();
 			final long t0 = System.currentTimeMillis();
-			for (int i = 0; i < n; i++) {
-				System.out.println(getClass().getName() + ": run " + (i + 1) + " of " + n);
+			for (int i = 0; i < number_of_runs; i++) {
+				out.print(getClass().getName() + ": run " + (i + 1) + " of " + number_of_runs);
+				out.flush();
+				final long t2 = System.currentTimeMillis();
 				doRun();
+				final long t3 = System.currentTimeMillis();
+				out.println(" "+(t3-t2)+"ms");
 				tn.commit();
 			}
 			final long t1 = System.currentTimeMillis();
 			final long dt = t1 - t0;
-//			final long dt_s = dt / 1000;
-//			System.out.println(getTestName() + " [cache " + cachests + "]: passed (" + dt_s + "s)");
-			System.out.println(getTestName() + " [cache " + cachests + "]: passed (" + dt + "ms)");
+			out.println(getTestName() + " [cache " + cachests + "]: passed (" + dt + "ms)");
+//			out.flush();
 		} catch (Throwable t1) {
 			if (!use_current_transaction) {
 				tn.rollback();
 			}
-			System.out.println(getClass().getName() + " [cache " + cachests + "]: failed");
+			out.println(getClass().getName() + " [cache " + cachests + "]: failed");
+//			out.flush();
 			throw new RuntimeException(t1);
 		} finally {
 			if (!use_current_transaction) {

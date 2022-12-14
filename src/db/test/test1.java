@@ -19,16 +19,6 @@ public class test1 extends TestCase {
 	}
 
 	@Override
-	protected int numberOfTestRuns() {
-		return 100;
-	}
-
-//	@Override
-//	protected boolean isResetDatabase() {
-//		return true;
-//	}
-
-	@Override
 	public void doRun() throws Throwable {
 		final DbTransaction tn = Db.currentTransaction();
 		final User u1 = (User) tn.create(User.class);
