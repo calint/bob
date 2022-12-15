@@ -303,7 +303,6 @@ public final class Cluster {
 		if (dt < connection_refresh_intervall_ms)
 			return;
 //		log("refreshing connections.");
-		final long t0 = System.currentTimeMillis();
 		connections_last_refresh_ms = t1;
 		ArrayList<Client> brokenClients = null;
 		for (Client ct : clients) {
@@ -317,7 +316,7 @@ public final class Cluster {
 				continue;
 			}
 		}
-		final long dt1 = System.currentTimeMillis() - t0;
+		final long dt1 = System.currentTimeMillis() - connections_last_refresh_ms;
 		log("refreshed connections in " + dt1 + " ms");
 		if (brokenClients == null)
 			return;
