@@ -11,6 +11,7 @@ b
 [ ]   dbo: connection pool
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 dbo
+[ ] cluster client connect to database through DriverManager is slow.
 [o] review code. search for "// todo" "// !" "// ?"
 [o] cluster
 [x]   connections to multiple servers

@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-apt-get update
+apt-get -o DPkg::Lock::Timeout=-1 update
 apt-get -y install default-jdk git default-mysql-server
 cd /
 git clone https://github.com/calint/bob
