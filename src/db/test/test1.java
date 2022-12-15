@@ -8,6 +8,7 @@ import db.DbObject;
 import db.DbTransaction;
 import db.Query;
 
+/** Tests many functions. It cleans up after test. */
 public class test1 extends TestCase {
 	@Override
 	public void doRun() throws Throwable {

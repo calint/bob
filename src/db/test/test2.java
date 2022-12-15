@@ -8,6 +8,7 @@ import db.Db;
 import db.DbTransaction;
 import db.Query;
 
+/** Tests min max values. It cleans up after test. */
 public class test2 extends TestCase {
 	@Override
 	public void doRun() throws Throwable {

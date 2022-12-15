@@ -7,6 +7,7 @@ import db.DbObject;
 import db.DbTransaction;
 import db.Query;
 
+/** Tests retrieving multiple objects per row in a select. It cleans up after test. */
 public class test3 extends TestCase {
 	@Override
 	public void doRun() throws Throwable {
