@@ -2,7 +2,6 @@ package db;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.InetSocketAddress;
@@ -255,7 +254,7 @@ public final class Cluster {
 						rs.close();
 					} else
 						throw new RuntimeException("expected generated id");
-				} catch (SQLException e) {
+				} catch (Throwable e) {
 					log(e);
 					if (broken_clients == null) {
 						broken_clients = new ArrayList<Client>();
@@ -277,7 +276,7 @@ public final class Cluster {
 			for (Client ct : clients) {
 				try {
 					ct.statement.execute(sql);
-				} catch (SQLException e) {
+				} catch (Throwable e) {
 					log(e);
 					if (broken_clients == null) {
 						broken_clients = new ArrayList<Client>();
@@ -314,7 +313,7 @@ public final class Cluster {
 		for (Client ct : clients) {
 			try {
 				ct.refreshConnection();
-			} catch (SQLException e) {
+			} catch (Throwable e) {
 				if (brokenClients == null) {
 					brokenClients = new ArrayList<Client>();
 				}
@@ -352,12 +351,12 @@ public final class Cluster {
 			thread.interrupt();
 			try {
 				socketChannel.close();
-			} catch (IOException e) {
+			} catch (Throwable e) {
 				log(e);
 			}
 			try {
 				connection.close();
-			} catch (SQLException e) {
+			} catch (Throwable e) {
 				log(e);
 			}
 			System.out.println("disconnected: " + address);
@@ -372,7 +371,7 @@ public final class Cluster {
 					statement = connection.createStatement();
 //					log("connected to database at " + address);
 					break;
-				} catch (SQLException t) {
+				} catch (Throwable t) {
 					try {
 						System.err.println("cannot connect to database at " + address + ". waiting.");
 						log(t);
@@ -418,7 +417,7 @@ public final class Cluster {
 		public void refreshConnection() throws SQLException {
 			try {
 				connection.close();
-			} catch (SQLException e) {
+			} catch (Throwable e) {
 				log(e);
 			}
 			final String cs = Db.getJdbcConnectionString(address, dbname, user, password);
