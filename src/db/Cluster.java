@@ -317,14 +317,14 @@ public final class Cluster {
 				continue;
 			}
 		}
+		final long dt1 = System.currentTimeMillis() - t0;
+		log("refreshed connections in " + dt1 + " ms");
 		if (brokenClients == null)
 			return;
 		for (Client ct : brokenClients) {
 			ct.close();
 			clients.remove(ct);
 		}
-		final long dt1 = System.currentTimeMillis() - t0;
-		log("refreshed connections in " + dt1 + " ms");
 	}
 
 	private final static class Client {
