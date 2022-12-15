@@ -469,7 +469,7 @@ public final class Cluster {
 					} else {
 						client.statement.execute(current_sql);
 					}
-				} catch (SQLException e) {
+				} catch (Throwable e) {
 					// close client
 					log(e);
 					client.close();
