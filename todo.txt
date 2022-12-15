@@ -10,6 +10,7 @@ b
 [ ]   b: request queue, thread pool
 [ ]   dbo: connection pool
 [ ] cluster: health-check the database
+[ ] remove package c
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 dbo
 [ ] cluster client connect to database through DriverManager is slow. Class.forName and register driver.
