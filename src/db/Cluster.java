@@ -30,6 +30,7 @@ public final class Cluster {
 //	public static boolean enable_log_sql = true;
 	public static boolean enable_log_sql = false;
 	public static int server_port = 8889;
+	private static Driver jdbcDriver;
 	// public static long connectionRefreshIntervallMs = 10 * 1000;
 	private static final ArrayList<Client> clients = new ArrayList<Client>();
 	/** Timestamp for when the connections where created. */
@@ -68,9 +69,9 @@ public final class Cluster {
 	}
 
 	public static void main(String[] args) throws Throwable {
-		Driver driver = (Driver) Class.forName("com.mysql.jdbc.Driver").newInstance(); // ! java 1.5
-		DriverManager.registerDriver(driver);
-
+		jdbcDriver = (Driver) Class.forName("com.mysql.jdbc.Driver").newInstance(); // ! java 1.5
+		DriverManager.registerDriver(jdbcDriver);
+		
 		if (args.length < 4) {
 			System.out.println("Usage: java db.ClusterNIO <ip:port file> <dbname> <user> <password>");
 			return;
@@ -366,7 +367,8 @@ public final class Cluster {
 			final String cs = Db.getJdbcConnectionString(address, dbname, user, password);
 			while (true) {
 				try {
-					connection = DriverManager.getConnection(cs);
+//					connection = DriverManager.getConnection(cs);
+					connection = jdbcDriver.connect(cs, null);
 					statement = connection.createStatement();
 //					log("connected to database at " + address);
 					break;
@@ -420,7 +422,8 @@ public final class Cluster {
 				log(e);
 			}
 			final String cs = Db.getJdbcConnectionString(address, dbname, user, password);
-			connection = DriverManager.getConnection(cs);
+//			connection = DriverManager.getConnection(cs);
+			connection = jdbcDriver.connect(cs, null);
 			statement = connection.createStatement();
 		}
 	}
