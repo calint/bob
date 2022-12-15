@@ -9,6 +9,7 @@ import java.lang.reflect.Modifier;
 import java.net.Socket;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -70,6 +71,9 @@ public final class Db {
 
 	/** Called once to create the singleton instance. */
 	public static void initInstance() throws Throwable {
+		Driver driver = (Driver) Class.forName("com.mysql.jdbc.Driver").getConstructor().newInstance(); // ! java 1.5
+		DriverManager.registerDriver(driver);
+
 		Db.log("dbo: init instance");
 //		inst=new Db();
 		register(DbObject.class);
