@@ -20,7 +20,7 @@ public @stateless class test_dbo extends a{
 //		runTest(x,new import_games(false));
 //		runTest(x,new test3());
 		final long dt=System.currentTimeMillis()-t0;
-//		x.p("done: ").p(dt).pl(" ms");
+		x.p("done: ").p(dt).pl(" ms");
 	}
 
 	private void runTest(xwriter x,int nruns,TestCase c) throws Throwable{
