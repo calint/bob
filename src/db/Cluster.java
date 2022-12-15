@@ -29,24 +29,19 @@ public final class Cluster {
 //	public static boolean enable_log_sql = true;
 	public static boolean enable_log_sql = false;
 	public static int server_port = 8889;
-//	private static Driver jdbcDriver;
-	// public static long connectionRefreshIntervallMs = 10 * 1000;
 	private static final ArrayList<Client> clients = new ArrayList<Client>();
 	/** Timestamp for when the connections where created. */
 	private static long connections_last_refresh_ms;
 	/** Synchronization object. */
-	private static Object sem = new Object();
+	private static Object monitor = new Object();
 	/** Counter used to synchronize. */
-//	private static volatile int activeThreads; // ? why volatile if it is updated in synchronized block
-	private static int activeThreads; // ? why volatile if it is updated in synchronized block
-//	/** Current SQL executed by the cluster */
-//	private static volatile String current_sql;
+	private static int active_threads; // ? why volatile if it is updated in synchronized block
 	/** Current SQL executed by the cluster */
 	private static String current_sql;
 
-	public static String dbname;
-	public static String user;
-	public static String password;
+	private static String dbname;
+	private static String user;
+	private static String password;
 
 	/** Prints the string to System.out */
 	public static void log(String s) {
@@ -70,7 +65,7 @@ public final class Cluster {
 	public static void main(String[] args) throws Throwable {
 		Driver driver = (Driver) Class.forName("com.mysql.jdbc.Driver").getConstructor().newInstance(); // ! java 1.5
 		DriverManager.registerDriver(driver);
-		
+
 		if (args.length < 4) {
 			System.out.println("Usage: java db.ClusterNIO <ip:port file> <dbname> <user> <password>");
 			return;
@@ -206,16 +201,16 @@ public final class Cluster {
 		if (!execute_in_parallel)
 			return execSql_serial(sql);
 
-		synchronized (sem) {
+		synchronized (monitor) {
 			current_sql = sql;
-			activeThreads = clients.size();
+			active_threads = clients.size();
 			// notify all threads to execute sql
-			sem.notifyAll();
+			monitor.notifyAll();
 
 			// wait for last thread to finish
-			while (activeThreads != 0) {
+			while (active_threads != 0) {
 				try {
-					sem.wait();
+					monitor.wait();
 				} catch (InterruptedException ok) {
 				}
 			}
@@ -330,19 +325,21 @@ public final class Cluster {
 	}
 
 	private final static class Client {
-		private String address;
-		private ByteBuffer bb = ByteBuffer.allocate(64 * 1024);
-		private ByteBuffer bb_nl = ByteBuffer.wrap("\n".getBytes());
+		private final String address;
+		private final ByteBuffer bb = ByteBuffer.allocate(64 * 1024);
+		private final ByteBuffer bb_nl = ByteBuffer.wrap("\n".getBytes());
+		private final StringBuilder sb = new StringBuilder(64 * 1024);
+		private final ClientThread thread;
 		private Connection connection;
-		private StringBuilder sb = new StringBuilder(64 * 1024);
 		private SocketChannel socketChannel;
 		private Statement statement;
-		private ClientThread thread;
 
 		public Client(String address) {
 			this.address = address;
 			if (execute_in_parallel) {
 				this.thread = new ClientThread(this, address);
+			} else {
+				this.thread = null;
 			}
 		}
 
@@ -444,10 +441,10 @@ public final class Cluster {
 				if (stopped)
 					break;
 				// wait for new sql or stopped
-				synchronized (sem) {
+				synchronized (monitor) {
 					while (!stopped && prevSql == current_sql) {
 						try {
-							sem.wait();
+							monitor.wait();
 						} catch (InterruptedException ok) {
 						}
 					}
@@ -476,19 +473,19 @@ public final class Cluster {
 						clients.remove(client);
 					}
 					// last thread done notifies the executor to continue
-					synchronized (sem) {
-						activeThreads--;
-						if (activeThreads == 0) {
-							sem.notify();
+					synchronized (monitor) {
+						active_threads--;
+						if (active_threads == 0) {
+							monitor.notify();
 						}
 					}
 					return;
 				}
 				// last thread done notifies the executor to continue
-				synchronized (sem) {
-					activeThreads--;
-					if (activeThreads == 0) {
-						sem.notify();
+				synchronized (monitor) {
+					active_threads--;
+					if (active_threads == 0) {
+						monitor.notify();
 					}
 				}
 			}
