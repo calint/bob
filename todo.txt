@@ -6,7 +6,7 @@ b
 [ ] thread pool: get first, create if none available
 [ ] fix "// todo" comments
 [ ]   websock: implement ping/pong
-[ ] use java.util.concurrent
+[ ] use java.util.concurrent (keep it compatible with java 1.5)
 [ ]   b: request queue, thread pool
 [ ]   dbo: connection pool
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
