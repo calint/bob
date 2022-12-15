@@ -3,7 +3,7 @@ set -e
 DIR=$(dirname "$0")
 cd $DIR
 
-IPS=$(cat servers-ips.txt | sed -r '/^\s*$/d' | sed -r '/^\s*#/d')
+IPS=$(cat cluster-ips.txt | sed -r '/^\s*$/d' | sed -r '/^\s*#/d')
 
 for IP in $IPS; do
 	CMD='echo "drop database if exists testdb;create database testdb;" | mysql'
