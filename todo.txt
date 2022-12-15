@@ -11,6 +11,7 @@ b
 [ ]   dbo: connection pool
 [ ] cluster: health-check the database
 [ ] remove package c
+[ ] Content-disposition: attachment; filename=file.txt
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 dbo
 [ ] cluster client connect to database through DriverManager is slow. Class.forName and register driver.
