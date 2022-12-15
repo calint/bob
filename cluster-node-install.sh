@@ -1,8 +1,9 @@
 #!/bin/sh
+# run on the node
 set -e
 
 apt-get -o DPkg::Lock::Timeout=-1 update
-apt-get -y install default-jdk git default-mysql-server
+apt-get -o DPkg::Lock::Timeout=-1 -y install default-jdk git default-mysql-server
 cd /
 git clone https://github.com/calint/bob
 cd /bob
@@ -28,13 +29,11 @@ systemctl enable bob
 # mysql allow connection from any host
 cp -a /etc/mysql/mysql.conf.d/mysqld.cnf /etc/mysql/mysql.conf.d/mysqld.cnf.bak
 cat /etc/mysql/mysql.conf.d/mysqld.cnf.bak | sed "s/\s*bind-address.*/bind-address=*/g" > /etc/mysql/mysql.conf.d/mysqld.cnf
-systemctl restart mysql
 
 # mysql create database, user and grant access
 echo "create database testdb;create user 'c'@'%' identified by 'password';grant all on testdb.* to 'c'@'%';" | mysql
 
-# add droplet to load balancer
 # add droplet to mysql cluster trusted sources
 
-# reboot (logs from the service won't be available otherwise)
+# reboot (logs from the services won't be available otherwise)
 reboot
