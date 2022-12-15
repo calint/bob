@@ -7,8 +7,6 @@ import b.a.stateless;
 import b.xwriter;
 import db.test.TestCase;
 import db.test.test1;
-import db.test.test2;
-import db.test.test3;
 
 public @stateless class test_dbo extends a{
 	static final long serialVersionUID=1;

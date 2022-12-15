@@ -69,7 +69,7 @@ public final class Cluster {
 	}
 
 	public static void main(String[] args) throws Throwable {
-		Driver driver = (Driver) Class.forName("com.mysql.jdbc.Driver").newInstance(); // ! java 1.5
+		Driver driver = (Driver) Class.forName("com.mysql.jdbc.Driver").getConstructor().newInstance(); // ! java 1.5
 		DriverManager.registerDriver(driver);
 		
 		if (args.length < 4) {
