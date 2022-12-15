@@ -164,7 +164,7 @@ public final class req{
 		method_length+=(ba_pos-ba_pos_prev);
 		if(method_length>abuse_method_len){
 			close();
-			throw new RuntimeException("abusemethodlen "+method_length);
+			throw new RuntimeException("abusemethodlen "+method_length+": "+new String(ba,ba_pos_prev,ba_pos-ba_pos_prev));
 		}
 	}
 
@@ -186,7 +186,7 @@ public final class req{
 		uri_length+=(ba_pos-ba_pos_prev);
 		if(uri_length>abuse_uri_len){
 			close();
-			throw new RuntimeException("abuseurilen "+uri_length);
+			throw new RuntimeException("abuseurilen "+uri_length+": "+uri_sb);
 		}
 	}
 
@@ -245,7 +245,7 @@ public final class req{
 		header_name_length+=(ba_pos-ba_pos_prev);
 		if(header_name_length>abuse_header_name_len){
 			close();
-			throw new RuntimeException("abuseheadernamelen "+header_name_length);
+			throw new RuntimeException("abuseheadernamelen "+header_name_length+": "+header_name_sb);
 		}
 	}
 
@@ -271,7 +271,7 @@ public final class req{
 		header_value_length+=(ba_pos-ba_pos_prev);
 		if(header_value_length>abuse_header_value_len){
 			close();
-			throw new RuntimeException("abuseheadervaluelen "+header_value_length);
+			throw new RuntimeException("abuseheadervaluelen "+header_value_length+": "+header_value_sb);
 		}
 	}
 

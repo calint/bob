@@ -1,3 +1,6 @@
+#!/bin/sh
+set -e
+
 FILES=$(ls charts/*.txt)
 
 for FILE in $FILES; do
