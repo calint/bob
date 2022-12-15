@@ -8,19 +8,6 @@ import db.DbTransaction;
 import db.Query;
 
 public class test3 extends TestCase {
-	public test3() {
-		this(false);
-	}
-
-	public test3(final boolean use_current_transaction) {
-		super(use_current_transaction);
-	}
-
-//	@Override
-//	protected boolean isResetDatabase() {
-//		return true;
-//	}
-
 	@Override
 	public void doRun() throws Throwable {
 		final DbTransaction tn = Db.currentTransaction();

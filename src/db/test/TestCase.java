@@ -6,25 +6,16 @@ import db.Db;
 import db.DbTransaction;
 
 public abstract class TestCase implements Runnable {
-	private final boolean use_current_transaction;
 	public PrintStream out = System.out;
+	public boolean use_current_transaction;
 	public int number_of_runs = 1;
 	public boolean data_points_output;
 	public boolean run_with_cache = true;
-	public boolean run_without_cache = false;
-
-	public TestCase() {
-		this(false);
-	}
-
-	public TestCase(final boolean use_current_transaction) {
-		this.use_current_transaction = use_current_transaction;
-	}
-
+	public boolean run_without_cache;
+	public boolean reset_database;
+	
 	public final void run() {
-		final boolean rst = isResetDatabase();
-
-		if (rst) {
+		if (reset_database) {
 			try {
 				Db.currentTransaction().commit(); // note Db.reset hangs mysql on drop "table session" otherwise.
 				// possibly because session was updated but not committed
@@ -37,16 +28,11 @@ public abstract class TestCase implements Runnable {
 		if (run_with_cache)
 			doTest(true);
 
-		if (rst)
+		if (reset_database)
 			Db.reset();
 
 		if (run_without_cache)
 			doTest(false);
-	}
-
-	/** @return true to reset database before tests */
-	protected boolean isResetDatabase() {
-		return false;
 	}
 
 	public String getTestName() {
@@ -58,7 +44,7 @@ public abstract class TestCase implements Runnable {
 		if (use_current_transaction) {
 			tn = Db.currentTransaction();
 		} else {
-			tn = Db.initCurrentTransaction();
+			tn = Db.initCurrentTransaction(); // ! this can leak a transaction if the page running is not @stateless
 		}
 		final String cachests = cacheon ? " on" : "off";
 		tn.cache_enabled = cacheon;
