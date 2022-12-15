@@ -9,6 +9,7 @@ b
 [ ] use java.util.concurrent (keep it compatible with java 1.5)
 [ ]   b: request queue, thread pool
 [ ]   dbo: connection pool
+[ ] cluster: health-check the database
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 dbo
 [ ] cluster client connect to database through DriverManager is slow. Class.forName and register driver.
