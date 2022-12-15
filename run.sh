@@ -1,4 +1,6 @@
 #!/bin/sh
+# run on the node by service manager
+
 set -e
 DIR=$(dirname "$0")
 cd $DIR
