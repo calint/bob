@@ -12,6 +12,7 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.sql.Connection;
+import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -67,7 +68,9 @@ public final class Cluster {
 	}
 
 	public static void main(String[] args) throws Throwable {
-		Class.forName("com.mysql.jdbc.Driver"); // ! java 1.5
+		Driver driver = (Driver) Class.forName("com.mysql.jdbc.Driver").newInstance(); // ! java 1.5
+		DriverManager.registerDriver(driver);
+
 		if (args.length < 4) {
 			System.out.println("Usage: java db.ClusterNIO <ip:port file> <dbname> <user> <password>");
 			return;
@@ -209,7 +212,7 @@ public final class Cluster {
 			activeThreads = clients.size();
 			// notify all threads to execute sql
 			sem.notifyAll();
-			
+
 			// wait for last thread to finish
 			while (activeThreads != 0) {
 				try {

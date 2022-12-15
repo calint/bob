@@ -1,5 +1,8 @@
 package bob;
 
+import java.sql.Driver;
+import java.sql.DriverManager;
+
 import b.bapp;
 import c.shell;
 import db.Db;
@@ -24,7 +27,9 @@ public final class app implements bapp {
 
 	/** called by b at startup */
 	public void init() throws Throwable {
-		Class.forName("com.mysql.jdbc.Driver"); // ! java 1.5
+		Driver driver = (Driver) Class.forName("com.mysql.jdbc.Driver").newInstance(); // ! java 1.5
+		DriverManager.registerDriver(driver);
+
 		Db.log(getClass().getName() + ": init");
 //		Db.enable_log=false;
 		Db.enable_log_sql=false;
