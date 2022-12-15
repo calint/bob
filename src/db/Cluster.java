@@ -179,7 +179,6 @@ public final class Cluster {
 						ct.process();
 					} catch (Throwable t) {
 						ct.close();
-						System.out.println("disconnected: " + ct.address);
 						clients.remove(ct);
 						if (!t.getMessage().startsWith("client disconnected"))
 							log(t);
@@ -361,6 +360,7 @@ public final class Cluster {
 			} catch (SQLException e) {
 				log(e);
 			}
+			System.out.println("disconnected: " + address);
 		}
 
 		public void connectToDatabase() {
