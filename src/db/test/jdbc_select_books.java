@@ -7,11 +7,6 @@ import db.Db;
 
 public class jdbc_select_books extends TestCase {
 	@Override
-	protected boolean isRunWithoutCache() {
-		return false;
-	}
-
-	@Override
 	public void doRun() throws Throwable {
 		final Statement stmt = Db.currentTransaction().getJdbcStatement();
 		final int nreq = 100;

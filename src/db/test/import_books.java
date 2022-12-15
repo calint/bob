@@ -22,11 +22,6 @@ public class import_books extends TestCase {
 	}
 
 	@Override
-	protected boolean isRunWithoutCache() {
-		return false;
-	}
-
-	@Override
 	public String getTestName() {
 		return getClass().getName() + " " + filePath;
 	}

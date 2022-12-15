@@ -10,11 +10,6 @@ import db.DbTransaction;
 // prints column types of user
 public class print_column_types extends TestCase {
 	@Override
-	protected boolean isRunWithoutCache() {
-		return false;
-	}
-
-	@Override
 	public void doRun() throws Throwable {
 		final DbTransaction tn = Db.currentTransaction();
 		final Statement stmt = tn.getJdbcStatement();

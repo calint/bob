@@ -7,9 +7,12 @@ import db.DbTransaction;
 
 public abstract class TestCase implements Runnable {
 	private final boolean use_current_transaction;
-	public PrintStream out=System.out;
-	public int number_of_runs=1;
-	
+	public PrintStream out = System.out;
+	public int number_of_runs = 1;
+	public boolean data_points_output;
+	public boolean run_with_cache = true;
+	public boolean run_without_cache = false;
+
 	public TestCase() {
 		this(false);
 	}
@@ -31,29 +34,19 @@ public abstract class TestCase implements Runnable {
 			Db.reset();
 		}
 
-		if (isRunWithCache())
+		if (run_with_cache)
 			doTest(true);
 
 		if (rst)
 			Db.reset();
 
-		if (isRunWithoutCache())
+		if (run_without_cache)
 			doTest(false);
 	}
 
 	/** @return true to reset database before tests */
 	protected boolean isResetDatabase() {
 		return false;
-	}
-
-	/** @return true to run test with cache on */
-	protected boolean isRunWithCache() {
-		return true;
-	}
-
-	/** @return true to run test with cache off */
-	protected boolean isRunWithoutCache() {
-		return true;
 	}
 
 	public String getTestName() {
@@ -69,20 +62,37 @@ public abstract class TestCase implements Runnable {
 		}
 		final String cachests = cacheon ? " on" : "off";
 		tn.cache_enabled = cacheon;
+		if (data_points_output) {
+			out.println("run\tms");
+		} else {
+			out.println(getClass().getName() + ":");
+		}
+		out.flush();
 		try {
 			final long t0 = System.currentTimeMillis();
 			for (int i = 0; i < number_of_runs; i++) {
-				out.print(getClass().getName() + ": run " + (i + 1) + " of " + number_of_runs);
-				out.flush();
+				if (data_points_output) {
+					out.print(i + 1);
+					out.print('\t');
+					out.flush();
+				} else {
+					out.print(getClass().getName() + ": run " + (i + 1) + " of " + number_of_runs);
+					out.flush();
+				}
 				final long t2 = System.currentTimeMillis();
 				doRun();
 				final long t3 = System.currentTimeMillis();
-				out.println(" "+(t3-t2)+" ms");
+				if (data_points_output) {
+					out.println(t3 - t2);
+				} else {
+					out.println(" " + (t3 - t2) + " ms");
+				}
 				tn.commit();
 			}
 			final long t1 = System.currentTimeMillis();
 			final long dt = t1 - t0;
-			out.println(getTestName() + " [cache " + cachests + "]: passed (" + dt + " ms)");
+			if (!data_points_output)
+				out.println(getTestName() + " [cache " + cachests + "]: passed (" + dt + " ms)");
 //			out.flush();
 		} catch (Throwable t1) {
 			if (!use_current_transaction) {

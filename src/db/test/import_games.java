@@ -26,11 +26,6 @@ public class import_games extends TestCase {
 	}
 
 	@Override
-	protected boolean isRunWithoutCache() {
-		return false;
-	}
-
-	@Override
 	public void doRun() throws Throwable {
 		final DbTransaction tn = Db.currentTransaction();
 		Db.log("importing " + filePath);

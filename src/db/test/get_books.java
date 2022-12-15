@@ -9,11 +9,6 @@ import db.Limit;
 
 public class get_books extends TestCase {
 	@Override
-	protected boolean isRunWithoutCache() {
-		return false;
-	}
-
-	@Override
 	public void doRun() throws Throwable {
 		final DbTransaction tn = Db.currentTransaction();
 		final int nreq = 100;
