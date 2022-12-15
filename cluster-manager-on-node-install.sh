@@ -1,5 +1,5 @@
 #!/bin/sh
-# run on the node
+# run on the node by cluster-manager-install.sh
 set -e
 DIR=$(dirname "$0")
 cd $DIR

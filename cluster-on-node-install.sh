@@ -1,5 +1,5 @@
 #!/bin/sh
-# run on the node
+# run on the node by cluster-install-nodes.sh
 set -e
 
 apt-get -o DPkg::Lock::Timeout=-1 update
