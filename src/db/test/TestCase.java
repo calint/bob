@@ -74,11 +74,10 @@ public abstract class TestCase implements Runnable {
 				if (data_points_output) {
 					out.print(i + 1);
 					out.print('\t');
-					out.flush();
 				} else {
 					out.print(getClass().getName() + ": run " + (i + 1) + " of " + number_of_runs);
-					out.flush();
 				}
+				out.flush();
 				final long t2 = System.currentTimeMillis();
 				doRun();
 				final long t3 = System.currentTimeMillis();
@@ -87,19 +86,21 @@ public abstract class TestCase implements Runnable {
 				} else {
 					out.println(" " + (t3 - t2) + " ms");
 				}
+				out.flush();
 				tn.commit();
 			}
 			final long t1 = System.currentTimeMillis();
 			final long dt = t1 - t0;
-			if (!data_points_output)
+			if (!data_points_output) {
 				out.println(getTestName() + " [cache " + cachests + "]: passed (" + dt + " ms)");
-//			out.flush();
+				out.flush();
+			}
 		} catch (Throwable t1) {
 			if (!use_current_transaction) {
 				tn.rollback();
 			}
 			out.println(getClass().getName() + " [cache " + cachests + "]: failed");
-//			out.flush();
+			out.flush();
 			throw new RuntimeException(t1);
 		} finally {
 			if (!use_current_transaction) {
