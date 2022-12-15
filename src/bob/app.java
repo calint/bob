@@ -24,7 +24,7 @@ public final class app implements bapp {
 
 	/** called by b at startup */
 	public void init() throws Throwable {
-		Class.forName("com.mysql.jdbc.Driver"); // ! java 1.5
+		Class.forName("com.mysql.jdbc.Driver").newInstance(); // ! java 1.5
 		Db.log(getClass().getName() + ": init");
 //		Db.enable_log=false;
 		Db.enable_log_sql=false;

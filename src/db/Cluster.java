@@ -67,7 +67,7 @@ public final class Cluster {
 	}
 
 	public static void main(String[] args) throws Throwable {
-		Class.forName("com.mysql.jdbc.Driver"); // ! java 1.5
+		Class.forName("com.mysql.jdbc.Driver").newInstance(); // ! java 1.5
 		if (args.length < 4) {
 			System.out.println("Usage: java db.ClusterNIO <ip:port file> <dbname> <user> <password>");
 			return;
