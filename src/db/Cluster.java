@@ -90,14 +90,20 @@ public final class Cluster {
 				continue;
 			final Client ct = new Client(line);
 			clients.add(ct);
-			log("  connecting to database at " + ct.address);
-			ct.connectToDatabase();
 		}
 		bfr.close();
+		final int nclients = clients.size();
+		log("  " + nclients + " client" + (nclients > 1 ? "s" : "") + ".");
+		log("connecting to databases.");
+		int i = 0;
+		for (Client ct : clients) {
+			i++;
+			log("  " + ct.address + " (" + i + " of " + nclients + ")");
+			ct.connectToDatabase();
+		}
 		log("connected to databases.");
 		connections_last_refresh_ms = System.currentTimeMillis();
 
-		final int nclients = clients.size();
 		log("waiting for " + nclients + " client" + (nclients > 1 ? "s" : "") + " to connect.");
 
 		final ServerSocketChannel ssc = ServerSocketChannel.open();
@@ -361,7 +367,7 @@ public final class Cluster {
 			System.out.println("disconnected: " + address);
 		}
 
-		public void connectToDatabase() {
+		public void connectToDatabase() { // ? do this in the constructor and make fields final
 			final String cs = Db.getJdbcConnectionString(address, dbname, user, password);
 			while (true) {
 				try {

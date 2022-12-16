@@ -1,4 +1,7 @@
 digitalocean.com 2022-12-15
 cluster nodes (s-1vcpu-1gb): 1 virtual CPU, 1G B ram, 25 GB disk, regular SSD ($6/month)
-
 test: /db/test/t1
+
+note.
+the uneven charts of cluster with more than 4 nodes might be due 
+to virtual cpu, network, uneven mysql response time etc

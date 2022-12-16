@@ -2,7 +2,9 @@
 # run on the node by cluster-install-nodes.sh
 set -e
 
-apt-get -o DPkg::Lock::Timeout=-1 update
+# timeout does not currently work
+#apt-get -o DPkg::Lock::Timeout=-1 update
+while ! apt-get update;do sleep 1;done
 apt-get -o DPkg::Lock::Timeout=-1 -y install default-jdk git default-mysql-server
 cd /
 git clone https://github.com/calint/bob
