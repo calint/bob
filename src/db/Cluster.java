@@ -93,7 +93,7 @@ public final class Cluster {
 		}
 		bfr.close();
 		final int nclients = clients.size();
-		log("  " + nclients + " client" + (nclients > 1 ? "s" : "") + ".");
+		log("  " + nclients + " node" + (nclients > 1 ? "s" : "") + ".");
 		log("connecting to databases.");
 		int i = 0;
 		for (Client ct : clients) {
