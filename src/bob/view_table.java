@@ -124,9 +124,11 @@ public abstract class view_table extends view {
 	protected Set<String> getSelectedIds() {
 		return t.selectedIds;
 	}
-//	/** Callback for press enter in query field. */
-//	public void x_new(xwriter js, String s) throws Throwable {
-//	}
+
+	/** Callback for press enter in query field. */
+	public void x_new(xwriter x, String s) throws Throwable {
+		onActionCreate(x, q.str());
+	}
 
 	protected abstract void renderHeaders(xwriter x);
 
