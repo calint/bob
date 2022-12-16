@@ -19,11 +19,13 @@ public class form_mock extends form {
 		return b.b.isempty(title.str(), "New mock file");
 	}
 
+	@Override
 	protected void render(xwriter x) throws Throwable {
 		x.inptxt(title);
 		x.is().xfocus(title).is_();
 	}
 
+	@Override
 	protected void write(xwriter x) throws Throwable {
 		if (oid == null) { // create new
 			data.ls.add(title.str());
@@ -40,5 +42,4 @@ public class form_mock extends form {
 		}
 		throw new RuntimeException("could not find " + oid);
 	}
-
 }

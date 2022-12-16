@@ -82,6 +82,7 @@ public abstract class view_table extends view {
 		t.setTableView(this);
 	}
 
+	@Override
 	public void to(final xwriter x) throws Throwable {
 		x.style();
 		x.css(q, "background:yellow;border:1px dotted #555;width:13em;margin:1em;padding:.2em");
@@ -97,13 +98,17 @@ public abstract class view_table extends view {
 	@Override
 	protected void bubble_event(xwriter x, a from, Object o) throws Throwable {
 		if (from instanceof action_create) {
-			onCreate(x, q.str());
+			onActionCreate(x, q.str());
 			return;
 		}
 		if (from instanceof action_delete) {
-			onDelete(x);
+			onActionDelete(x);
 			x.xu(t);
 			x.xfocus(q);
+			return;
+		}
+		if (from instanceof action) {
+			onAction(x, (action) from);
 			return;
 		}
 		// event unknown by this element, bubble to parent
@@ -115,6 +120,7 @@ public abstract class view_table extends view {
 		x.xu(t);
 	}
 
+	@Override
 	protected Set<String> getSelectedIds() {
 		return t.selectedIds;
 	}
