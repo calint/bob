@@ -104,7 +104,7 @@ public final class Cluster {
 		log("connected to databases.");
 		connections_last_refresh_ms = System.currentTimeMillis();
 
-		log("waiting for " + nclients + " client" + (nclients > 1 ? "s" : "") + " to connect.");
+		log("waiting for " + nclients + " node" + (nclients > 1 ? "s" : "") + " to connect.");
 
 		final ServerSocketChannel ssc = ServerSocketChannel.open();
 		ssc.configureBlocking(false);
@@ -132,7 +132,7 @@ public final class Cluster {
 					ct.socketChannel = sc;
 					keys.remove();
 					client_count++;
-					log("  node " + ct.address + " connected (" + client_count + " of " + nclients + ")");
+					log("  " + ct.address + " connected (" + client_count + " of " + nclients + ")");
 					continue;
 				} else {
 					throw new RuntimeException("expected selection key to be accept");
