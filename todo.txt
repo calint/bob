@@ -16,6 +16,7 @@ b
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 dbo
 [ ] cluster client connect to database through DriverManager is slow. Class.forName and register driver.
+[ ] cluster hangs when droplet is destroyed
 [o] review code. search for "// todo" "// !" "// ?"
 [o] cluster
 [x]   connections to multiple servers
