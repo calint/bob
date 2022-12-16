@@ -11,8 +11,6 @@ public abstract class view extends a implements titled {
 
 	protected abstract List<action> getActionsList();
 
-	protected abstract void onActionCreate(xwriter x, String init_str) throws Throwable;
-
 	protected abstract List<?> getObjectsList();
 
 	protected abstract String getIdFrom(Object o);
@@ -20,6 +18,8 @@ public abstract class view extends a implements titled {
 	protected abstract String getNameFrom(Object o);
 
 	protected abstract Set<String> getSelectedIds();
+
+	protected abstract void onActionCreate(xwriter x, String init_str) throws Throwable;
 
 	protected abstract void onActionDelete(xwriter x) throws Throwable;
 
