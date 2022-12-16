@@ -7,16 +7,24 @@ public abstract class form extends a implements titled {
 	static final long serialVersionUID = 1;
 	public container ans; // actions
 	/** Parent object id. */
-	protected String pid;
+	protected String parent_id;
 	/** Object id. */
-	protected String oid;
+	protected String object_id;
 
-	public form(String pid, String oid) {
-		this.pid = pid;
-		this.oid = oid;
+	public form(String parent_id, String object_id) {
+		this.parent_id = parent_id;
+		this.object_id = object_id;
 		ans.add(new action_saveclose());
 		ans.add(new action_save());
 		ans.add(new action_close());
+	}
+
+	public final String getParentId() {
+		return parent_id;
+	}
+
+	public final String getObjectId() {
+		return object_id;
 	}
 
 	@Override
@@ -26,17 +34,15 @@ public abstract class form extends a implements titled {
 		render(x);
 	}
 
-	protected abstract void render(xwriter x) throws Throwable;
-
 	@Override
 	protected void bubble_event(xwriter x, a from, Object o) throws Throwable {
 		if (from instanceof action_saveclose) {
-			write(x);
+			save(x);
 			super.bubble_event(x, this, "close");
 			return;
 		}
 		if (from instanceof action_save) {
-			write(x);
+			save(x);
 			super.bubble_event(x, this, "updated");
 			return;
 		}
@@ -48,6 +54,8 @@ public abstract class form extends a implements titled {
 		super.bubble_event(x, from, o);
 	}
 
-	protected abstract void write(xwriter x) throws Throwable;
+	protected abstract void render(xwriter x) throws Throwable;
+
+	protected abstract void save(xwriter x) throws Throwable;
 
 }

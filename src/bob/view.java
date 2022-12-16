@@ -21,7 +21,7 @@ public abstract class view extends a implements titled {
 
 	protected abstract Set<String> getSelectedIds();
 
-	protected abstract void onAction(xwriter x, action act) throws Throwable;
-
 	protected abstract void onActionDelete(xwriter x) throws Throwable;
+
+	protected abstract void onAction(xwriter x, action act) throws Throwable;
 }

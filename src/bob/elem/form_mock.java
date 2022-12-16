@@ -26,20 +26,20 @@ public class form_mock extends form {
 	}
 
 	@Override
-	protected void write(xwriter x) throws Throwable {
-		if (oid == null) { // create new
+	protected void save(xwriter x) throws Throwable {
+		if (object_id == null) { // create new
 			data.ls.add(title.str());
 			return;
 		}
 		// edit
 		for (int i = 0; i < data.ls.size(); i++) {
 			final String s = data.ls.get(i);
-			if (s.equals(oid)) {
+			if (s.equals(object_id)) {
 				data.ls.set(i, title.str());
-				oid = title.str();
+				object_id = title.str();
 				return;
 			}
 		}
-		throw new RuntimeException("could not find " + oid);
+		throw new RuntimeException("could not find " + object_id);
 	}
 }
