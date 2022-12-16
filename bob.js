@@ -71,7 +71,13 @@ $p=function(eid,txt){
 //$l=function(){if(ui.keys)document.onkeyup=ui.onkey;}
 $a=function(eid,a,v){$(eid).setAttribute(a,v);}
 $r=function(ev,ths,axpb){if(!ev)ev=window.event;$b(ths);if(ev.keyCode!=13)return true;$x(axpb);return false;}
-$f=function(eid){const e=$(eid);if(!e)return;if(e.focus)e.focus();/*if(e.select)e.select();*/}
+$f=function(eid){
+	const e=$(eid);
+	if(!e)return;
+	if(e.focus)e.focus();
+	if(e.setSelectionRange)e.setSelectionRange(e.value.length,e.value.length);
+	/*if(e.select)e.select();*/
+}
 $t=function(s){document.title=s;}
 ui.alert=function(msg){alert(msg);}
 ui._clnfldvl=function(s){return s.replace(/\r\n/g,'\n').replace(/\r/g,'\n');}

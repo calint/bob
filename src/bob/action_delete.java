@@ -1,22 +1,9 @@
 package bob;
 
-import java.util.Set;
+public class action_delete extends action {
+	private static final long serialVersionUID = 1L;
 
-import b.a;
-import b.xwriter;
-
-public class action_delete extends action{
-	private static final long serialVersionUID=1L;
-
-	public action_delete(){
+	public action_delete() {
 		super("delete");
-	}
-
-	@Override protected void process(xwriter x,a from,Set<String> selectedIds) throws Throwable{
-		System.out.println(getClass().getName()+" "+selectedIds);
-		for(String id:selectedIds){
-			data.ls.remove(id);
-		}
-		selectedIds.clear();
 	}
 }

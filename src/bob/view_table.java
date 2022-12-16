@@ -6,16 +6,16 @@ import java.util.List;
 import b.a;
 import b.xwriter;
 
-public abstract class table_view extends view {
+public abstract class view_table extends view {
 	static final long serialVersionUID = 1;
 
 	public final static class table extends a {
 		static final long serialVersionUID = 1;
 		public container cbs; // checkboxes
-		private table_view tv;
+		private view_table tv;
 		private final HashSet<String> selectedIds = new HashSet<String>();
 
-		public void setTableView(table_view tv) {
+		public void setTableView(view_table tv) {
 			this.tv = tv;
 		}
 
@@ -73,7 +73,7 @@ public abstract class table_view extends view {
 	public a q; // query field
 	public table t; // the table
 
-	public table_view() {
+	public view_table() {
 		final List<action> actions = getActionsList();
 		for (action a : actions) {
 			ans.add(a);
@@ -87,16 +87,22 @@ public abstract class table_view extends view {
 		x.style_();
 		x.divh(ans);
 //		x.ax(this, "up", "••");
-		x.inpax(q, null, this, "q").p(" ");
-		x.is().p("$f('").p(q.id()).p("')").is_();
+		x.inpax(q, null, this, "q", "new").p(" ");
+//		x.is().p("$f('").p(q.id()).p("')").is_();
+		x.is().xfocus(q).is_();
 		x.divh(t);
 	}
 
 	@Override
 	protected void bubble_event(xwriter x, a from, Object o) throws Throwable {
-		if (from instanceof action) {
-			final action a = (action) from;
-			a.process(x, this, t.selectedIds);
+		if (from instanceof action_create) {
+			final action_create a = (action_create) from;
+			form f = a.createForm(q.str());
+			super.bubble_event(x, this, f);
+			return;
+		}
+		if (from instanceof action_delete) {
+			onDelete(x, t.selectedIds);
 			x.xu(t);
 			x.xfocus(q);
 			return;
@@ -112,6 +118,10 @@ public abstract class table_view extends view {
 		t.to(x);
 		js.xube();
 	}
+
+//	/** Callback for press enter in query field. */
+//	public void x_new(xwriter js, String s) throws Throwable {
+//	}
 
 	protected abstract void renderHeaders(xwriter x);
 

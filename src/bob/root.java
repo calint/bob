@@ -9,7 +9,7 @@ import b.a;
 import b.b;
 import b.req;
 import b.xwriter;
-import bob.elem.mock_table;
+import bob.elem.table_mock;
 
 public class root extends a {
 	static final long serialVersionUID = 1;
@@ -17,13 +17,13 @@ public class root extends a {
 	public a sg; // serialized, gziped size
 	public a si; // server info
 	public bread_crumbs bc;
-	public a av; // active view
+	public a ae; // active view
 //	public a test;
 
 	public root() throws IOException {
 		update_serialized_size();
 		update_server_info();
-		bc.add(new mock_table());
+		bc.add(new table_mock());
 	}
 
 	private void update_server_info() {
@@ -45,8 +45,8 @@ public class root extends a {
 		x.divh(bc);
 		x.nl();
 		final a active_elem = bc.getActive();
-		active_elem.replace(this, av);
-		x.divh(av);
+		active_elem.replace(this, ae);
+		x.divh(ae);
 		x.nl();
 		x.p("serialized: ").span(s).p(" B  gziped: ").span(sg).p(" B ").ax(this, "s", ":: refresh").nl();
 		x.p("server: ").span(si);
@@ -55,17 +55,39 @@ public class root extends a {
 
 	@Override
 	protected void bubble_event(xwriter x, a from, Object o) throws Throwable {
-		if (from instanceof bread_crumbs) {
+		if (from == bc) { // event from bread crumb
 			final a e = ((bread_crumbs) from).getActive();
-			e.replace(this, av); // replace active view
-			x.xu(av); // update active view
+			e.replace(this, ae); // replace active element
+			x.xu(ae); // update active element
 			return;
+		}
+		if (from instanceof form) { // event from a form
+			if ("close".equals(o)) {
+				bc.removeLast(); // remove last element in bread crumbs
+				a e = bc.getActive(); // get current element
+				e.replace(this, ae); // replace active element
+				x.xu(ae); // update active element
+				x.xu(bc); // update bread crumbs
+				return;
+			}
+			if ("updated".equals(o)) {
+				x.xu(bc); // update bread crumbs
+				return;
+			}
 		}
 		if (o instanceof form) {
 			final a e = (a) o;
 			bc.add(e); // add to bread crumb
-			e.replace(this, av); // replace active view
-			x.xu(av); // update active view
+			e.replace(this, ae); // replace active element
+			x.xu(ae); // update active element
+			x.xu(bc); // update bread crumbs
+			return;
+		}
+		if (o instanceof view) {
+			final a e = (a) o;
+			bc.add(e); // add to bread crumb
+			e.replace(this, ae); // replace active element
+			x.xu(ae); // update active element
 			x.xu(bc); // update bread crumbs
 			return;
 		}

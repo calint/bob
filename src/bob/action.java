@@ -1,6 +1,5 @@
 package bob;
 
-import java.util.Set;
 import b.a;
 import b.xwriter;
 
@@ -13,7 +12,6 @@ public abstract class action extends a{
 		x.ax(this,null,str());
 	}
 	public final void x_(xwriter x,String param) throws Throwable{
-		bubble_event(x);
+		super.bubble_event(x);
 	}
-	protected abstract void process(xwriter x,a from,Set<String> selectedIds) throws Throwable;
 }

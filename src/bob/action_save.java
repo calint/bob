@@ -1,18 +1,10 @@
 package bob;
 
-import java.util.Set;
+public class action_save extends action {
+	private static final long serialVersionUID = 1L;
 
-import b.a;
-import b.xwriter;
-
-public class action_save extends action{
-	private static final long serialVersionUID=1L;
-	
-	public action_save(){
+	public action_save() {
 		super("save");
 	}
-	
-	@Override protected void process(xwriter x,a from,Set<String> selectedIds) throws Throwable{
-		x.xalert("s");
-	}
+
 }

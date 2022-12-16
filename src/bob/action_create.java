@@ -1,20 +1,18 @@
 package bob;
 
-import java.util.Set;
+public class action_create extends action {
+	private static final long serialVersionUID = 1L;
+	private final Class<? extends form> form_cls;
+	/** Parent id. */
+	private final String pid;
 
-import b.a;
-import b.xwriter;
-
-public class action_create extends action{
-	private static final long serialVersionUID=1L;
-	
-	public action_create(){
+	public action_create(String pid, Class<? extends form> form_cls) {
 		super("create");
+		this.pid = pid;
+		this.form_cls = form_cls;
 	}
-	
-	@Override protected void process(xwriter x,a from,Set<String> selectedIds) throws Throwable{
-		System.out.println(getClass().getName()+" "+selectedIds);
-		table_view t=(table_view)from;
-		data.ls.add(t.q.str());
+
+	public form createForm(String initstr) throws Throwable {
+		return (form) form_cls.getConstructor(String.class, String.class, String.class).newInstance(pid, null, initstr);
 	}
 }

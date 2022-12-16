@@ -57,4 +57,8 @@ public final class bread_crumbs extends a {
 	protected a find_child(String nm) {
 		return elements.get(Integer.parseInt(nm));
 	}
+
+	public void removeLast() {
+		elements.remove(elements.size() - 1);
+	}
 }
