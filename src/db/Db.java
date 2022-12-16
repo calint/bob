@@ -91,6 +91,9 @@ public final class Db {
 	 * @return the created transaction
 	 */
 	public static DbTransaction initCurrentTransaction() { // ? so ugly
+		if (tn.get() != null) {
+			throw new RuntimeException("transaction already initiated on this thread.");
+		}
 //		Db.log("dbo: init transaction on "+Thread.currentThread());
 		PooledConnection pc;
 		// get pooled connection
@@ -163,6 +166,9 @@ public final class Db {
 	public static void deinitCurrentTransaction() { // ? so ugly
 //		Db.log("dbo: deinit transaction on "+Thread.currentThread());
 		final DbTransaction tx = tn.get();
+		if (tx == null) {
+			throw new RuntimeException("transaction not initiated on this thread.");
+		}
 		boolean connection_is_ok = true;
 		if (!tx.rollbacked) {
 			try {
