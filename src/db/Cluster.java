@@ -132,7 +132,7 @@ public final class Cluster {
 					ct.socketChannel = sc;
 					keys.remove();
 					client_count++;
-					log("  " + ct.address + " connected (" + client_count + " of " + nclients + ")");
+					log("  " + ct.address + " (" + client_count + " of " + nclients + ")");
 					continue;
 				} else {
 					throw new RuntimeException("expected selection key to be accept");
