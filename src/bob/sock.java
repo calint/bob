@@ -99,7 +99,10 @@ final public class sock extends websock{
 			target_elem.getClass().getMethod("x_"+target_elem_method,xwriter.class,String.class).invoke(target_elem,x,target_elem_method_args);
 		}catch(final InvocationTargetException t){
 			b.log(t.getTargetException());
-			x.xalert(b.isempty(t.getTargetException().getMessage(),t.toString()));
+			Throwable e=t;
+			while(e.getCause()!=null)
+				e=e.getCause();
+			x.xalert(b.isempty(e.getMessage(),e.toString()));
 		}catch(NoSuchMethodException t){
 			x.xalert("method not found:\n"+target_elem.getClass().getName()+".x_"+target_elem_method+"(xwriter,String)");
 		}

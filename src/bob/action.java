@@ -10,10 +10,10 @@ public abstract class action extends a{
 		set(name);
 	}
 	@Override public final void to(xwriter x) throws Throwable{
-		x.ax(this,null,":: "+str());
+		x.ax(this,null,str());
 	}
 	public final void x_(xwriter x,String param) throws Throwable{
 		bubble_event(x);
 	}
-	protected abstract void process(a from,Set<String> selectedIds) throws Throwable;
+	protected abstract void process(xwriter x,a from,Set<String> selectedIds) throws Throwable;
 }
