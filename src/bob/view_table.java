@@ -111,11 +111,8 @@ public abstract class view_table extends view {
 	}
 
 	/** Callback for change in query field. */
-	public void x_q(xwriter js, String s) throws Throwable {
-//		System.out.println("query: "+q.str());
-		xwriter x = js.xub(t, true, false);
-		t.to(x);
-		js.xube();
+	public void x_q(xwriter x, String s) throws Throwable {
+		x.xu(t);
 	}
 
 	protected Set<String> getSelectedIds() {
