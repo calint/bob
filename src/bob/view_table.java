@@ -2,6 +2,7 @@ package bob;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import b.a;
 import b.xwriter;
@@ -20,7 +21,7 @@ public abstract class view_table extends view {
 		}
 
 		public void to(final xwriter x) throws Throwable {
-			final List<?> ls = tv.getList();
+			final List<?> ls = tv.getObjectsList();
 			x.table("f").nl();
 			x.tr().th();
 			x.th().p("Name");
@@ -96,13 +97,11 @@ public abstract class view_table extends view {
 	@Override
 	protected void bubble_event(xwriter x, a from, Object o) throws Throwable {
 		if (from instanceof action_create) {
-			final action_create a = (action_create) from;
-			form f = a.createForm(q.str());
-			super.bubble_event(x, this, f);
+			onCreate(x, q.str());
 			return;
 		}
 		if (from instanceof action_delete) {
-			onDelete(x, t.selectedIds);
+			onDelete(x);
 			x.xu(t);
 			x.xfocus(q);
 			return;
@@ -119,6 +118,9 @@ public abstract class view_table extends view {
 		js.xube();
 	}
 
+	protected Set<String> getSelectedIds() {
+		return t.selectedIds;
+	}
 //	/** Callback for press enter in query field. */
 //	public void x_new(xwriter js, String s) throws Throwable {
 //	}

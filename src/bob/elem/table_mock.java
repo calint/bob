@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import b.a;
 import b.xwriter;
 import bob.action;
 import bob.action_create;
@@ -18,12 +17,12 @@ public class table_mock extends view_table {
 
 	protected List<action> getActionsList() {
 		final List<action> ls = new ArrayList<action>();
-		ls.add(new action_create(null, form_mock.class));
+		ls.add(new action_create());
 		ls.add(new action_delete());
 		return ls;
 	}
 
-	protected List<?> getList() {
+	protected List<?> getObjectsList() {
 		final List<String> result = new ArrayList<String>();
 		final String qstr = q.str().toLowerCase();
 		for (Iterator<String> i = data.ls.iterator(); i.hasNext();) {
@@ -58,11 +57,18 @@ public class table_mock extends view_table {
 		super.bubble_event(x, this, fm);
 	}
 
+	@Override
+	protected void onCreate(xwriter x, String init_str) throws Throwable {
+		form_mock fm = new form_mock(null, null, init_str);
+		super.bubble_event(x, this, fm);
+	}
+
 	public String getTitle() {
 		return "Mock files";
 	}
 
-	protected void onDelete(xwriter x, Set<String> selectedIds) throws Throwable {
+	protected void onDelete(xwriter x) throws Throwable {
+		final Set<String> selectedIds = getSelectedIds();
 		System.out.println(getClass().getName() + " " + selectedIds);
 		for (String id : selectedIds) {
 			data.ls.remove(id);

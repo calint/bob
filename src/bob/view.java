@@ -9,13 +9,17 @@ import b.xwriter;
 public abstract class view extends a implements titled {
 	static final long serialVersionUID = 1;
 
+	protected abstract void onCreate(xwriter x, String init_str) throws Throwable;
+
 	protected abstract List<action> getActionsList();
 
-	protected abstract List<?> getList();
+	protected abstract List<?> getObjectsList();
 
 	protected abstract String getIdFrom(Object o);
 
 	protected abstract String getNameFrom(Object o);
 
-	protected abstract void onDelete(xwriter x, Set<String> selectedIds) throws Throwable;
+	protected abstract Set<String> getSelectedIds();
+
+	protected abstract void onDelete(xwriter x) throws Throwable;
 }
