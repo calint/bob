@@ -9,9 +9,9 @@ import b.xwriter;
 public abstract class view extends a implements titled {
 	static final long serialVersionUID = 1;
 
-	protected abstract void onCreate(xwriter x, String init_str) throws Throwable;
-
 	protected abstract List<action> getActionsList();
+
+	protected abstract void onCreate(xwriter x, String init_str) throws Throwable;
 
 	protected abstract List<?> getObjectsList();
 

@@ -75,7 +75,7 @@ public class root extends a {
 				return;
 			}
 		}
-		if (o instanceof form) {
+		if (o instanceof form) { // open form
 			final a e = (a) o;
 			bc.add(e); // add to bread crumb
 			e.replace(this, ae); // replace active element
@@ -83,7 +83,7 @@ public class root extends a {
 			x.xu(bc); // update bread crumbs
 			return;
 		}
-		if (o instanceof view) {
+		if (o instanceof view) { // open view
 			final a e = (a) o;
 			bc.add(e); // add to bread crumb
 			e.replace(this, ae); // replace active element
