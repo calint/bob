@@ -235,7 +235,7 @@ final public class b{
 //		r.process();
 //	}
 	static void thread(final req r){
-		if(!b.thread_pool||(thdreq.all_request_threads.size()<thread_pool_size)){
+		if(!b.thread_pool||thdreq.all_request_threads.size()<thread_pool_size){
 			new thdreq(r);
 			return;
 		}
@@ -318,7 +318,7 @@ final public class b{
 			t=t.getCause();
 		}
 		if(!log_client_disconnects){
-			if((t instanceof java.nio.channels.CancelledKeyException)||(t instanceof java.nio.channels.ClosedChannelException)){
+			if(t instanceof java.nio.channels.CancelledKeyException||t instanceof java.nio.channels.ClosedChannelException){
 				return;
 			}
 			if(t instanceof java.net.SocketException){
@@ -329,13 +329,7 @@ final public class b{
 			}
 			if(t instanceof java.io.IOException){
 				final String msg=t.getMessage();
-				if("Broken pipe".equals(msg)){
-					return;
-				}
-				if("Connection reset by peer".equals(msg)){
-					return;
-				}
-				if("An existing connection was forcibly closed by the remote host".equals(msg)){
+				if("Broken pipe".equals(msg)||"Connection reset by peer".equals(msg)||"An existing connection was forcibly closed by the remote host".equals(msg)){
 					return;
 				}
 			}
@@ -451,7 +445,7 @@ final public class b{
 		return sw.toString();
 	}
 	public static String stacktraceline(final Throwable e){
-		return stacktrace(e).replace('\n',' ').replace('\r',' ').replaceAll("\\s+"," ").replaceAll(" at "," @ ");
+		return stacktrace(e).replace('\n',' ').replace('\r',' ').replaceAll("\\s+"," ").replace(" at "," @ ");
 	}
 	public static String tolastmodstr(final long t){
 		final SimpleDateFormat sdf=new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz");
@@ -511,10 +505,10 @@ final public class b{
 			if(type.startsWith("java.util.")){
 				type=type.substring("java.util.".length());
 			}
-			final boolean isstr=type.equals("String");
-			final boolean isbool=type.equals("boolean");
-			final boolean isint=type.equals("int");
-			final boolean islong=type.equals("long");
+			final boolean isstr="String".equals(type);
+			final boolean isbool="boolean".equals(type);
+			final boolean isint="int".equals(type);
+			final boolean islong="long".equals(type);
 			final boolean print_type=!(isstr||isbool||isint||islong);
 			if(isstr){
 				out.print("\"");
@@ -633,7 +627,7 @@ final public class b{
 //		final int i=clsnm.lastIndexOf('.');
 //		final String pkgnm=i==-1?"":clsnm.substring(0,i);
 //		if(pkgnm.endsWith(".a")&&!req.get().session().bits_hasall(2))throw new Error("firewalled1");
-		if(clsnm.startsWith("a.localhost.")&&!req.get().ip().toString().equals("/0:0:0:0:0:0:0:1")){
+		if(clsnm.startsWith("a.localhost.")&&!"/0:0:0:0:0:0:0:1".equals(req.get().ip().toString())){
 			throw new Error("firewalled2");
 		}
 	}

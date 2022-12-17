@@ -22,10 +22,10 @@ public abstract class websock{
 	private ByteBuffer request_bb;
 	private ByteBuffer[] send_bba;
 	private boolean is_first_packet;
-	private boolean is_masked;
 	private final byte[] mask_key=new byte[4];
 	private boolean is_threaded=true;
 	private int mask_i;
+	boolean is_masked;
 
 	/** @param is_threaded true to handle on_message on a thread. If websock is not threaded it will run on the server thread potentially blocking. */
 	public websock(final boolean is_threaded){
@@ -57,7 +57,7 @@ public abstract class websock{
 		bbo.put("\r\n\r\n".getBytes());
 		bbo.flip();
 		while(bbo.hasRemaining()&&socket_channel.write(bbo)!=0){
-			;
+
 		}
 		if(bbo.hasRemaining()){
 			throw new RuntimeException("initiation packet not fully sent");
@@ -113,7 +113,7 @@ public abstract class websock{
 					final int b0=bb.get();
 					final boolean fin=(b0&128)==128;
 					if(fin){
-						;// to remove warning of unused variable
+						// to remove warning of unused variable
 					}
 					final int resv=b0>>4&7;
 					if(resv!=0){

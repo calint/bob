@@ -85,7 +85,7 @@ final public class thdwatch extends Thread{
 	public static void reset(){// ? freethdsgetsderanged
 		for(final Field f:_fields){
 			final String s=f.getName();
-			if(s.startsWith("_")||(f.getType()!=long.class)){
+			if(s.startsWith("_")||f.getType()!=long.class){
 				continue;
 			}
 			try{

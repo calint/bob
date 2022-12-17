@@ -196,10 +196,8 @@ public final class req{
 			if(b!='\n'){
 				continue;
 			}
-			if(ba_pos>=3&&ba[ba_pos-3]=='1'){
+			if(ba_pos>=3&&ba[ba_pos-3]=='1'||ba_pos>=2&&ba[ba_pos-2]=='1'){
 				connection_keep_alive=true;// ? cheapo to set keepalive for http/1.1\r\n
-			}else if(ba_pos>=2&&ba[ba_pos-2]=='1'){
-				connection_keep_alive=true;// ? cheapo to set keepalive for 1\n
 			}
 			do_after_prot();
 			break;
@@ -239,9 +237,8 @@ public final class req{
 			if(b=='\n'){
 				do_after_header();
 				return;
-			}else{
-				header_name_sb.append((char)b);
 			}
+			header_name_sb.append((char)b);
 		}
 		header_name_length+=ba_pos-ba_pos_prev;
 		if(header_name_length>abuse_header_name_len){
@@ -292,7 +289,7 @@ public final class req{
 
 		content_type=headers.get(hk_content_type);
 		if(content_type!=null){
-			if(content_type.startsWith("dir;")||content_type.equals("dir")){
+			if(content_type.startsWith("dir;")||"dir".equals(content_type)){
 				if(!b.enable_upload){
 					throw new RuntimeException("uploadsdisabled");
 				}
@@ -317,7 +314,7 @@ public final class req{
 				reply(h_http204,null,null,null);
 				return;
 			}
-			if(content_type.startsWith("file;")||content_type.equals("file")){
+			if(content_type.startsWith("file;")||"file".equals(content_type)){
 				if(!b.enable_upload){
 					throw new RuntimeException("uploadsdisabled");
 				}
@@ -352,7 +349,7 @@ public final class req{
 		}
 		// assumes content type "text/plain; charset=utf-8" from an ajax post
 		final String contentLength_s=headers.get(hk_content_length);
-		if(contentLength_s!=null&&!contentLength_s.equals("0")){
+		if(contentLength_s!=null&&!"0".equals(contentLength_s)){
 			if(!set_session_id_from_cookie()){
 				throw new RuntimeException("nocookie in request with content. path:"+uri_sb);
 			}
@@ -373,7 +370,7 @@ public final class req{
 			close();
 			throw t;
 		}
-		if((b.cache_files&&try_cache())||(b.try_file&&try_file())){
+		if(b.cache_files&&try_cache()||b.try_file&&try_file()){
 			return;
 		}
 		if(b.try_rc&&try_resource()){

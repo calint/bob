@@ -9,19 +9,19 @@ public final class xwriter{
 		if(text==null){
 			return "";
 		}
-		return text.replaceAll("'","\\\\'").replaceAll("\"","&quot;");
+		return text.replace("'","\\'").replace("\"","&quot;");
 	}
 	public static String enc_js_str(final String text){
 		if(text==null){
 			return "";
 		}
-		return text.replaceAll("'","\\\\'");
+		return text.replace("'","\\'");
 	}
 	public static String enc_quot(final String text){
 		if(text==null){
 			return "";
 		}
-		return text.replaceAll("\"","&quot;");
+		return text.replace("\"","&quot;");
 	}
 	private final OutputStream os;
 	private boolean xreload_requested=false; // reload page races with element serialization to db

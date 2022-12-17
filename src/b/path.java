@@ -179,12 +179,8 @@ public final class path implements Serializable{
 		return file.delete();
 	}
 	public void append(final String line,final String eol) throws IOException{
-		if(!file.exists()){
-			if(!file.getParentFile().isDirectory()){
-				if(!file.getParentFile().mkdirs()){
-					throw new Error();
-				}
-			}
+		if(!file.exists()&&!file.getParentFile().isDirectory()&&!file.getParentFile().mkdirs()){
+			throw new Error();
 		}
 		final byte[] ba=b.tobytes(line);
 		final OutputStream os=outputstream(true);
@@ -202,10 +198,8 @@ public final class path implements Serializable{
 		append(line,null);
 	}
 	public void append(final String[] lines,final String eol) throws IOException{
-		if(!file.exists()){
-			if(!file.getParentFile().mkdirs()){
-				throw new Error();
-			}
+		if(!file.exists()&&!file.getParentFile().mkdirs()){
+			throw new Error();
 		}
 		final OutputStream os=outputstream(true);
 		try{
