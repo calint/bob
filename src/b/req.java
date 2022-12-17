@@ -402,19 +402,6 @@ public final class req{
 	private boolean set_session_id_from_cookie(){
 		session_id=get_session_id_from_headers(headers);
 		return session_id!=null;
-//		final String cookie=headers.get(hk_cookie);
-//		if(cookie==null)
-//			return false;
-//		final String[] c1=cookie.split(";");
-//		for(String cc:c1){
-//			cc=cc.trim();
-//			if(cc.startsWith("i=")){
-//				session_id=cc.substring("i=".length());
-//				session_id_set=false;
-//				return true;
-//			}
-//		}
-//		return false;
 	}
 
 	private static String make_new_session_id(){
@@ -1075,36 +1062,6 @@ public final class req{
 		return st==state.sock;
 	}
 
-//	// threaded socks
-//	void set_waiting_sock_thread_read(){
-//		waiting_sock_thread_read=true;
-//	}
-//
-//	void set_waiting_sock_thread_write(){
-//		waiting_sock_thread_write=true;
-//	}
-//
-//	/** Called from thread when running in threaded mode. */
-//	void sock_thread_run() throws Throwable{
-//		if(waiting_sock_thread_read){
-//			waiting_sock_thread_read=false;
-//			sock_thread_read();
-//		}
-//		// the read might have triggered a write
-//		if(waiting_sock_thread_write){
-//			waiting_sock_thread_write=false;
-//			sock_thread_write();
-//		}
-//	}
-
-//	private void sock_thread_read() throws Throwable{
-//		websock.process();
-//	}
-//
-//	private void sock_thread_write() throws Throwable{
-//		websock.write();
-//	}
-
 	boolean is_oschunked_waiting_write(){
 		return oschunked_waiting_write;
 	}
@@ -1173,7 +1130,6 @@ public final class req{
 		return query_str;
 	}
 
-//	public session session(){return ses;}
 	public Map<String,String> headers(){
 		return headers;
 	}
@@ -1273,7 +1229,6 @@ public final class req{
 	final static byte[] h_content_length="\r\nContent-Length: ".getBytes();
 	final static byte[] h_last_modified="\r\nLast-Modified: ".getBytes();
 	final static byte[] h_etag="\r\nETag: ".getBytes();
-//	final static byte[]h_etag_after="\"".getBytes();
 	final static byte[] h_content_type="\r\nContent-Type: ".getBytes();
 	final static byte[] hkp_connection_keep_alive="\r\nConnection: Keep-Alive".getBytes();
 	final static byte[] ba_crlf2="\r\n\r\n".getBytes();
@@ -1284,8 +1239,6 @@ public final class req{
 	final static byte[] h_http403="HTTP/1.1 403 Forbidden".getBytes();
 	private final static byte[] h_http404="HTTP/1.1 404 Not Found".getBytes();
 	final static byte[] hk_set_cookie="\r\nSet-Cookie: i=".getBytes();
-	// allow sites to run without ssl
-//	private final static byte[]hkv_set_cookie_append =";path=/;expires=Thu, 31-Dec-2099 00:00:00 GMT;Secure;SameSite=Lax".getBytes();
 	final static byte[] hkv_set_cookie_append=";path=/;expires=Thu, 31-Dec-2099 00:00:00 GMT;SameSite=Lax".getBytes();
 	private final static byte[] hkp_transfer_encoding_chunked="\r\nTransfer-Encoding: chunked".getBytes();
 	private final static byte[] hkp_accept_ranges_byte="\r\nAccept-Ranges: bytes".getBytes();
@@ -1294,28 +1247,13 @@ public final class req{
 	private final static String hk_content_length="content-length";
 	private final static String hk_content_type="content-type";
 	private final static String hk_cookie="cookie";
-//	private final static String hk_if_modified_since="if-modified-since";
 	private final static String hk_if_none_match="if-none-match";
 	private final static String hv_keep_alive="keep-alive";
-//	private final static String s_bytes_="bytes ";
 	private final static String s_equals="=";
 	private final static String s_minus="-";
 	private final static String s_range="range";
 	private final static String s_slash="/";
 	private final static byte[] ba_page_header_pre_title="<!doctype html><meta name=viewport content=\"width=device-width,initial-scale=1\"><meta charset=utf-8><link rel=stylesheet href=/x.css><script src=/x.js></script>".getBytes();
-//	private final static int state_next_request=0;
-//	private final static int state_method=1;
-//	private final static int state_uri=2;
-//	private final static int state_prot=3;
-//	private final static int state_header_name=4;
-//	private final static int state_header_value=5;
-//	private final static int state_content_read=6;
-//	private final static int state_transfer_file=7;
-//	private final static int state_transfer_buffers=8;
-//	private final static int state_waiting_run_page=9;
-//	private final static int state_run_page=10;
-//	private final static int state_content_upload=11;
-//	private final static int state_sock=12;
 	private final static String text_html_utf8="text/html;charset=utf-8";
 	private final static String text_plain="text/plain";// ? utf8 encoding?
 //	private final static String text_plain_utf8="text/plain;charset=utf-8";
