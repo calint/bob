@@ -83,7 +83,7 @@ public abstract class view_table extends view {
 	}
 
 	@Override
-	public void to(final xwriter x) throws Throwable {
+	public final void to(final xwriter x) throws Throwable {
 		x.style();
 		x.css(q, "background:yellow;border:1px dotted #555;width:13em;margin:1em;padding:.2em");
 		x.style_();
@@ -96,7 +96,7 @@ public abstract class view_table extends view {
 	}
 
 	@Override
-	protected void bubble_event(xwriter x, a from, Object o) throws Throwable {
+	protected final void bubble_event(xwriter x, a from, Object o) throws Throwable {
 		if (from instanceof action_create) {
 			onActionCreate(x, q.str());
 			return;
@@ -116,17 +116,17 @@ public abstract class view_table extends view {
 	}
 
 	/** Callback for change in query field. */
-	public void x_q(xwriter x, String s) throws Throwable {
+	public final  void x_q(xwriter x, String s) throws Throwable {
 		x.xu(t);
 	}
 
 	@Override
-	protected Set<String> getSelectedIds() {
+	protected final Set<String> getSelectedIds() {
 		return t.selectedIds;
 	}
 
 	/** Callback for press enter in query field. */
-	public void x_new(xwriter x, String s) throws Throwable {
+	public final void x_new(xwriter x, String s) throws Throwable {
 		onActionCreate(x, q.str());
 	}
 
