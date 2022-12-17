@@ -1,7 +1,6 @@
 package bob;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -9,21 +8,19 @@ import b.a;
 import b.b;
 import b.req;
 import b.xwriter;
-import bob.elem.table_mock;
 
 public class controller extends a {
 	static final long serialVersionUID = 1;
 	public a s; // serialized size
-	public a sg; // serialized, gziped size
+	public a sg; // serialized size, gziped
 	public a si; // server info
 	public bread_crumbs bc;
-	public a ae; // active view
+	public a ae; // active element
 //	public a test;
 
-	public controller() throws IOException {
+	public controller() {
 		update_serialized_size();
 		update_server_info();
-		bc.add(new table_mock());
 	}
 
 	private void update_server_info() {
@@ -101,7 +98,7 @@ public class controller extends a {
 		x.xu(s, sg);
 	}
 
-	private void update_serialized_size() throws IOException {
+	private void update_serialized_size() {
 		final byte[] ba = serialize(this);
 		s.set(Integer.toString(ba.length));
 		sg.set(Integer.toString(gzip(ba).length));

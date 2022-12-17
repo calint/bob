@@ -26,6 +26,6 @@ public class action extends a {
 	}
 
 	public final void x_(xwriter x, String param) throws Throwable {
-		super.bubble_event(x, this, str());
+		super.bubble_event(x);
 	}
 }
