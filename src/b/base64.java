@@ -56,9 +56,8 @@ public final class base64{
 	public static char[] encodeToChar(final byte[] sArr,final boolean lineSep){
 		// Check special case
 		final int sLen=sArr!=null?sArr.length:0;
-		if(sLen==0){
+		if(sLen==0)
 			return new char[0];
-		}
 		final int eLen=sLen/3*3; // Length of even 24-bits.
 		final int cCnt=(sLen-1)/3+1<<2; // Returned character count
 		final int dLen=cCnt+(lineSep?(cCnt-1)/76<<1:0); // Length of returned array

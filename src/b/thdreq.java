@@ -47,14 +47,12 @@ final class thdreq extends Thread{
 				return;
 			}
 			thdwatch.pages++;
-			if(!r.is_waiting_run_page()){
+			if(!r.is_waiting_run_page())
 				throw new IllegalStateException();
-			}
 			r.run_page();
 			// the state of the page may have changed to socket
-			if(r.is_sock()){
+			if(r.is_sock())
 				return;
-			}
 			if(r.is_transfer()){ // ? can the state of a threaded request be this?
 				r.selection_key.interestOps(SelectionKey.OP_WRITE);
 				r.selection_key.selector().wakeup();

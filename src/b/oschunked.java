@@ -94,9 +94,8 @@ final class oschunked extends OutputStream{
 		}
 	}
 	@Override public void flush() throws IOException{
-		if(bufi==0){
+		if(bufi==0)
 			return;
-		}
 		final ByteBuffer[] bba={ByteBuffer.wrap(Integer.toHexString(bufi).getBytes()),bb_crnl.slice(),ByteBuffer.wrap(buf,0,bufi),bb_crnl.slice()};
 		write_blocking(bba);
 		bufi=0;

@@ -30,9 +30,8 @@ public final class req{
 			// check if there are ongoing writes
 			if(is_transfer()){
 				do_transfer();
-				if(is_transfer()){ // more writes to do?
+				if(is_transfer())
 					return;
-				}
 				if(!is_connection_keepalive()){
 					close();
 					return;
@@ -83,9 +82,8 @@ public final class req{
 				case header_name:
 					parse_header_name();
 					// parse_header_name()->do_after_header() might have changed the state and started transfer
-					if(is_transfer()){
+					if(is_transfer())
 						return;
-					}
 					if(is_waiting_run_page()){
 //						System.out.println("interest ops: "+selection_key.interestOps());
 						b.thread(this);
@@ -290,21 +288,18 @@ public final class req{
 		content_type=headers.get(hk_content_type);
 		if(content_type!=null){
 			if(content_type.startsWith("dir;")||"dir".equals(content_type)){
-				if(!b.enable_upload){
+				if(!b.enable_upload)
 					throw new RuntimeException("uploadsdisabled");
-				}
-				if(!set_session_id_from_cookie()){
+				if(!set_session_id_from_cookie())
 					throw new RuntimeException("nocookie at create dir. path:"+uri_sb);
-				}
 				final String[] q=content_type.split(";");
 				final String lastmod_s=q[1];
 				final path p=b.path(b.sessions_dir).get(session_id).get(path_str);
 				if(!p.exists()){
 					p.mkdirs();
 				}
-				if(!p.isdir()){
+				if(!p.isdir())
 					throw new RuntimeException("isnotdir: "+p);
-				}
 				final SimpleDateFormat df=new SimpleDateFormat("yyyy-MM-dd--HH:mm:ss.SSS");
 				try{
 					p.lastmod(df.parse(lastmod_s).getTime());
@@ -315,13 +310,11 @@ public final class req{
 				return;
 			}
 			if(content_type.startsWith("file;")||"file".equals(content_type)){
-				if(!b.enable_upload){
+				if(!b.enable_upload)
 					throw new RuntimeException("uploadsdisabled");
-				}
 //				System.out.println(path_s);
-				if(!set_session_id_from_cookie()){
+				if(!set_session_id_from_cookie())
 					throw new RuntimeException("nocookie at create file from upload. path:"+uri_sb);
-				}
 //				final String contentLength_s=hdrs.get(hk_content_length);
 				content_remaining_to_read=Long.parseLong(headers.get(hk_content_length));
 				if(content_remaining_to_read>abuse_upload_len){
@@ -350,9 +343,8 @@ public final class req{
 		// assumes content type "text/plain; charset=utf-8" from an ajax post
 		final String contentLength_s=headers.get(hk_content_length);
 		if(contentLength_s!=null&&!"0".equals(contentLength_s)){
-			if(!set_session_id_from_cookie()){
+			if(!set_session_id_from_cookie())
 				throw new RuntimeException("nocookie in request with content. path:"+uri_sb);
-			}
 			content_remaining_to_read=Long.parseLong(contentLength_s);
 			if(content_remaining_to_read>abuse_content_len){
 				close();
@@ -370,12 +362,10 @@ public final class req{
 			close();
 			throw t;
 		}
-		if(b.cache_files&&try_cache()||b.try_file&&try_file()){
+		if(b.cache_files&&try_cache()||b.try_file&&try_file())
 			return;
-		}
-		if(b.try_rc&&try_resource()){
+		if(b.try_rc&&try_resource())
 			return;
-		}
 
 		// try creating an instance of 'a' on a separate thread
 		st=state.waiting_run_page;
@@ -383,15 +373,13 @@ public final class req{
 
 	public static String get_session_id_from_headers(final Map<String,String> headers){
 		final String cookie=headers.get(req.hk_cookie);
-		if(cookie==null){
+		if(cookie==null)
 			return null;
-		}
 		final String[] c1=cookie.split(";");
 		for(String cc:c1){
 			cc=cc.trim();
-			if(cc.startsWith("i=")){
+			if(cc.startsWith("i="))
 				return cc.substring("i=".length());
-			}
 		}
 		return null;
 	}
@@ -412,14 +400,12 @@ public final class req{
 	}
 
 	private boolean try_file() throws Throwable{
-		if(!path.exists()){
+		if(!path.exists())
 			return false;
-		}
 		if(path.isdir()){
 			final path p=path.get(b.default_directory_file);
-			if(!p.exists()||!p.isfile()){
+			if(!p.exists()||!p.isfile())
 				return false;
-			}
 			path=p;
 		}
 		thdwatch.files++;
@@ -527,9 +513,8 @@ public final class req{
 	/** @return true if the file or resource has been cached. */
 	private boolean try_cache() throws Throwable{
 		final chdresp cachedresp=file_and_resource_cache.get(path_str);
-		if(cachedresp==null){
+		if(cachedresp==null)
 			return false;
-		}
 		// validate that the cached response is up to date
 		if(!cachedresp.validate(System.currentTimeMillis())){
 			file_and_resource_cache.remove(path_str);
@@ -543,14 +528,12 @@ public final class req{
 	/** @return true if resource was cached and sent. */
 	private boolean try_resource() throws Throwable{
 		final String resource_path=b.get_resource_for_path(path_str);
-		if(resource_path==null){
+		if(resource_path==null)
 			return false;
-		}
 
 		final InputStream is=req.class.getResourceAsStream(resource_path);
-		if(is==null){
+		if(is==null)
 			return false;
-		}
 		final String suffix=path_str.substring(path_str.lastIndexOf('.')+1);
 		final byte[] content_type=b.get_content_type_for_file_suffix(suffix);
 		final chdresp c=new chdresp_resource(is,content_type);
@@ -709,18 +692,16 @@ public final class req{
 			do_transfer_file();
 		}else if(st==state.transfer_buffers){
 			do_transfer_buffers();
-		}else{
+		}else
 			throw new IllegalStateException();
-		}
 	}
 
 	/** @return true if if transfer is done, more writes are needed. */
 	private void do_transfer_buffers() throws Throwable{
 		while(transfer_buffers_remaining!=0){
 			final long c=socket_channel.write(transfer_buffers);
-			if(c==0){
+			if(c==0)
 				return;
-			}
 			transfer_buffers_remaining-=c;
 			thdwatch.output+=c;
 		}
@@ -784,9 +765,8 @@ public final class req{
 		ba_pos+=c;
 		ba_rem-=c;
 		thdwatch.input+=c;
-		if(content_remaining_to_read<0){ // ?
+		if(content_remaining_to_read<0)
 			throw new RuntimeException();
-		}
 		if(content_remaining_to_read==0){
 			upload_channel.close();
 			final SimpleDateFormat df=new SimpleDateFormat("yyyy-MM-dd--HH:mm:ss.SSS");
@@ -820,9 +800,8 @@ public final class req{
 	private sessionobj get_session_path(final String p){
 		final DbTransaction tn=Db.currentTransaction();
 		final List<DbObject> ls=tn.get(sessionobj.class,new Query(session.sessionId,Query.EQ,session_id).and(session.objects).and(sessionobj.path,Query.EQ,p),null,null);
-		if(ls.isEmpty()){
+		if(ls.isEmpty())
 			return get_session().object(p);
-		}
 		if(ls.size()>1){
 			b.log(new RuntimeException("found "+ls.size()+" paths for session "+session_id+" path "+p));
 		}
@@ -875,9 +854,8 @@ public final class req{
 			while(t.getCause()!=null){
 				t=t.getCause();
 			}
-			if(t instanceof RuntimeException){
+			if(t instanceof RuntimeException)
 				throw(RuntimeException)t;
-			}
 			throw new RuntimeException(t);
 		}finally{
 			if(!is_stateless){
@@ -915,15 +893,13 @@ public final class req{
 				a e=root_elem;
 				for(int n=1;n<paths.length;n++){
 					e=e.child(paths[n]);
-					if(e==null){
+					if(e==null)
 						throw new RuntimeException("not found: "+me.getKey());
-					}
 				}
 				e.set(me.getValue());
 			}
-			if(ajax_command_string.length()==0){
+			if(ajax_command_string.length()==0)
 				throw new RuntimeException("expectedax");
-			}
 
 			// decode the field id, method name and parameters parameters
 			final String target_elem_id,target_elem_method,target_elem_method_args;
@@ -1021,9 +997,8 @@ public final class req{
 	private void populate_content_map_from_buffer() throws Throwable{
 //		System.out.println("*** content type: "+content_type);
 //		System.out.println(new String(content_bb.array(),0,content_bb.limit()));
-		if(content_type!=null&&!content_type.startsWith(text_plain)){
+		if(content_type!=null&&!content_type.startsWith(text_plain))
 			throw new RuntimeException("postedcontent only "+text_plain+" allowed");
-		}
 		final byte[] ba=content_bb.array();
 		int i=0;
 		String name="";
@@ -1113,9 +1088,8 @@ public final class req{
 	public int port(){
 		final String h=headers.get("host");
 		final String[] ha=h.split(":");
-		if(ha.length<2){
+		if(ha.length<2)
 			return 80; // ? SSL?
-		}
 		return Integer.parseInt(ha[1]);
 	}
 
@@ -1141,9 +1115,8 @@ public final class req{
 	}
 
 	public static long file_and_resource_cache_size_B(){
-		if(file_and_resource_cache==null){
+		if(file_and_resource_cache==null)
 			return 0;
-		}
 		long k=0;
 		// ? sync(cachef)
 		for(final chdresp e:file_and_resource_cache.values()){

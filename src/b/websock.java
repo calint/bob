@@ -59,13 +59,11 @@ public abstract class websock{
 		while(bbo.hasRemaining()&&socket_channel.write(bbo)!=0){
 
 		}
-		if(bbo.hasRemaining()){
+		if(bbo.hasRemaining())
 			throw new RuntimeException("initiation packet not fully sent");
-		}
 		on_opened();
-		if(is_sending()){// on_opened might have sent a large message. fully send before receiving new messages.
+		if(is_sending())
 			return;
-		}
 		st=state.parse_next_frame;
 		// response sent, wait for packet (assumes client hasn't sent anything yet)
 		r.selection_key.interestOps(SelectionKey.OP_READ);
@@ -81,9 +79,8 @@ public abstract class websock{
 		while(true){
 			if(is_sending()){
 				write();
-				if(is_sending()){
+				if(is_sending())
 					return;
-				}
 			}
 			if(bb.remaining()==0){
 				bb.clear();
@@ -116,9 +113,8 @@ public abstract class websock{
 						// to remove warning of unused variable
 					}
 					final int resv=b0>>4&7;
-					if(resv!=0){
+					if(resv!=0)
 						throw new Error("reserved bits are not 0");
-					}
 					final int opcode=b0&0xf;
 					if(opcode==8){// rfc6455#section-5.5.1
 						st=state.closed;
@@ -157,9 +153,8 @@ public abstract class websock{
 					final byte[] bbia=bb.array();
 					final int pos=bb.position();
 					final int limit=bb.remaining()>payload_remaining?pos+payload_remaining:bb.limit();
-					if(is_masked&&mask_key[0]==0&&mask_key[1]==0&&mask_key[2]==0&&mask_key[3]==0){
+					if(is_masked&&mask_key[0]==0&&mask_key[1]==0&&mask_key[2]==0&&mask_key[3]==0)
 						throw new RuntimeException();
-					}
 					// unmask
 					for(int i=pos;i<limit;i++){
 						final byte b=(byte)(bbia[i]^mask_key[mask_i]);
@@ -180,9 +175,8 @@ public abstract class websock{
 																				// the data unmasked
 					on_payload(bbii);
 					is_first_packet=false;
-					if(is_sending()){ // on_payload()->on_message() might have changed the state
+					if(is_sending())
 						return;
-					}
 					break;
 				}
 			}
@@ -243,10 +237,9 @@ public abstract class websock{
 		send(new ByteBuffer[]{bb},textmode);
 	}
 	final protected void send(final ByteBuffer[] bba,final boolean textmode) throws Throwable{
-		if(is_sending()){
+		if(is_sending())
 			throw new RuntimeException("Trying to send while busy sending. Only one send per on_message.");
-			// note. before the request is closed by the exception handler there might be attempted reads which throw closed channel exception. ok?
-		}
+		// note. before the request is closed by the exception handler there might be attempted reads which throw closed channel exception. ok?
 		int nbytes_to_send=0;
 		for(final ByteBuffer b:bba){
 			nbytes_to_send+=b.remaining();

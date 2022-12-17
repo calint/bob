@@ -6,21 +6,18 @@ import java.io.IOException;
 import java.io.OutputStream;
 public final class xwriter{
 	public static String enc_js_in_attr(final String text){
-		if(text==null){
+		if(text==null)
 			return "";
-		}
 		return text.replace("'","\\'").replace("\"","&quot;");
 	}
 	public static String enc_js_str(final String text){
-		if(text==null){
+		if(text==null)
 			return "";
-		}
 		return text.replace("'","\\'");
 	}
 	public static String enc_quot(final String text){
-		if(text==null){
+		if(text==null)
 			return "";
-		}
 		return text.replace("\"","&quot;");
 	}
 	private final OutputStream os;
@@ -356,9 +353,8 @@ public final class xwriter{
 		return li(null);
 	}
 	public xwriter li(final String cls){
-		if(isempty(cls)){
+		if(isempty(cls))
 			return li();
-		}
 		return tago("li").attr("class",cls).tagoe();
 	}
 	public xwriter nbsp(){
@@ -407,9 +403,8 @@ public final class xwriter{
 		return p(Long.toString(n));
 	}
 	public xwriter p(final String s){
-		if(s==null){
+		if(s==null)
 			return this;
-		}
 		try{
 			os.write(tobytes(s));
 		}catch(final IOException e){
@@ -440,9 +435,8 @@ public final class xwriter{
 		return render(e);
 	}
 	public xwriter render(final a e) throws Throwable{
-		if(e==null){
+		if(e==null)
 			return this;
-		}
 		e.to(this);
 		return this;
 	}

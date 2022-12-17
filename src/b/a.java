@@ -123,9 +123,8 @@ public class a implements Serializable{
 	}
 
 	public void to(final xwriter x) throws Throwable{
-		if(value==null){
+		if(value==null)
 			return;
-		}
 		x.p(value);
 	}
 

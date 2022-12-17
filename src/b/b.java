@@ -106,9 +106,8 @@ final public class b{
 	public static void main(final String[] args) throws Throwable{
 		out.println(hello);
 		id=InetAddress.getLocalHost().getHostName();
-		if(!class_init(b.class,args)){
+		if(!class_init(b.class,args))
 			return;
-		}
 		if(print_conf_at_startup){
 			print_hr(out,64);
 			class_init(b.class,new String[]{"-1"});
@@ -318,20 +317,17 @@ final public class b{
 			t=t.getCause();
 		}
 		if(!log_client_disconnects){
-			if(t instanceof java.nio.channels.CancelledKeyException||t instanceof java.nio.channels.ClosedChannelException){
+			if(t instanceof java.nio.channels.CancelledKeyException||t instanceof java.nio.channels.ClosedChannelException)
 				return;
-			}
 			if(t instanceof java.net.SocketException){
 				final String msg=t.getMessage();
-				if("Connection reset".equals(msg)){
+				if("Connection reset".equals(msg))
 					return;
-				}
 			}
 			if(t instanceof java.io.IOException){
 				final String msg=t.getMessage();
-				if("Broken pipe".equals(msg)||"Connection reset by peer".equals(msg)||"An existing connection was forcibly closed by the remote host".equals(msg)){
+				if("Broken pipe".equals(msg)||"Connection reset by peer".equals(msg)||"An existing connection was forcibly closed by the remote host".equals(msg))
 					return;
-				}
 			}
 		}
 		err.println(b.stacktraceline(t));
@@ -355,9 +351,8 @@ final public class b{
 //		return new path(new File(root_dir,path));
 //	}
 	private static void ensure_path_ok(final String path) throws Error{
-		if(path.contains("..")){
+		if(path.contains(".."))
 			throw new Error("illegalpath "+path+": containing '..'");
-		}
 	}
 	static LinkedList<req> pending_requests_list(){
 		return pending_req;
@@ -481,9 +476,8 @@ final public class b{
 	}
 	public static String isempty(final String s,final String def){
 		if(isempty(s)){
-			if(def==null){
+			if(def==null)
 				return "";
-			}
 			return def;
 		}
 		return s;
@@ -529,9 +523,8 @@ final public class b{
 		}
 	}
 	public static boolean class_init(final Class<?> cls,final String[] args) throws SecurityException,NoSuchFieldException,IllegalArgumentException,IllegalAccessException{
-		if(args==null||args.length==0){
+		if(args==null||args.length==0)
 			return true;
-		}
 		if("-1".equals(args[0])){
 			class_printopts(cls);
 			return false;
@@ -620,22 +613,19 @@ final public class b{
 //	}
 	public static void firewall_assert_access(final a e){
 		final Class<? extends a> cls=e.getClass();
-		if(cls.equals(a.class)){
+		if(cls.equals(a.class))
 			return;
-		}
 		final String clsnm=cls.getName();
 //		final int i=clsnm.lastIndexOf('.');
 //		final String pkgnm=i==-1?"":clsnm.substring(0,i);
 //		if(pkgnm.endsWith(".a")&&!req.get().session().bits_hasall(2))throw new Error("firewalled1");
-		if(clsnm.startsWith("a.localhost.")&&!"/0:0:0:0:0:0:0:1".equals(req.get().ip().toString())){
+		if(clsnm.startsWith("a.localhost.")&&!"/0:0:0:0:0:0:0:1".equals(req.get().ip().toString()))
 			throw new Error("firewalled2");
-		}
 	}
 	public static String file_to_uri(final File f){// ? cleanup
 		final String u1=f.getPath();
-		if(!u1.startsWith(root_dir)){
+		if(!u1.startsWith(root_dir))
 			throw new SecurityException("path "+u1+" not in root "+root_dir);
-		}
 		final String u4=u1.substring(root_dir.length());
 		final String u2=u4.replace(File.pathSeparatorChar,'/');
 		return u2.replace(' ','+');
