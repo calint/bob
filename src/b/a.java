@@ -89,20 +89,21 @@ public class a implements Serializable {
 //			throw new Error(t);
 //		}
 //	}
-	public final a child(final String id) {
-		try {
-			return (a) getClass().getField(id).get(this);
-		} catch (Throwable e) {
-		}
-		return find_child(id);
-	}
 
 	/**
 	 * Override this if element contains children that are not defined in fields.
 	 */
-	protected a find_child(final String nm) {
+	public a child(final String id) {
+		try {
+			return (a) getClass().getField(id).get(this);
+		} catch (Throwable ignored) {
+		}
 		return null;
 	}
+
+//	protected a find_child(final String nm) {
+//		return null;
+//	}
 
 	/** Bubbles event to parent. Override this to receive events from children. */
 	protected void bubble_event(final xwriter x, final a from, final Object o) throws Throwable {

@@ -1,7 +1,6 @@
 package bob.elem;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -24,8 +23,7 @@ public class table_mock extends view_table {
 	protected List<?> getObjectsList() {
 		final List<String> result = new ArrayList<String>();
 		final String qstr = q.str().toLowerCase();
-		for (Iterator<String> i = data.ls.iterator(); i.hasNext();) {
-			final String title = i.next();
+		for (final String title : data.ls) {
 			if (!title.toLowerCase().startsWith(qstr)) {
 				continue;
 			}
@@ -35,52 +33,52 @@ public class table_mock extends view_table {
 	}
 
 	@Override
-	protected String getIdFrom(Object o) {
+	protected String getIdFrom(final Object o) {
 		return o.toString();
 	}
 
 	@Override
-	protected String getNameFrom(Object o) {
+	protected String getNameFrom(final Object o) {
 		return o.toString();
 	}
 
 	@Override
-	protected void onActionCreate(xwriter x, String init_str) throws Throwable {
-		form_mock fm = new form_mock(null, null, init_str);
+	protected void onActionCreate(final xwriter x, final String init_str) throws Throwable {
+		final form_mock fm = new form_mock(null, null, init_str);
 		super.bubble_event(x, this, fm);
 	}
 
 	@Override
-	protected void onActionDelete(xwriter x) throws Throwable {
+	protected void onActionDelete(final xwriter x) throws Throwable {
 		final Set<String> selectedIds = getSelectedIds();
-		for (String id : selectedIds) {
+		for (final String id : selectedIds) {
 			data.ls.remove(id);
 		}
 		selectedIds.clear();
 	}
 
 	@Override
-	protected void onAction(xwriter x, action act) throws Throwable {
+	protected void onAction(final xwriter x, final action act) throws Throwable {
 		final Set<String> selectedIds = getSelectedIds();
 		x.xalert(act.name() + selectedIds);
 	}
 
 	@Override
-	protected void renderHeaders(xwriter x) {
+	protected void renderHeaders(final xwriter x) {
 		x.th().p("Title").th().p("Created").th().p("Size");
 	}
 
 	@Override
-	protected void renderRowCells(xwriter x, Object o) {
+	protected void renderRowCells(final xwriter x, final Object o) {
 		x.td();
-		renderLinkedName(x, o);
+		renderLinked(x, o, o.toString());
 		x.td().p("2022-12-06 15:33");
 		x.td().p("12 KB");
 	}
 
 	@Override
-	protected void onRowClick(xwriter x, String id) throws Throwable {
-		form_mock fm = new form_mock(null, id, null);
+	protected void onRowClick(final xwriter x, final String id) throws Throwable {
+		final form_mock fm = new form_mock(null, id, null);
 		super.bubble_event(x, this, fm);
 	}
 }

@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
+
 import b.a;
 import b.b;
 import b.websock;
@@ -18,21 +19,23 @@ final public class websock_bob extends websock {
 		super(true);
 	}
 
-	final @Override protected void on_opened() throws Throwable {
+	@Override
+	protected void on_opened() throws Throwable {
 //		System.out.println("websocket "+Integer.toHexString(hashCode())+": on_opened");
 
 		// todo load root from db or create new
 		controller = (a) Class.forName(controller_class_name).getConstructor().newInstance();
 
 		final xwriter js = new xwriter();
-		xwriter x = js.xub(controller, true, false);
+		final xwriter x = js.xub(controller, true, false);
 		controller.to(x);
 		js.xube();
 
 		send(js.toString());
 	}
 
-	final @Override protected void on_message(ByteBuffer bb) throws Throwable {
+	@Override
+	protected void on_message(final ByteBuffer bb) throws Throwable {
 //		System.out.println("websocket "+Integer.toHexString(hashCode())+": on_message: "+bb.remaining()+" bytes");
 //		System.out.println(new String(bb.array(),bb.position(),bb.remaining()));
 //		System.out.println("-- - -- ------- -- - - - - -- - -");
@@ -52,13 +55,15 @@ final public class websock_bob extends websock {
 			a e = controller;
 			for (int n = 1; n < paths.length; n++) {
 				e = e.child(paths[n]);
-				if (e == null)
+				if (e == null) {
 					throw new RuntimeException("not found: " + me.getKey());
+				}
 			}
 			e.set(me.getValue());
 		}
-		if (ajax_command_string.length() == 0)
+		if (ajax_command_string.length() == 0) {
 			throw new RuntimeException("expectedax");
+		}
 
 		// decode the field id, method name and parameters parameters
 		final String target_elem_id, target_elem_method, target_elem_method_args;
@@ -82,8 +87,9 @@ final public class websock_bob extends websock {
 		a target_elem = controller;
 		for (int n = 1; n < path.length; n++) {
 			target_elem = target_elem.child(path[n]);
-			if (target_elem == null)
+			if (target_elem == null) {
 				break;
+			}
 		}
 
 		final xwriter x = new xwriter();
@@ -101,10 +107,11 @@ final public class websock_bob extends websock {
 		} catch (final InvocationTargetException t) {
 			b.log(t.getTargetException());
 			Throwable e = t;
-			while (e.getCause() != null)
+			while (e.getCause() != null) {
 				e = e.getCause();
+			}
 			x.xalert(b.isempty(e.getMessage(), e.toString()));
-		} catch (NoSuchMethodException t) {
+		} catch (final NoSuchMethodException t) {
 			x.xalert("method not found:\n" + target_elem.getClass().getName() + ".x_" + target_elem_method
 					+ "(xwriter,String)");
 		}
@@ -115,7 +122,8 @@ final public class websock_bob extends websock {
 		send(msg);
 	}
 
-	final @Override protected void on_closed() throws Throwable {
+	@Override
+	protected void on_closed() throws Throwable {
 //		System.out.println("websocket "+Integer.toHexString(hashCode())+": on_closed");
 		// todo store root in db
 	}
@@ -125,22 +133,23 @@ final public class websock_bob extends websock {
 		final HashMap<String, String> content = new HashMap<String, String>();
 		final byte[] ba = content_bb.array();
 		int i = content_bb.position();
-		int n = content_bb.limit();
+		final int n = content_bb.limit();
 //		System.out.println(new String(ba,i,n-i));
 		String name = "";
 		int s = 0;
 		int j = i;
 		int ba_i = i;
 		while (true) {
-			if (i == n)
+			if (i == n) {
 				break;
+			}
 			final byte c = ba[ba_i];
 			switch (s) {
 			default:
 				throw new RuntimeException();
 			case 0:
 				if (c == '=') {
-					name = new String(ba, i, (j - i), b.strenc);
+					name = new String(ba, i, j - i, b.strenc);
 					i = j + 1;
 					s = 1;
 				}
@@ -148,7 +157,7 @@ final public class websock_bob extends websock {
 
 			case 1:
 				if (c == '\r') {
-					final String value = new String(ba, i, (j - i), b.strenc);
+					final String value = new String(ba, i, j - i, b.strenc);
 					content.put(name, value);
 					i = j + 1;
 					s = 0;

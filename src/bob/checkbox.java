@@ -9,7 +9,7 @@ public class checkbox extends a {
 	final private static String on = "▣";
 	final private String id;
 
-	public checkbox(String id, boolean checked) {
+	public checkbox(final String id, final boolean checked) {
 		set(checked ? on : off);
 		this.id = id;
 	}
@@ -18,7 +18,8 @@ public class checkbox extends a {
 		return id;
 	}
 
-	public void to(xwriter x) throws Throwable {
+	@Override
+	public void to(final xwriter x) throws Throwable {
 		x.spano(this);
 		if (on.equals(str())) {
 			x.ax(this, "u", on);
@@ -28,13 +29,13 @@ public class checkbox extends a {
 		x.span_();
 	}
 
-	public void x_s(xwriter x, String param) throws Throwable {
+	public void x_s(final xwriter x, final String param) throws Throwable {
 		set(on);
 		bubble_event(x, this, "checked"); // bubble event
 		x.xuo(this); // replace outer html element with this id with the output of this element
 	}
 
-	public void x_u(xwriter x, String param) throws Throwable {
+	public void x_u(final xwriter x, final String param) throws Throwable {
 		set(off);
 		bubble_event(x, this, "unchecked"); // bubble event
 		x.xuo(this); // replace outer html element with this id with the output of this element

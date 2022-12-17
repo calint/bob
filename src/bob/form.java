@@ -21,20 +21,24 @@ public abstract class form extends a implements titled {
 	/** Object id. */
 	protected String object_id;
 
-	public form(String parent_id, String object_id, int enabled_form_bits) {
+	public form(final String parent_id, final String object_id, final int enabled_form_bits) {
 		this.parent_id = parent_id;
 		this.object_id = object_id;
 		this.enabled_form_bits = enabled_form_bits;
-		if ((enabled_form_bits & BIT_SAVE_CLOSE) != 0)
+		if ((enabled_form_bits & BIT_SAVE_CLOSE) != 0) {
 			scc.add(new action("save and clode", "sc"));
-		if ((enabled_form_bits & BIT_SAVE) != 0)
+		}
+		if ((enabled_form_bits & BIT_SAVE) != 0) {
 			scc.add(new action("save", "s"));
-		if ((enabled_form_bits & BIT_CLOSE) != 0)
+		}
+		if ((enabled_form_bits & BIT_CLOSE) != 0) {
 			scc.add(new action("close", "c"));
+		}
 		final List<action> actions = getActionsList();
-		if (actions == null)
+		if (actions == null) {
 			return;
-		for (action a : actions) {
+		}
+		for (final action a : actions) {
 			ans.add(a);
 		}
 	}
@@ -48,7 +52,7 @@ public abstract class form extends a implements titled {
 	}
 
 	@Override
-	public final void to(xwriter x) throws Throwable {
+	public final void to(final xwriter x) throws Throwable {
 		x.nl();
 		if (!ans.elements().isEmpty()) {
 			x.divh(ans);
@@ -60,14 +64,15 @@ public abstract class form extends a implements titled {
 	}
 
 	@Override
-	protected void bubble_event(xwriter x, a from, Object o) throws Throwable {
+	protected void bubble_event(final xwriter x, final a from, final Object o) throws Throwable {
 		if (from instanceof action) {
 			final String code = ((action) from).code();
 			if ("sc".equals(code) && (enabled_form_bits & BIT_SAVE_CLOSE) != 0) {
 				save(x);
 				super.bubble_event(x, this, "close");
 				return;
-			} else if ("s".endsWith(code) && (enabled_form_bits & BIT_SAVE) != 0) {
+			}
+			if ("s".endsWith(code) && (enabled_form_bits & BIT_SAVE) != 0) {
 				save(x);
 				super.bubble_event(x, this, "updated");
 				return;
@@ -86,17 +91,17 @@ public abstract class form extends a implements titled {
 		return null;
 	}
 
-	protected void onAction(xwriter x, action act) {
+	protected void onAction(final xwriter x, final action act) {
 	}
 
-	protected final void saveAndClose(xwriter x) throws Throwable {
+	protected final void saveAndClose(final xwriter x) throws Throwable {
 		save(x);
 		super.bubble_event(x, this, "close");
 	}
 
 	protected abstract void render(xwriter x) throws Throwable;
 
-	protected void save(xwriter x) throws Throwable {
+	protected void save(final xwriter x) throws Throwable {
 	}
 
 }

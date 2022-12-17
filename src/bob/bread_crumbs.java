@@ -11,20 +11,21 @@ import b.xwriter;
  */
 public final class bread_crumbs extends a {
 	private static final long serialVersionUID = 1L;
-	private ArrayList<a> elements = new ArrayList<a>();
+	private final ArrayList<a> elements = new ArrayList<a>();
 
 	@Override
-	public void to(xwriter x) {
+	public void to(final xwriter x) {
 		final int n = elements.size();
 		final int lei = n - 1; // last element index
 		for (int i = 0; i < n; i++) {
 			final a e = elements.get(i);
 			x.p(" &raquo; ");
 			final String nm;
-			if (e instanceof titled) // ? oop
+			if (e instanceof titled) { // ? oop
 				nm = ((titled) e).getTitle();
-			else
+			} else { // ? oop
 				nm = getClass().getName();
+			}
 			if (i == lei) {
 				x.tag("em").p(nm).tage("em");
 				return;
@@ -33,7 +34,7 @@ public final class bread_crumbs extends a {
 		}
 	}
 
-	public void x_clk(xwriter x, String param) throws Throwable {
+	public void x_clk(final xwriter x, final String param) throws Throwable {
 		final int i = Integer.parseInt(param);
 		final int n = elements.size();
 		if (i + 1 < n) {
@@ -45,7 +46,7 @@ public final class bread_crumbs extends a {
 		bubble_event(x);
 	}
 
-	public void add(a e) {
+	public void add(final a e) {
 		elements.add(e);
 	}
 
@@ -54,7 +55,11 @@ public final class bread_crumbs extends a {
 	}
 
 	@Override
-	protected a find_child(String nm) {
+	public a child(final String nm) {
+		final a e = super.child(nm);
+		if (e != null) {
+			return e;
+		}
 		return elements.get(Integer.parseInt(nm));
 	}
 

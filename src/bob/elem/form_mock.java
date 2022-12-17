@@ -21,7 +21,7 @@ public class form_mock extends form {
 
 	public a title;
 
-	public form_mock(String parent_id, String object_id, String init_str) {
+	public form_mock(final String parent_id, final String object_id, final String init_str) {
 		super(parent_id, object_id, BIT_SAVE_CLOSE | BIT_SAVE | BIT_CLOSE);
 		title.set(object_id == null ? init_str : object_id);
 	}
@@ -31,7 +31,7 @@ public class form_mock extends form {
 	}
 
 	@Override
-	protected void render(xwriter x) throws Throwable {
+	protected void render(final xwriter x) throws Throwable {
 		x.p("title: ").inptxt(title, this, "sc");
 		x.is().xfocus(title).is_();
 		x.nl();
@@ -39,14 +39,14 @@ public class form_mock extends form {
 
 	@Override
 	protected List<action> getActionsList() {
-		List<action> ls = new ArrayList<action>();
+		final List<action> ls = new ArrayList<action>();
 //		ls.add(new action_mock());
 		ls.add(new action("alert me", "alert"));
 		return ls;
 	}
 
 	@Override
-	protected void onAction(xwriter x, action act) {
+	protected void onAction(final xwriter x, final action act) {
 		if ("alert".equals(act.code())) {
 			x.xalert("alert");
 			return;
@@ -55,7 +55,7 @@ public class form_mock extends form {
 	}
 
 	@Override
-	protected void save(xwriter x) throws Throwable {
+	protected void save(final xwriter x) throws Throwable {
 		if (object_id == null) { // create new
 			data.ls.add(title.str());
 			object_id = title.str();
@@ -73,7 +73,7 @@ public class form_mock extends form {
 		throw new RuntimeException("could not find " + object_id);
 	}
 
-	public final void x_sc(xwriter x, String param) throws Throwable {
+	public final void x_sc(final xwriter x, final String param) throws Throwable {
 		saveAndClose(x);
 	}
 }

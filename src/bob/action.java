@@ -11,7 +11,7 @@ public class action extends a {
 		this("", "");
 	}
 
-	public action(String text, String code) {
+	public action(final String text, final String code) {
 		set(text);
 		this.code = code;
 	}
@@ -21,11 +21,11 @@ public class action extends a {
 	}
 
 	@Override
-	public final void to(xwriter x) throws Throwable {
+	public final void to(final xwriter x) throws Throwable {
 		x.ax(this, null, str());
 	}
 
-	public final void x_(xwriter x, String param) throws Throwable {
+	public final void x_(final xwriter x, final String param) throws Throwable {
 		super.bubble_event(x);
 	}
 }

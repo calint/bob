@@ -16,8 +16,8 @@ public abstract class view extends a implements titled {
 	/** The actions that are enabled in the view. */
 	final protected int enabled_view_bits;
 
-	public view(int enabled_bits) {
-		this.enabled_view_bits = enabled_bits;
+	public view(final int enabled_bits) {
+		enabled_view_bits = enabled_bits;
 	}
 //
 //	protected final void enable(int bit) {

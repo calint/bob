@@ -57,7 +57,7 @@ public final class app implements bapp {
 //				+ "?verifyServerCertificate=false&useSSL=true&ssl-mode=REQUIRED", b.bapp_jdbc_user, b.bapp_jdbc_password,
 //				Integer.parseInt(b.bapp_jdbc_ncons));
 
-// verifyServerCertificate=false&useSSL=true&ssl-mode=REQUIRED		
+// verifyServerCertificate=false&useSSL=true&ssl-mode=REQUIRED
 //		ssl-mode=REQUIRED
 	}
 

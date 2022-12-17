@@ -5,17 +5,17 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 public final class xwriter{
-	private static String enc_js_in_attr(final String text){
+	public static String enc_js_in_attr(final String text){
 		if(text==null)
 			return "";
 		return text.replaceAll("'","\\\\'").replaceAll("\"","&quot;");
 	}
-	private static String enc_js_str(final String text){
+	public static String enc_js_str(final String text){
 		if(text==null)
 			return "";
 		return text.replaceAll("'","\\\\'");
 	}
-	private static String enc_quot(final String text){
+	public static String enc_quot(final String text){
 		if(text==null)
 			return "";
 		return text.replaceAll("\"","&quot;");

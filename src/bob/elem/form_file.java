@@ -8,9 +8,9 @@ import bob.form;
 public class form_file extends form {
 	private static final long serialVersionUID = 1L;
 
-	private path pth;
+	private final path pth;
 
-	public form_file(path pth) {
+	public form_file(final path pth) {
 		super(null, pth.name(), BIT_CLOSE);
 		this.pth = pth;
 	}
@@ -20,7 +20,7 @@ public class form_file extends form {
 	}
 
 	@Override
-	protected void render(xwriter x) throws Throwable {
+	protected void render(final xwriter x) throws Throwable {
 		x.divo((String) null,
 				"text-align:left;margin:0;margin-left:4em;margin-right:4em;padding:1em;border:1px dotted green");
 		pth.to(new osltgt(x.outputstream()));

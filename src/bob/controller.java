@@ -27,6 +27,7 @@ public class controller extends a {
 		si.set(b.id + " " + req.get().ip().getHostAddress());
 	}
 
+	@Override
 	public void to(final xwriter x) throws Throwable {
 		x.nl();
 		x.divh(bc);
@@ -40,7 +41,7 @@ public class controller extends a {
 	}
 
 	@Override
-	protected void bubble_event(xwriter x, a from, Object o) throws Throwable {
+	protected void bubble_event(final xwriter x, final a from, final Object o) throws Throwable {
 		if (from == bc) { // event from bread crumb
 			final a e = ((bread_crumbs) from).getActive();
 			e.replace(this, ae); // replace active element
@@ -50,7 +51,7 @@ public class controller extends a {
 		if (from instanceof form) { // event from a form
 			if ("close".equals(o)) {
 				bc.removeLast(); // remove last element in bread crumbs
-				a e = bc.getActive(); // get current element
+				final a e = bc.getActive(); // get current element
 				e.replace(this, ae); // replace active element
 				x.xu(ae); // update active element
 				x.xu(bc); // update bread crumbs
@@ -61,15 +62,7 @@ public class controller extends a {
 				return;
 			}
 		}
-		if (o instanceof form) { // open form
-			final a e = (a) o;
-			bc.add(e); // add to bread crumb
-			e.replace(this, ae); // replace active element
-			x.xu(ae); // update active element
-			x.xu(bc); // update bread crumbs
-			return;
-		}
-		if (o instanceof view) { // open view
+		if ((o instanceof form) || (o instanceof view)) { // open view
 			final a e = (a) o;
 			bc.add(e); // add to bread crumb
 			e.replace(this, ae); // replace active element
@@ -81,7 +74,7 @@ public class controller extends a {
 		super.bubble_event(x, from, o);
 	}
 
-	public void x_s(xwriter x, String param) throws Throwable {
+	public void x_s(final xwriter x, final String param) throws Throwable {
 //		System.out.println("*** param:{"+param+"}");
 		update_serialized_size();
 		x.xu(s, sg);
@@ -93,20 +86,20 @@ public class controller extends a {
 		sg.set(Integer.toString(gzip(ba).length));
 	}
 
-	public static byte[] serialize(Object o) {
+	public static byte[] serialize(final Object o) {
 		try {
 			final ByteArrayOutputStream bos = new ByteArrayOutputStream(256);
 			final ObjectOutputStream oos = new ObjectOutputStream(bos);
 			oos.writeObject(o);
 			oos.close();
 			return bos.toByteArray();
-		} catch (Throwable t) {
+		} catch (final Throwable t) {
 			throw new RuntimeException(t);
 		}
 	}
 
-	public static byte[] gzip(byte[] ba) {
-		ByteArrayOutputStream bos = new ByteArrayOutputStream(ba.length);
+	public static byte[] gzip(final byte[] ba) {
+		final ByteArrayOutputStream bos = new ByteArrayOutputStream(ba.length);
 		GZIPOutputStream gos = null;
 		try {
 			gos = new GZIPOutputStream(bos);
@@ -117,16 +110,16 @@ public class controller extends a {
 			gos.close();
 			bos.close();
 			return bos.toByteArray();
-		} catch (Throwable t) {
+		} catch (final Throwable t) {
 			throw new RuntimeException(t);
 		}
 	}
 
-	public void x_test(xwriter x, String param) {
+	public void x_test(final xwriter x, final String param) {
 		System.out.println("test param{" + param + "}");
 	}
 
-	public void x_sel(xwriter x, String param) {
+	public void x_sel(final xwriter x, final String param) {
 		System.out.println("sel param{" + param + "}");
 	}
 

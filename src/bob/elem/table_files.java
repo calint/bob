@@ -22,9 +22,10 @@ public class table_files extends view_table {
 	private final path pth;
 	private transient SimpleDateFormat sdf; // serialized is ~30 KB
 
-	private String formatDateTime(long ms) {
-		if (sdf == null)
+	private String formatDateTime(final long ms) {
+		if (sdf == null) {
 			sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		}
 		return sdf.format(ms);
 	}
 
@@ -32,7 +33,7 @@ public class table_files extends view_table {
 		this(b.b.path());
 	}
 
-	public table_files(path pth) {
+	public table_files(final path pth) {
 		super(BIT_SEARCH, BIT_CLICK_ITEM);
 		this.pth = pth;
 	}
@@ -58,12 +59,11 @@ public class table_files extends view_table {
 			pattern = null;
 		}
 		final List<String> result = new ArrayList<String>();
-		for (String pthnm : pth.list()) {
-			if (do_query) {
-				if (!pattern.matcher(pthnm).find())
-					continue;
+		for (final String pthnm : pth.list()) {
+			if (do_query && !pattern.matcher(pthnm).find()) {
+				continue;
 			}
-			path p = pth.get(pthnm);
+			final path p = pth.get(pthnm);
 			if (p.isdir()) {
 				result.add("./" + pthnm);
 			} else {
@@ -75,12 +75,12 @@ public class table_files extends view_table {
 	}
 
 	@Override
-	protected String getIdFrom(Object o) {
+	protected String getIdFrom(final Object o) {
 		return getNameFrom(o);
 	}
 
 	@Override
-	protected String getNameFrom(Object o) {
+	protected String getNameFrom(final Object o) {
 		String dispnm = o.toString();
 		if (dispnm.startsWith("./")) {
 			dispnm = dispnm.substring("./".length());
@@ -89,18 +89,18 @@ public class table_files extends view_table {
 	}
 
 	@Override
-	protected void onAction(xwriter x, action act) throws Throwable {
+	protected void onAction(final xwriter x, final action act) throws Throwable {
 		final Set<String> selectedIds = getSelectedIds();
 		x.xalert(act.name() + selectedIds);
 	}
 
 	@Override
-	protected void renderHeaders(xwriter x) {
+	protected void renderHeaders(final xwriter x) {
 		x.th().th().p("Name").th().p("Last modified").th().p("Size");
 	}
 
 	@Override
-	protected void renderRowCells(xwriter x, Object o) {
+	protected void renderRowCells(final xwriter x, final Object o) {
 		final path p = pth.get(o.toString());
 		x.td();
 		final String img;
@@ -118,14 +118,14 @@ public class table_files extends view_table {
 	}
 
 	@Override
-	protected void onRowClick(xwriter x, String id) throws Throwable {
+	protected void onRowClick(final xwriter x, final String id) throws Throwable {
 		final path p = pth.get(id);
 		if (p.isdir()) {
-			table_files f = new table_files(p);
+			final table_files f = new table_files(p);
 			super.bubble_event(x, this, f);
 			return;
 		}
-		form_file f = new form_file(p);
+		final form_file f = new form_file(p);
 		super.bubble_event(x, this, f);
 	}
 }
