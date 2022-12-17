@@ -554,7 +554,9 @@ final public class b{
 	public static void p(final String s){
 		out.print(s);
 	}
-
+	public static void log(final String s){
+		pl(s);
+	}
 	public static @Retention(RetentionPolicy.RUNTIME) @interface unit{
 		String name() default "";
 	}

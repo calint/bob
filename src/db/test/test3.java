@@ -35,7 +35,7 @@ public class test3 extends TestCase {
 			}
 
 			row = ls.get(1);
-			if ((row[0] != u) || (row[1] != f2)) {
+			if (row[0] != u || row[1] != f2) {
 				throw new RuntimeException();
 			}
 		} else {
@@ -46,7 +46,7 @@ public class test3 extends TestCase {
 			}
 
 			row = ls.get(1);
-			if ((row[0].id() != u.id()) || (row[1].id() != f2.id())) {
+			if (row[0].id() != u.id() || row[1].id() != f2.id()) {
 				throw new RuntimeException();
 			}
 		}
