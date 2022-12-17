@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import b.path;
 import b.xwriter;
@@ -33,11 +34,19 @@ public class table_files extends view_table {
 
 	@Override
 	protected List<?> getObjectsList() {
+		final String qstr;
+		if (b.b.isempty(q.str())) {
+			qstr = "";
+		} else {
+			qstr = q.str().replace("*", ".*");
+		}
+//		final String qstr = q.str().toLowerCase();
+		final Pattern pattern = Pattern.compile(qstr, Pattern.CASE_INSENSITIVE);
 		final List<String> result = new ArrayList<String>();
-		final String qstr = q.str().toLowerCase();
 		for (String pthnm : pth.list()) {
-			if (!pthnm.toLowerCase().startsWith(qstr)) {
-				continue;
+			if (qstr.length() != 0) {
+				if (!pattern.matcher(pthnm).find())
+					continue;
 			}
 			final path p = pth.get(pthnm);
 			if (p.isdir()) {
@@ -75,7 +84,7 @@ public class table_files extends view_table {
 	protected void renderRowCells(xwriter x, Object o) {
 		final path p = pth.get(o.toString());
 		x.td().p(sdf.format(p.lastmod()));
-		x.td(null,"text-align:right").p(util.formatSizeInBytes(p.size()));
+		x.td(null, "text-align:right").p(util.formatSizeInBytes(p.size()));
 	}
 
 	@Override
@@ -86,7 +95,7 @@ public class table_files extends view_table {
 			super.bubble_event(x, this, f);
 			return;
 		}
-		form_file f=new form_file(p);
+		form_file f = new form_file(p);
 		super.bubble_event(x, this, f);
 	}
 }
