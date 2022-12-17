@@ -106,6 +106,10 @@ public abstract class view_table extends view {
 				onActionCreate(x, q.str());
 				return;
 			} else if ("delete".equals(code)) {
+				if(getSelectedIds().isEmpty()) {
+					x.xalert("No items selected.");
+					return;
+				}
 				onActionDelete(x);
 				x.xu(t);
 				x.xfocus(q);
