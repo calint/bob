@@ -83,7 +83,7 @@ public class table_files extends view_table {
 
 	@Override
 	protected void renderHeaders(xwriter x) {
-		x.th().p("Created").th().p("Size");
+		x.th().p("Last modified").th().p("Size");
 	}
 
 	@Override
