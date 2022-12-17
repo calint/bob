@@ -55,7 +55,7 @@ public abstract class view_table extends view {
 		}
 //		x.ax(this, "up", "••");
 		if ((enabled_view_bits & BIT_SEARCH) != 0) {
-			x.inpax(q, null, this, "q", "new");
+			x.inpax(q, "query", this, "q", "new");
 			x.is().xfocus(q).is_();
 		}
 		x.divh(t);

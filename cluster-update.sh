@@ -17,8 +17,8 @@ echo
 
 for IP in $IPS; do
 	echo $IP: scp ...
-	scp -q run.cfg.do root@$IP:/bob/run.cfg &
-	scp -q cluster.cfg.do root@$IP:/bob/cluster.cfg &
+	scp run.cfg.do root@$IP:/bob/run.cfg &
+	scp cluster.cfg.do root@$IP:/bob/cluster.cfg &
 done
 
 wait
