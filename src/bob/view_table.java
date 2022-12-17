@@ -115,7 +115,7 @@ public abstract class view_table extends view {
 			onAction(x, (action) from);
 			return;
 		}
-		// event unknown by this element, bubble to parent
+		// event unknown by this element
 		super.bubble_event(x, from, o);
 	}
 
@@ -124,14 +124,14 @@ public abstract class view_table extends view {
 		x.xu(t);
 	}
 
-	@Override
-	protected final Set<String> getSelectedIds() {
-		return t.selectedIds;
-	}
-
 	/** Callback for press enter in query field. */
 	public final void x_new(xwriter x, String s) throws Throwable {
 		onActionCreate(x, q.str());
+	}
+
+	@Override
+	protected final Set<String> getSelectedIds() {
+		return t.selectedIds;
 	}
 
 	protected abstract void renderHeaders(xwriter x);

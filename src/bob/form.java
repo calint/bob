@@ -64,7 +64,7 @@ public abstract class form extends a implements titled {
 			onAction(x, (action) from);
 			return;
 		}
-		// event unknown by this element, bubble to parent
+		// event unknown by this element
 		super.bubble_event(x, from, o);
 	}
 
