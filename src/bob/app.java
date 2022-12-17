@@ -36,7 +36,7 @@ public final class app implements bapp {
 		
 		b.b.set_file_suffix_to_content_type("java","text/plain");
 		
-		b.b.set_path_to_class("/bob/websocket",bob.sock.class);
+		b.b.set_path_to_class("/bob/websocket",bob.websock_bob.class);
 		b.b.set_path_to_class("/stats",b.a_stats.class);
 		
 		// qa

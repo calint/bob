@@ -9,12 +9,12 @@ import b.b;
 import b.websock;
 import b.xwriter;
 
-final public class sock extends websock{
+final public class websock_bob extends websock{
 	private final static String axfld="$";
 	public String controller_class_name="bob.elem.ctrl";
 	protected a controller;
 
-	public sock(){
+	public websock_bob(){
 		super(true);
 	}
 
