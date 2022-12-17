@@ -92,7 +92,7 @@ public abstract class view_table extends view {
 		x.style_();
 		x.divh(ans);
 //		x.ax(this, "up", "••");
-		x.inpax(q, null, this, "q", "new").p(" ");
+		x.inpax(q, null, this, "q", "new");
 //		x.is().p("$f('").p(q.id()).p("')").is_();
 		x.is().xfocus(q).is_();
 		x.divh(t);
