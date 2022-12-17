@@ -2,7 +2,6 @@ package bob.elem;
 
 import b.a;
 import b.xwriter;
-import bob.data;
 import bob.form;
 
 public class form_mock extends form {
@@ -21,7 +20,7 @@ public class form_mock extends form {
 
 	@Override
 	protected void render(xwriter x) throws Throwable {
-		x.inptxt(title);
+		x.p("title: ").inptxt(title);
 		x.is().xfocus(title).is_();
 	}
 

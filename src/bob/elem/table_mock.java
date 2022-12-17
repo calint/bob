@@ -9,7 +9,6 @@ import b.xwriter;
 import bob.action;
 import bob.action_create;
 import bob.action_delete;
-import bob.data;
 import bob.view_table;
 
 public class table_mock extends view_table {
