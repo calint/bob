@@ -11,13 +11,13 @@ import bob.form;
 public class form_mock extends form {
 	private static final long serialVersionUID = 1L;
 
-	public final static class action_mock extends action {
-		private static final long serialVersionUID = 1L;
-
-		public action_mock() {
-			super("alert me");
-		}
-	}
+//	public final static class action_mock extends action {
+//		private static final long serialVersionUID = 1L;
+//
+//		public action_mock() {
+//			super("alert me");
+//		}
+//	}
 
 	public a title;
 
@@ -39,13 +39,14 @@ public class form_mock extends form {
 	@Override
 	protected List<action> getActionsList() {
 		List<action> ls = new ArrayList<action>();
-		ls.add(new action_mock());
+//		ls.add(new action_mock());
+		ls.add(new action("alert me","alert"));
 		return ls;
 	}
 
 	@Override
 	protected void onAction(xwriter x, action act) {
-		if (act instanceof action_mock) {
+		if ("alert".equals(act.code())) {
 			x.xalert("alert");
 			return;
 		}

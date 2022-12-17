@@ -9,6 +9,9 @@ import b.xwriter;
 
 public abstract class view_table extends view {
 	static final long serialVersionUID = 1;
+	public container ans; // actions
+	public a q; // query field
+	public table t; // the table
 
 	public final static class table extends a {
 		static final long serialVersionUID = 1;
@@ -70,18 +73,16 @@ public abstract class view_table extends view {
 		}
 	}
 
-	public container ans; // actions
-	public a q; // query field
-	public table t; // the table
-
 	public view_table() {
+		t.setTableView(this);
+		ans.add(new action("create", "create"));
+		ans.add(new action("delete", "delete"));
 		final List<action> actions = getActionsList();
 		if (actions == null)
 			return;
 		for (action a : actions) {
 			ans.add(a);
 		}
-		t.setTableView(this);
 	}
 
 	@Override
@@ -99,17 +100,18 @@ public abstract class view_table extends view {
 
 	@Override
 	protected final void bubble_event(xwriter x, a from, Object o) throws Throwable {
-		if (from instanceof action_create) {
-			onActionCreate(x, q.str());
-			return;
-		}
-		if (from instanceof action_delete) {
-			onActionDelete(x);
-			x.xu(t);
-			x.xfocus(q);
-			return;
-		}
 		if (from instanceof action) {
+			final String code = ((action) from).code();
+			if ("create".equals(code)) {
+				onActionCreate(x, q.str());
+				return;
+			} else if ("delete".equals(code)) {
+				onActionDelete(x);
+				x.xu(t);
+				x.xfocus(q);
+				return;
+
+			}
 			onAction(x, (action) from);
 			return;
 		}
@@ -118,7 +120,7 @@ public abstract class view_table extends view {
 	}
 
 	/** Callback for change in query field. */
-	public final  void x_q(xwriter x, String s) throws Throwable {
+	public final void x_q(xwriter x, String s) throws Throwable {
 		x.xu(t);
 	}
 

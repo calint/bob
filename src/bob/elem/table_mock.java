@@ -7,8 +7,6 @@ import java.util.Set;
 
 import b.xwriter;
 import bob.action;
-import bob.action_create;
-import bob.action_delete;
 import bob.view_table;
 
 public class table_mock extends view_table {
@@ -16,14 +14,6 @@ public class table_mock extends view_table {
 
 	public String getTitle() {
 		return "Mock files";
-	}
-
-	@Override
-	protected List<action> getActionsList() {
-		final List<action> ls = new ArrayList<action>();
-		ls.add(new action_create());
-		ls.add(new action_delete());
-		return ls;
 	}
 
 	@Override

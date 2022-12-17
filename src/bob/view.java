@@ -9,7 +9,9 @@ import b.xwriter;
 public abstract class view extends a implements titled {
 	static final long serialVersionUID = 1;
 
-	protected abstract List<action> getActionsList();
+	protected List<action> getActionsList() {
+		return null;
+	}
 
 	protected abstract List<?> getObjectsList();
 
