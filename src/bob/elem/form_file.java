@@ -11,7 +11,7 @@ public class form_file extends form {
 	private path pth;
 
 	public form_file(path pth) {
-		super(null, pth.name(), 0);
+		super(null, pth.name(), BIT_CLOSE);
 		this.pth = pth;
 	}
 

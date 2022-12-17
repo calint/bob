@@ -55,7 +55,7 @@ public abstract class form extends a implements titled {
 			x.nl();
 		}
 		render(x);
-		x.nl().nl();
+		x.nl();
 		x.divh(scc);
 	}
 

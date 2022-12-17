@@ -34,6 +34,7 @@ public class form_mock extends form {
 	protected void render(xwriter x) throws Throwable {
 		x.p("title: ").inptxt(title, this, "sc");
 		x.is().xfocus(title).is_();
+		x.nl();
 	}
 
 	@Override
