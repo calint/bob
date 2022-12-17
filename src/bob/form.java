@@ -75,6 +75,11 @@ public abstract class form extends a implements titled {
 	protected void onAction(xwriter x, action act) {
 	}
 
+	protected final void saveAndClose(xwriter x) throws Throwable {
+		save(x);
+		super.bubble_event(x, this, "close");
+	}
+
 	protected abstract void render(xwriter x) throws Throwable;
 
 	protected abstract void save(xwriter x) throws Throwable;

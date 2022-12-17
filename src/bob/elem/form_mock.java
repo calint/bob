@@ -32,7 +32,7 @@ public class form_mock extends form {
 
 	@Override
 	protected void render(xwriter x) throws Throwable {
-		x.p("title: ").inptxt(title);
+		x.p("title: ").inptxt(title, this, "sc");
 		x.is().xfocus(title).is_();
 	}
 
@@ -40,7 +40,7 @@ public class form_mock extends form {
 	protected List<action> getActionsList() {
 		List<action> ls = new ArrayList<action>();
 //		ls.add(new action_mock());
-		ls.add(new action("alert me","alert"));
+		ls.add(new action("alert me", "alert"));
 		return ls;
 	}
 
@@ -70,5 +70,9 @@ public class form_mock extends form {
 			}
 		}
 		throw new RuntimeException("could not find " + object_id);
+	}
+
+	public final void x_sc(xwriter x, String param) throws Throwable {
+		saveAndClose(x);
 	}
 }
