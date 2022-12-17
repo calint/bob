@@ -17,7 +17,13 @@ public class table_files extends view_table {
 	static final long serialVersionUID = 1;
 
 	private final path pth;
-	private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // ? serialized is ~30 KB
+	private transient SimpleDateFormat sdf; // serialized is ~30 KB
+
+	private String formatDateTime(long ms) {
+		if (sdf == null)
+			sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return sdf.format(ms);
+	}
 
 	public table_files(path pth) {
 		super(BIT_SEARCH, BIT_CLICK_ITEM);
@@ -83,7 +89,7 @@ public class table_files extends view_table {
 	@Override
 	protected void renderRowCells(xwriter x, Object o) {
 		final path p = pth.get(o.toString());
-		x.td().p(sdf.format(p.lastmod()));
+		x.td().p(formatDateTime(p.lastmod()));
 		x.td(null, "text-align:right").p(util.formatSizeInBytes(p.size()));
 	}
 
