@@ -114,13 +114,4 @@ public class controller extends a {
 			throw new RuntimeException(t);
 		}
 	}
-
-	public void x_test(final xwriter x, final String param) {
-		System.out.println("test param{" + param + "}");
-	}
-
-	public void x_sel(final xwriter x, final String param) {
-		System.out.println("sel param{" + param + "}");
-	}
-
 }
