@@ -67,11 +67,13 @@ public class table_mock extends view_table {
 
 	@Override
 	protected void renderHeaders(xwriter x) {
-		x.th().p("Created").th().p("Size");
+		x.th().p("Title").th().p("Created").th().p("Size");
 	}
 
 	@Override
 	protected void renderRowCells(xwriter x, Object o) {
+		x.td();
+		renderLinkedName(x, o);
 		x.td().p("2022-12-06 15:33");
 		x.td().p("12 KB");
 	}

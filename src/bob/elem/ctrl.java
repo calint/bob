@@ -11,6 +11,6 @@ public class ctrl extends controller {
 
 	public ctrl() {
 //		bc.add(new table_mock());
-		bc.add(new table_files(b.b.path()));
+		bc.add(new table_files());
 	}
 }

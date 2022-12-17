@@ -16,6 +16,9 @@ import bob.view_table;
 public class table_files extends view_table {
 	static final long serialVersionUID = 1;
 
+	public static String icon_file_uri = "/bob/file.png";
+	public static String icon_folder_uri = "/bob/folder.png";
+
 	private final path pth;
 	private transient SimpleDateFormat sdf; // serialized is ~30 KB
 
@@ -23,6 +26,10 @@ public class table_files extends view_table {
 		if (sdf == null)
 			sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return sdf.format(ms);
+	}
+
+	public table_files() {
+		this(b.b.path());
 	}
 
 	public table_files(path pth) {
@@ -40,23 +47,25 @@ public class table_files extends view_table {
 
 	@Override
 	protected List<?> getObjectsList() {
+		final boolean do_query = !b.b.isempty(q.str());
+		final Pattern pattern;
 		final String qstr;
-		if (b.b.isempty(q.str())) {
-			qstr = "";
-		} else {
+		if (do_query) {
 			qstr = q.str().replace("*", ".*");
+			pattern = Pattern.compile(qstr, Pattern.CASE_INSENSITIVE);
+		} else {
+			qstr = "";
+			pattern = null;
 		}
-//		final String qstr = q.str().toLowerCase();
-		final Pattern pattern = Pattern.compile(qstr, Pattern.CASE_INSENSITIVE);
 		final List<String> result = new ArrayList<String>();
 		for (String pthnm : pth.list()) {
-			if (qstr.length() != 0) {
+			if (do_query) {
 				if (!pattern.matcher(pthnm).find())
 					continue;
 			}
-			final path p = pth.get(pthnm);
+			path p = pth.get(pthnm);
 			if (p.isdir()) {
-				result.add("/" + pthnm);
+				result.add("./" + pthnm);
 			} else {
 				result.add(pthnm);
 			}
@@ -67,12 +76,16 @@ public class table_files extends view_table {
 
 	@Override
 	protected String getIdFrom(Object o) {
-		return o.toString();
+		return getNameFrom(o);
 	}
 
 	@Override
 	protected String getNameFrom(Object o) {
-		return o.toString();
+		String dispnm = o.toString();
+		if (dispnm.startsWith("./")) {
+			dispnm = dispnm.substring("./".length());
+		}
+		return dispnm;
 	}
 
 	@Override
@@ -83,12 +96,23 @@ public class table_files extends view_table {
 
 	@Override
 	protected void renderHeaders(xwriter x) {
-		x.th().p("Last modified").th().p("Size");
+		x.th().th().p("Name").th().p("Last modified").th().p("Size");
 	}
 
 	@Override
 	protected void renderRowCells(xwriter x, Object o) {
 		final path p = pth.get(o.toString());
+		x.td();
+		final String img;
+		if (p.isdir()) {
+			img = "<img src=" + icon_folder_uri + ">";
+		} else {
+			img = "<img src=" + icon_file_uri + ">";
+		}
+		renderLinked(x, o, img);
+		x.td();
+		x.p(getNameFrom(o));
+//		renderLinkedName(x, o);
 		x.td().p(formatDateTime(p.lastmod()));
 		x.td(null, "text-align:right").p(util.formatSizeInBytes(p.size()));
 	}
