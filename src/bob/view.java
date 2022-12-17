@@ -14,7 +14,7 @@ public abstract class view extends a implements titled {
 	public final static int BIT_SEARCH = 4;
 	public final static int BIT_SELECT = 8;
 	/** The actions that are enabled in the view. */
-	protected int enabled_view_bits;
+	final protected int enabled_view_bits;
 
 	public view(int enabled_bits) {
 		this.enabled_view_bits = enabled_bits;

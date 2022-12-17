@@ -12,7 +12,7 @@ public abstract class form extends a implements titled {
 	public final static int BIT_SAVE = 2;
 	public final static int BIT_CLOSE = 4;
 	/** The actions that are enabled on the form. */
-	protected int enabled_form_bits;
+	final protected int enabled_form_bits;
 
 	public container ans; // actions container
 	public container scc; // save and close, save and close actions container

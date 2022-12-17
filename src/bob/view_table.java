@@ -9,10 +9,10 @@ import b.xwriter;
 
 public abstract class view_table extends view {
 	static final long serialVersionUID = 1;
-	
+
 	public final static int BIT_CLICK_ITEM = 1;
 	/** The actions that are enabled in the table. */
-	protected int enabled_table_bits;
+	final protected int enabled_table_bits;
 
 	public container ans; // actions
 	public a q; // query field
@@ -85,7 +85,8 @@ public abstract class view_table extends view {
 
 		/** Callback for click on row. */
 		public void x_clk(xwriter x, String s) throws Throwable {
-			tv.onRowClick(x, s);
+			if ((tv.enabled_table_bits & BIT_CLICK_ITEM) != 0)
+				tv.onRowClick(x, s);
 		}
 	}
 
@@ -93,6 +94,7 @@ public abstract class view_table extends view {
 		super(view_bits);
 		enabled_table_bits = table_bits;
 		t.setTableView(this);
+		// ? enbabled bit cannot be changed dynamically
 		if ((enabled_view_bits & BIT_CREATE) != 0)
 			ans.add(new action("create", "create"));
 		if ((enabled_view_bits & BIT_DELETE) != 0)
@@ -136,10 +138,10 @@ public abstract class view_table extends view {
 	protected final void bubble_event(xwriter x, a from, Object o) throws Throwable {
 		if (from instanceof action) {
 			final String code = ((action) from).code();
-			if ("create".equals(code)) {
+			if ("create".equals(code) && (enabled_view_bits & BIT_CREATE) != 0) {
 				onActionCreate(x, q.str());
 				return;
-			} else if ("delete".equals(code)) {
+			} else if ("delete".equals(code) && (enabled_view_bits & BIT_DELETE) != 0) {
 				if (getSelectedIds().isEmpty()) {
 					x.xalert("No items selected.");
 					return;
@@ -164,7 +166,8 @@ public abstract class view_table extends view {
 
 	/** Callback for press enter in query field. */
 	public final void x_new(xwriter x, String s) throws Throwable {
-		onActionCreate(x, q.str());
+		if ((enabled_view_bits & BIT_CREATE) != 0)
+			onActionCreate(x, q.str());
 	}
 
 	@Override
