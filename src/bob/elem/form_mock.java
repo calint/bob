@@ -28,6 +28,7 @@ public class form_mock extends form {
 	protected void save(xwriter x) throws Throwable {
 		if (object_id == null) { // create new
 			data.ls.add(title.str());
+			object_id = title.str();
 			return;
 		}
 		// edit
