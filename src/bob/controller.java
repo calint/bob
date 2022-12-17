@@ -28,6 +28,7 @@ public class controller extends a {
 	}
 
 	public void to(final xwriter x) throws Throwable {
+		x.nl();
 		x.divh(bc);
 		final a active_elem = bc.getActive();
 		active_elem.replace(this, ae);
