@@ -1,5 +1,7 @@
 package bob;
 
+import java.util.List;
+
 import b.a;
 import b.xwriter;
 
@@ -17,9 +19,12 @@ public abstract class form extends a implements titled {
 	public form(String parent_id, String object_id) {
 		this.parent_id = parent_id;
 		this.object_id = object_id;
-//		ans.add(new action_saveclose());
-//		ans.add(new action_save());
-//		ans.add(new action_close());
+		final List<action> actions = getActionsList();
+		if (actions == null)
+			return;
+		for (action a : actions) {
+			ans.add(a);
+		}
 	}
 
 	public final String getParentId() {
@@ -33,13 +38,14 @@ public abstract class form extends a implements titled {
 	@Override
 	public final void to(xwriter x) throws Throwable {
 		x.divh(ans);
+		x.nl();
 		render(x);
 		x.nl().nl();
 		asc.to(x);
 		x.p(" • ");
 		as.to(x);
 		x.p(" • ");
-		ac.to(x);		
+		ac.to(x);
 	}
 
 	@Override
@@ -66,7 +72,11 @@ public abstract class form extends a implements titled {
 		super.bubble_event(x, from, o);
 	}
 
-	protected void onAction(xwriter x, action action) {
+	protected void onAction(xwriter x, action act) {
+	}
+
+	protected List<action> getActionsList() {
+		return null;
 	}
 
 	protected abstract void render(xwriter x) throws Throwable;

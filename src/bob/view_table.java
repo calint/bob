@@ -76,6 +76,8 @@ public abstract class view_table extends view {
 
 	public view_table() {
 		final List<action> actions = getActionsList();
+		if (actions == null)
+			return;
 		for (action a : actions) {
 			ans.add(a);
 		}

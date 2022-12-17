@@ -1,11 +1,23 @@
 package bob.elem;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import b.a;
 import b.xwriter;
+import bob.action;
 import bob.form;
 
 public class form_mock extends form {
 	private static final long serialVersionUID = 1L;
+
+	public final static class action_mock extends action {
+		private static final long serialVersionUID = 1L;
+
+		public action_mock() {
+			super("alert me");
+		}
+	}
 
 	public a title;
 
@@ -22,6 +34,22 @@ public class form_mock extends form {
 	protected void render(xwriter x) throws Throwable {
 		x.p("title: ").inptxt(title);
 		x.is().xfocus(title).is_();
+	}
+
+	@Override
+	protected List<action> getActionsList() {
+		List<action> ls = new ArrayList<action>();
+		ls.add(new action_mock());
+		return ls;
+	}
+
+	@Override
+	protected void onAction(xwriter x, action act) {
+		if (act instanceof action_mock) {
+			x.xalert("alert");
+			return;
+		}
+		super.onAction(x, act);
 	}
 
 	@Override
