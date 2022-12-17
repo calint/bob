@@ -23,7 +23,7 @@ public abstract class websock{
 	private ByteBuffer[] send_bba;
 	private boolean is_first_packet;
 	private final byte[] mask_key=new byte[4];
-	private boolean is_threaded=true;
+	private final boolean is_threaded;
 	private int mask_i;
 	boolean is_masked;
 
