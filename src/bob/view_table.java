@@ -29,9 +29,8 @@ public abstract class view_table extends view {
 			ac.add(new action("delete", "delete"));
 		}
 		final List<action> actions = getActionsList();
-		if (actions == null) {
+		if (actions == null)
 			return;
-		}
 		for (final action a : actions) {
 			ac.add(a);
 		}

@@ -39,9 +39,8 @@ public class Index {
 			break;
 		}
 		rs.close();
-		if (found) {
+		if (found)
 			return;
-		}
 
 		createIndex(stmt);
 	}
@@ -69,9 +68,8 @@ public class Index {
 			}
 			cols.remove(f.name);
 		}
-		if (cols.isEmpty() && done) {
+		if (cols.isEmpty() && done)
 			return;
-		}
 
 		// declared index does not match index in db. recreate index
 		dropIndex(stmt);

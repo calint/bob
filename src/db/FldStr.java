@@ -24,16 +24,14 @@ public final class FldStr extends DbField {
 
 	public FldStr(final int size, final String def, final boolean allowNull) {
 		super("varchar", size, def, allowNull, true);
-		if (size > MAX_SIZE) { // ? mysql specifc
+		if (size > MAX_SIZE)
 			throw new RuntimeException("size " + size + " exceeds maximum of " + MAX_SIZE);
-		}
 	}
 
 	@Override
 	protected void putDefaultValue(final Map<DbField, Object> kvm) {
-		if (defVal == null) {
+		if (defVal == null)
 			return;
-		}
 
 		kvm.put(this, defVal);
 	}

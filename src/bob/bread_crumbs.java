@@ -57,9 +57,8 @@ public final class bread_crumbs extends a {
 	@Override
 	public a child(final String nm) {
 		final a e = super.child(nm);
-		if (e != null) {
+		if (e != null)
 			return e;
-		}
 		return elements.get(Integer.parseInt(nm));
 	}
 

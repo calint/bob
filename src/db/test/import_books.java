@@ -41,22 +41,19 @@ public class import_books extends TestCase {
 				break;
 			}
 			final String name = ls.get(0);
-			if (name.length() > Book.name.getSize()) {
+			if (name.length() > Book.name.getSize())
 				throw new RuntimeException("record " + i + " has size of name " + name.length()
 						+ " but field length is " + Book.name.getSize());
-			}
 
 			final String authors = ls.get(2);
-			if (authors.length() > Book.authors.getSize()) {
+			if (authors.length() > Book.authors.getSize())
 				throw new RuntimeException("record " + i + " has size of authors " + authors.length()
 						+ " but field length is " + Book.authors.getSize());
-			}
 
 			final String publisher = ls.get(5);
-			if (publisher.length() > Book.publisher.getSize()) {
+			if (publisher.length() > Book.publisher.getSize())
 				throw new RuntimeException("record " + i + " has size of publisher " + publisher.length()
 						+ " but field length is " + Book.publisher.getSize());
-			}
 
 			if (++i % 100 == 0) {
 				Db.log("  " + i);

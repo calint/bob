@@ -102,9 +102,8 @@ public final class RelRefN extends DbRelation {
 		}
 		rs.close();
 
-		if (lookingForIndexNames.isEmpty()) {
+		if (lookingForIndexNames.isEmpty())
 			return;
-		}
 
 		if (lookingForIndexNames.contains(fromIxName)) {
 			final StringBuilder sb = new StringBuilder(128);

@@ -18,9 +18,8 @@ public class FldDateTime extends DbField {
 
 	@Override
 	protected void putDefaultValue(final Map<DbField, Object> kvm) {
-		if (defval == null) {
+		if (defval == null)
 			return;
-		}
 
 		kvm.put(this, defval);
 	}

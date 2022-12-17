@@ -13,9 +13,8 @@ public final class FldChars extends DbField {
 	@Override
 	protected void putDefaultValue(final Map<DbField, Object> kvm) {
 		final String def = getDefaultValue();
-		if (def == null) {
+		if (def == null)
 			return;
-		}
 		kvm.put(this, def);
 	}
 

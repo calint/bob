@@ -46,17 +46,15 @@ public final class Db {
 
 	/** Prints the string to System.out */
 	public static void log(final String s) {
-		if (!enable_log) {
+		if (!enable_log)
 			return;
-		}
 		System.out.println(s);
 	}
 
 	/** Prints the string to System.out */
 	public static void log_sql(final String s) {
-		if (!enable_log_sql) {
+		if (!enable_log_sql)
 			return;
-		}
 		System.out.println(s);
 	}
 //	private static Db inst;
@@ -94,9 +92,8 @@ public final class Db {
 	 * @return the created transaction
 	 */
 	public static DbTransaction initCurrentTransaction() { // ? so ugly
-		if (tn.get() != null) {
+		if (tn.get() != null)
 			throw new RuntimeException("transaction already initiated on this thread.");
-		}
 //		Db.log("dbo: init transaction on "+Thread.currentThread());
 		PooledConnection pc;
 		// get pooled connection
@@ -169,9 +166,8 @@ public final class Db {
 	public static void deinitCurrentTransaction() { // ? so ugly
 //		Db.log("dbo: deinit transaction on "+Thread.currentThread());
 		final DbTransaction tx = tn.get();
-		if (tx == null) {
+		if (tx == null)
 			throw new RuntimeException("transaction not initiated on this thread.");
-		}
 		boolean connection_is_ok = true;
 		if (!tx.rollbacked) {
 			try {
@@ -344,9 +340,8 @@ public final class Db {
 
 		Db.log("--- - - - ---- - - - - - -- -- --- -- --- ---- -- -- - - -");
 
-		if (!cluster_on) {
+		if (!cluster_on)
 			return;
-		}
 
 		while (true) {
 			log("connecting to cluster " + cluster_ip + ":" + cluster_port);
@@ -357,9 +352,8 @@ public final class Db {
 				clusterSocketOs = new BufferedOutputStream(clusterSocket.getOutputStream(), 1024 * 1);
 				log("connected. waiting for cluster to give go ahead.");
 				final String ack = clusterSocketReader.readLine();
-				if (ack == null) {
+				if (ack == null)
 					throw new RuntimeException("cluster disconnected. re-trying");
-				}
 				if (ack.length() == 0) {
 					log("cluster started.");
 					break;
@@ -385,9 +379,8 @@ public final class Db {
 		clusterSocketOs.write(ba_nl);
 		clusterSocketOs.flush();
 		final String idStr = clusterSocketReader.readLine();
-		if (idStr == null) {
+		if (idStr == null)
 			throw new RuntimeException("lost connection to cluster");
-		}
 		return Integer.parseInt(idStr);
 	}
 
@@ -397,12 +390,10 @@ public final class Db {
 			clusterSocketOs.write(ba_nl);
 			clusterSocketOs.flush();
 			final String ack = clusterSocketReader.readLine();
-			if (ack == null) { // lost connection to server
+			if (ack == null)
 				throw new RuntimeException("lost connection to cluster"); // ? take db off-line
-			}
-			if (ack.length() != 0) {
+			if (ack.length() != 0)
 				throw new RuntimeException("unknown reply: {" + ack + "}");
-			}
 		} catch (final Throwable t) {
 			throw new RuntimeException(t);
 		}

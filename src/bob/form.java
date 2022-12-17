@@ -35,9 +35,8 @@ public abstract class form extends a implements titled {
 			scc.add(new action("close", "c"));
 		}
 		final List<action> actions = getActionsList();
-		if (actions == null) {
+		if (actions == null)
 			return;
-		}
 		for (final action a : actions) {
 			ans.add(a);
 		}

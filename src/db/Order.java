@@ -48,9 +48,8 @@ public final class Order {
 	}
 
 	void sql_appendToQuery(final StringBuilder sb, final Query.TableAliasMap tam) {
-		if (elems.isEmpty()) {
+		if (elems.isEmpty())
 			return;
-		}
 		sb.append("order by ");
 		for (final Elem e : elems) {
 			final String s = tam.getAliasForTableName(e.tableName);

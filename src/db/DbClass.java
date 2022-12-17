@@ -146,9 +146,8 @@ public final class DbClass {
 		for (final DbField f : allFields) {
 			columns_removeColumn(columns, f.name);
 		}
-		if (columns.isEmpty()) {
+		if (columns.isEmpty())
 			return;
-		}
 
 		for (final Column c : columns) {
 			final StringBuilder sb = new StringBuilder(128);
@@ -310,9 +309,8 @@ public final class DbClass {
 
 	private boolean columns_containsColumn(final List<Column> columns, final String name) {
 		for (final Column c : columns) {
-			if (c.name.equals(name)) {
+			if (c.name.equals(name))
 				return true;
-			}
 		}
 		return false;
 	}
@@ -376,9 +374,8 @@ public final class DbClass {
 			indexes.remove(ix.name);
 		}
 
-		if (indexes.isEmpty()) {
+		if (indexes.isEmpty())
 			return;
-		}
 
 		for (final String s : indexes) {
 			final StringBuilder sb = new StringBuilder(128);

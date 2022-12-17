@@ -16,9 +16,8 @@ public final class FldSerializable extends DbField {
 			sb.append("null");
 			return;
 		}
-		if (!(v instanceof Serializable)) {
+		if (!(v instanceof Serializable))
 			throw new RuntimeException("expected serializable object. " + o);
-		}
 
 		// if the value has changed then it is kept in java type which is serializable
 		final Serializable so = (Serializable) v;

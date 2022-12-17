@@ -20,9 +20,8 @@ public final class RelAgg extends DbRelation {
 	/** @returns 0 if id is null */
 	public int getId(final DbObject ths) {
 		final Object objId = ths.fieldValues.get(relFld);
-		if (objId == null) {
+		if (objId == null)
 			return 0;
-		}
 		return (Integer) objId;
 	}
 
@@ -41,9 +40,8 @@ public final class RelAgg extends DbRelation {
 
 	public void delete(final DbObject ths) {
 		final DbObject o = get(ths, false);
-		if (o == null) {
+		if (o == null)
 			return;
-		}
 		Db.currentTransaction().delete(o);
 		ths.set(relFld, 0);
 	}
@@ -51,16 +49,14 @@ public final class RelAgg extends DbRelation {
 	@Override
 	void cascadeDelete(final DbObject ths) {
 		final int toId = getId(ths);
-		if (toId == 0) {
+		if (toId == 0)
 			return;
-		}
 		// need to delete
 		final DbClass dbClsTo = Db.dbClassForJavaClass(toCls);
 		if (dbClsTo.cascadeDelete) {
 			final DbObject o = get(ths, false);
-			if (o == null) {
+			if (o == null)
 				return;
-			}
 			Db.currentTransaction().delete(o);
 			return;
 		}

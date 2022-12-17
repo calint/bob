@@ -33,17 +33,15 @@ public final class DbTransaction {
 
 		DbObject get(final Class<?> cls, final int id) {
 			final HashMap<Integer, DbObject> idToObjMap = clsToIdObjMap.get(cls);
-			if (idToObjMap == null) {
+			if (idToObjMap == null)
 				return null;
-			}
 			return idToObjMap.get(id);
 		}
 
 		void remove(final DbObject o) {
 			final HashMap<Integer, DbObject> idToObjMap = clsToIdObjMap.get(o.getClass());
-			if (idToObjMap == null) {
+			if (idToObjMap == null)
 				return;
-			}
 			idToObjMap.remove(o.id());
 		}
 
@@ -80,9 +78,8 @@ public final class DbTransaction {
 				Db.log_sql(sql);
 				stmt.execute(sql, Statement.RETURN_GENERATED_KEYS);
 				final ResultSet rs = stmt.getGeneratedKeys();
-				if (!rs.next()) {
+				if (!rs.next())
 					throw new RuntimeException("expected generated id");
-				}
 				final int id = rs.getInt(1);
 				o.fieldValues.put(DbObject.id, id);
 				rs.close();
@@ -227,9 +224,8 @@ public final class DbTransaction {
 		}
 
 		final int n = classes.length;
-		if (n < 1) {
+		if (n < 1)
 			throw new RuntimeException("classes array is empty");
-		}
 		final DbClass[] dbclasses = new DbClass[n];
 		for (int i = 0; i < n; i++) {
 			dbclasses[i] = Db.dbClassForJavaClass(classes[i]);
@@ -345,9 +341,8 @@ public final class DbTransaction {
 		Db.log_sql(sql);
 		try {
 			final ResultSet rs = stmt.executeQuery(sql);
-			if (!rs.next()) {
+			if (!rs.next())
 				throw new RuntimeException("expected result from " + sql);
-			}
 			return rs.getInt(1);
 		} catch (final Throwable t) {
 			throw new RuntimeException(t);
@@ -360,9 +355,8 @@ public final class DbTransaction {
 		if (cache_enabled) { // will keep memory usage down at batch imports
 			cache.clear();
 		}
-		if (Db.cluster_on || Db.autocommit) {
+		if (Db.cluster_on || Db.autocommit)
 			return;
-		}
 		con.commit();
 	}
 
@@ -371,9 +365,8 @@ public final class DbTransaction {
 		rollbacked = true;
 //		if (cache_enabled)
 //			cache.clear();
-		if (Db.cluster_on || Db.autocommit) {
+		if (Db.cluster_on || Db.autocommit)
 			return;
-		}
 		try {
 			con.rollback();
 //			Db.log("*** rollback done");
@@ -392,9 +385,8 @@ public final class DbTransaction {
 
 	/** writes changed objects to database */
 	public void flush() { // ? public?
-		if (dirtyObjects.isEmpty()) {
+		if (dirtyObjects.isEmpty())
 			return;
-		}
 //		Db.log("*** flushing " + dirtyObjects.size() + " objects");
 		try {
 			for (final DbObject o : dirtyObjects) {

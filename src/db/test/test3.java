@@ -24,31 +24,26 @@ public class test3 extends TestCase {
 
 		final Query q = new Query(User.files);
 		final List<DbObject[]> ls = tn.get(new Class<?>[] { User.class, File.class }, q, null, null);
-		if (ls.size() != 2) {
+		if (ls.size() != 2)
 			throw new RuntimeException();
-		}
 		if (tn.cache_enabled) {
 			DbObject[] row;
 			row = ls.get(0);
-			if (row[0] != u || row[1] != f1) {
+			if (row[0] != u || row[1] != f1)
 				throw new RuntimeException();
-			}
 
 			row = ls.get(1);
-			if (row[0] != u || row[1] != f2) {
+			if (row[0] != u || row[1] != f2)
 				throw new RuntimeException();
-			}
 		} else {
 			DbObject[] row;
 			row = ls.get(0);
-			if (row[0].id() != u.id() || row[1].id() != f1.id()) {
+			if (row[0].id() != u.id() || row[1].id() != f1.id())
 				throw new RuntimeException();
-			}
 
 			row = ls.get(1);
-			if (row[0].id() != u.id() || row[1].id() != f2.id()) {
+			if (row[0].id() != u.id() || row[1].id() != f2.id())
 				throw new RuntimeException();
-			}
 		}
 
 		tn.delete(u);

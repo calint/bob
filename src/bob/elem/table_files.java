@@ -40,9 +40,8 @@ public class table_files extends view_table {
 
 	public String getTitle() {
 		final String nm = pth.name();
-		if (".".equals(nm)) {
+		if (".".equals(nm))
 			return pth.fullpath();
-		}
 		return nm;
 	}
 

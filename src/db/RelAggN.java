@@ -56,10 +56,9 @@ public final class RelAggN extends DbRelation {
 	}
 
 	public void delete(final DbObject ths, final DbObject o) {
-		if (!o.fieldValues.containsKey(relFld) || o.getInt(relFld) != ths.id()) {
+		if (!o.fieldValues.containsKey(relFld) || o.getInt(relFld) != ths.id())
 			throw new RuntimeException(ths.getClass().getName() + "[" + ths.id() + "] does not contain "
 					+ toCls.getName() + "[" + o.id() + "] in relation '" + name + "'");
-		}
 
 		Db.currentTransaction().delete(o);
 	}
