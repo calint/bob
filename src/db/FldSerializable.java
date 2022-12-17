@@ -16,8 +16,9 @@ public final class FldSerializable extends DbField {
 			sb.append("null");
 			return;
 		}
-		if (!(v instanceof Serializable))
+		if (!(v instanceof Serializable)) {
 			throw new RuntimeException("expected serializable object. " + o);
+		}
 
 		// if the value has changed then it is kept in java type which is serializable
 		final Serializable so = (Serializable) v;
@@ -30,7 +31,7 @@ public final class FldSerializable extends DbField {
 			sb.append("0x");
 			sb.ensureCapacity(sb.length() + ba.length * 2);
 			FldBlob.appendHexedBytes(sb, ba);
-		} catch (Throwable t) {
+		} catch (final Throwable t) {
 			throw new RuntimeException(t);
 		}
 	}

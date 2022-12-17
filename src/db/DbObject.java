@@ -12,14 +12,15 @@ public abstract class DbObject {
 	HashSet<DbField> dirtyFields;
 
 	private HashSet<DbField> getCreatedDirtyFields() {
-		if (dirtyFields == null)
+		if (dirtyFields == null) {
 			dirtyFields = new HashSet<DbField>();
+		}
 		return dirtyFields;
 	}
 
 	/** Alias for getId(). */
 	final public int id() {
-		return ((Integer) fieldValues.get(id)).intValue();
+		return (Integer) fieldValues.get(id);
 	}
 
 	final public int getId() {
@@ -31,23 +32,23 @@ public abstract class DbObject {
 	}
 
 	final protected int getInt(final DbField field) {
-		return ((Integer) fieldValues.get(field)).intValue();
+		return (Integer) fieldValues.get(field);
 	}
 
 	final protected long getLng(final DbField field) {
-		return ((Long) fieldValues.get(field)).longValue();
+		return (Long) fieldValues.get(field);
 	}
 
 	final protected float getFlt(final DbField field) {
-		return ((Float) fieldValues.get(field)).floatValue();
+		return (Float) fieldValues.get(field);
 	}
 
 	final protected double getDbl(final DbField field) {
-		return ((Double) fieldValues.get(field)).doubleValue();
+		return (Double) fieldValues.get(field);
 	}
 
 	final protected boolean getBool(final DbField field) {
-		return ((Boolean) fieldValues.get(field)).booleanValue();
+		return (Boolean) fieldValues.get(field);
 	}
 
 	final protected Timestamp getTs(final DbField field) {
@@ -135,12 +136,12 @@ public abstract class DbObject {
 	 * update will not be triggered. Used for optimizing handling of transformed
 	 * data.
 	 */
-	public static void putFieldValue(final DbObject o, final DbField f, Object v) {
+	public static void putFieldValue(final DbObject o, final DbField f, final Object v) {
 		o.put(f, v);
 	}
 
 	/** Sets the value v in DbField f in DbObject o. */
-	public static void setFieldValue(final DbObject o, final DbField f, Object v) {
+	public static void setFieldValue(final DbObject o, final DbField f, final Object v) {
 		o.set(f, v);
 	}
 

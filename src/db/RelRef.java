@@ -43,22 +43,26 @@ public final class RelRef extends DbRelation {
 	/** @returns 0 if id is null. */
 	public int getId(final DbObject ths) {
 		final Object objId = ths.fieldValues.get(relFld);
-		if (objId == null)
+		if (objId == null) {
 			return 0;
-		return ((Integer) objId).intValue();
+		}
+		return (Integer) objId;
 	}
 
 	public DbObject get(final DbObject ths) {
 		final int id = getId(ths);
-		if (id == 0)
+		if (id == 0) {
 			return null;
+		}
 		final List<? extends DbObject> ls = Db.currentTransaction().get(toCls, new Query(toCls, id), null, null);
-		if (ls.isEmpty()) // ? the target object has been deleted but the relation has not been updated to
+		if (ls.isEmpty()) { // ? the target object has been deleted but the relation has not been updated to
 			// null
 			return null;
+		}
 		return ls.get(0);
 	}
 
+	@Override
 	boolean cascadeDeleteNeeded() {
 		return false;
 	}

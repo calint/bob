@@ -7,7 +7,10 @@ import db.DbObject;
 import db.DbTransaction;
 import db.Query;
 
-/** Tests retrieving multiple objects per row in a select. It cleans up after test. */
+/**
+ * Tests retrieving multiple objects per row in a select. It cleans up after
+ * test.
+ */
 public class test3 extends TestCase {
 	@Override
 	public void doRun() throws Throwable {
@@ -21,34 +24,31 @@ public class test3 extends TestCase {
 
 		final Query q = new Query(User.files);
 		final List<DbObject[]> ls = tn.get(new Class<?>[] { User.class, File.class }, q, null, null);
-		if (ls.size() != 2)
+		if (ls.size() != 2) {
 			throw new RuntimeException();
+		}
 		if (tn.cache_enabled) {
 			DbObject[] row;
 			row = ls.get(0);
-			if (row[0] != u)
+			if (row[0] != u || row[1] != f1) {
 				throw new RuntimeException();
-			if (row[1] != f1)
-				throw new RuntimeException();
+			}
 
 			row = ls.get(1);
-			if (row[0] != u)
+			if ((row[0] != u) || (row[1] != f2)) {
 				throw new RuntimeException();
-			if (row[1] != f2)
-				throw new RuntimeException();
+			}
 		} else {
 			DbObject[] row;
 			row = ls.get(0);
-			if (row[0].id() != u.id())
+			if (row[0].id() != u.id() || row[1].id() != f1.id()) {
 				throw new RuntimeException();
-			if (row[1].id() != f1.id())
-				throw new RuntimeException();
+			}
 
 			row = ls.get(1);
-			if (row[0].id() != u.id())
+			if ((row[0].id() != u.id()) || (row[1].id() != f2.id())) {
 				throw new RuntimeException();
-			if (row[1].id() != f2.id())
-				throw new RuntimeException();
+			}
 		}
 
 		tn.delete(u);

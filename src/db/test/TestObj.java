@@ -19,11 +19,13 @@ public final class TestObj extends DbObject {
 	@SuppressWarnings("unchecked")
 	public List<String> getList() {
 		final Object v = get(list);
-		if (v == null)
+		if (v == null) {
 			return null;
+		}
 
-		if (v instanceof List<?>) // is it transformed?
+		if (v instanceof List<?>) { // is it transformed?
 			return (List<String>) v;
+		}
 
 		// convert from sql representation
 		final byte[] ba = getBytesArray(list);
@@ -33,7 +35,7 @@ public final class TestObj extends DbObject {
 			ois.close();
 			put(list, ls); // put without marking field dirty
 			return ls;
-		} catch (Throwable t) {
+		} catch (final Throwable t) {
 			throw new RuntimeException(t);
 		}
 	}

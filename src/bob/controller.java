@@ -62,7 +62,7 @@ public class controller extends a {
 				return;
 			}
 		}
-		if ((o instanceof form) || (o instanceof view)) { // open view
+		if (o instanceof form || o instanceof view) { // open view
 			final a e = (a) o;
 			bc.add(e); // add to bread crumb
 			e.replace(this, ae); // replace active element

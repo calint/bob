@@ -31,8 +31,9 @@ public class fulltext_search_books extends TestCase {
 			Db.log("  objects retrieved: " + ls.size());
 			i++;
 			Db.log("requests: " + i);
-			if (i == nreq)
+			if (i == nreq) {
 				break;
+			}
 		}
 	}
 }

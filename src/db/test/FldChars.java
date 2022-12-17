@@ -6,15 +6,16 @@ import db.DbField;
 
 public final class FldChars extends DbField {
 
-	public FldChars(int size, String def) {
+	public FldChars(final int size, final String def) {
 		super("char", size, def == null ? null : def, true, true);
 	}
 
 	@Override
-	protected void putDefaultValue(Map<DbField, Object> kvm) {
+	protected void putDefaultValue(final Map<DbField, Object> kvm) {
 		final String def = getDefaultValue();
-		if (def == null)
+		if (def == null) {
 			return;
+		}
 		kvm.put(this, def);
 	}
 

@@ -11,7 +11,7 @@ import db.DbObject;
  */
 public final class Main {
 	@SuppressWarnings("unchecked")
-	public final static void main(final String clsName) throws Throwable {
+	public static void main(final String clsName) throws Throwable {
 		final JavaCodeEmitter jce = new JavaCodeEmitter();
 		final PrintWriter out = new PrintWriter(new OutputStreamWriter(System.out));// ? param to call
 		final Class<? extends DbObject> cls = (Class<? extends DbObject>) Class.forName(clsName);

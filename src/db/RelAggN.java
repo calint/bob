@@ -36,15 +36,17 @@ public final class RelAggN extends DbRelation {
 
 	public List<DbObject> get(final DbObject ths, final Query qry, final Order ord, final Limit lmt) {
 		final Query q = new Query(ths.getClass(), ths.id()).and(this);
-		if (qry != null)
+		if (qry != null) {
 			q.and(qry);
+		}
 		return Db.currentTransaction().get(toCls, q, ord, lmt);
 	}
 
 	public int getCount(final DbObject ths, final Query qry) {
 		final Query q = new Query(ths.getClass(), ths.id()).and(this);
-		if (qry != null)
+		if (qry != null) {
 			q.and(qry);
+		}
 		return Db.currentTransaction().getCount(toCls, q);
 	}
 
@@ -54,9 +56,10 @@ public final class RelAggN extends DbRelation {
 	}
 
 	public void delete(final DbObject ths, final DbObject o) {
-		if (!o.fieldValues.containsKey(relFld) || o.getInt(relFld) != ths.id())
+		if (!o.fieldValues.containsKey(relFld) || o.getInt(relFld) != ths.id()) {
 			throw new RuntimeException(ths.getClass().getName() + "[" + ths.id() + "] does not contain "
-					+ toCls.getName() + "[" + o.id() + "] in relation '" + this.name + "'");
+					+ toCls.getName() + "[" + o.id() + "] in relation '" + name + "'");
+		}
 
 		Db.currentTransaction().delete(o);
 	}

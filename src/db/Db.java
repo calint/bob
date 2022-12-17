@@ -45,16 +45,18 @@ public final class Db {
 	public static boolean enable_log_sql = true;
 
 	/** Prints the string to System.out */
-	public static void log(String s) {
-		if (!enable_log)
+	public static void log(final String s) {
+		if (!enable_log) {
 			return;
+		}
 		System.out.println(s);
 	}
 
 	/** Prints the string to System.out */
-	public static void log_sql(String s) {
-		if (!enable_log_sql)
+	public static void log_sql(final String s) {
+		if (!enable_log_sql) {
 			return;
+		}
 		System.out.println(s);
 	}
 //	private static Db inst;
@@ -71,7 +73,8 @@ public final class Db {
 
 	/** Called once to create the singleton instance. */
 	public static void initInstance() throws Throwable {
-		Driver driver = (Driver) Class.forName("com.mysql.jdbc.Driver").getConstructor().newInstance(); // ! java 1.5
+		final Driver driver = (Driver) Class.forName("com.mysql.jdbc.Driver").getConstructor().newInstance(); // ! java
+																												// 1.5
 		DriverManager.registerDriver(driver);
 
 		Db.log("dbo: init instance");
@@ -87,7 +90,7 @@ public final class Db {
 	/**
 	 * Initiates thread local for currentTransaction(). The transaction can be
 	 * retrieved anywhere in the thread using Db.currentTransaction().
-	 * 
+	 *
 	 * @return the created transaction
 	 */
 	public static DbTransaction initCurrentTransaction() { // ? so ugly
@@ -101,7 +104,7 @@ public final class Db {
 			while (conpool.isEmpty()) { // spurious interrupt might happen
 				try {
 					conpool.wait();
-				} catch (InterruptedException e) {
+				} catch (final InterruptedException e) {
 					log(e);
 				}
 			}
@@ -112,7 +115,7 @@ public final class Db {
 //			Db.log("dbo: connection " + Integer.toHexString(pc.hashCode()) + " exceeded life time. Creating new.");
 			try {
 				pc.getConnection().close();
-			} catch (Throwable t) {
+			} catch (final Throwable t) {
 				log(t);
 			}
 			while (true) {
@@ -122,7 +125,7 @@ public final class Db {
 					final DbTransaction t = new DbTransaction(pc2);
 					tn.set(t);
 					return t;
-				} catch (Throwable e) {
+				} catch (final Throwable e) {
 					log(e);
 				}
 			}
@@ -133,7 +136,7 @@ public final class Db {
 				final DbTransaction t = new DbTransaction(pc);
 				tn.set(t);
 				return t;
-			} catch (Throwable e) {
+			} catch (final Throwable e) {
 				log(e);
 			}
 			// something went wrong initiating transaction
@@ -144,7 +147,7 @@ public final class Db {
 				final DbTransaction t = new DbTransaction(pc2);
 				tn.set(t);
 				return t;
-			} catch (Throwable e) {
+			} catch (final Throwable e) {
 				log(e);
 			}
 		}
@@ -173,14 +176,14 @@ public final class Db {
 		if (!tx.rollbacked) {
 			try {
 				tx.commit();
-			} catch (Throwable t) {
+			} catch (final Throwable t) {
 				connection_is_ok = false;
 				log(t);
 			}
 		}
 		try {
 			tx.stmt.close();
-		} catch (Throwable t) {
+		} catch (final Throwable t) {
 			connection_is_ok = false;
 			log(t);
 		}
@@ -215,8 +218,9 @@ public final class Db {
 	}
 
 	public static void log(Throwable t) {
-		while (t.getCause() != null)
+		while (t.getCause() != null) {
 			t = t.getCause();
+		}
 		System.err.println(stacktraceline(t));
 	}
 
@@ -267,7 +271,7 @@ public final class Db {
 
 	/**
 	 * Initiates the registered classes and connects to the database.
-	 * 
+	 *
 	 * @param host       server host.
 	 * @param dbname     database.
 	 * @param user
@@ -302,14 +306,16 @@ public final class Db {
 		// allow DbClass relations to add necessary fields and indexes, even to other
 		// DbClasses
 		for (final DbClass c : dbclasses) {
-			for (final DbRelation r : c.allRelations)
+			for (final DbRelation r : c.allRelations) {
 				r.init(c);
+			}
 		}
 
 		// allow indexes to initiate using fully initiated relations.
 		for (final DbClass c : dbclasses) {
-			for (final Index ix : c.allIndexes)
+			for (final Index ix : c.allIndexes) {
 				ix.init(c);
+			}
 		}
 
 		// print summary
@@ -338,8 +344,9 @@ public final class Db {
 
 		Db.log("--- - - - ---- - - - - - -- -- --- -- --- ---- -- -- - - -");
 
-		if (!cluster_on)
+		if (!cluster_on) {
 			return;
+		}
 
 		while (true) {
 			log("connecting to cluster " + cluster_ip + ":" + cluster_port);
@@ -358,10 +365,10 @@ public final class Db {
 					break;
 				}
 				throw new RuntimeException("unknown reply from cluster.");
-			} catch (Throwable t) {
+			} catch (final Throwable t) {
 				try {
 					Thread.sleep(1000);
-				} catch (InterruptedException e) {
+				} catch (final InterruptedException e) {
 					log(e);
 				}
 			}
@@ -381,8 +388,7 @@ public final class Db {
 		if (idStr == null) {
 			throw new RuntimeException("lost connection to cluster");
 		}
-		final int id = Integer.parseInt(idStr);
-		return id;
+		return Integer.parseInt(idStr);
 	}
 
 	public static synchronized void execClusterSql(final String sql) {
@@ -394,9 +400,10 @@ public final class Db {
 			if (ack == null) { // lost connection to server
 				throw new RuntimeException("lost connection to cluster"); // ? take db off-line
 			}
-			if (ack.length() != 0)
+			if (ack.length() != 0) {
 				throw new RuntimeException("unknown reply: {" + ack + "}");
-		} catch (Throwable t) {
+			}
+		} catch (final Throwable t) {
 			throw new RuntimeException(t);
 		}
 	}
@@ -410,14 +417,15 @@ public final class Db {
 		while (true) {
 			try {
 				c = DriverManager.getConnection(jdbc_connection_string);
-				if (!cluster_on && !autocommit)
+				if (!cluster_on && !autocommit) {
 					c.setAutoCommit(false);
+				}
 				return c;
-			} catch (Throwable t) {
+			} catch (final Throwable t) {
 				try {
 					System.err.println("dbo: cannot create connection. waiting. " + stacktraceline(t));
 					Thread.sleep(1000);
-				} catch (InterruptedException e) {
+				} catch (final InterruptedException e) {
 					log(e);
 				}
 			}
@@ -430,11 +438,11 @@ public final class Db {
 		while (rstbls.next()) {
 			final String tblname = rstbls.getString("TABLE_NAME");
 			Db.log("[" + tblname + "]");
-			ResultSet rscols = dbm.getColumns(null, null, tblname, null);
+			final ResultSet rscols = dbm.getColumns(null, null, tblname, null);
 			while (rscols.next()) {
-				String columnName = rscols.getString("COLUMN_NAME");
-				String datatype = rscols.getString("TYPE_NAME");
-				String defval = rscols.getString("COLUMN_DEF");
+				final String columnName = rscols.getString("COLUMN_NAME");
+				final String datatype = rscols.getString("TYPE_NAME");
+				final String defval = rscols.getString("COLUMN_DEF");
 				final StringBuilder sb = new StringBuilder();
 				sb.append("    ").append(columnName).append(' ').append(datatype);
 				if (defval != null) {
@@ -459,8 +467,9 @@ public final class Db {
 		final Statement stmt = con.createStatement();
 
 		for (final DbClass dbcls : dbclasses) {
-			if (Modifier.isAbstract(dbcls.javaClass.getModifiers()))
+			if (Modifier.isAbstract(dbcls.javaClass.getModifiers())) {
 				continue;
+			}
 			dbcls.ensureTable(stmt, dbm);
 		}
 
@@ -527,8 +536,9 @@ public final class Db {
 			final Statement stmt = con.createStatement();
 			final StringBuilder sb = new StringBuilder();
 			for (final DbClass dbc : dbclasses) {
-				if (Modifier.isAbstract(dbc.javaClass.getModifiers()))
+				if (Modifier.isAbstract(dbc.javaClass.getModifiers())) {
 					continue;
+				}
 				sb.setLength(0);
 				sb.append("drop table ").append(dbc.tableName);
 				final String sql = sb.toString();
@@ -545,13 +555,14 @@ public final class Db {
 			stmt.close();
 
 			ensureTablesAndIndexes(con, con.getMetaData());
-		} catch (Throwable t) {
+		} catch (final Throwable t) {
 			t.printStackTrace();
 		} finally {
 			try {
-				if (con != null)
+				if (con != null) {
 					con.close();
-			} catch (Throwable t) {
+				}
+			} catch (final Throwable t) {
 				t.printStackTrace();
 			}
 		}
@@ -564,7 +575,7 @@ public final class Db {
 			for (final PooledConnection pc : conpool) {
 				try {
 					pc.getConnection().close();
-				} catch (Throwable e) {
+				} catch (final Throwable e) {
 					e.printStackTrace();
 				}
 			}
@@ -573,10 +584,10 @@ public final class Db {
 	}
 
 	static String tableNameForJavaClass(final Class<? extends DbObject> cls) {
-		final String tblnm = cls.getName().substring(cls.getName().lastIndexOf('.') + 1);// ? package name
+
 //		final String tblnm = cls.getName().replace('.', '_');
 //		final String tblnm = cls.getName();
-		return tblnm;
+		return cls.getName().substring(cls.getName().lastIndexOf('.') + 1);
 	}
 
 	static DbClass dbClassForJavaClass(final Class<?> c) {
@@ -598,14 +609,11 @@ public final class Db {
 		}
 	}
 
-	public static String getJdbcConnectionString(String address, String dbname, String user, String passwd) {
-//		final String s = "jdbc:mysql://" + address + ":3306/" + dbname + "?user=" + user + "&password=" + passwd
-//				+ "&verifyServerCertificate=false&useSSL=true&ssl-mode=REQUIRED";
-//		final String s = "jdbc:mysql://" + address + ":3306/" + dbname + "?user=" + user + "&password=" + passwd
-//				+ "&useSSL=false";
-		final String s = "jdbc:mysql://" + address + ":3306/" + dbname + "?user=" + user + "&password=" + passwd
-				+ "&useSSL=false&allowPublicKeyRetrieval=true";
+	public static String getJdbcConnectionString(final String address, final String dbname, final String user,
+			final String passwd) {
+
 		// System.out.println(s);
-		return s;
+		return "jdbc:mysql://" + address + ":3306/" + dbname + "?user=" + user + "&password=" + passwd
+				+ "&useSSL=false&allowPublicKeyRetrieval=true";
 	}
 }

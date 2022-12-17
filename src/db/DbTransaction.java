@@ -32,17 +32,18 @@ public final class DbTransaction {
 		}
 
 		DbObject get(final Class<?> cls, final int id) {
-			HashMap<Integer, DbObject> idToObjMap = clsToIdObjMap.get(cls);
-			if (idToObjMap == null)
+			final HashMap<Integer, DbObject> idToObjMap = clsToIdObjMap.get(cls);
+			if (idToObjMap == null) {
 				return null;
-			final DbObject o = idToObjMap.get(id);
-			return o;
+			}
+			return idToObjMap.get(id);
 		}
 
 		void remove(final DbObject o) {
 			final HashMap<Integer, DbObject> idToObjMap = clsToIdObjMap.get(o.getClass());
-			if (idToObjMap == null)
+			if (idToObjMap == null) {
 				return;
+			}
 			idToObjMap.remove(o.id());
 		}
 
@@ -79,11 +80,11 @@ public final class DbTransaction {
 				Db.log_sql(sql);
 				stmt.execute(sql, Statement.RETURN_GENERATED_KEYS);
 				final ResultSet rs = stmt.getGeneratedKeys();
-				if (rs.next()) {
-					final int id = rs.getInt(1);
-					o.fieldValues.put(DbObject.id, id);
-				} else
+				if (!rs.next()) {
 					throw new RuntimeException("expected generated id");
+				}
+				final int id = rs.getInt(1);
+				o.fieldValues.put(DbObject.id, id);
 				rs.close();
 			} else {
 				final int id = Db.execClusterSqlInsert(sql);
@@ -96,11 +97,12 @@ public final class DbTransaction {
 				f.putDefaultValue(o.fieldValues);
 			}
 
-			if (cache_enabled)
+			if (cache_enabled) {
 				cache.put(o);
+			}
 
 			return o;
-		} catch (Throwable t) {
+		} catch (final Throwable t) {
 			throw new RuntimeException(t);
 		}
 	}
@@ -147,8 +149,9 @@ public final class DbTransaction {
 			Db.execClusterSql(sb.toString());
 		}
 		dirtyObjects.remove(o);
-		if (cache_enabled)
+		if (cache_enabled) {
 			cache.remove(o);
+		}
 	}
 
 	public List<DbObject> get(final Class<?> cls, final Query qry, final Order ord, final Limit lmt) { // ? call get(new
@@ -168,14 +171,17 @@ public final class DbTransaction {
 		tam.sql_appendSelectFromTables(sb);
 		sb.append(" ");
 
-		if (sbwhere.length() != 0)
+		if (sbwhere.length() != 0) {
 			sb.append(sbwhere);
+		}
 
-		if (ord != null)
+		if (ord != null) {
 			ord.sql_appendToQuery(sb, tam);
+		}
 
-		if (lmt != null)
+		if (lmt != null) {
 			lmt.sql_appendToQuery(sb);
+		}
 
 		sb.setLength(sb.length() - 1);
 
@@ -241,14 +247,17 @@ public final class DbTransaction {
 		tam.sql_appendSelectFromTables(sb);
 		sb.append(" ");
 
-		if (sbwhere.length() != 0)
+		if (sbwhere.length() != 0) {
 			sb.append(sbwhere);
+		}
 
-		if (ord != null)
+		if (ord != null) {
 			ord.sql_appendToQuery(sb, tam);
+		}
 
-		if (lmt != null)
+		if (lmt != null) {
 			lmt.sql_appendToQuery(sb);
+		}
 
 		sb.setLength(sb.length() - 1);
 		final ArrayList<DbObject[]> ls = new ArrayList<DbObject[]>(128); // ? magic number, use limit if available
@@ -336,8 +345,9 @@ public final class DbTransaction {
 		Db.log_sql(sql);
 		try {
 			final ResultSet rs = stmt.executeQuery(sql);
-			if (!rs.next())
+			if (!rs.next()) {
 				throw new RuntimeException("expected result from " + sql);
+			}
 			return rs.getInt(1);
 		} catch (final Throwable t) {
 			throw new RuntimeException(t);
@@ -347,10 +357,12 @@ public final class DbTransaction {
 	/** writes changed objects to database, clears cache, commits */
 	public void commit() throws Throwable {
 		flush();
-		if (cache_enabled) // will keep memory usage down at batch imports
+		if (cache_enabled) { // will keep memory usage down at batch imports
 			cache.clear();
-		if (Db.cluster_on || Db.autocommit)
+		}
+		if (Db.cluster_on || Db.autocommit) {
 			return;
+		}
 		con.commit();
 	}
 
@@ -359,12 +371,13 @@ public final class DbTransaction {
 		rollbacked = true;
 //		if (cache_enabled)
 //			cache.clear();
-		if (Db.cluster_on || Db.autocommit)
+		if (Db.cluster_on || Db.autocommit) {
 			return;
+		}
 		try {
 			con.rollback();
 //			Db.log("*** rollback done");
-		} catch (Throwable t) {
+		} catch (final Throwable t) {
 			throw new RuntimeException(t);// ? this can be ignored?
 		}
 	}
@@ -379,14 +392,15 @@ public final class DbTransaction {
 
 	/** writes changed objects to database */
 	public void flush() { // ? public?
-		if (dirtyObjects.isEmpty())
+		if (dirtyObjects.isEmpty()) {
 			return;
+		}
 //		Db.log("*** flushing " + dirtyObjects.size() + " objects");
 		try {
 			for (final DbObject o : dirtyObjects) {
 				updateDbFromDbObject(o);
 			}
-		} catch (Throwable t) {
+		} catch (final Throwable t) {
 			throw new RuntimeException(t);
 		}
 
@@ -417,7 +431,7 @@ public final class DbTransaction {
 		Db.log_sql(sql);
 		try {
 			stmt.execute(sql);
-		} catch (Throwable t) {
+		} catch (final Throwable t) {
 			throw new RuntimeException(t);
 		}
 	}

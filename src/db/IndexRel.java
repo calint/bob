@@ -10,9 +10,10 @@ public class IndexRel extends Index {
 
 	@Override
 	void init(final DbClass c) {
-		if (rel.relFld == null)
+		if (rel.relFld == null) {
 			throw new RuntimeException("Relation " + rel.name + " in class " + cls.getName()
 					+ " can not be indexed. Is relation type RefN?");
+		}
 		if (!rel.relFld.cls.equals(cls)) {
 			throw new RuntimeException("Relation " + rel.name + " in class " + cls.getName()
 					+ " can not be indexed because the relation creates the column in a different table. Is relation type AggN? In that case the column is already indexed.");

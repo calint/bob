@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /** Index of column(s). */
 public class Index {
@@ -18,9 +19,7 @@ public class Index {
 	final ArrayList<DbField> fields = new ArrayList<DbField>();
 
 	public Index(final DbField... flds) {
-		for (final DbField f : flds) {
-			fields.add(f);
-		}
+		Collections.addAll(fields, flds);
 	}
 
 	/** Called after DbClasses and DbRelations have been initialized. */
@@ -40,8 +39,9 @@ public class Index {
 			break;
 		}
 		rs.close();
-		if (found == true)
+		if (found) {
 			return;
+		}
 
 		createIndex(stmt);
 	}
@@ -52,8 +52,9 @@ public class Index {
 		final ArrayList<String> cols = new ArrayList<String>();
 		while (rs.next()) {
 			final String indexName = rs.getString("INDEX_NAME");
-			if (!indexName.equals(name))
+			if (!indexName.equals(name)) {
 				continue;
+			}
 			final String columnName = rs.getString("COLUMN_NAME");
 			cols.add(columnName);
 		}
@@ -68,8 +69,9 @@ public class Index {
 			}
 			cols.remove(f.name);
 		}
-		if (cols.isEmpty() && done)
+		if (cols.isEmpty() && done) {
 			return;
+		}
 
 		// declared index does not match index in db. recreate index
 		dropIndex(stmt);

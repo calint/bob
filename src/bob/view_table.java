@@ -170,7 +170,7 @@ public abstract class view_table extends view {
 		@Override
 		protected void bubble_event(final xwriter js, final a from, final Object o) throws Throwable {
 			// event bubbled from child
-			if (((tv.enabled_view_bits & view.BIT_SELECT) != 0) && (from instanceof checkbox)) {
+			if ((tv.enabled_view_bits & view.BIT_SELECT) != 0 && from instanceof checkbox) {
 				final String id = ((checkbox) from).getId();
 				if ("checked".equals(o)) {
 					selectedIds.add(id);

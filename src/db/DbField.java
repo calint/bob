@@ -26,9 +26,9 @@ public abstract class DbField {
 	 */
 	protected DbField(final String sqlType, final int size, final String sqlDefVal, final boolean allowsNull,
 			final boolean isStringType) {
-		this.type = sqlType;
+		type = sqlType;
 		this.size = size;
-		this.defVal = sqlDefVal;
+		defVal = sqlDefVal;
 		this.allowsNull = allowsNull;
 		this.isStringType = isStringType;
 	}
@@ -75,8 +75,9 @@ public abstract class DbField {
 	 */
 	protected void sql_columnDefinition(final StringBuilder sb) {
 		sb.append(name).append(' ').append(getSqlType());
-		if (size != 0)
+		if (size != 0) {
 			sb.append("(").append(getSize()).append(")");
+		}
 		if (defVal != null) {
 			sb.append(" default ");
 			if (isDefaultValueString()) {

@@ -43,14 +43,15 @@ public final class DbClass {
 	 */
 	final boolean cascadeDelete;
 
-	DbClass(Class<? extends DbObject> c) throws Throwable {
+	DbClass(final Class<? extends DbObject> c) throws Throwable {
 		javaClass = c;
 		tableName = Db.tableNameForJavaClass(c);
 		// collect declared fields, relations and indexes
 		boolean cascDeletes = false;
 		for (final Field f : javaClass.getDeclaredFields()) {
-			if (!Modifier.isStatic(f.getModifiers()))
+			if (!Modifier.isStatic(f.getModifiers())) {
 				continue;
+			}
 			if (DbField.class.isAssignableFrom(f.getType())) {
 				final DbField dbf = (DbField) f.get(null);
 				dbf.name = f.getName();
@@ -65,8 +66,9 @@ public final class DbClass {
 				dbr.cls = c;
 				dbr.tableName = tableName;
 				declaredRelations.add(dbr);
-				if (dbr.cascadeDeleteNeeded())
+				if (dbr.cascadeDeleteNeeded()) {
 					cascDeletes = true;
+				}
 				continue;
 			}
 			if (Index.class.isAssignableFrom(f.getType())) {
@@ -109,8 +111,6 @@ public final class DbClass {
 		rs.close();
 
 		createTable(stmt);
-
-		return;
 	}
 
 	private void createTable(final Statement stmt) throws SQLException {
@@ -122,7 +122,7 @@ public final class DbClass {
 		}
 		sb.setLength(sb.length() - 1);
 		sb.append(")");
-		if(Db.engine!=null) {
+		if (Db.engine != null) {
 			sb.append("engine=").append(Db.engine);
 		}
 
@@ -133,8 +133,9 @@ public final class DbClass {
 
 	private void ensureColumns(final Statement stmt, final DatabaseMetaData dbm) throws Throwable {
 		addMissingColumns(stmt, dbm);
-		if (Db.enable_delete_unused_columns)
+		if (Db.enable_delete_unused_columns) {
 			deleteUnusedColumns(stmt, dbm);
+		}
 		arrangeColumns(stmt, dbm);
 		ensureColumnTypesAndSize(stmt, dbm);
 //		ensureColumnDefaultValues(stmt, dbm);
@@ -145,8 +146,9 @@ public final class DbClass {
 		for (final DbField f : allFields) {
 			columns_removeColumn(columns, f.name);
 		}
-		if (columns.isEmpty())
+		if (columns.isEmpty()) {
 			return;
+		}
 
 		for (final Column c : columns) {
 			final StringBuilder sb = new StringBuilder(128);
@@ -188,8 +190,9 @@ public final class DbClass {
 				is_nullable_ok = "NO".equals(c.is_nullable);
 			}
 
-			if (type_ok && size_ok && defval_ok && is_nullable_ok)
+			if (type_ok && size_ok && defval_ok && is_nullable_ok) {
 				continue;
+			}
 
 			final StringBuilder sb = new StringBuilder(128);
 			sb.append("alter table ").append(tableName).append(" modify ");
@@ -241,8 +244,9 @@ public final class DbClass {
 		for (int i = 0; i < n; i++) {
 			final DbField f = allFields.get(i);
 			final Column c = columns.get(i);
-			if (f.name.equals(c.name))
+			if (f.name.equals(c.name)) {
 				continue;
+			}
 			return false;
 		}
 		return true;
@@ -298,7 +302,7 @@ public final class DbClass {
 		Collections.sort(columns, new Comparator<Column>() {
 			public int compare(final Column o1, final Column o2) {
 				return o1.ordinal_position - o2.ordinal_position;
-			};
+			}
 		});
 
 		return columns;
@@ -306,8 +310,9 @@ public final class DbClass {
 
 	private boolean columns_containsColumn(final List<Column> columns, final String name) {
 		for (final Column c : columns) {
-			if (c.name.equals(name))
+			if (c.name.equals(name)) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -371,8 +376,9 @@ public final class DbClass {
 			indexes.remove(ix.name);
 		}
 
-		if (indexes.isEmpty())
+		if (indexes.isEmpty()) {
 			return;
+		}
 
 		for (final String s : indexes) {
 			final StringBuilder sb = new StringBuilder(128);

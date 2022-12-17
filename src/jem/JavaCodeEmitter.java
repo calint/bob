@@ -18,14 +18,12 @@ public final class JavaCodeEmitter {
 
 	public static String getPackageNameForClass(final Class<?> cls) {
 		final String nm = cls.getName();
-		final String pk = nm.substring(0, nm.lastIndexOf('.'));
-		return pk;
+		return nm.substring(0, nm.lastIndexOf('.'));
 	}
 
 	public static String getClassNameAfterPackageForClass(final Class<?> cls) {
 		final String nm = cls.getName();
-		final String nm2 = nm.substring(nm.lastIndexOf('.') + 1);
-		return nm2;
+		return nm.substring(nm.lastIndexOf('.') + 1);
 	}
 
 	public void emit(final PrintWriter out, final Class<? extends DbObject> cls) throws Throwable {
@@ -40,7 +38,7 @@ public final class JavaCodeEmitter {
 				final JavaCodeElem jce = (JavaCodeElem) Class.forName(elemClsName).getConstructor(dbf.getClass())
 						.newInstance(dbf);
 				add(jce);
-			} catch (Throwable t) {
+			} catch (final Throwable t) {
 				System.err.println(
 						"cannot create JavaCodeElem of class '" + elemClsName + "' for java class " + t.getMessage());
 			}
@@ -55,7 +53,7 @@ public final class JavaCodeEmitter {
 				final JavaCodeElem jce = (JavaCodeElem) Class.forName(elemClsName).getConstructor(dbr.getClass())
 						.newInstance(dbr);
 				add(jce);
-			} catch (Throwable t) {
+			} catch (final Throwable t) {
 				System.err.println(
 						"cannot create JavaCodeElem of class '" + elemClsName + "' for java class " + t.getMessage());
 			}
@@ -73,7 +71,7 @@ public final class JavaCodeEmitter {
 		out.flush();
 	}
 
-	public static String getSingulariesForPlurar(String s) {
+	public static String getSingulariesForPlurar(final String s) {
 		final StringBuilder sb = new StringBuilder();
 		sb.append(s);
 		if (s.endsWith("ies")) {

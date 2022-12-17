@@ -24,8 +24,9 @@ public class jdbc_select_books extends TestCase {
 			rs.close();
 			i++;
 			System.out.println("requests: " + i);
-			if (i == nreq)
+			if (i == nreq) {
 				break;
+			}
 		}
 	}
 }

@@ -17,8 +17,8 @@ public final class FldBlob extends DbField {
 
 	public static void appendHexedBytes(final StringBuilder sb, final byte[] bytes) {
 		final char[] hex = new char[2];
-		for (int i = 0; i < bytes.length; i++) {
-			final int v = bytes[i] & 0xFF;
+		for (final byte element : bytes) {
+			final int v = element & 0xFF;
 			hex[0] = HEX_ARRAY[v >>> 4];
 			hex[1] = HEX_ARRAY[v & 0x0F];
 			sb.append(hex);

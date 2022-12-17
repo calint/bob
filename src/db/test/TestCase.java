@@ -13,26 +13,29 @@ public abstract class TestCase implements Runnable {
 	public boolean run_with_cache = true;
 	public boolean run_without_cache;
 	public boolean reset_database;
-	
+
 	public final void run() {
 		if (reset_database) {
 			try {
 				Db.currentTransaction().commit(); // note Db.reset hangs mysql on drop "table session" otherwise.
 				// possibly because session was updated but not committed
-			} catch (Throwable e) {
+			} catch (final Throwable e) {
 				throw new RuntimeException(e);
 			}
 			Db.reset();
 		}
 
-		if (run_with_cache)
+		if (run_with_cache) {
 			doTest(true);
+		}
 
-		if (reset_database)
+		if (reset_database) {
 			Db.reset();
+		}
 
-		if (run_without_cache)
+		if (run_without_cache) {
 			doTest(false);
+		}
 	}
 
 	public String getTestName() {
@@ -81,7 +84,7 @@ public abstract class TestCase implements Runnable {
 				out.println(getTestName() + " [cache " + cachests + "]: passed (" + dt + " ms)");
 				out.flush();
 			}
-		} catch (Throwable t1) {
+		} catch (final Throwable t1) {
 			if (!use_current_transaction) {
 				tn.rollback();
 			}

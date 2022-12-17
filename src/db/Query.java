@@ -30,7 +30,7 @@ public final class Query {
 		Query query;// if not null then this is a sub query
 		IndexFt ftix;// if not null then this is a full text query
 
-		public void sql_build(final StringBuilder sb, TableAliasMap tam) {
+		public void sql_build(final StringBuilder sb, final TableAliasMap tam) {
 			switch (elemOp) {
 			case AND:
 				sb.append("and ");
@@ -127,8 +127,9 @@ public final class Query {
 			for (final Map.Entry<String, String> kv : tblToAlias.entrySet()) {
 				sb.append(kv.getKey()).append(" ").append(kv.getValue()).append(", ");
 			}
-			if (!tblToAlias.isEmpty())
+			if (!tblToAlias.isEmpty()) {
 				sb.setLength(sb.length() - 2);
+			}
 		}
 	}
 
@@ -147,8 +148,9 @@ public final class Query {
 	}
 
 	void sql_build(final StringBuilder sb, final TableAliasMap tam) {
-		for (final Elem e : elems)
+		for (final Elem e : elems) {
 			e.sql_build(sb, tam);
+		}
 	}
 
 	public Query() {

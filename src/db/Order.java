@@ -16,7 +16,7 @@ public final class Order {
 		append(fld, true);
 	}
 
-	public Order(final DbField fld, boolean ascending) {
+	public Order(final DbField fld, final boolean ascending) {
 		append(fld, ascending);
 	}
 
@@ -48,8 +48,9 @@ public final class Order {
 	}
 
 	void sql_appendToQuery(final StringBuilder sb, final Query.TableAliasMap tam) {
-		if (elems.isEmpty())
+		if (elems.isEmpty()) {
 			return;
+		}
 		sb.append("order by ");
 		for (final Elem e : elems) {
 			final String s = tam.getAliasForTableName(e.tableName);

@@ -22,8 +22,9 @@ public class get_books extends TestCase {
 			System.out.println("objects retrieved: " + ls.size());
 			i++;
 			System.out.println("requests: " + i);
-			if (i == nreq)
+			if (i == nreq) {
 				break;
+			}
 		}
 	}
 }

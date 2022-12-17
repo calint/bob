@@ -76,7 +76,8 @@ public abstract class form extends a implements titled {
 				save(x);
 				super.bubble_event(x, this, "updated");
 				return;
-			} else if ("c".equals(code) && (enabled_form_bits & BIT_CLOSE) != 0) {
+			}
+			if ("c".equals(code) && (enabled_form_bits & BIT_CLOSE) != 0) {
 				super.bubble_event(x, this, "close");
 				return;
 			}

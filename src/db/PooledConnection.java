@@ -8,7 +8,7 @@ final class PooledConnection {
 
 	public PooledConnection(final Connection con) {
 		this.con = con;
-		this.created_ms = System.currentTimeMillis();
+		created_ms = System.currentTimeMillis();
 	}
 
 	public long getAgeInMs() {

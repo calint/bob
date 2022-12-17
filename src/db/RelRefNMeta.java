@@ -13,10 +13,10 @@ final class RelRefNMeta {
 	final String toColName; // column name referencing to target id
 
 	RelRefNMeta(final Class<? extends DbObject> fromCls, final String relName, final Class<? extends DbObject> toCls) {
-		this.fromTableName = Db.tableNameForJavaClass(fromCls);
-		this.fromColName = "fromId";
-		this.toTableName = Db.tableNameForJavaClass(toCls);
-		this.toColName = "toId";
+		fromTableName = Db.tableNameForJavaClass(fromCls);
+		fromColName = "fromId";
+		toTableName = Db.tableNameForJavaClass(toCls);
+		toColName = "toId";
 		tableName = new StringBuilder(256).append(TABLE_NAME_PREFIX).append(fromTableName).append('_').append(relName)
 				.toString();
 	}
@@ -39,7 +39,7 @@ final class RelRefNMeta {
 		final StringBuilder sb = new StringBuilder(256);
 		sb.append("create table ").append(tableName).append("(id int primary key auto_increment").append(',')
 				.append(fromColName).append(" int,").append(toColName).append(" int)");
-		if(Db.engine!=null) {
+		if (Db.engine != null) {
 			sb.append("engine=").append(Db.engine);
 		}
 		final String sql = sb.toString();
@@ -87,11 +87,11 @@ final class RelRefNMeta {
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
-		sb.append(this.tableName);
+		sb.append(tableName);
 		return super.toString();
 	}
 
-	static ResultSet getAllRefsTables(DatabaseMetaData dbm) throws Throwable {
+	static ResultSet getAllRefsTables(final DatabaseMetaData dbm) throws Throwable {
 		return dbm.getTables(null, null, TABLE_NAME_PREFIX + "%", new String[] { "TABLE" });
 	}
 

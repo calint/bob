@@ -34,8 +34,9 @@ public class import_games extends TestCase {
 		int i = 2;
 		while (true) {
 			ls = csv.nextRecord();
-			if (ls == null)
+			if (ls == null) {
 				break;
+			}
 			final Game o = (Game) tn.create(Game.class);
 			o.setName(ls.get(1));
 			o.setDescription(ls.get(2));

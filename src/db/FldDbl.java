@@ -23,8 +23,9 @@ public final class FldDbl extends DbField {
 	// mysql default values returns no decimals if none necessary
 	private static String defValToStr(final double def) {
 		String s = Double.toString(def);
-		if (s.endsWith(".0"))
+		if (s.endsWith(".0")) {
 			s = s.substring(0, s.length() - 2);
+		}
 		return s;
 	}
 }

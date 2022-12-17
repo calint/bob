@@ -21,8 +21,9 @@ public final class File extends DbObject {
 	public void loadFile(final String path) throws Throwable {
 		final DataBinary d = getData(true);
 		final java.io.File f = new java.io.File(path);
-		if (!f.exists())
+		if (!f.exists()) {
 			throw new RuntimeException("file '" + path + "' not found");
+		}
 		final long len = f.length();
 		setSizeB(len);
 		// note does not handle files bigger than 4G
@@ -35,8 +36,9 @@ public final class File extends DbObject {
 
 	public void writeFile(final String path) throws Throwable {
 		final DataBinary d = getData(false);
-		if (d == null)
+		if (d == null) {
 			return;
+		}
 		final java.io.File f = new java.io.File(path);
 		// note does not handle files bigger than 4G
 		final byte[] ba = d.getData();
@@ -50,7 +52,7 @@ public final class File extends DbObject {
 		return getStr(name);
 	}
 
-	public void setName(String v) {
+	public void setName(final String v) {
 		set(name, v);
 	}
 
@@ -59,7 +61,7 @@ public final class File extends DbObject {
 		return getLng(size_B);
 	}
 
-	public void setSizeB(long v) {
+	public void setSizeB(final long v) {
 		set(size_B, v);
 	}
 
@@ -68,7 +70,7 @@ public final class File extends DbObject {
 		return getTs(created_ts);
 	}
 
-	public void setCreatedTs(Timestamp v) {
+	public void setCreatedTs(final Timestamp v) {
 		set(created_ts, v);
 	}
 

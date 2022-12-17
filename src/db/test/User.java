@@ -120,7 +120,7 @@ public final class User extends DbObject {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public List<File> getFiles(final Query qry, final Order ord, final Limit lmt) {
-		return (List<File>) (List) files.get(this, qry, ord, lmt);
+		return (List) files.get(this, qry, ord, lmt);
 	}
 
 	public int getFilesCount(final Query qry) {
@@ -172,7 +172,7 @@ public final class User extends DbObject {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public List<File> getRefFiles(final Query qry, final Order ord, final Limit lmt) {
-		return (List<File>) (List) refFiles.get(this, qry, ord, lmt);
+		return (List) refFiles.get(this, qry, ord, lmt);
 	}
 
 	public int getRefFilesCount(final Query qry) {
@@ -194,7 +194,7 @@ public final class User extends DbObject {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public List<Game> getGames(final Query qry, final Order ord, final Limit lmt) {
-		return (List<Game>) (List) games.get(this, qry, ord, lmt);
+		return (List) games.get(this, qry, ord, lmt);
 	}
 
 	public int getGamesCount(final Query qry) {

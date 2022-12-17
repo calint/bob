@@ -30,8 +30,9 @@ public final class CsvReader {
 		while (true) {
 			final int chi = reader.read();
 			if (chi == -1) {
-				if (ls.isEmpty())
+				if (ls.isEmpty()) {
 					return null;
+				}
 				throw new RuntimeException("unexpected end of stream");
 			}
 			final char ch = (char) chi;
@@ -39,8 +40,9 @@ public final class CsvReader {
 				if (ch == stringDelim) { // example ... "the quote ""hello"" ", ...
 					reader.mark(1);
 					final int nxtChr = reader.read(); // check if ""
-					if (nxtChr == -1)
+					if (nxtChr == -1) {
 						throw new RuntimeException("unexpected end of stream");
+					}
 					if ((char) nxtChr == stringDelim) {
 						sb.append(stringDelim);
 						continue;
@@ -77,7 +79,7 @@ public final class CsvReader {
 //	public static void main(String[] args) throws Throwable {
 //		CsvReader csv = new CsvReader(new FileReader("/home/c/Downloads/prob.csv"), ',', '"');
 //		List<String> ls = csv.nextRecord();
-//		System.out.println(ls);	
+//		System.out.println(ls);
 //		while (true) {
 //			ls = csv.nextRecord();
 //			if (ls == null)
