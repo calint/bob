@@ -36,20 +36,16 @@ public final class app implements bapp {
 		
 		b.b.set_file_suffix_to_content_type("java","text/plain");
 		
-//		b.b.set_path_to_class("/shell",shell.class);
-//		b.b.set_path_to_class("/websocket",websocket.class);
-//		b.b.set_path_to_class("/websocket2",websocket2.class);
 		b.b.set_path_to_class("/bob/websocket",bob.sock.class);
-//		b.b.set_path_to_class("/health-check",health_check.class);
-//		b.b.set_path_to_class("/dbo/test/test_dbo",c.test_dbo.class);
 		b.b.set_path_to_class("/stats",b.a_stats.class);
-		b.b.set_path_to_class("/db/test/t1",db.test.t1.class);
 		
 		// qa
 		b.b.set_path_to_class("/b/test/t1",b.test.t1.class);
 		b.b.set_path_to_class("/b/test/t2",b.test.t2.class);
 		b.b.set_path_to_class("/b/test/t3",b.test.t3.class);
 		b.b.set_path_to_class("/b/test/t4",b.test.t4.class);
+		b.b.set_path_to_class("/db/test/t1",db.test.t1.class);
+
 //		db.init("jdbc:mysql://localhost:3306/testdb", "c", "password", 5);
 //		db.init("jdbc:mysql://" + b.bapp_jdbc_host + "/" + b.bapp_jdbc_db
 //				+ "?allowPublicKeyRetrieval=true&useSSL=false", b.bapp_jdbc_user, b.bapp_jdbc_password,
