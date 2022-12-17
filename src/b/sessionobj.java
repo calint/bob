@@ -3,7 +3,6 @@ package b;
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
-
 import db.DbObject;
 import db.FldSerializable;
 import db.FldStr;
@@ -18,17 +17,19 @@ public final class sessionobj extends DbObject{
 		return getStr(path);
 	}
 
-	public void path(String v){
+	public void path(final String v){
 		set(path,v);
 	}
 
 	public Object object(){
 		final Object v=get(object);
-		if(v==null)
+		if(v==null){
 			return null;
+		}
 
-		if(!(v instanceof byte[])) // is it transformed?
+		if(!(v instanceof byte[])){ // is it transformed?
 			return v;
+		}
 
 		// convert from sql representation
 		final byte[] ba=(byte[])v;
@@ -38,12 +39,12 @@ public final class sessionobj extends DbObject{
 			ois.close();
 			put(object,o); // put without marking field dirty
 			return o;
-		}catch(Throwable t){
+		}catch(final Throwable t){
 			return null; // ? what to do?
 		}
 	}
 
-	public void object(Serializable v){
+	public void object(final Serializable v){
 		set(object,v);
 	}
 

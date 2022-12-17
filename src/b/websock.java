@@ -8,7 +8,7 @@ import java.security.MessageDigest;
  * Use case is request response chain with one send for each on_message. Full duplex not supported.
  */
 public abstract class websock{
-	private static enum state{
+	private enum state{
 		handshake,parse_next_frame,parse_data,sending,closed
 	}
 	enum op{
@@ -22,21 +22,21 @@ public abstract class websock{
 	private ByteBuffer request_bb;
 	private ByteBuffer[] send_bba;
 	private boolean is_first_packet;
-	private int mask_i;
 	private boolean is_masked;
 	private final byte[] mask_key=new byte[4];
 	private boolean is_threaded=true;
+	private int mask_i;
 
 	/** @param is_threaded true to handle on_message on a thread. If websock is not threaded it will run on the server thread potentially blocking. */
-	public websock(boolean is_threaded){
+	public websock(final boolean is_threaded){
 		this.is_threaded=is_threaded;
 	}
 
 	/** @param r the request that runs this websocket. */
 	final synchronized void init(final req r) throws Throwable{
-		this.rq=r;
-		this.socket_channel=r.socket_channel;
-		this.bb=r.bb;
+		rq=r;
+		socket_channel=r.socket_channel;
+		bb=r.bb;
 		// rfc6455#section-1.3
 		// Opening Handshake
 		final String key=r.headers().get("sec-websocket-key");
@@ -56,9 +56,12 @@ public abstract class websock{
 		}
 		bbo.put("\r\n\r\n".getBytes());
 		bbo.flip();
-		while(bbo.hasRemaining()&&socket_channel.write(bbo)!=0);
-		if(bbo.hasRemaining())
+		while(bbo.hasRemaining()&&socket_channel.write(bbo)!=0){
+			;
+		}
+		if(bbo.hasRemaining()){
 			throw new RuntimeException("initiation packet not fully sent");
+		}
 		on_opened();
 		if(is_sending()){// on_opened might have sent a large message. fully send before receiving new messages.
 			return;
@@ -78,8 +81,9 @@ public abstract class websock{
 		while(true){
 			if(is_sending()){
 				write();
-				if(is_sending())
+				if(is_sending()){
 					return;
+				}
 			}
 			if(bb.remaining()==0){
 				bb.clear();
@@ -106,13 +110,15 @@ public abstract class websock{
 				case parse_next_frame: // ? assuming the header is buffered. breaking up into states for header would handle the input buffer of 1 B
 					// rfc6455#section-5.2
 					// Base Framing Protocol
-					final int b0=(int)bb.get();
+					final int b0=bb.get();
 					final boolean fin=(b0&128)==128;
-					if(fin)
+					if(fin){
 						;// to remove warning of unused variable
-					final int resv=(b0>>4)&7;
-					if(resv!=0)
+					}
+					final int resv=b0>>4&7;
+					if(resv!=0){
 						throw new Error("reserved bits are not 0");
+					}
 					final int opcode=b0&0xf;
 					if(opcode==8){// rfc6455#section-5.5.1
 						st=state.closed;
@@ -124,22 +130,22 @@ public abstract class websock{
 					// https://www.rfc-editor.org/rfc/rfc6455#section-5.2
 
 					// parse header
-					final int b1=(int)bb.get();
+					final int b1=bb.get();
 					is_masked=(b1&128)==128;
 					payload_remaining=b1&127;
 					if(payload_remaining==126){
-						final int by2=(((int)bb.get()&0xff)<<8);
-						final int by1=((int)bb.get()&0xff);
+						final int by2=(bb.get()&0xff)<<8;
+						final int by1=bb.get()&0xff;
 						payload_remaining=by2|by1;
 					}else if(payload_remaining==127){
 						bb.get();// skip the bytes that encode a length >4G
 						bb.get();
 						bb.get();
 						bb.get();
-						final int by4=(((int)bb.get()&0xff)<<24);
-						final int by3=(((int)bb.get()&0xff)<<16);
-						final int by2=(((int)bb.get()&0xff)<<8);
-						final int by1=((int)bb.get()&0xff);
+						final int by4=(bb.get()&0xff)<<24;
+						final int by3=(bb.get()&0xff)<<16;
+						final int by2=(bb.get()&0xff)<<8;
+						final int by1=bb.get()&0xff;
 						payload_remaining=by4|by3|by2|by1;
 					}
 					bb.get(mask_key);
@@ -174,14 +180,15 @@ public abstract class websock{
 																				// the data unmasked
 					on_payload(bbii);
 					is_first_packet=false;
-					if(is_sending()) // on_payload()->on_message() might have changed the state
+					if(is_sending()){ // on_payload()->on_message() might have changed the state
 						return;
+					}
 					break;
 				}
 			}
 		}
 	}
-	private void on_payload(ByteBuffer bb) throws Throwable{
+	private void on_payload(final ByteBuffer bb) throws Throwable{
 		final boolean is_last_packet=payload_remaining==0;
 		if(is_first_packet&&!is_last_packet){
 			request_bb=ByteBuffer.allocate(bb.remaining()+payload_remaining);
@@ -207,7 +214,7 @@ public abstract class websock{
 		final long n=socket_channel.write(send_bba);
 //		System.out.println("websock "+Integer.toHexString(hashCode())+": sock_write: "+n+" bytes");
 		thdwatch.output+=n;
-		for(ByteBuffer b:send_bba){ // check if the write is complete.
+		for(final ByteBuffer b:send_bba){ // check if the write is complete.
 			if(b.hasRemaining()){
 				rq.selection_key.interestOps(SelectionKey.OP_WRITE);
 				rq.selection_key.selector().wakeup();
@@ -228,11 +235,11 @@ public abstract class websock{
 	 */
 	abstract protected void on_message(ByteBuffer bb) throws Throwable;
 
-	final protected void send(String s) throws Throwable{
+	final protected void send(final String s) throws Throwable{
 		send(new ByteBuffer[]{ByteBuffer.wrap(s.getBytes())},true);
 	}
 
-	final protected void send(ByteBuffer bb,final boolean textmode) throws Throwable{
+	final protected void send(final ByteBuffer bb,final boolean textmode) throws Throwable{
 		send(new ByteBuffer[]{bb},textmode);
 	}
 	final protected void send(final ByteBuffer[] bba,final boolean textmode) throws Throwable{
@@ -241,13 +248,15 @@ public abstract class websock{
 			// note. before the request is closed by the exception handler there might be attempted reads which throw closed channel exception. ok?
 		}
 		int nbytes_to_send=0;
-		for(final ByteBuffer b:bba)
+		for(final ByteBuffer b:bba){
 			nbytes_to_send+=b.remaining();
+		}
 
 		send_bba=new ByteBuffer[bba.length+1];
 		send_bba[0]=make_header(nbytes_to_send,textmode);
-		for(int i=1;i<send_bba.length;i++)
+		for(int i=1;i<send_bba.length;i++){
 			send_bba[i]=bba[i-1];
+		}
 
 		st=state.sending;
 		write();
@@ -264,7 +273,7 @@ public abstract class websock{
 			nhdr=2;
 		}else if(size_of_data_to_send<=65535){
 			hdr[1]=126;
-			hdr[2]=(byte)((size_of_data_to_send>>8)&255);
+			hdr[2]=(byte)(size_of_data_to_send>>8&255);
 			hdr[3]=(byte)(size_of_data_to_send&255);
 			nhdr=4;
 		}else{
@@ -273,9 +282,9 @@ public abstract class websock{
 //			hdr[3]=(byte)((ndata>>48)&255);
 //			hdr[4]=(byte)((ndata>>40)&255);
 //			hdr[5]=(byte)((ndata>>32)&255);
-			hdr[6]=(byte)((size_of_data_to_send>>24)&255);
-			hdr[7]=(byte)((size_of_data_to_send>>16)&255);
-			hdr[8]=(byte)((size_of_data_to_send>>8)&255);
+			hdr[6]=(byte)(size_of_data_to_send>>24&255);
+			hdr[7]=(byte)(size_of_data_to_send>>16&255);
+			hdr[8]=(byte)(size_of_data_to_send>>8&255);
 			hdr[9]=(byte)(size_of_data_to_send&255);
 			nhdr=10;
 		}

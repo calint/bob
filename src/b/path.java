@@ -27,10 +27,12 @@ public final class path implements Serializable{
 		final String name=f.getName();
 //		if(name==null||name.length()==0||name.equals(".")||name.contains(".."))throw new Error("illegal name: "+name);
 //		if(name.equals(".")||name.contains(".."))throw new Error("illegal name: "+name);
-		if(name.contains(".."))
+		if(name.contains("..")){
 			throw new Error("illegal name: "+name);
-		if(b.firewall_paths_on)
+		}
+		if(b.firewall_paths_on){
 			b.firewall_ensure_path_access(uri());
+		}
 	}
 	path(final File f,final boolean ommit_checks){
 		file=f;
@@ -68,8 +70,9 @@ public final class path implements Serializable{
 		return file.isFile();
 	}
 	public boolean isdir(){
-		if(!file.exists())
+		if(!file.exists()){
 			return false;
+		}
 		return file.isDirectory();
 	}
 	public String fullpath(){
@@ -80,22 +83,23 @@ public final class path implements Serializable{
 		}
 	}
 	public path get(final String name){
-		final path p=new path(new File(file,name));
-		return p;
+		return new path(new File(file,name));
 	}
 	public String name(){
 		return file.getName();
 	}
 	public String[] list(){
 		final String[] f=file.list();
-		if(f==null)
+		if(f==null){
 			return new String[0];
+		}
 		return f;
 	}
 	public String[] list(final FilenameFilter fnmf){
 		final String[] f=file.list(fnmf);
-		if(f==null)
+		if(f==null){
 			return new String[0];
+		}
 		return f;
 	}
 	public boolean rename(final path nf){
@@ -105,12 +109,14 @@ public final class path implements Serializable{
 		return file.renameTo(new File(file.getParent(),newname));
 	}
 	public void lastmod(final long lastmod){
-		if(!file.setLastModified(lastmod))
+		if(!file.setLastModified(lastmod)){
 			throw new Error();
+		}
 	}
 	public void setreadonly(){
-		if(!file.setReadOnly())
+		if(!file.setReadOnly()){
 			throw new Error();
+		}
 	}
 //	public void executable(final boolean b){if(!file.setExecutable(b))throw new Error();}
 	public boolean ishidden(){
@@ -126,50 +132,60 @@ public final class path implements Serializable{
 	public FileChannel filechannel() throws IOException{
 		return outputstream(false).getChannel();
 	}
-	public final int hashCode(){
+	@Override public int hashCode(){
 		return file.toString().hashCode();
 	}
-	public boolean equals(final Object obj){
-		if(!(obj instanceof path))
+	@Override public boolean equals(final Object obj){
+		if(!(obj instanceof path)){
 			return false;
+		}
 		return ((path)obj).file.equals(file);
 	}
-	public String toString(){
+	@Override public String toString(){
 		final String fn=file.toString();
-		if(fn.startsWith("./"))
+		if(fn.startsWith("./")){
 			return fn.substring("./".length());
+		}
 		return fn;
 	}
 	public path mkfile() throws IOException{
-		if(!file.createNewFile())
+		if(!file.createNewFile()){
 			throw new IOException("cannot make file "+file);
+		}
 		return this;
 	}
 	public boolean rm(){
 		return rm(null);
 	}
 	public boolean rm(final sts st){
-		if(!file.exists())
+		if(!file.exists()){
 			return true;
-		if(st!=null)
+		}
+		if(st!=null){
 			try{
 				st.sts_set("deleteting "+file.toString());
 			}catch(final Throwable t){
 				throw new Error(t);
 			}
-		if(file.isFile())
+		}
+		if(file.isFile()){
 			return file.delete();
+		}
 		for(final File f:file.listFiles()){
-			if(!new path(f).rm(st))
+			if(!new path(f).rm(st)){
 				return false;
+			}
 		}
 		return file.delete();
 	}
 	public void append(final String line,final String eol) throws IOException{
-		if(!file.exists())
-			if(!file.getParentFile().isDirectory())
-				if(!file.getParentFile().mkdirs())
+		if(!file.exists()){
+			if(!file.getParentFile().isDirectory()){
+				if(!file.getParentFile().mkdirs()){
 					throw new Error();
+				}
+			}
+		}
 		final byte[] ba=b.tobytes(line);
 		final OutputStream os=outputstream(true);
 		try{
@@ -186,17 +202,20 @@ public final class path implements Serializable{
 		append(line,null);
 	}
 	public void append(final String[] lines,final String eol) throws IOException{
-		if(!file.exists())
-			if(!file.getParentFile().mkdirs())
+		if(!file.exists()){
+			if(!file.getParentFile().mkdirs()){
 				throw new Error();
+			}
+		}
 		final OutputStream os=outputstream(true);
 		try{
 			final byte[] eosba=eol!=null?b.tobytes(eol):null;
 			for(final String line:lines){
 				final byte[] ba=b.tobytes(line);
 				os.write(ba);
-				if(eol!=null)
+				if(eol!=null){
 					os.write(eosba);
+				}
 			}
 		}finally{
 			os.close();
@@ -212,19 +231,24 @@ public final class path implements Serializable{
 		return this;
 	}
 	public void mkdirs() throws IOException{
-		if(file.exists()&&file.isDirectory())
+		if(file.exists()&&file.isDirectory()){
 			return;
-		if(!file.mkdirs())
+		}
+		if(!file.mkdirs()){
 			throw new IOException("cannot make dir "+file);
+		}
 	}
 	public void mkbasedir() throws IOException{
 		final File pf=file.getParentFile();
-		if(pf!=null&&pf.isDirectory())
+		if(pf!=null&&pf.isDirectory()){
 			return;
-		if(pf==null)
+		}
+		if(pf==null){
 			throw new Error();
-		if(!pf.mkdirs())
+		}
+		if(!pf.mkdirs()){
 			throw new IOException("cannot make basedir for "+file);
+		}
 	}
 	public path to(final ByteBuffer bb) throws IOException{
 		final FileInputStream fis=fileinputstream();
@@ -239,9 +263,10 @@ public final class path implements Serializable{
 	}
 	public String type(){
 		final String fn=file.getName();
-		int ix=fn.lastIndexOf('.');
-		if(ix==-1)
+		final int ix=fn.lastIndexOf('.');
+		if(ix==-1){
 			return "";
+		}
 		return fn.substring(ix+1).toLowerCase();
 	}
 	public String uri(){
@@ -250,8 +275,7 @@ public final class path implements Serializable{
 	public Object readobj() throws IOException,ClassNotFoundException{
 		final ObjectInputStream ois=new ObjectInputStream(inputstream());
 		try{
-			final Object o=ois.readObject();
-			return o;
+			return ois.readObject();
 		}finally{
 			ois.close();
 		}
@@ -281,8 +305,9 @@ public final class path implements Serializable{
 		try{
 			final FileChannel fc=os.getChannel();
 			fc.write(byteBuffer);
-			if(byteBuffer.hasRemaining())
+			if(byteBuffer.hasRemaining()){
 				throw new Error("incompletewrite");
+			}
 		}finally{
 			os.close();
 		}
@@ -332,12 +357,14 @@ public final class path implements Serializable{
 //	}
 //}
 	public String readstr() throws IOException{
-		if(!isfile())
+		if(!isfile()){
 			return "";
+		}
 		final ByteBuffer bb=ByteBuffer.allocate((int)size());
 		to(bb);
-		if(bb.hasRemaining())
+		if(bb.hasRemaining()){
 			throw new Error("buffernotfullyread");
+		}
 		bb.flip();
 		return new String(bb.array(),bb.position(),bb.limit(),b.strenc);
 	}
@@ -345,7 +372,7 @@ public final class path implements Serializable{
 	public boolean isin(final path p){
 		try{
 			return fullpath().startsWith(p.fullpath());
-		}catch(Throwable t){
+		}catch(final Throwable t){
 			throw new Error(t);
 		}
 	}
@@ -355,8 +382,9 @@ public final class path implements Serializable{
 	}
 	public void copyto(final path dir) throws Throwable{
 		final path p=dir.get(name());
-		if(p.exists())
+		if(p.exists()){
 			throw new Error("exists. overwrite?");
+		}
 		final OutputStream os=p.outputstream();
 		try{
 			to(os);
@@ -373,31 +401,38 @@ public final class path implements Serializable{
 		boolean visit(final path p) throws Throwable;
 	}
 	public void apply(final visitor v) throws Throwable{
-		if(!exists())
+		if(!exists()){
 			return;
-		if(isfile())
+		}
+		if(isfile()){
 			v.visit(this);
-		if(isdir())
-			for(final String fn:file.list())
+		}
+		if(isdir()){
+			for(final String fn:file.list()){
 				get(fn).apply(v);
+			}
+		}
 	}
 	public ByteBuffer readbb() throws IOException{
 		final long size=size();
-		if(size>Integer.MAX_VALUE)
+		if(size>Integer.MAX_VALUE){
 			throw new Error("filesizetolarge "+size);
+		}
 		final ByteBuffer bb=ByteBuffer.allocate((int)size);
 		to(bb);
 		bb.flip();
 		return bb;
 	}
 	public void foreach(final visitor v) throws Throwable{
-		if(!isdir())
+		if(!isdir()){
 			return;
+		}
 // android compatible
 		for(final String s:list()){
 			final path pth=get(s);
-			if(v.visit(pth))
+			if(v.visit(pth)){
 				break;
+			}
 		}
 
 // java 7

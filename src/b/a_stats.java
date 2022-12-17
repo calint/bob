@@ -9,7 +9,7 @@ public @stateless class a_stats extends a implements bin{
 		return "text/plain;charset=utf-8";
 	}
 
-	@Override public void to(xwriter x) throws Throwable{
+	@Override public void to(final xwriter x) throws Throwable{
 		thdwatch.update();
 //		thdwatch.print_fieldnames_to(x.outputstream(),"\n");
 //		thdwatch.print_fields_to(x.outputstream(),"\n");

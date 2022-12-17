@@ -28,7 +28,7 @@ final class chdresp_resource extends chdresp{
 		bb.flip();
 	}
 	/** @return true if path is valid, false to evict it from the cache */
-	boolean validate(final long now) throws Throwable{
+	@Override boolean validate(final long now) throws Throwable{
 		return true; // resources are always up to date
 	}
 }

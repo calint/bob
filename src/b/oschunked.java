@@ -1,7 +1,8 @@
 package b;
-import java.io.*;
-import java.nio.*;
-import java.nio.channels.*;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.ByteBuffer;
+import java.nio.channels.SelectionKey;
 final class oschunked extends OutputStream{
 	private static final ByteBuffer bb_eochunk=ByteBuffer.wrap("0\r\n\r\n".getBytes());
 	private static final ByteBuffer bb_crnl=ByteBuffer.wrap("\r\n".getBytes());
@@ -11,7 +12,7 @@ final class oschunked extends OutputStream{
 	private final byte[] buf;
 	private int bufi;
 	private final ByteBuffer[] headers_bb;
-	private int headers_bb_len;
+	private final int headers_bb_len;
 	private boolean first_send=true;
 	oschunked(final req r,final ByteBuffer[] headers_bb,final int headers_bb_len,final int chunk_size_bytes){
 		this.r=r;
@@ -21,16 +22,16 @@ final class oschunked extends OutputStream{
 		chunkhx=(Integer.toHexString(chunk_size_bytes)+"\r\n").getBytes();
 		buf=new byte[chunk_size_bytes];
 	}
-	public String toString(){
+	@Override public String toString(){
 		return new String(buf,0,bufi);
 	}
-	public void write(final int ch) throws IOException{
+	@Override public void write(final int ch) throws IOException{
 		throw new UnsupportedOperationException();
 	}
-	public void write(final byte[] b) throws IOException{
+	@Override public void write(final byte[] b) throws IOException{
 		write(b,0,b.length);
 	}
-	public void write(final byte[] c,int off,int len) throws IOException{
+	@Override public void write(final byte[] c,int off,int len) throws IOException{
 		final int remain=buf.length-bufi;
 		if(len<=remain){
 			System.arraycopy(c,off,buf,bufi,len);
@@ -41,10 +42,10 @@ final class oschunked extends OutputStream{
 		bufi+=remain;
 		off+=remain;
 		len-=remain;
-		final ByteBuffer[] bba=new ByteBuffer[]{ByteBuffer.wrap(chunkhx),ByteBuffer.wrap(buf,0,bufi),bb_crnl.slice()};
+		final ByteBuffer[] bba={ByteBuffer.wrap(chunkhx),ByteBuffer.wrap(buf,0,bufi),bb_crnl.slice()};
 		write_blocking(bba);
 		while(len>chunk_size_bytes){
-			final ByteBuffer[] bba2=new ByteBuffer[]{ByteBuffer.wrap(chunkhx),ByteBuffer.wrap(c,off,chunk_size_bytes),bb_crnl.slice()};
+			final ByteBuffer[] bba2={ByteBuffer.wrap(chunkhx),ByteBuffer.wrap(c,off,chunk_size_bytes),bb_crnl.slice()};
 			write_blocking(bba2);
 			off+=chunk_size_bytes;
 			len-=chunk_size_bytes;
@@ -70,8 +71,9 @@ final class oschunked extends OutputStream{
 			send_buffers=bba;
 		}
 		long remaining=0;
-		for(ByteBuffer bb:send_buffers)
+		for(final ByteBuffer bb:send_buffers){
 			remaining+=bb.remaining();
+		}
 		while(remaining!=0){
 			final long c=r.socket_channel.write(send_buffers,0,send_buffers.length);
 			if(c==0){
@@ -91,10 +93,11 @@ final class oschunked extends OutputStream{
 			thdwatch.output+=c;
 		}
 	}
-	public void flush() throws IOException{
-		if(bufi==0)
+	@Override public void flush() throws IOException{
+		if(bufi==0){
 			return;
-		final ByteBuffer[] bba=new ByteBuffer[]{ByteBuffer.wrap(Integer.toHexString(bufi).getBytes()),bb_crnl.slice(),ByteBuffer.wrap(buf,0,bufi),bb_crnl.slice()};
+		}
+		final ByteBuffer[] bba={ByteBuffer.wrap(Integer.toHexString(bufi).getBytes()),bb_crnl.slice(),ByteBuffer.wrap(buf,0,bufi),bb_crnl.slice()};
 		write_blocking(bba);
 		bufi=0;
 	}

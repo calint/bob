@@ -1,7 +1,6 @@
 package b;
 
 import java.util.List;
-
 import db.DbObject;
 import db.Index;
 import db.Query;
@@ -17,7 +16,7 @@ public final class session extends DbObject{
 		return getStr(sessionId);
 	}
 
-	public void session_id(String v){
+	public void session_id(final String v){
 		set(sessionId,v);
 	}
 
@@ -32,7 +31,6 @@ public final class session extends DbObject{
 		if(ls.size()>1){
 			b.pl(b.stacktrace(new RuntimeException("found more than one object for path '"+path+"' in session "+this)));
 		}
-		final sessionobj e=(sessionobj)ls.get(0);
-		return e;
+		return (sessionobj)ls.get(0);
 	}
 }

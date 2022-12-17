@@ -1,6 +1,6 @@
 package b;
 final class jvmsdh extends Thread{
-	public void run(){
+	@Override public void run(){
 		thdwatch._stop=true;
 		if(b.bapp!=null){
 			try{

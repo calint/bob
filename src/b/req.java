@@ -1,7 +1,6 @@
 package b;
 
 import static b.b.tobytes;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -18,7 +17,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
 import b.a.stateless;
 import b.b.conf;
 import db.Db;
@@ -161,7 +159,7 @@ public final class req{
 				break;
 			}
 		}
-		method_length+=(ba_pos-ba_pos_prev);
+		method_length+=ba_pos-ba_pos_prev;
 		if(method_length>abuse_method_len){
 			close();
 			throw new RuntimeException("abusemethodlen "+method_length+": "+new String(ba,ba_pos_prev,ba_pos-ba_pos_prev));
@@ -183,7 +181,7 @@ public final class req{
 			} // ie: '. index.html\n'
 			uri_sb.append((char)b);
 		}
-		uri_length+=(ba_pos-ba_pos_prev);
+		uri_length+=ba_pos-ba_pos_prev;
 		if(uri_length>abuse_uri_len){
 			close();
 			throw new RuntimeException("abuseurilen "+uri_length+": "+uri_sb);
@@ -195,16 +193,18 @@ public final class req{
 		while(ba_rem!=0){
 			final byte b=ba[ba_pos++];
 			ba_rem--;
-			if(b!='\n')
+			if(b!='\n'){
 				continue;
-			if(ba_pos>=3&&ba[ba_pos-3]=='1')
+			}
+			if(ba_pos>=3&&ba[ba_pos-3]=='1'){
 				connection_keep_alive=true;// ? cheapo to set keepalive for http/1.1\r\n
-			else if(ba_pos>=2&&ba[ba_pos-2]=='1')
+			}else if(ba_pos>=2&&ba[ba_pos-2]=='1'){
 				connection_keep_alive=true;// ? cheapo to set keepalive for 1\n
+			}
 			do_after_prot();
 			break;
 		}
-		prot_length+=(ba_pos-ba_pos_prev);
+		prot_length+=ba_pos-ba_pos_prev;
 		if(prot_length>abuse_prot_len){
 			close();
 			throw new RuntimeException("abuseprotlen "+prot_length);
@@ -235,14 +235,15 @@ public final class req{
 				header_value_length=0;
 				st=state.header_value;
 				break;
-			}else if(b=='\n'){
+			}
+			if(b=='\n'){
 				do_after_header();
 				return;
 			}else{
 				header_name_sb.append((char)b);
 			}
 		}
-		header_name_length+=(ba_pos-ba_pos_prev);
+		header_name_length+=ba_pos-ba_pos_prev;
 		if(header_name_length>abuse_header_name_len){
 			close();
 			throw new RuntimeException("abuseheadernamelen "+header_name_length+": "+header_name_sb);
@@ -268,7 +269,7 @@ public final class req{
 			}
 			header_value_sb.append((char)b);
 		}
-		header_value_length+=(ba_pos-ba_pos_prev);
+		header_value_length+=ba_pos-ba_pos_prev;
 		if(header_value_length>abuse_header_value_len){
 			close();
 			throw new RuntimeException("abuseheadervaluelen "+header_value_length+": "+header_value_sb);
@@ -285,23 +286,28 @@ public final class req{
 //		}
 
 		final String ka=headers.get(hk_connection);
-		if(ka!=null)
+		if(ka!=null){
 			connection_keep_alive=hv_keep_alive.equalsIgnoreCase(ka);
+		}
 
 		content_type=headers.get(hk_content_type);
 		if(content_type!=null){
 			if(content_type.startsWith("dir;")||content_type.equals("dir")){
-				if(!b.enable_upload)
+				if(!b.enable_upload){
 					throw new RuntimeException("uploadsdisabled");
-				if(!set_session_id_from_cookie())
+				}
+				if(!set_session_id_from_cookie()){
 					throw new RuntimeException("nocookie at create dir. path:"+uri_sb);
+				}
 				final String[] q=content_type.split(";");
 				final String lastmod_s=q[1];
 				final path p=b.path(b.sessions_dir).get(session_id).get(path_str);
-				if(!p.exists())
+				if(!p.exists()){
 					p.mkdirs();
-				if(!p.isdir())
+				}
+				if(!p.isdir()){
 					throw new RuntimeException("isnotdir: "+p);
+				}
 				final SimpleDateFormat df=new SimpleDateFormat("yyyy-MM-dd--HH:mm:ss.SSS");
 				try{
 					p.lastmod(df.parse(lastmod_s).getTime());
@@ -312,11 +318,13 @@ public final class req{
 				return;
 			}
 			if(content_type.startsWith("file;")||content_type.equals("file")){
-				if(!b.enable_upload)
+				if(!b.enable_upload){
 					throw new RuntimeException("uploadsdisabled");
+				}
 //				System.out.println(path_s);
-				if(!set_session_id_from_cookie())
+				if(!set_session_id_from_cookie()){
 					throw new RuntimeException("nocookie at create file from upload. path:"+uri_sb);
+				}
 //				final String contentLength_s=hdrs.get(hk_content_length);
 				content_remaining_to_read=Long.parseLong(headers.get(hk_content_length));
 				if(content_remaining_to_read>abuse_upload_len){
@@ -345,8 +353,9 @@ public final class req{
 		// assumes content type "text/plain; charset=utf-8" from an ajax post
 		final String contentLength_s=headers.get(hk_content_length);
 		if(contentLength_s!=null&&!contentLength_s.equals("0")){
-			if(!set_session_id_from_cookie())
+			if(!set_session_id_from_cookie()){
 				throw new RuntimeException("nocookie in request with content. path:"+uri_sb);
+			}
 			content_remaining_to_read=Long.parseLong(contentLength_s);
 			if(content_remaining_to_read>abuse_content_len){
 				close();
@@ -364,22 +373,22 @@ public final class req{
 			close();
 			throw t;
 		}
-		if(b.cache_files&&try_cache())
+		if((b.cache_files&&try_cache())||(b.try_file&&try_file())){
 			return;
-		if(b.try_file&&try_file())
+		}
+		if(b.try_rc&&try_resource()){
 			return;
-		if(b.try_rc&&try_resource())
-			return;
+		}
 
 		// try creating an instance of 'a' on a separate thread
 		st=state.waiting_run_page;
-		return;
 	}
 
-	public static String get_session_id_from_headers(Map<String,String> headers){
+	public static String get_session_id_from_headers(final Map<String,String> headers){
 		final String cookie=headers.get(req.hk_cookie);
-		if(cookie==null)
+		if(cookie==null){
 			return null;
+		}
 		final String[] c1=cookie.split(";");
 		for(String cc:c1){
 			cc=cc.trim();
@@ -412,18 +421,21 @@ public final class req{
 		final SimpleDateFormat sdf=new SimpleDateFormat("yyMMdd-HHmmss.SSS-");
 		final StringBuilder sb=new StringBuilder(sdf.format(new Date()));
 		final String alf="0123456789abcdef";
-		for(int n=0;n<8;n++)
+		for(int n=0;n<8;n++){
 			sb.append(alf.charAt(b.rndint(0,alf.length())));
+		}
 		return sb.toString();
 	}
 
 	private boolean try_file() throws Throwable{
-		if(!path.exists())
+		if(!path.exists()){
 			return false;
+		}
 		if(path.isdir()){
 			final path p=path.get(b.default_directory_file);
-			if(!p.exists()||!p.isfile())
+			if(!p.exists()||!p.isfile()){
 				return false;
+			}
 			path=p;
 		}
 		thdwatch.files++;
@@ -460,20 +472,22 @@ public final class req{
 
 			try{
 				range_from=Long.parseLong(ss[0]);
-			}catch(NumberFormatException e){
+			}catch(final NumberFormatException e){
 				range_from=-1;
 			}
-			if(range_from==-1) // invalid or not specified
+			if(range_from==-1){ // invalid or not specified
 				range_from=0;
+			}
 
-			if(ss.length>1)
+			if(ss.length>1){
 				try{
 					range_to=Long.parseLong(ss[1]);
-				}catch(NumberFormatException e){
+				}catch(final NumberFormatException e){
 					range_to=-1;
 				}
-			else
+			}else{
 				range_to=-1;
+			}
 
 			bb[i++]=ByteBuffer.wrap(h_http206);
 			bb[i++]=ByteBuffer.wrap(h_content_length);
@@ -507,17 +521,19 @@ public final class req{
 			bb[i++]=ByteBuffer.wrap(hkv_set_cookie_append);
 //			session_id_set=false;
 		}
-		if(connection_keep_alive)
+		if(connection_keep_alive){
 			bb[i++]=ByteBuffer.wrap(hkp_connection_keep_alive);
+		}
 		bb[i++]=ByteBuffer.wrap(ba_crlf2);
 		final long n=send_packet(bb,i); // ? is send complete?
 		thdwatch.output+=n;
 		transfer_file_channel=path.fileinputstream().getChannel();
 		transfer_file_position=range_from;
-		if(range_to==-1) // unspecified, use content_length
+		if(range_to==-1){ // unspecified, use content_length
 			transfer_file_remaining=len-range_from;
-		else
+		}else{ // unspecified, use content_length
 			transfer_file_remaining=range_to-range_from+1; // zero indexed inclusive adjustment
+		}
 
 		st=state.transfer_file;
 		do_transfer_file(); // ? return value ignored
@@ -526,7 +542,7 @@ public final class req{
 
 	/** @return true if the file or resource has been cached. */
 	private boolean try_cache() throws Throwable{
-		chdresp cachedresp=file_and_resource_cache.get(path_str);
+		final chdresp cachedresp=file_and_resource_cache.get(path_str);
 		if(cachedresp==null){
 			return false;
 		}
@@ -543,12 +559,14 @@ public final class req{
 	/** @return true if resource was cached and sent. */
 	private boolean try_resource() throws Throwable{
 		final String resource_path=b.get_resource_for_path(path_str);
-		if(resource_path==null)
+		if(resource_path==null){
 			return false;
+		}
 
 		final InputStream is=req.class.getResourceAsStream(resource_path);
-		if(is==null)
+		if(is==null){
 			return false;
+		}
 		final String suffix=path_str.substring(path_str.lastIndexOf('.')+1);
 		final byte[] content_type=b.get_content_type_for_file_suffix(suffix);
 		final chdresp c=new chdresp_resource(is,content_type);
@@ -557,7 +575,7 @@ public final class req{
 		return true;
 	}
 
-	private void reply(chdresp c) throws Throwable{
+	private void reply(final chdresp c) throws Throwable{
 		thdwatch.cachef++;
 		final String clientetag=headers.get(hk_if_none_match);
 		if(clientetag!=null&&c.etag_matches(clientetag)){
@@ -574,20 +592,22 @@ public final class req{
 
 			try{
 				range_from=Long.parseLong(ss[0]);
-			}catch(NumberFormatException e){
+			}catch(final NumberFormatException e){
 				range_from=-1;
 			}
-			if(range_from==-1) // invalid or not specified
+			if(range_from==-1){ // invalid or not specified
 				range_from=0;
+			}
 
-			if(ss.length>1)
+			if(ss.length>1){
 				try{
 					range_to=Long.parseLong(ss[1]);
-				}catch(NumberFormatException e){
+				}catch(final NumberFormatException e){
 					range_to=-1;
 				}
-			else
+			}else{
 				range_to=-1;
+			}
 
 			int bb_len=session_id_set?10:7;
 			final byte[] content_type=c.content_type();
@@ -632,7 +652,7 @@ public final class req{
 			return;
 		}
 		// cookie to set
-		final ByteBuffer[] bba=new ByteBuffer[]{c.byte_buffer().slice(),ByteBuffer.wrap(hk_set_cookie),ByteBuffer.wrap(session_id.getBytes()),ByteBuffer.wrap(hkv_set_cookie_append),c.byte_buffer().slice()};
+		final ByteBuffer[] bba={c.byte_buffer().slice(),ByteBuffer.wrap(hk_set_cookie),ByteBuffer.wrap(session_id.getBytes()),ByteBuffer.wrap(hkv_set_cookie_append),c.byte_buffer().slice()};
 		bba[0].limit(c.additional_headers_insertion_position()); // limit the first slice to the location where
 																	// additional headers can be inserted
 		bba[4].position(c.additional_headers_insertion_position()); // position the buffer (same as bb[0]) to the start
@@ -664,11 +684,13 @@ public final class req{
 			bb[bi++]=ByteBuffer.wrap(h_content_length);
 			bb[bi++]=ByteBuffer.wrap(Long.toString(content.length).getBytes());
 		}
-		if(connection_keep_alive)
+		if(connection_keep_alive){
 			bb[bi++]=ByteBuffer.wrap(hkp_connection_keep_alive);
+		}
 		bb[bi++]=ByteBuffer.wrap(ba_crlf2);
-		if(content!=null)
+		if(content!=null){
 			bb[bi++]=ByteBuffer.wrap(content);
+		}
 		final long n=send_packet(bb,bi);
 		thdwatch.output+=n;
 		st=state.next_request;
@@ -676,18 +698,21 @@ public final class req{
 
 	private int send_packet(final ByteBuffer[] bba,final int n) throws Throwable{
 		long tosend=0;
-		for(int i=0;i<n;i++)
+		for(int i=0;i<n;i++){
 			tosend+=bba[i].remaining();
+		}
 		final long c=socket_channel.write(bba,0,n);// ? while
-		if(c!=tosend)
+		if(c!=tosend){
 			b.log(new RuntimeException("sent "+c+" of "+tosend+" bytes"));// ? throwerror
+		}
 		return n;
 	}
 
 	private void transfer_buffers(final ByteBuffer[] bba) throws Throwable{
 		long n=0;
-		for(ByteBuffer b:bba)
+		for(final ByteBuffer b:bba){
 			n+=b.remaining();
+		}
 		transfer_buffers=bba;
 		transfer_buffers_remaining=n;
 		st=state.transfer_buffers;
@@ -696,20 +721,22 @@ public final class req{
 
 	/** @return true if transfer is done, false if more writes are needed. */
 	void do_transfer() throws Throwable{
-		if(st==state.transfer_file)
+		if(st==state.transfer_file){
 			do_transfer_file();
-		else if(st==state.transfer_buffers)
+		}else if(st==state.transfer_buffers){
 			do_transfer_buffers();
-		else
+		}else{
 			throw new IllegalStateException();
+		}
 	}
 
 	/** @return true if if transfer is done, more writes are needed. */
 	private void do_transfer_buffers() throws Throwable{
 		while(transfer_buffers_remaining!=0){
 			final long c=socket_channel.write(transfer_buffers);
-			if(c==0)
+			if(c==0){
 				return;
+			}
 			transfer_buffers_remaining-=c;
 			thdwatch.output+=c;
 		}
@@ -719,7 +746,7 @@ public final class req{
 	/** @return true if if transfer is done, more writes are needed. */
 	private void do_transfer_file() throws IOException{
 		final int buf_size=b.transfer_file_write_size;
-		while(transfer_file_remaining!=0)
+		while(transfer_file_remaining!=0){
 			try{
 				final long n=transfer_file_remaining>buf_size?buf_size:transfer_file_remaining;
 				final long c=transfer_file_channel.transferTo(transfer_file_position,n,socket_channel);
@@ -740,9 +767,9 @@ public final class req{
 				thdwatch.eagain++; // ? assuming. eventually bug
 				return;
 			}
+		}
 		transfer_file_channel.close();
 		st=state.next_request;
-		return;
 	}
 
 	private void parse_content_read(){
@@ -773,8 +800,9 @@ public final class req{
 		ba_pos+=c;
 		ba_rem-=c;
 		thdwatch.input+=c;
-		if(content_remaining_to_read<0)// ?
+		if(content_remaining_to_read<0){ // ?
 			throw new RuntimeException();
+		}
 		if(content_remaining_to_read==0){
 			upload_channel.close();
 			final SimpleDateFormat df=new SimpleDateFormat("yyyy-MM-dd--HH:mm:ss.SSS");
@@ -810,12 +838,11 @@ public final class req{
 		final List<DbObject> ls=tn.get(sessionobj.class,new Query(session.sessionId,Query.EQ,session_id).and(session.objects).and(sessionobj.path,Query.EQ,p),null,null);
 		if(ls.isEmpty()){
 			return get_session().object(p);
-		}else{
-			if(ls.size()>1){
-				b.log(new RuntimeException("found "+ls.size()+" paths for session "+session_id+" path "+p));
-			}
-			return (sessionobj)ls.get(0);
 		}
+		if(ls.size()>1){
+			b.log(new RuntimeException("found "+ls.size()+" paths for session "+session_id+" path "+p));
+		}
+		return (sessionobj)ls.get(0);
 	}
 
 	/** Called from the request thread. */
@@ -824,7 +851,7 @@ public final class req{
 
 		final Class<?> cls=b.get_class_for_path(path_str);
 		if(cls==null){
-			xwriter x=new xwriter().p(path_str).nl().nl().pl("Resource not found.");
+			final xwriter x=new xwriter().p(path_str).nl().nl().pl("Resource not found.");
 			reply(h_http404,null,null,tobytes(x.toString()));
 			b.log(new RuntimeException("http404 "+path()));
 			return;
@@ -847,8 +874,9 @@ public final class req{
 			return;
 		}
 
-		if(content_bb!=null)
+		if(content_bb!=null){
 			populate_content_map_from_buffer();
+		}
 
 		final boolean is_stateless=cls.getAnnotation(stateless.class)!=null;
 
@@ -857,16 +885,20 @@ public final class req{
 		try{
 			run_page_do(tn,cls);
 		}catch(Throwable t){
-			if(!is_stateless)
+			if(!is_stateless){
 				tn.rollback();
-			while(t.getCause()!=null)
+			}
+			while(t.getCause()!=null){
 				t=t.getCause();
-			if(t instanceof RuntimeException)
+			}
+			if(t instanceof RuntimeException){
 				throw(RuntimeException)t;
+			}
 			throw new RuntimeException(t);
 		}finally{
-			if(!is_stateless)
+			if(!is_stateless){
 				Db.deinitCurrentTransaction();
+			}
 		}
 
 		st=state.next_request;
@@ -899,13 +931,15 @@ public final class req{
 				a e=root_elem;
 				for(int n=1;n<paths.length;n++){
 					e=e.child(paths[n]);
-					if(e==null)
+					if(e==null){
 						throw new RuntimeException("not found: "+me.getKey());
+					}
 				}
 				e.set(me.getValue());
 			}
-			if(ajax_command_string.length()==0)
+			if(ajax_command_string.length()==0){
 				throw new RuntimeException("expectedax");
+			}
 
 			// decode the field id, method name and parameters parameters
 			final String target_elem_id,target_elem_method,target_elem_method_args;
@@ -929,8 +963,9 @@ public final class req{
 			a target_elem=root_elem;
 			for(int n=1;n<path.length;n++){
 				target_elem=target_elem.child(path[n]);
-				if(target_elem==null)
+				if(target_elem==null){
 					break;
+				}
 			}
 			final oschunked os=reply_chunked(h_http200,text_html_utf8);
 			final xwriter x=new xwriter(os);
@@ -945,7 +980,7 @@ public final class req{
 			}catch(final InvocationTargetException t){
 				b.log(t.getTargetException());
 				x.xalert(b.isempty(t.getTargetException().getMessage(),t.toString()));
-			}catch(NoSuchMethodException t){
+			}catch(final NoSuchMethodException t){
 				x.xalert("method not found:\n"+target_elem.getClass().getName()+".x_"+target_elem_method+"(xwriter,String)");
 			}
 			dbo_root_elem.object(root_elem);// dbo element is now dirty
@@ -964,7 +999,7 @@ public final class req{
 			// ? extra mode: serialize, encode to text, write into tag <div id="--state">
 			// that is posted with ajax request
 			root_elem.to(x);
-		}catch(Throwable t){
+		}catch(final Throwable t){
 			b.log(t);
 			x.pre().p(b.stacktrace(t));
 		}
@@ -986,8 +1021,9 @@ public final class req{
 			bb_reply[bbi++]=ByteBuffer.wrap(hkv_set_cookie_append);
 //			session_id_set=false;
 		}
-		if(connection_keep_alive)
+		if(connection_keep_alive){
 			bb_reply[bbi++]=ByteBuffer.wrap(hkp_connection_keep_alive);
+		}
 		if(content_type!=null){
 			bb_reply[bbi++]=ByteBuffer.wrap(h_content_type);
 			bb_reply[bbi++]=ByteBuffer.wrap(content_type.getBytes());
@@ -1001,20 +1037,21 @@ public final class req{
 	private void populate_content_map_from_buffer() throws Throwable{
 //		System.out.println("*** content type: "+content_type);
 //		System.out.println(new String(content_bb.array(),0,content_bb.limit()));
-		if(content_type!=null&&!content_type.startsWith(text_plain))
+		if(content_type!=null&&!content_type.startsWith(text_plain)){
 			throw new RuntimeException("postedcontent only "+text_plain+" allowed");
-		byte[] ba=content_bb.array();
+		}
+		final byte[] ba=content_bb.array();
 		int i=0;
 		String name="";
 		int s=0;
 		int k=0;
-		for(byte c:ba){
+		for(final byte c:ba){
 			switch(s){
 			default:
 				throw new RuntimeException();
 			case 0:
 				if(c=='='){
-					name=new String(ba,i,(k-i),b.strenc);
+					name=new String(ba,i,k-i,b.strenc);
 					i=k+1;
 					s=1;
 				}
@@ -1022,7 +1059,7 @@ public final class req{
 
 			case 1:
 				if(c=='\r'){
-					final String value=new String(ba,i,(k-i),b.strenc);
+					final String value=new String(ba,i,k-i,b.strenc);
 					content.put(name,value);
 					i=k+1;
 					s=0;
@@ -1089,12 +1126,13 @@ public final class req{
 	}
 
 	void close(){
-		if(is_sock())
+		if(is_sock()){
 			try{
 				websock.on_closed();
 			}catch(final Throwable t){
 				b.log(t);
 			}
+		}
 
 		try{
 			socket_channel.close();
@@ -1121,8 +1159,9 @@ public final class req{
 	public int port(){
 		final String h=headers.get("host");
 		final String[] ha=h.split(":");
-		if(ha.length<2)
+		if(ha.length<2){
 			return 80; // ? SSL?
+		}
 		return Integer.parseInt(ha[1]);
 	}
 
@@ -1139,7 +1178,7 @@ public final class req{
 		return headers;
 	}
 
-	public String toString(){
+	@Override public String toString(){
 		return hashCode()+"\n"+new String(bb.array(),bb.position(),bb.remaining());
 //		return new String(ba,ba_pos,ba_rem)+(content_bb==null?"":new String(content_bb.slice().array()));
 	}
@@ -1149,12 +1188,14 @@ public final class req{
 	}
 
 	public static long file_and_resource_cache_size_B(){
-		if(file_and_resource_cache==null)
+		if(file_and_resource_cache==null){
 			return 0;
+		}
 		long k=0;
 		// ? sync(cachef)
-		for(final chdresp e:file_and_resource_cache.values())
+		for(final chdresp e:file_and_resource_cache.values()){
 			k+=e.byte_buffer().capacity();
+		}
 		return k;
 	}
 //	public static long cacheu_size(){
@@ -1222,9 +1263,10 @@ public final class req{
 
 //	private static Map<String,chdresp>cacheu;
 	static void init_static(){
-		if(b.cache_files)
+		if(b.cache_files){
 			file_and_resource_cache=Collections.synchronizedMap(new LinkedHashMap<String,chdresp>(b.cache_files_hashlen));
 //		if(b.cache_uris)cacheu=Collections.synchronizedMap(new LinkedHashMap<String,chdresp>());
+		}
 	}
 
 	final static byte[] h_http200="HTTP/1.1 200 OK".getBytes();

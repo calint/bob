@@ -9,7 +9,7 @@ abstract class chdresp{
 	int additional_headers_insertion_position;
 	int content_position;
 
-	final boolean etag_matches(String clientetag){
+	final boolean etag_matches(final String clientetag){
 		return etag.equals(clientetag);
 	}
 	final ByteBuffer byte_buffer(){

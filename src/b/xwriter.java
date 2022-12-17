@@ -6,18 +6,21 @@ import java.io.IOException;
 import java.io.OutputStream;
 public final class xwriter{
 	public static String enc_js_in_attr(final String text){
-		if(text==null)
+		if(text==null){
 			return "";
+		}
 		return text.replaceAll("'","\\\\'").replaceAll("\"","&quot;");
 	}
 	public static String enc_js_str(final String text){
-		if(text==null)
+		if(text==null){
 			return "";
+		}
 		return text.replaceAll("'","\\\\'");
 	}
 	public static String enc_quot(final String text){
-		if(text==null)
+		if(text==null){
 			return "";
+		}
 		return text.replaceAll("\"","&quot;");
 	}
 	private final OutputStream os;
@@ -92,14 +95,16 @@ public final class xwriter{
 	/** Renders a div tag with element content. */
 	public xwriter div_html(final a e,final String cls,final String style){
 		tago("div").attr("id",e.id());
-		if(!isempty(cls))
+		if(!isempty(cls)){
 			attr("class",cls);
-		if(!isempty(style))
+		}
+		if(!isempty(style)){
 			attr("style",style);
+		}
 		tagoe();
 		try{
 			e.to(this);
-		}catch(Throwable t){
+		}catch(final Throwable t){
 			throw new Error(t);
 		}
 		return div_();
@@ -135,12 +140,15 @@ public final class xwriter{
 	}
 	public xwriter divot(final a e,final String cls,final String style){
 		tago("div");
-		if(e!=null)
+		if(e!=null){
 			attr("id",e.id());
-		if(!isempty(cls))
+		}
+		if(!isempty(cls)){
 			attr("class",cls);
-		if(!isempty(style))
+		}
+		if(!isempty(style)){
 			attr("style",style);
+		}
 		return this;
 	}
 	public xwriter enter(){
@@ -148,8 +156,9 @@ public final class xwriter{
 	}
 	/** Called before closing being the last script dont. Used to avoid racing between DbTransaction.commit() and reloading the page. */
 	public void finish(){
-		if(xreload_requested)
+		if(xreload_requested){
 			pl("location.href=location.href");
+		}
 		xreload_requested=false;
 	}
 	public xwriter flush(){
@@ -178,12 +187,15 @@ public final class xwriter{
 	public xwriter inp(final a e,final String type,final String cls,final String style,final a on_enter_callback_elem,final String on_enter_callback,final String default_value,final a on_change_callback_elem,final String on_change_callback){
 		final String value=isempty(e.str(),default_value);
 		tago("input").attr("value",value).default_attrs_for_element(e);
-		if(!isempty(type))
+		if(!isempty(type)){
 			attr("type",type);
-		if(!isempty(cls))
+		}
+		if(!isempty(cls)){
 			attr("class",cls);
-		if(!isempty(style))
+		}
+		if(!isempty(style)){
 			attr("style",style);
+		}
 
 		if(on_enter_callback_elem!=null){
 			final StringBuilder sb=new StringBuilder(64);
@@ -197,8 +209,9 @@ public final class xwriter{
 		}
 		final StringBuilder sb=new StringBuilder(64);
 		if("checkbox".equals(type)){
-			if(value.equals(Boolean.TRUE.toString()))
+			if(value.equals(Boolean.TRUE.toString())){
 				attr("checked","checked");
+			}
 			sb.append("this.value=this.checked?'1':'0';$b(this)");
 			if(on_change_callback_elem!=null){
 				sb.append(";$x('");
@@ -225,7 +238,7 @@ public final class xwriter{
 	}
 	/**
 	 * Input field that callbacks an element while typing.
-	 * 
+	 *
 	 * @param e             the element.
 	 * @param cls           style class.
 	 * @param callback_elem element to do callback on at change.
@@ -233,13 +246,15 @@ public final class xwriter{
 	 */
 	public xwriter inpax(final a e,final String cls,final a callback_elem,final String callback){
 		tago("input").attr("value",e.toString()).default_attrs_for_element(e).attr("type","text");
-		if(!isempty(cls))
+		if(!isempty(cls)){
 			attr("class",cls);
+		}
 		attr("onfocus","this.setSelectionRange(this.value.length,this.value.length)");
 		final StringBuilder sb=new StringBuilder();
 		sb.append(callback_elem.id());
-		if(!isempty(callback))
+		if(!isempty(callback)){
 			sb.append(" ").append(enc_js_in_attr(callback));
+		}
 		final String sbs=sb.toString();
 		attr("oninput","$b(this);$x('"+sbs+"');return true;");
 		attr("onkeypress","return $r(event,this,'"+callback_elem.id()+" sel')");
@@ -282,8 +297,9 @@ public final class xwriter{
 	public xwriter inptxtarea(final a e,final String cls){
 		tago("textarea").default_attrs_for_element(e).attr("onchange","$b(this)").attr("onkeydown","$b(this)");
 
-		if(!isempty(cls))
+		if(!isempty(cls)){
 			attr("class",cls);
+		}
 		attr("wrap","off").attr("spellcheck","false").tagoe();
 		try{
 			e.to(new osltgt(outputstream()));
@@ -301,27 +317,28 @@ public final class xwriter{
 	public xwriter is(){
 		return inline_js_open();
 	}
-	public xwriter js_x(a e,boolean encode_for_attribute){
+	public xwriter js_x(final a e,final boolean encode_for_attribute){
 		return js_x(e,null,encode_for_attribute);
 	}
-	public xwriter js_x(a e,String callback){
+	public xwriter js_x(final a e,final String callback){
 		return js_x(e,callback,false);
 	}
 	/**
 	 * Renders script for a callback.
-	 * 
+	 *
 	 * @param e                    element to call
 	 * @param callback             first word is method name and remaining string is the parameter.
 	 * @param encode_for_attribute true to encode param for script in HTML attribute.
 	 */
-	public xwriter js_x(a e,String callback,boolean encode_for_attribute){
+	public xwriter js_x(final a e,final String callback,final boolean encode_for_attribute){
 		p("$x('").p(e.id());
 		if(!isempty(callback)){
 			p(" ");
-			if(encode_for_attribute)
+			if(encode_for_attribute){
 				p(enc_js_in_attr(callback));
-			else
+			}else{
 				p(enc_js_str(callback));
+			}
 		}
 		p("');");
 		return this;
@@ -339,8 +356,9 @@ public final class xwriter{
 		return li(null);
 	}
 	public xwriter li(final String cls){
-		if(isempty(cls))
+		if(isempty(cls)){
 			return li();
+		}
 		return tago("li").attr("class",cls).tagoe();
 	}
 	public xwriter nbsp(){
@@ -350,8 +368,9 @@ public final class xwriter{
 		return p('\n');
 	}
 	public xwriter nl(final int number_of_newlines){
-		for(int i=0;i<number_of_newlines;i++)
+		for(int i=0;i<number_of_newlines;i++){
 			p('\n');
+		}
 		return this;
 	}
 	public xwriter ol(){
@@ -388,8 +407,9 @@ public final class xwriter{
 		return p(Long.toString(n));
 	}
 	public xwriter p(final String s){
-		if(s==null)
+		if(s==null){
 			return this;
+		}
 		try{
 			os.write(tobytes(s));
 		}catch(final IOException e){
@@ -408,8 +428,9 @@ public final class xwriter{
 	}
 	public xwriter pre(final String cls){
 		tago("pre");
-		if(!isempty(cls))
+		if(!isempty(cls)){
 			attr("class",cls);
+		}
 		return tagoe();
 	}
 	public xwriter pre_(){
@@ -419,8 +440,9 @@ public final class xwriter{
 		return render(e);
 	}
 	public xwriter render(final a e) throws Throwable{
-		if(e==null)
+		if(e==null){
 			return this;
+		}
 		e.to(this);
 		return this;
 	}
@@ -433,7 +455,7 @@ public final class xwriter{
 	public xwriter span(final a e){
 		return span(e,null,null);
 	}
-	public xwriter span(final a e,String cls){
+	public xwriter span(final a e,final String cls){
 		return span(e,cls,null);
 	}
 	/** Renders a complete span with HTML escaped value. */
@@ -441,7 +463,7 @@ public final class xwriter{
 		spano(e,cls,style);
 		try{
 			e.to(new osltgt(os));
-		}catch(Throwable t){
+		}catch(final Throwable t){
 			throw new Error(t);
 		}
 		return span_();
@@ -456,7 +478,7 @@ public final class xwriter{
 		spano(e,cls,style);
 		try{
 			e.to(os);
-		}catch(Throwable t){
+		}catch(final Throwable t){
 			throw new RuntimeException(t);
 		}
 		return span_();
@@ -474,33 +496,35 @@ public final class xwriter{
 	public xwriter spano(final a e){
 		return spano(e,null,null);
 	}
-	public xwriter spano(final a e,String cls){
+	public xwriter spano(final a e,final String cls){
 		return spano(e,cls,null);
 	}
 	/** Renders the span tag. Must be closed with span_(). */
-	public xwriter spano(final a e,String cls,String style){
+	public xwriter spano(final a e,final String cls,final String style){
 		spanot(e,cls,style);
 		return tagoe();
 	}
 	public xwriter spanot(final a e){
 		return spanot(e,null,null);
 	}
-	public xwriter spanot(final a e,String cls){
+	public xwriter spanot(final a e,final String cls){
 		return spanot(e,cls,null);
 	}
 	/**
 	 * Opens a span tag with id, class and style allowing the appending of additional attributes. Must be closed with tagoe().
-	 * 
+	 *
 	 * @param e     the element
 	 * @param cls   the class attribute
 	 * @param style the style attribute
 	 */
-	public xwriter spanot(final a e,String cls,String style){
+	public xwriter spanot(final a e,final String cls,final String style){
 		tago("span").attr("id",e.id());
-		if(!isempty(cls))
+		if(!isempty(cls)){
 			attr("class",cls);
-		if(!isempty(style))
+		}
+		if(!isempty(style)){
 			attr("style",style);
+		}
 		return this;
 	}
 	public xwriter spc(){
@@ -523,10 +547,12 @@ public final class xwriter{
 	}
 	public xwriter table(final String cls,final String style){
 		tago("table");
-		if(!isempty(cls))
+		if(!isempty(cls)){
 			attr("class",cls);
-		if(!isempty(style))
+		}
+		if(!isempty(style)){
 			attr("style",style);
+		}
 		tagoe();
 		return this;
 	}
@@ -562,10 +588,12 @@ public final class xwriter{
 	}
 	public xwriter td(final String cls,final String style){
 		tago("td");
-		if(!isempty(cls))
+		if(!isempty(cls)){
 			attr("class",cls);
-		if(!isempty(style))
+		}
+		if(!isempty(style)){
 			attr("style",style);
+		}
 		return tagoe();
 	}
 	public xwriter td_(){
@@ -580,8 +608,9 @@ public final class xwriter{
 	}
 	public xwriter th(final String cls){
 		tago("th");
-		if(!isempty(cls))
+		if(!isempty(cls)){
 			attr("class",cls);
+		}
 		return tagoe();
 	}
 	public xwriter th_(){
@@ -590,7 +619,7 @@ public final class xwriter{
 	public xwriter title(final String title){
 		return tag("title").p(title).tage("title");
 	}
-	public String toString(){
+	@Override public String toString(){
 		return os.toString();
 	}
 	public xwriter tr(){
@@ -598,8 +627,9 @@ public final class xwriter{
 	}
 	public xwriter tr(final String cls){
 		tago("tr");
-		if(!isempty(cls))
+		if(!isempty(cls)){
 			attr("class",cls);
+		}
 		return tagoe();
 	}
 	public xwriter tr_(){
@@ -610,8 +640,9 @@ public final class xwriter{
 	}
 	public xwriter ul(final String cls){
 		tago("ul");
-		if(!isempty(cls))
+		if(!isempty(cls)){
 			attr("class",cls);
+		}
 		return tagoe();
 	}
 	public xwriter ul_(){
@@ -643,7 +674,7 @@ public final class xwriter{
 	}
 	/** Updates inner HTML of elements e... */
 	public xwriter xu(final a...es) throws Throwable{
-		for(a e:es){
+		for(final a e:es){
 			e.to(xub(e,true,false));
 			xube();
 		}
@@ -651,7 +682,7 @@ public final class xwriter{
 	}
 	/**
 	 * Updates inner HTML of element.
-	 * 
+	 *
 	 * @param e       element
 	 * @param escltgt true to escape lt and gt.
 	 */
