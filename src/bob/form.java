@@ -10,13 +10,16 @@ public abstract class form extends a implements titled {
 	protected String parent_id;
 	/** Object id. */
 	protected String object_id;
+	public action_saveclose asc;
+	public action_save as;
+	public action_close ac;
 
 	public form(String parent_id, String object_id) {
 		this.parent_id = parent_id;
 		this.object_id = object_id;
-		ans.add(new action_saveclose());
-		ans.add(new action_save());
-		ans.add(new action_close());
+//		ans.add(new action_saveclose());
+//		ans.add(new action_save());
+//		ans.add(new action_close());
 	}
 
 	public final String getParentId() {
@@ -29,9 +32,14 @@ public abstract class form extends a implements titled {
 
 	@Override
 	public final void to(xwriter x) throws Throwable {
-		render(x);
-		x.nl().nl();	
 		x.divh(ans);
+		render(x);
+		x.nl().nl();
+		asc.to(x);
+		x.p(" • ");
+		as.to(x);
+		x.p(" • ");
+		ac.to(x);		
 	}
 
 	@Override
@@ -50,8 +58,15 @@ public abstract class form extends a implements titled {
 			super.bubble_event(x, this, "close");
 			return;
 		}
+		if (from instanceof action) {
+			onAction(x, (action) from);
+			return;
+		}
 		// event unknown by this element, bubble to parent
 		super.bubble_event(x, from, o);
+	}
+
+	protected void onAction(xwriter x, action action) {
 	}
 
 	protected abstract void render(xwriter x) throws Throwable;
