@@ -21,9 +21,9 @@ public class form_mock extends form {
 
 	public a title;
 
-	public form_mock(String pid, String oid, String init) {
-		super(pid, oid);
-		title.set(oid == null ? init : oid);
+	public form_mock(String parent_id, String object_id, String init_str) {
+		super(parent_id, object_id);
+		title.set(object_id == null ? init_str : object_id);
 	}
 
 	public String getTitle() {

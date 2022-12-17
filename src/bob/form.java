@@ -7,8 +7,8 @@ import b.xwriter;
 
 public abstract class form extends a implements titled {
 	static final long serialVersionUID = 1;
-	public container ans; // actions
-	public container scc; // save and close, save and close container
+	public container ans; // actions container
+	public container scc; // save and close, save and close actions container
 	/** Parent object id. */
 	protected String parent_id;
 	/** Object id. */
