@@ -6,8 +6,6 @@ cd $DIR
 IPS=$(cat cluster-ips.txt | sed -r '/^\s*$/d' | sed -r '/^\s*#/d')
 
 for IP in $IPS; do
-#	CMD='cd /bob && git add * && git stash && git pull https://github.com/calint/bob && ./build.sh'
-#	CMD='cd /bob && git add -A . && git stash && git pull https://github.com/calint/bob && ./build.sh'
 	CMD='cd /bob && git fetch && git reset --hard HEAD && git merge '@{u}' && ./build.sh'
 
 	echo $IP: $CMD
