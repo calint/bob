@@ -28,17 +28,6 @@ public class controller extends a {
 	}
 
 	public void to(final xwriter x) throws Throwable {
-		x.style();
-		x.css("table.f", "margin-left:auto;margin-right:auto;text-align:left");
-		x.css("table.f tr:first-child", "border:0;border-bottom:1px solid green;border-top:1px solid #070");
-		x.css("table.f tr:last-child", "border:0;border-bottom:1px solid #040");
-		x.css("table.f th",
-				"padding:.5em;text-align:left;background:#fefefe;color:black;border-bottom:1px solid green");
-		x.css("table.f td",
-				"padding:.5em;vertical-align:middle;border-left:1px dotted #ccc;border-bottom:1px dotted #ccc");
-		x.css("table.f td:first-child", "border-left:0");
-//		x.css(q,"background:yellow;border:1px dotted #555;width:13em;margin:1em;padding:.2em");
-		x.style_();
 		x.divh(bc);
 		x.nl();
 		final a active_elem = bc.getActive();
