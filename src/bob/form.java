@@ -7,6 +7,13 @@ import b.xwriter;
 
 public abstract class form extends a implements titled {
 	static final long serialVersionUID = 1;
+
+	public final static int BIT_SAVE_CLOSE = 1;
+	public final static int BIT_SAVE = 2;
+	public final static int BIT_CLOSE = 4;
+	/** The actions that are enabled on the form. */
+	protected int enabled_form_bits;
+
 	public container ans; // actions container
 	public container scc; // save and close, save and close actions container
 	/** Parent object id. */
@@ -14,12 +21,16 @@ public abstract class form extends a implements titled {
 	/** Object id. */
 	protected String object_id;
 
-	public form(String parent_id, String object_id) {
+	public form(String parent_id, String object_id, int enabled_form_bits) {
 		this.parent_id = parent_id;
 		this.object_id = object_id;
-		scc.add(new action("save and clode", "sc"));
-		scc.add(new action("save", "s"));
-		scc.add(new action("close", "c"));
+		this.enabled_form_bits = enabled_form_bits;
+		if ((enabled_form_bits & BIT_SAVE_CLOSE) != 0)
+			scc.add(new action("save and clode", "sc"));
+		if ((enabled_form_bits & BIT_SAVE) != 0)
+			scc.add(new action("save", "s"));
+		if ((enabled_form_bits & BIT_CLOSE) != 0)
+			scc.add(new action("close", "c"));
 		final List<action> actions = getActionsList();
 		if (actions == null)
 			return;
@@ -49,15 +60,15 @@ public abstract class form extends a implements titled {
 	protected void bubble_event(xwriter x, a from, Object o) throws Throwable {
 		if (from instanceof action) {
 			final String code = ((action) from).code();
-			if ("sc".equals(code)) {
+			if ("sc".equals(code) && (enabled_form_bits & BIT_SAVE_CLOSE) != 0) {
 				save(x);
 				super.bubble_event(x, this, "close");
 				return;
-			} else if ("s".endsWith(code)) {
+			} else if ("s".endsWith(code) && (enabled_form_bits & BIT_SAVE) != 0) {
 				save(x);
 				super.bubble_event(x, this, "updated");
 				return;
-			} else if ("c".equals(code)) {
+			} else if ("c".equals(code) && (enabled_form_bits & BIT_CLOSE) != 0) {
 				super.bubble_event(x, this, "close");
 				return;
 			}

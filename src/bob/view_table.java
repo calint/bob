@@ -9,6 +9,11 @@ import b.xwriter;
 
 public abstract class view_table extends view {
 	static final long serialVersionUID = 1;
+	
+	public final static int BIT_CLICK_ITEM = 1;
+	/** The actions that are enabled in the table. */
+	protected int enabled_table_bits;
+
 	public container ans; // actions
 	public a q; // query field
 	public table t; // the table
@@ -16,7 +21,7 @@ public abstract class view_table extends view {
 	public final static class table extends a {
 		static final long serialVersionUID = 1;
 		public container cbs; // checkboxes
-		private view_table tv;
+		private view_table tv; // the parent
 		private final HashSet<String> selectedIds = new HashSet<String>();
 
 		public void setTableView(view_table tv) {
@@ -26,7 +31,9 @@ public abstract class view_table extends view {
 		public void to(final xwriter x) throws Throwable {
 			final List<?> ls = tv.getObjectsList();
 			x.table("f").nl();
-			x.tr().th();
+			x.tr();
+			if ((tv.enabled_view_bits & BIT_SELECT) != 0)
+				x.th();
 			x.th().p("Name");
 			tv.renderHeaders(x);
 			x.nl();
@@ -34,15 +41,22 @@ public abstract class view_table extends view {
 			cbs.elements().clear();
 			for (final Object o : ls) {
 				final String id = tv.getIdFrom(o);
-				x.tr().td();
-				final checkbox cb = new checkbox(id, selectedIds.contains(id));
-				// add to container where the element will get a name unique in the context.
-				// the parent of the checkbox will be the container.
-				cbs.add(cb);
-				// checkbox now has parent and name. render it.
-				cb.to(x);
+				x.tr();
+				if ((tv.enabled_view_bits & BIT_SELECT) != 0) {
+					x.td();
+					final checkbox cb = new checkbox(id, selectedIds.contains(id));
+					// add to container where the element will get a name unique in the context.
+					// the parent of the checkbox will be the container.
+					cbs.add(cb);
+					// checkbox now has parent and name. render it.
+					cb.to(x);
+				}
 				x.td();
-				x.ax(this, "clk " + id, tv.getNameFrom(o));
+				final String nm = tv.getNameFrom(o);
+				if ((tv.enabled_table_bits & BIT_CLICK_ITEM) != 0)
+					x.ax(this, "clk " + id, nm);
+				else
+					x.p(nm);
 				tv.renderRowCells(x, o);
 				x.nl();
 			}
@@ -51,16 +65,18 @@ public abstract class view_table extends view {
 
 		protected void bubble_event(xwriter js, a from, Object o) throws Throwable {
 			// event bubbled from child
-			if (from instanceof checkbox) {
-				final String id = ((checkbox) from).getId();
-				if ("checked".equals(o)) {
+			if ((tv.enabled_view_bits & BIT_SELECT) != 0) {
+				if (from instanceof checkbox) {
+					final String id = ((checkbox) from).getId();
+					if ("checked".equals(o)) {
 //					System.out.println("selected: "+id);
-					selectedIds.add(id);
-					return;
-				} else if ("unchecked".equals(o)) {
+						selectedIds.add(id);
+						return;
+					} else if ("unchecked".equals(o)) {
 //					System.out.println("unselected: "+id);
-					selectedIds.remove(id);
-					return;
+						selectedIds.remove(id);
+						return;
+					}
 				}
 			}
 			// event unknown by this element, bubble to parent
@@ -73,10 +89,14 @@ public abstract class view_table extends view {
 		}
 	}
 
-	public view_table() {
+	public view_table(int view_bits, int table_bits) {
+		super(view_bits);
+		enabled_table_bits = table_bits;
 		t.setTableView(this);
-		ans.add(new action("create", "create"));
-		ans.add(new action("delete", "delete"));
+		if ((enabled_view_bits & BIT_CREATE) != 0)
+			ans.add(new action("create", "create"));
+		if ((enabled_view_bits & BIT_DELETE) != 0)
+			ans.add(new action("delete", "delete"));
 		final List<action> actions = getActionsList();
 		if (actions == null)
 			return;
@@ -90,11 +110,17 @@ public abstract class view_table extends view {
 		x.style();
 		x.css(q, "background:yellow;border:1px dotted #555;width:13em;margin:1em;padding:.2em");
 		x.style_();
-		x.divh(ans);
+		if (!ans.elements().isEmpty()) {
+			x.divh(ans);
+			if ((enabled_view_bits & BIT_SEARCH) == 0) {
+				x.nl();
+			}
+		}
 //		x.ax(this, "up", "••");
-		x.inpax(q, null, this, "q", "new");
-//		x.is().p("$f('").p(q.id()).p("')").is_();
-		x.is().xfocus(q).is_();
+		if ((enabled_view_bits & BIT_SEARCH) != 0) {
+			x.inpax(q, null, this, "q", "new");
+			x.is().xfocus(q).is_();
+		}
 		x.divh(t);
 	}
 
@@ -106,7 +132,7 @@ public abstract class view_table extends view {
 				onActionCreate(x, q.str());
 				return;
 			} else if ("delete".equals(code)) {
-				if(getSelectedIds().isEmpty()) {
+				if (getSelectedIds().isEmpty()) {
 					x.xalert("No items selected.");
 					return;
 				}

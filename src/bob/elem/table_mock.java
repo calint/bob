@@ -12,6 +12,10 @@ import bob.view_table;
 public class table_mock extends view_table {
 	static final long serialVersionUID = 1;
 
+	public table_mock() {
+		super(BIT_CREATE | BIT_DELETE | BIT_SELECT | BIT_SEARCH, BIT_CLICK_ITEM);
+	}
+
 	public String getTitle() {
 		return "Mock files";
 	}

@@ -9,6 +9,29 @@ import b.xwriter;
 public abstract class view extends a implements titled {
 	static final long serialVersionUID = 1;
 
+	public final static int BIT_CREATE = 1;
+	public final static int BIT_DELETE = 2;
+	public final static int BIT_SEARCH = 4;
+	public final static int BIT_SELECT = 8;
+	/** The actions that are enabled in the view. */
+	protected int enabled_view_bits;
+
+	public view(int enabled_bits) {
+		this.enabled_view_bits = enabled_bits;
+	}
+//
+//	protected final void enable(int bit) {
+//		enabled_bits |= bit;
+//	}
+//
+//	protected final void disable(int bit) {
+//		enabled_bits &= ~bit;
+//	}
+
+//	protected final boolean isEnabled(int bit) {
+//		return (enabled_bits & bit) == bit;
+//	}
+
 	protected List<action> getActionsList() {
 		return null;
 	}
