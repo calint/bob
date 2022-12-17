@@ -29,9 +29,9 @@ public abstract class form extends a implements titled {
 
 	@Override
 	public final void to(xwriter x) throws Throwable {
-		x.divh(ans);
-		x.nl();
 		render(x);
+		x.nl().nl();	
+		x.divh(ans);
 	}
 
 	@Override
