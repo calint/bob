@@ -11,8 +11,8 @@ import b.xwriter;
 
 final public class sock extends websock{
 	private final static String axfld="$";
-	public String root_class_name="bob.root";
-	protected a root;
+	public String controller_class_name="bob.controller";
+	protected a controller;
 
 	public sock(){
 		super(true);
@@ -22,14 +22,14 @@ final public class sock extends websock{
 //		System.out.println("websocket "+Integer.toHexString(hashCode())+": on_opened");
 
 		// todo load root from db or create new
-		root=(a)Class.forName(root_class_name).getConstructor().newInstance();
+		controller=(a)Class.forName(controller_class_name).getConstructor().newInstance();
 
-		final xwriter xjs=new xwriter();
-		xwriter x=xjs.xub(root,true,false);
-		root.to(x);
-		xjs.xube();
+		final xwriter js=new xwriter();
+		xwriter x=js.xub(controller,true,false);
+		controller.to(x);
+		js.xube();
 		
-		send(xjs.toString());
+		send(js.toString());
 	}
 
 	final @Override protected void on_message(ByteBuffer bb) throws Throwable{
@@ -49,7 +49,7 @@ final public class sock extends websock{
 			}
 			// ? indexofloop
 			final String[] paths=me.getKey().split(a.id_path_separator);
-			a e=root;
+			a e=controller;
 			for(int n=1;n<paths.length;n++){
 				e=e.child(paths[n]);
 				if(e==null)
@@ -79,7 +79,7 @@ final public class sock extends websock{
 		}
 		// navigate to the target element
 		final String[] path=target_elem_id.split(a.id_path_separator);// ? indexofloop
-		a target_elem=root;
+		a target_elem=controller;
 		for(int n=1;n<path.length;n++){
 			target_elem=target_elem.child(path[n]);
 			if(target_elem==null)

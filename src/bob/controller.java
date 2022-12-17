@@ -11,7 +11,7 @@ import b.req;
 import b.xwriter;
 import bob.elem.table_mock;
 
-public class root extends a {
+public class controller extends a {
 	static final long serialVersionUID = 1;
 	public a s; // serialized size
 	public a sg; // serialized, gziped size
@@ -20,7 +20,7 @@ public class root extends a {
 	public a ae; // active view
 //	public a test;
 
-	public root() throws IOException {
+	public controller() throws IOException {
 		update_serialized_size();
 		update_server_info();
 		bc.add(new table_mock());

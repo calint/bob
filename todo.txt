@@ -11,7 +11,6 @@ b
 [ ]   b: request queue, thread pool
 [ ]   dbo: connection pool
 [ ] cluster: health-check the database
-[ ] remove package c
 [ ] Content-disposition: attachment; filename=file.txt
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 dbo
@@ -71,6 +70,7 @@ dbo
 [ ]   ms sql server?
 [ ]   ibm db2?
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
+[x] remove package c
 [x] req state to enum
 [x] page that does not save state or access session
 [x]   annotation regarding transaction and state saving, @stateless does not initiate transaction or reads/writes path object
