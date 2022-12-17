@@ -93,6 +93,7 @@ public abstract class form extends a implements titled {
 
 	protected abstract void render(xwriter x) throws Throwable;
 
-	protected abstract void save(xwriter x) throws Throwable;
+	protected void save(xwriter x) throws Throwable {
+	}
 
 }

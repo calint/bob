@@ -1,6 +1,5 @@
 package bob;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -14,114 +13,42 @@ public abstract class view_table extends view {
 	/** The actions that are enabled in the table. */
 	final protected int enabled_table_bits;
 
-	public container ans; // actions
+	public container ac; // actions
 	public a q; // query field
 	public table t; // the table
-
-	public final static class table extends a {
-		static final long serialVersionUID = 1;
-		public container cbs; // checkboxes
-		private view_table tv; // the parent
-		private final HashSet<String> selectedIds = new HashSet<String>();
-
-		public void setTableView(view_table tv) {
-			this.tv = tv;
-		}
-
-		public void to(final xwriter x) throws Throwable {
-			final List<?> ls = tv.getObjectsList();
-			x.table("f").nl();
-			x.tr();
-			if ((tv.enabled_view_bits & BIT_SELECT) != 0)
-				x.th();
-			x.th().p("Name");
-			tv.renderHeaders(x);
-			x.nl();
-
-			cbs.elements().clear();
-			for (final Object o : ls) {
-				final String id = tv.getIdFrom(o);
-				x.tr();
-				if ((tv.enabled_view_bits & BIT_SELECT) != 0) {
-					x.td();
-					final checkbox cb = new checkbox(id, selectedIds.contains(id));
-					// add to container where the element will get a name unique in the context.
-					// the parent of the checkbox will be the container.
-					cbs.add(cb);
-					// checkbox now has parent and name. render it.
-					cb.to(x);
-				}
-				x.td();
-				final String nm = tv.getNameFrom(o);
-				if ((tv.enabled_table_bits & BIT_CLICK_ITEM) != 0)
-					x.ax(this, "clk " + id, nm);
-				else
-					x.p(nm);
-				tv.renderRowCells(x, o);
-				x.nl();
-			}
-			x.table_();
-		}
-
-		protected void bubble_event(xwriter js, a from, Object o) throws Throwable {
-			// event bubbled from child
-			if ((tv.enabled_view_bits & BIT_SELECT) != 0) {
-				if (from instanceof checkbox) {
-					final String id = ((checkbox) from).getId();
-					if ("checked".equals(o)) {
-//					System.out.println("selected: "+id);
-						selectedIds.add(id);
-						return;
-					} else if ("unchecked".equals(o)) {
-//					System.out.println("unselected: "+id);
-						selectedIds.remove(id);
-						return;
-					}
-				}
-			}
-			// event unknown by this element, bubble to parent
-			super.bubble_event(js, from, o);
-		}
-
-		/** Callback for click on row. */
-		public void x_clk(xwriter x, String s) throws Throwable {
-			if ((tv.enabled_table_bits & BIT_CLICK_ITEM) != 0)
-				tv.onRowClick(x, s);
-		}
-	}
 
 	public view_table(int view_bits, int table_bits) {
 		super(view_bits);
 		enabled_table_bits = table_bits;
 		t.setTableView(this);
-		// ? enbabled bit cannot be changed dynamically
 		if ((enabled_view_bits & BIT_CREATE) != 0)
-			ans.add(new action("create", "create"));
+			ac.add(new action("create", "create"));
 		if ((enabled_view_bits & BIT_DELETE) != 0)
-			ans.add(new action("delete", "delete"));
+			ac.add(new action("delete", "delete"));
 		final List<action> actions = getActionsList();
 		if (actions == null)
 			return;
 		for (action a : actions) {
-			ans.add(a);
+			ac.add(a);
 		}
 	}
 
 	@Override
 	public final void to(final xwriter x) throws Throwable {
-		x.style();
-		x.css("table.f", "margin-left:auto;margin-right:auto;text-align:left");
-		x.css("table.f tr:first-child", "border:0;border-bottom:1px solid green;border-top:1px solid #070");
-		x.css("table.f tr:last-child", "border:0;border-bottom:1px solid #040");
-		x.css("table.f th",
-				"padding:.5em;text-align:left;background:#fefefe;color:black;border-bottom:1px solid green");
-		x.css("table.f td",
-				"padding:.5em;vertical-align:middle;border-left:1px dotted #ccc;border-bottom:1px dotted #ccc");
-		x.css("table.f td:first-child", "border-left:0");
-		x.css(q, "background:yellow;border:1px dotted #555;width:13em;margin:1em;padding:.2em");
-		x.style_();
-		if (!ans.elements().isEmpty()) {
-			x.divh(ans);
+//		x.style();
+//		x.css("table.f", "margin-left:auto;margin-right:auto;text-align:left");
+//		x.css("table.f tr:first-child", "border:0;border-bottom:1px solid green;border-top:1px solid #070");
+//		x.css("table.f tr:last-child", "border:0;border-bottom:1px solid #040");
+//		x.css("table.f th",
+//				"padding:.5em;text-align:left;background:#fefefe;color:black;border-bottom:1px solid green");
+//		x.css("table.f td",
+//				"padding:.5em;vertical-align:middle;border-left:1px dotted #ccc;border-bottom:1px dotted #ccc");
+//		x.css("table.f td:first-child", "border-left:0");
+//		x.css(q, "background:yellow;border:1px dotted #555;width:13em;margin:1em;padding:.2em");
+//		x.style_();
+		if (!ac.elements().isEmpty()) {
+			x.nl();
+			x.divh(ac);
 			if ((enabled_view_bits & BIT_SEARCH) == 0) {
 				x.nl();
 			}
@@ -171,8 +98,16 @@ public abstract class view_table extends view {
 	}
 
 	@Override
-	protected final Set<String> getSelectedIds() {
-		return t.selectedIds;
+	protected Set<String> getSelectedIds() {
+		return t.getSelectedIds();
+	}
+
+	@Override
+	protected void onActionCreate(xwriter x, String init_str) throws Throwable {
+	}
+
+	@Override
+	protected void onActionDelete(xwriter x) throws Throwable {
 	}
 
 	protected abstract void renderHeaders(xwriter x);
