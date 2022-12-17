@@ -365,7 +365,7 @@ public final class DbClass {
 		final ResultSet rs = dbm.getIndexInfo(null, null, tableName, false, false);
 		while (rs.next()) {
 			final String indexName = rs.getString("INDEX_NAME");
-			if (indexName.equals("PRIMARY")) { // mysql added index on id
+			if ("PRIMARY".equals(indexName)) { // mysql added index on id
 				continue;
 			}
 			indexes.add(indexName);

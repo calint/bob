@@ -205,7 +205,7 @@ public final class Cluster {
 	}
 
 	public static String stacktraceline(final Throwable e) {
-		return stacktrace(e).replace('\n', ' ').replace('\r', ' ').replaceAll("\\s+", " ").replaceAll(" at ", " @ ");
+		return stacktrace(e).replace('\n', ' ').replace('\r', ' ').replaceAll("\\s+", " ").replace(" at ", " @ ");
 	}
 
 	private static int execSql(final String sql) {
