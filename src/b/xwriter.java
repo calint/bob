@@ -172,14 +172,14 @@ public final class xwriter{
 	public xwriter hr(){
 		return tag("hr");
 	}
-	/** Closes inline script tag. */
-	public xwriter inline_js_close(){
-		return tage("is");
-	}
-	/** Opens a tag for inline script that is executed on the client side. The script is collected in a list from the response message and executed after the field has been set. */
-	public xwriter inline_js_open(){
-		return tag("is");
-	}
+//	/** Closes inline script tag. */
+//	public xwriter inline_js_close(){
+//		return tage("is");
+//	}
+//	/** Opens a tag for inline script that is executed on the client side. The script is collected in a list from the response message and executed after the field has been set. */
+//	public xwriter inline_js_open(){
+//		return tag("is");
+//	}
 	// ? review this
 	public xwriter inp(final a e,final String type,final String cls,final String style,final a on_enter_callback_elem,final String on_enter_callback,final String default_value,final a on_change_callback_elem,final String on_change_callback){
 		final String value=isempty(e.str(),default_value);
@@ -306,14 +306,14 @@ public final class xwriter{
 		}
 		return tage("textarea");
 	}
-	/** Alias for inline_js_close() */
-	public xwriter is_(){
-		return inline_js_close();
-	}
-	/** Alias for inline_js_open() */
-	public xwriter is(){
-		return inline_js_open();
-	}
+//	/** Alias for inline_js_close() */
+//	public xwriter is_(){
+//		return inline_js_close();
+//	}
+//	/** Alias for inline_js_open() */
+//	public xwriter is(){
+//		return inline_js_open();
+//	}
 	public xwriter js_x(final a e,final boolean encode_for_attribute){
 		return js_x(e,null,encode_for_attribute);
 	}

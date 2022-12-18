@@ -5,9 +5,9 @@ $=function(eid){return document.getElementById(eid);}
 $d=function(v){console.log(v);}
 $s=function(eid,txt){
 	// extract inline script
-	const tag_bgn='<is>';
+	const tag_bgn='<script>';
 	const tag_bgn_len=tag_bgn.length;
-	const tag_end='</is>';
+	const tag_end='</script>';
 	const tag_end_len=tag_end.length;
 	const inlines=[];
 	let i=0;

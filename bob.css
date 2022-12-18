@@ -7,8 +7,7 @@ a,a:visited{text-decoration:none;color:#00a;transition:all .3s ease-in-out}
 a:focus,a:hover,a:active{color:green;text-shadow:0 0 1em rgba(0,0,0,.7)}
 em{font-weight:bold}
 input{padding:.5em;border:1px dotted green}
-#\- {text-align:center}
-
+div.disp{text-align:center}
 /** bob.view_table.table */	
 table.f{
 	margin-left:auto;

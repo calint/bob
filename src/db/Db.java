@@ -195,12 +195,12 @@ public final class Db {
 //		if (!stmtIsClosed)
 //			throw new RuntimeException(
 //					"Statement should be closed here. DbTransaction.finishTransaction() not called?");
+		tn.remove();
 		if (connection_is_ok) {
 			synchronized (conpool) {
 				conpool.addFirst(tx.pooledCon);
 				conpool.notify();
 			}
-			tn.remove();
 			return;
 		}
 		// this connection threw exception while deinit. make a new one
@@ -210,7 +210,6 @@ public final class Db {
 			conpool.addFirst(pc);
 			conpool.notify();
 		}
-		tn.remove();
 	}
 
 	public static void log(Throwable t) {

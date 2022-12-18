@@ -47,7 +47,7 @@ public abstract class view_table extends view {
 		}
 		if ((enabled_view_bits & BIT_SEARCH) != 0) {
 			x.inpax(q, "query", this, "q", "new");
-			x.is().xfocus(q).is_();
+			x.script().xfocus(q).script_();
 		}
 		x.divh(t);
 	}

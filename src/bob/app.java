@@ -38,6 +38,8 @@ public final class app implements bapp {
 
 		b.b.set_path_to_class("/bob/websocket", bob.websock_bob.class);
 		b.b.set_path_to_class("/stats", b.a_stats.class);
+		b.b.set_path_to_class("/pbob", bob.controller_postback.class);
+//		b.b.set_path_to_class("/bob", bob.elem.ctrl.class);
 
 		// qa
 		b.b.set_path_to_class("/b/test/t1", b.test.t1.class);

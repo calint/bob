@@ -1,16 +1,24 @@
-debug_set=true;
-debug_js=true;
-debug_verbose=false;
-
-
 ui={}
 ui.is_dbg=true;
+ui.is_dbg_set=true;
+ui.is_dbg_verbose=false;
+ui.is_dbg_js=true;
 ui.axconwait=false;
 $=function(eid){return document.getElementById(eid);}
 $d=function(v){console.log(v);}
 $s=function(eid,txt){
 	const e=$(eid);
-	if(debug_set)$d(eid+'{'+txt+'}');
+	if(ui.is_dbg_set)$d(eid+'{'+txt+'}');
+	if(!e){$d(eid+' notfound');return;}
+	if(e.nodeName=="INPUT"||e.nodeName=="TEXTAREA"||e.nodeName=="OUTPUT"){
+		e.value=txt;
+	}else{
+		e.innerHTML=txt;
+	}
+}
+$sv=function(eid,txt){
+	const e=$(eid);
+	if(ui.is_dbg_set)$d(eid+'{'+txt+'}');
 	if(!e){$d(eid+' notfound');return;}
 	if(e.nodeName=="INPUT"||e.nodeName=="TEXTAREA"||e.nodeName=="OUTPUT"){
 		e.value=txt;
@@ -22,7 +30,7 @@ $s=function(eid,txt){
 	}
 }
 $o=function(eid,txt){
-	if(debug_set)$d(eid+'={'+txt+'}');
+	if(ui.is_dbg_set)$d(eid+'={'+txt+'}');
 	const e=$(eid);if(!e)return;e.outerHTML=txt;
 }
 $p=function(eid,txt){
@@ -39,7 +47,13 @@ $p=function(eid,txt){
 //$l=function(){if(ui.keys)document.onkeyup=ui.onkey;}
 $a=function(eid,a,v){$(eid).setAttribute(a,v);}
 $r=function(ev,ths,axpb){if(!ev)ev=window.event;$b(ths);if(ev.keyCode!=13)return true;$x(axpb);return false;}
-$f=function(eid){const e=$(eid);if(!e)return;if(e.focus)e.focus();/*if(e.select)e.select();*/}
+$f=function(eid){
+	const e=$(eid);
+	if(!e)return;
+	if(e.focus)e.focus();
+	if(e.setSelectionRange)e.setSelectionRange(e.value.length,e.value.length);
+	/*if(e.select)e.select();*/
+}
 $t=function(s){document.title=s;}
 ui.alert=function(msg){alert(msg);}
 ui._clnfldvl=function(s){return s.replace(/\r\n/g,'\n').replace(/\r/g,'\n');}
@@ -92,7 +106,7 @@ ui._onreadystatechange=function(){
 	case 1:{// Open
 		if(this._hasopened)break;this._hasopened=true;//? firefox quirkfix1
 		$d('req open');
-		if(debug_verbose)$d(new Date().getTime()-this._t0+" * sending");
+		if(ui.is_dbg_verbose)$d(new Date().getTime()-this._t0+" * sending");
 		$s('-ajaxsts','sending '+this._pd.length+' text');
 		this.setRequestHeader('Content-Type','text/plain; charset=utf-8');
 		$d(this._pd);
@@ -119,8 +133,8 @@ ui._onreadystatechange=function(){
 			break;
 		}
 		const jscode=this.responseText.substring(this._jscodeoffset);
-		if(debug_js)$d(new Date().getTime()-this._t0+" * run "+jscode.length+" bytes");
-		if(debug_js)$d(jscode);
+		if(ui.is_dbg_js)$d(new Date().getTime()-this._t0+" * run "+jscode.length+" bytes");
+		if(ui.is_dbg_js)$d(jscode);
 		this._jscodeoffset+=jscode.length;
 		eval(jscode);
 		break;
@@ -133,8 +147,8 @@ ui._onreadystatechange=function(){
 
 		let jscode=this.responseText.substring(this._jscodeoffset);
 		if(jscode.length>0){
-			if(debug_js)$d(new Date().getTime()-this._t0+" * run "+jscode.length+" bytes");
-			if(debug_js)$d(jscode);
+			if(ui.is_dbg_js)$d(new Date().getTime()-this._t0+" * run "+jscode.length+" bytes");
+			if(ui.is_dbg_js)$d(jscode);
 			this._jscodeoffset+=jscode.length;
 			eval(jscode);
 		}
