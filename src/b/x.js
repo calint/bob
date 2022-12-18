@@ -96,12 +96,13 @@ ui.fmt_data_per_second=function(nbytes,ms){
 ui._onreadystatechange=function(){
 //	$d(" * stage "+this.readyState);
 	const elsts=$('-ajaxsts');
-	if(elsts){{const e=elsts;
+	if(elsts){
+		const e=elsts;
 		if(e._oldbg!=null){
 			e.style.background=e._oldbg;
 			delete e._oldbg;
 		}
-	}}
+	}
 	switch(this.readyState){
 	case 1:{// Open
 		if(this._hasopened)break;this._hasopened=true;//? firefox quirkfix1
@@ -109,7 +110,7 @@ ui._onreadystatechange=function(){
 		if(ui.is_dbg_verbose)$d(new Date().getTime()-this._t0+" * sending");
 		$s('-ajaxsts','sending '+this._pd.length+' text');
 		this.setRequestHeader('Content-Type','text/plain; charset=utf-8');
-		$d(this._pd);
+		$d(this._pd.replace('\r','\n'));
 		ui.req._jscodeoffset=0;
 		this.send(this._pd);
 		break;
