@@ -13,6 +13,7 @@ b
 [ ] cluster: health-check the database
 [ ] Content-disposition: attachment; filename=file.txt
 [ ] bob,b: window.scrollTo(0, document.body.scrollHeight), element.scrollTop = element.scrollHeight;
+[ ] jem: add package names that contain jem fields elements
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 dbo
 [ ] cluster client connect to database through DriverManager is slow. Class.forName and register driver.
