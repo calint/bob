@@ -10,7 +10,8 @@ public class ctrl extends controller {
 	private static final long serialVersionUID = 1L;
 
 	public ctrl() {
-//		bc.add(new table_mock());
+		m.addItem(table_files.class, "Files browser");
 		bc.add(new table_files());
+		m.addItem(table_mock.class, "Mock");
 	}
 }

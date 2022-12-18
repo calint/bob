@@ -51,6 +51,8 @@ public final class bread_crumbs extends a {
 	}
 
 	public a getActive() {
+		if (elements.isEmpty())
+			return null;
 		return elements.get(elements.size() - 1);
 	}
 
@@ -64,5 +66,9 @@ public final class bread_crumbs extends a {
 
 	public void removeLast() {
 		elements.remove(elements.size() - 1);
+	}
+
+	public void clear() {
+		elements.clear();
 	}
 }

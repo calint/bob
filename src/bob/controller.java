@@ -3,7 +3,6 @@ package bob;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
 import java.util.zip.GZIPOutputStream;
-
 import b.a;
 import b.b;
 import b.req;
@@ -16,6 +15,7 @@ public class controller extends a {
 	public a si; // server info
 	public bread_crumbs bc;
 	public a ae; // active element
+	public menu m;
 //	public a test;
 
 	public controller() {
@@ -30,7 +30,10 @@ public class controller extends a {
 	@Override
 	public void to(final xwriter x) throws Throwable {
 		x.nl();
-		x.divh(bc);
+		x.spanh(m);
+		x.spanh(bc);
+//		x.divh(m);
+//		x.divh(bc);
 		final a active_elem = bc.getActive();
 		active_elem.replace(this, ae);
 		x.divh(ae);
@@ -42,6 +45,15 @@ public class controller extends a {
 
 	@Override
 	protected void bubble_event(final xwriter x, final a from, final Object o) throws Throwable {
+		if (from == m) { // event from the menu
+			final a e = (a) ((Class<?>) o).getConstructor().newInstance();
+			bc.clear();
+			bc.add(e); // add to bread crumb
+			e.replace(this, ae); // replace active element
+			x.xu(ae); // update active element
+			x.xu(bc); // update bread crumbs
+			return;
+		}
 		if (from == bc) { // event from bread crumb
 			final a e = ((bread_crumbs) from).getActive();
 			e.replace(this, ae); // replace active element

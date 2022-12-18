@@ -471,7 +471,7 @@ public final class xwriter{
 	public xwriter span_html(final a e,final String cls,final String style){
 		spano(e,cls,style);
 		try{
-			e.to(os);
+			e.to(this);
 		}catch(final Throwable t){
 			throw new RuntimeException(t);
 		}
