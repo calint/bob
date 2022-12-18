@@ -12,6 +12,7 @@ public class ctrl extends controller {
 	public ctrl() {
 		m.addItem(table_files.class, "Files browser");
 		bc.add(new table_files());
+		m.addItem(table_dbclasses.class, "Classes");
 		m.addItem(table_mock.class, "Mock");
 	}
 }

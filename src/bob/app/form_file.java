@@ -21,8 +21,7 @@ public class form_file extends form {
 
 	@Override
 	protected void render(final xwriter x) throws Throwable {
-		x.divo((String) null,
-				"text-align:left;margin:0;margin-left:4em;margin-right:4em;padding:1em;border:1px dotted green");
+		x.divo("output");
 		pth.to(new osltgt(x.outputstream()));
 		x.div_();
 	}

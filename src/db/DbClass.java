@@ -357,6 +357,10 @@ public final class DbClass {
 		return declaredRelations;
 	}
 
+	public Class<? extends DbObject> getJavaClass() {
+		return javaClass;
+	}
+
 	void dropUndeclaredIndexes(final Statement stmt, final DatabaseMetaData dbm) throws Throwable {
 		final HashSet<String> indexes = new HashSet<String>();
 		// collect all indexes in this table

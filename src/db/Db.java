@@ -17,6 +17,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 
 /** The database. */
 public final class Db {
@@ -584,9 +585,9 @@ public final class Db {
 		return clsToDbClsMap.get(c);
 	}
 
-//	public List<DbClass> getDbClasses() {
-//		return dbclasses;
-//	}
+	public static List<DbClass> getDbClasses() {
+		return dbclasses;
+	}
 
 	/** @return the {@link DbClass} for the Java class */
 	public static DbClass getDbClassForJavaClass(final Class<? extends DbObject> cls) {

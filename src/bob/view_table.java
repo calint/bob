@@ -48,6 +48,8 @@ public abstract class view_table extends view {
 		if ((enabled_view_bits & BIT_SEARCH) != 0) {
 			x.inpax(q, "query", this, "q", "new");
 			x.script().xfocus(q).script_();
+		} else {
+			x.nl();
 		}
 		x.divh(t);
 	}
@@ -115,6 +117,10 @@ public abstract class view_table extends view {
 
 	@Override
 	protected void onActionDelete(final xwriter x) throws Throwable {
+	}
+
+	@Override
+	protected void onAction(final xwriter x, final action act) throws Throwable {
 	}
 
 	protected void renderHeaders(final xwriter x) {

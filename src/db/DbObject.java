@@ -20,7 +20,7 @@ public abstract class DbObject {
 
 	/** Alias for getId(). */
 	final public int id() {
-		return (Integer) fieldValues.get(id);
+		return getInt(id);
 	}
 
 	final public int getId() {
