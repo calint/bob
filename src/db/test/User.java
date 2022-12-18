@@ -1,9 +1,9 @@
 package db.test;
 
 import java.sql.Timestamp;
-import java.util.List;
 
 import db.DbObject;
+import db.DbObjects;
 import db.FldBool;
 import db.FldDbl;
 import db.FldFlt;
@@ -12,9 +12,6 @@ import db.FldLng;
 import db.FldStr;
 import db.FldTs;
 import db.IndexFt;
-import db.Limit;
-import db.Order;
-import db.Query;
 import db.RelAgg;
 import db.RelAggN;
 import db.RelRef;
@@ -118,17 +115,16 @@ public final class User extends DbObject {
 		return (File) files.create(this);
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public List<File> getFiles(final Query qry, final Order ord, final Limit lmt) {
-		return (List) files.get(this, qry, ord, lmt);
-	}
-
-	public int getFilesCount(final Query qry) {
-		return files.getCount(this, qry);
+	public DbObjects getFiles() {
+		return files.get(this);
 	}
 
 	public void deleteFile(final int id) {
 		files.delete(this, id);
+	}
+
+	public void deleteFile(final File o) {
+		files.delete(this, o.id());
 	}
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
@@ -170,13 +166,8 @@ public final class User extends DbObject {
 		refFiles.add(this, o.id());
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public List<File> getRefFiles(final Query qry, final Order ord, final Limit lmt) {
-		return (List) refFiles.get(this, qry, ord, lmt);
-	}
-
-	public int getRefFilesCount(final Query qry) {
-		return refFiles.getCount(this, qry);
+	public DbObjects getRefFiles() {
+		return refFiles.get(this);
 	}
 
 	public void removeRefFile(final int id) {
@@ -192,13 +183,8 @@ public final class User extends DbObject {
 		return (Game) games.create(this);
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public List<Game> getGames(final Query qry, final Order ord, final Limit lmt) {
-		return (List) games.get(this, qry, ord, lmt);
-	}
-
-	public int getGamesCount(final Query qry) {
-		return games.getCount(this, qry);
+	public DbObjects getGames() {
+		return games.get(this);
 	}
 
 	public void deleteGame(final int id) {

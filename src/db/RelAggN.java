@@ -34,20 +34,9 @@ public final class RelAggN extends DbRelation {
 		return o;
 	}
 
-	public List<DbObject> get(final DbObject ths, final Query qry, final Order ord, final Limit lmt) {
+	public DbObjects get(final DbObject ths) {
 		final Query q = new Query(ths.getClass(), ths.id()).and(this);
-		if (qry != null) {
-			q.and(qry);
-		}
-		return Db.currentTransaction().get(toCls, q, ord, lmt);
-	}
-
-	public int getCount(final DbObject ths, final Query qry) {
-		final Query q = new Query(ths.getClass(), ths.id()).and(this);
-		if (qry != null) {
-			q.and(qry);
-		}
-		return Db.currentTransaction().getCount(toCls, q);
+		return new DbObjects(null, toCls, q, null);
 	}
 
 	public void delete(final DbObject ths, final int toId) {
@@ -67,7 +56,7 @@ public final class RelAggN extends DbRelation {
 	void cascadeDelete(final DbObject ths) {
 		final DbClass dbClsTo = Db.dbClassForJavaClass(toCls);
 		if (dbClsTo.cascadeDelete) {
-			final List<DbObject> ls = get(ths, null, null, null);
+			final List<DbObject> ls = get(ths).toList();
 			for (final DbObject o : ls) {
 				Db.currentTransaction().delete(o);
 			}

@@ -1,6 +1,7 @@
 package b;
 
 import java.util.List;
+
 import db.DbObject;
 import db.Index;
 import db.Query;
@@ -22,7 +23,7 @@ public final class session extends DbObject{
 
 	public sessionobj object(final String path){
 		final Query q=new Query(sessionobj.path,Query.EQ,path);
-		final List<DbObject> ls=objects.get(this,q,null,null);
+		final List<DbObject> ls=objects.get(this).get(q).toList();
 		if(ls.isEmpty()){
 			final sessionobj e=(sessionobj)objects.create(this);
 			e.path(path);

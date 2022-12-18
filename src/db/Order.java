@@ -1,16 +1,25 @@
 package db;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
+import db.Query.TableAliasMap;
+
 /** Parameter to get(...) sorting the result list. */
-public final class Order {
-	final private static class Elem {
+public final class Order implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	final private static class Elem implements Serializable {
+		private static final long serialVersionUID = 1L;
 		String tableName;
 		String columnName;
 		String dir;
 	}
 
 	final private ArrayList<Elem> elems = new ArrayList<Elem>();
+
+	public Order() {
+	}
 
 	public Order(final DbField fld) {
 		append(fld, true);
@@ -61,5 +70,24 @@ public final class Order {
 		}
 		sb.setLength(sb.length() - 1);
 		sb.append(' ');
+	}
+
+	public Order append(final Order ord) {
+		for (final Elem e : ord.elems) {
+			final Elem ne = new Elem();
+			ne.tableName = e.tableName;
+			ne.columnName = e.columnName;
+			ne.dir = e.dir;
+			elems.add(ne);
+		}
+		return this;
+	}
+
+	@Override
+	public String toString() {
+		final TableAliasMap tam = new TableAliasMap();
+		final StringBuilder sb = new StringBuilder(256);
+		sql_appendToQuery(sb, tam);
+		return sb.toString();
 	}
 }

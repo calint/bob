@@ -4,7 +4,6 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.HashSet;
-import java.util.List;
 
 /** Association One-to-Many. */
 public final class RelRefN extends DbRelation {
@@ -36,24 +35,9 @@ public final class RelRefN extends DbRelation {
 		}
 	}
 
-//	public void add(final DbObject from, final DbObject to) {
-//		add(from, to.getId());
-//	}
-
-	public List<DbObject> get(final DbObject ths, final Query qry, final Order ord, final Limit lmt) {
+	public DbObjects get(final DbObject ths) {
 		final Query q = new Query(ths.getClass(), ths.id()).and(this);
-		if (qry != null) {
-			q.and(qry);
-		}
-		return Db.currentTransaction().get(toCls, q, ord, lmt);
-	}
-
-	public int getCount(final DbObject ths, final Query qry) {
-		final Query q = new Query(ths.getClass(), ths.id()).and(this);
-		if (qry != null) {
-			q.and(qry);
-		}
-		return Db.currentTransaction().getCount(toCls, q);
+		return new DbObjects(null, toCls, q, null);
 	}
 
 	public void remove(final DbObject from, final int toId) {

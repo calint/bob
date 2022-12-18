@@ -6,6 +6,7 @@ import java.util.List;
 import db.Db;
 import db.DbObject;
 import db.DbTransaction;
+import db.Order;
 import db.Query;
 
 /** Tests many functions. It cleans up after test. */
@@ -28,14 +29,30 @@ public class test1 extends TestCase {
 
 		final File f1 = u1.createFile();
 		final File f2 = u1.createFile();
-		n = u1.getFilesCount(null);
+		f1.setName("user file");
+		f2.setName("another user file");
+		n = u1.getFiles().getCount();
 		if (n != 2)
 			throw new RuntimeException("expected 2" + " got " + n);
 
-		f1.setName("user file");
 		n = tn.getCount(File.class, new Query(File.name, Query.EQ, "user file"));
 		if (n != 1)
 			throw new RuntimeException("expected 1. got " + n);
+
+		n = u1.getFiles().get(new Query(File.name, Query.EQ, "user file")).getCount();
+		if (n != 1)
+			throw new RuntimeException("expected 1. got " + n);
+
+		n = u1.getFiles().get(new Query(File.name, Query.EQ, "user file")).toList().size();
+		if (n != 1)
+			throw new RuntimeException("expected 1. got " + n);
+
+		final List<DbObject> ls9 = u1.getFiles().get(null, new Order(File.name)).toList();
+		if ((ls9.size() != 2) || (ls9.get(0).id() != f2.id() && ls9.get(1).id() != f1.id()))
+			throw new RuntimeException();
+
+		if (tn.cache_enabled && (ls9.get(0) != f2 && ls9.get(1) != f1))
+			throw new RuntimeException();
 
 		final Query q = new Query(User.name, Query.EQ, "user name").and(User.files).and(File.name, Query.EQ,
 				"user file");
@@ -44,27 +61,33 @@ public class test1 extends TestCase {
 			throw new RuntimeException("expected 1. got " + n);
 
 		tn.delete(f1);
-		n = u1.getFilesCount(null);
+//		n = u1.getFilesCount(null);
+		n = u1.getFiles().getCount();
 		if (n != 1)
 			throw new RuntimeException("expected 2 got " + n);
 
 		u1.deleteFile(f2.id());
-		n = u1.getFilesCount(null);
+		n = u1.getFiles().getCount();
 		if (n != 0)
 			throw new RuntimeException("expected 0 got " + n);
 
 		final File f3 = (File) tn.create(File.class);
-		n = u1.getRefFilesCount(null);
+		f3.setName("reffed file");
+		n = u1.getRefFiles().getCount();
 		if (n != 0)
 			throw new RuntimeException("expected 0 got " + n);
 
 		u1.addRefFile(f3.id());
-		n = u1.getRefFilesCount(null);
+		n = u1.getRefFiles().getCount();
+		if (n != 1)
+			throw new RuntimeException("expected 1 got " + n);
+
+		n = u1.getRefFiles().get(new Query(File.name, Query.LIKE, "reffed %")).getCount();
 		if (n != 1)
 			throw new RuntimeException("expected 1 got " + n);
 
 		tn.delete(f3);
-		n = u1.getRefFilesCount(null);
+		n = u1.getRefFiles().getCount();
 		if (n != 0)
 			throw new RuntimeException("expected 0 got " + n);
 

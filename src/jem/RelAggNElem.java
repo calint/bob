@@ -32,37 +32,16 @@ public class RelAggNElem extends ElemRel {
 		out.println("}");
 		out.println();
 
-//		@SuppressWarnings({ "unchecked", "rawtypes" }) // ? uggly
-//		public List<File> getFiles(final Query qry, final Order ord, final Limit lmt) {
-//			return (List<File>) (List) files.get(this, qry, ord, lmt);
+//		public DbObjects getFiles() {
+//			return files.get(this);
 //		}
-		final Class<? extends DbObject> toCls = ((RelAggN) rel).getToClass(); // ? ugly cast
-		final String toClsNm = toCls.getName().substring(toCls.getName().lastIndexOf('.') + 1);
-		out.println("@SuppressWarnings({\"unchecked\",\"rawtypes\"})");
-		out.print("public ");
-		out.print("List<");
-		out.print(toClsNm);
-		out.print(">");
-		out.print("get");
-		out.print(acc);
-		out.println("(final Query qry,final Order ord,final Limit lmt){");
-		out.print("\treturn(List<");
-		out.print(toClsNm);
-		out.print(">)(List)");
-		out.print(rel.getName());
-		out.println(".get(this,qry,ord,lmt);");
-		out.println("}");
-		out.println();
 
-//		public int getFilesCount(final Query qry) {
-//			return files.getCount(this, qry);
-//		}
-		out.print("public int get");
+		out.print("public DbObjects get");
 		out.print(acc);
-		out.println("Count(final Query qry){");
+		out.println("(){");
 		out.print("\treturn ");
 		out.print(rel.getName());
-		out.println(".getCount(this,qry);");
+		out.println(".get(this);");
 		out.println("}");
 		out.println();
 
@@ -78,6 +57,8 @@ public class RelAggNElem extends ElemRel {
 		out.println("}");
 		out.println();
 
+		final Class<? extends DbObject> toCls = ((RelAggN) rel).getToClass(); // ? ugly cast
+		final String toClsNm = toCls.getName().substring(toCls.getName().lastIndexOf('.') + 1);
 		out.print("public void delete");
 		out.print(accSing);
 		out.print("(final ");

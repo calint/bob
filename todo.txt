@@ -16,7 +16,6 @@ b
 [ ] jem: add package names that contain additional jem fields elements
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 dbo
-[ ] class DbObjects filter(...) sort(...) limit(...) asList() count()
 [ ] cluster client connect to database through DriverManager is slow. Class.forName and register driver.
 [ ] cluster hangs when droplet is destroyed
 [o] review code. search for "// todo" "// !" "// ?"
@@ -103,6 +102,7 @@ dbo
 [x] try b with 1B input buffer
 [x] try b with socket small in/out buffers
 -------------------------------------------------------------------------------
+[x] class DbObjects filter(...) sort(...) limit(...) asList() count()
 [x] better connection pool
 [x]   thread safe
 [x]   wait if connection pool is empty or create new connections? wait.

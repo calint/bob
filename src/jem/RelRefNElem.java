@@ -42,35 +42,16 @@ public class RelRefNElem extends ElemRel {
 		out.println("}");
 		out.println();
 
-//		@SuppressWarnings({ "unchecked", "rawtypes" })
-//		public List<File> getRefFiles(final Query qry, final Order ord, final Limit lmt) {
-//			return (List<File>) (List) refFiles.get(this, qry, ord, lmt);
+//		public DbObjects getRefFiles() {
+//			return refFiles.get(this);
 //		}
-		out.println("@SuppressWarnings({ \"unchecked\", \"rawtypes\" })");
-		out.print("public ");
-		out.print("List<");
-		out.print(toClsNm);
-		out.print(">");
-		out.print("get");
-		out.print(acc);
-		out.println("(final Query qry,final Order ord,final Limit lmt){");
-		out.print("\treturn(List<");
-		out.print(toClsNm);
-		out.print(">)(List)");
-		out.print(rel.getName());
-		out.println(".get(this,qry,ord,lmt);");
-		out.println("}");
-		out.println();
 
-//		public int getRefFilesCount(final Query qry) {
-//			return refFiles.getCount(this, qry);
-//		}
-		out.print("public int get");
+		out.print("public DbObjects get");
 		out.print(acc);
-		out.println("Count(final Query qry){");
+		out.println("(){");
 		out.print("\treturn ");
 		out.print(rel.getName());
-		out.println(".getCount(this,qry);");
+		out.println(".get(this);");
 		out.println("}");
 		out.println();
 
