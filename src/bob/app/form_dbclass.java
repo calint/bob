@@ -1,5 +1,6 @@
 package bob.app;
 
+import b.osltgt;
 import b.xwriter;
 import bob.form;
 import db.DbClass;
@@ -7,21 +8,21 @@ import db.DbClass;
 public class form_dbclass extends form {
 	private static final long serialVersionUID = 1L;
 
-	private final DbClass dbclass;
+	private final String javaClassName;
 
 	public form_dbclass(final DbClass dbclass) {
 		super(null, dbclass.getJavaClass().getName(), BIT_CLOSE);
-		this.dbclass = dbclass;
+		javaClassName = dbclass.getJavaClass().getName();
 	}
 
 	public String getTitle() {
-		return dbclass.getJavaClass().getName();
+		return javaClassName;
 	}
 
 	@Override
 	protected void render(final xwriter x) throws Throwable {
 		x.divo("output");
-		jem.Main.main(dbclass.getJavaClass().getName(), x.outputstream());
+		jem.Main.main(javaClassName, new osltgt(x.outputstream()));
 		x.div_();
 	}
 }
