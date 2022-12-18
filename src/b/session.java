@@ -1,7 +1,6 @@
 package b;
 
 import java.util.List;
-
 import db.DbObject;
 import db.Index;
 import db.Query;

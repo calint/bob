@@ -943,7 +943,7 @@ public final class req{
 			}catch(final NoSuchMethodException t){
 				x.xalert("method not found:\n"+target_elem.getClass().getName()+".x_"+target_elem_method+"(xwriter,String)");
 			}
-			if(tn!=null) {
+			if(tn!=null){
 				dbo_root_elem.object(root_elem);// dbo element is now dirty
 				tn.flush();
 			}

@@ -4,9 +4,9 @@ public class a_ajaxsts extends a{
 	@Override public void to(final xwriter x) throws Throwable{
 		// ? review this
 //		x.p("<div onclick=\"console.log(event);let e=$('"+id()+"');console.log(e);e.style.cssText='"+sts_css_closed+"';\">");
-		x.p("<div id=").p(this.id()).p(" style=\"").p(sts_css_opened).p("\"></div>");
+		x.p("<div id=").p(id()).p(" style=\"").p(sts_css_opened).p("\"></div>");
 //		x.div_();
-		
+
 	}
 
 //	@conf public static String sts_css_opened="transition-duration:1s;transition-timing-function:ease;padding:1em;width:20em;height:1em;background:#fed;box-shadow:0 0 .5em rgba(0,0,0,.5);";
