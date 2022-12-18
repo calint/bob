@@ -24,7 +24,18 @@ public final class DbObjects {
 	}
 
 	public List<DbObject> toList() {
-		return toList(null);
+		return toList((Limit) null);
+	}
+
+	public List<DbObject[]> toList(final Class<?>[] classes, final Limit limit) {
+		final Query qry = new Query();
+		final Order ord = new Order();
+		buildQuery(qry, ord);
+		return Db.currentTransaction().get(classes, qry, ord, limit);
+	}
+
+	public List<DbObject[]> toList(final Class<?>[] classes) {
+		return toList(classes, null);
 	}
 
 	public DbObjects get(final Query qry, final Order ord) {

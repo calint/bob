@@ -48,10 +48,10 @@ public class test1 extends TestCase {
 			throw new RuntimeException("expected 1. got " + n);
 
 		final List<DbObject> ls9 = u1.getFiles().get(null, new Order(File.name)).toList();
-		if ((ls9.size() != 2) || (ls9.get(0).id() != f2.id() && ls9.get(1).id() != f1.id()))
+		if (ls9.size() != 2 || ls9.get(0).id() != f2.id() && ls9.get(1).id() != f1.id())
 			throw new RuntimeException();
 
-		if (tn.cache_enabled && (ls9.get(0) != f2 && ls9.get(1) != f1))
+		if (tn.cache_enabled && ls9.get(0) != f2 && ls9.get(1) != f1)
 			throw new RuntimeException();
 
 		final Query q = new Query(User.name, Query.EQ, "user name").and(User.files).and(File.name, Query.EQ,
@@ -138,6 +138,14 @@ public class test1 extends TestCase {
 		final List<DbObject> ls2 = tn.get(DataText.class, q1, null, null);
 		if (ls2.size() != 0)
 			throw new RuntimeException("expected 0 results got " + ls1.size());
+
+		final List<DbObject[]> ls10 = tn.get(new Class<?>[] { Book.class, DataText.class },
+				new Query(DataText.ft, "+fulltext +indexed").and(Book.data), null, null);
+		if ((ls10.size() != 1) || !(ls10.get(0)[0].id() == b1.id() && ls10.get(0)[1].id() == dt1.id()))
+			throw new RuntimeException();
+// 		the transaction has been committed and the cache has been flushed so the test will fail
+//		if (tn.cache_enabled && !(ls10.get(0)[0] == b1 && ls10.get(0)[1] == dt1))
+//			throw new RuntimeException();
 
 		tn.delete(b1);
 		// --
