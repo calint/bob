@@ -90,7 +90,8 @@ public class controller extends a {
 	public void x_s(final xwriter x, final String param) throws Throwable {
 //		System.out.println("*** param:{"+param+"}");
 		update_serialized_size();
-		x.xu(s, sg);
+		update_server_info();
+		x.xu(s, sg, si);
 	}
 
 	private void update_serialized_size() {
