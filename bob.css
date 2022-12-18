@@ -41,6 +41,9 @@ table.f td{
 table.f td:first-child{
 	border-left:0
 }
+table.f td.ar{
+	text-align:right
+}
 /** bob.view_table */
 input.query {
 	background:yellow;

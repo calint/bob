@@ -52,7 +52,7 @@ public class table_dbclasses extends view_table {
 
 	@Override
 	protected void renderHeaders(final xwriter x) {
-		x.th().p("Name").th().p("fields").th().p("relations");
+		x.th().p("Name").th().p("Fields").th().p("Relations");
 	}
 
 	@Override
@@ -60,8 +60,8 @@ public class table_dbclasses extends view_table {
 		final DbClass c = (DbClass) o;
 		x.td();
 		renderLinked(x, o, c.getJavaClass().getName());
-		x.td().p(c.getDeclaredFields().size());
-		x.td().p(c.getDeclaredRelations().size());
+		x.td("ar").p(c.getDeclaredFields().size());
+		x.td("ar").p(c.getDeclaredRelations().size());
 	}
 
 	@Override
