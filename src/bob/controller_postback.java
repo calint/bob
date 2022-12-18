@@ -15,6 +15,7 @@ public class controller_postback extends a{
 		x.pl("<title>bob</title>");
 		x.pl("<link rel=stylesheet href=/bob.css>");
 		x.divh(c,"disp");
+		x.nl().nl();
 		ajaxsts.to(x);
 	}
 }

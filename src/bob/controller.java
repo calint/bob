@@ -37,7 +37,7 @@ public class controller extends a {
 		x.nl();
 		x.p("serialized: ").span(s).p(" B  gziped: ").span(sg).p(" B ").ax(this, "s", ":: refresh").nl();
 		x.p("server: ").span(si);
-		x.nl().nl();
+		x.nl();
 	}
 
 	@Override
