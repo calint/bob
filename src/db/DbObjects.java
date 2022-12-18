@@ -38,8 +38,7 @@ public final class DbObjects {
 	public int getCount() {
 		final Query qry = new Query();
 		buildQuery(qry, null);
-		final DbTransaction tn = Db.currentTransaction();
-		return tn.getCount(select, qry);
+		return Db.currentTransaction().getCount(select, qry);
 	}
 
 	private void buildQuery(final Query qry, final Order ord) {
