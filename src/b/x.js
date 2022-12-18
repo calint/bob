@@ -7,13 +7,40 @@ ui.axconwait=false;
 $=function(eid){return document.getElementById(eid);}
 $d=function(v){console.log(v);}
 $s=function(eid,txt){
+	// extract inline script
+	const tag_bgn='<script>';
+	const tag_bgn_len=tag_bgn.length;
+	const tag_end='</script>';
+	const tag_end_len=tag_end.length;
+	const inlines=[];
+	let i=0;
+	while(true){
+		const i_bgn=txt.indexOf(tag_bgn,i);
+		if(i_bgn==-1)
+			break;
+		const i_end=txt.indexOf(tag_end,i_bgn+tag_bgn_len);
+		if(i_end==-1){
+			alert('Did not find end tag after index '+(i_bgn+tag_bgn_len));
+			break;
+		}
+		const script=txt.substring(i_bgn+tag_bgn_len,i_end);
+		inlines.push(script);
+		txt=txt.substring(0,i_bgn)+txt.substring(i_end+tag_end_len,txt.length);
+		i=i_bgn;
+	}
+	// set txt stripped of inline script
 	const e=$(eid);
 	if(ui.is_dbg_set)$d(eid+'{'+txt+'}');
 	if(!e){$d(eid+' notfound');return;}
-	if(e.nodeName=="INPUT"||e.nodeName=="TEXTAREA"||e.nodeName=="OUTPUT"){
+	if(e.nodeName=='INPUT'||e.nodeName=='TEXTAREA'||e.nodeName=='OUTPUT'){
 		e.value=txt;
 	}else{
 		e.innerHTML=txt;
+	}
+
+	for(let i=0;i<inlines.length;i++){
+		console.log('inline: '+inlines[i]);
+		eval(inlines[i]);
 	}
 }
 $sv=function(eid,txt){
