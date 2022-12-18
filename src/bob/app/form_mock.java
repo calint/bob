@@ -1,4 +1,4 @@
-package bob.elem;
+package bob.app;
 
 import java.util.ArrayList;
 import java.util.List;

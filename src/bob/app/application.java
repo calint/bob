@@ -1,4 +1,4 @@
-package bob;
+package bob.app;
 
 import b.bapp;
 import db.Db;
@@ -10,14 +10,14 @@ import db.test.Game;
 import db.test.TestObj;
 import db.test.User;
 
-public final class app implements bapp {
-	private static app inst;
+public final class application implements bapp {
+	private static application inst;
 
-	public static app instance() {
+	public static application instance() {
 		return inst;
 	}
 
-	public app() {
+	public application() {
 		inst = this;
 	}
 
@@ -38,7 +38,7 @@ public final class app implements bapp {
 
 		b.b.set_path_to_class("/bob/websocket", bob.websock_bob.class);
 		b.b.set_path_to_class("/stats", b.a_stats.class);
-		b.b.set_path_to_class("/pbob", bob.controller_postback.class);
+		b.b.set_path_to_class("/pbob", bob.app.controller_postback.class);
 //		b.b.set_path_to_class("/bob", bob.elem.ctrl.class);
 
 		// qa

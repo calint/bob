@@ -12,7 +12,7 @@ import b.xwriter;
 
 final public class websock_bob extends websock {
 	private final static String axfld = "$";
-	public String controller_class_name = "bob.elem.ctrl";
+	public String controller_class_name = "bob.app.ctrl";
 	protected a controller;
 
 	public websock_bob() {

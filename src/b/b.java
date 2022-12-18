@@ -88,7 +88,7 @@ final public class b{
 	public static PrintStream out=System.out;
 	public static PrintStream err=System.err;
 
-	public static String bapp_class="bob.app";
+	public static String bapp_class="bob.app.application";
 	public static String bapp_jdbc_host="localhost";
 	public static String bapp_jdbc_db="dbo";
 	public static String bapp_jdbc_user="user";

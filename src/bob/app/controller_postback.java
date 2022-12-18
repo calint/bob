@@ -1,9 +1,8 @@
-package bob;
+package bob.app;
 
 import b.a;
 import b.a_ajaxsts;
 import b.xwriter;
-import bob.elem.ctrl;
 
 public class controller_postback extends a{
 	private static final long serialVersionUID=2L;

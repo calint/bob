@@ -1,4 +1,4 @@
-package bob.elem;
+package bob.app;
 
 import b.osltgt;
 import b.path;
