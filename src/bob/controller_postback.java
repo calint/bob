@@ -14,8 +14,8 @@ public class controller_postback extends a{
 	@Override public void to(xwriter x) throws Throwable{
 		x.pl("<title>bob</title>");
 		x.pl("<link rel=stylesheet href=/bob.css>");
+		ajaxsts.to(x);
 		x.divh(c,"disp");
 		x.nl().nl();
-		ajaxsts.to(x);
 	}
 }
