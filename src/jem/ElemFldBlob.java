@@ -4,8 +4,8 @@ import java.io.PrintWriter;
 
 import db.FldBlob;
 
-public final class FldBlobElem extends ElemFld {
-	public FldBlobElem(final FldBlob fld) {
+public final class ElemFldBlob extends ElemFld {
+	public ElemFldBlob(final FldBlob fld) {
 		super(fld);
 	}
 

@@ -2,10 +2,10 @@ package jem;
 
 import java.io.PrintWriter;
 
-import db.FldDateTime;
+import db.FldFlt;
 
-public final class FldDateTimeElem extends ElemFld {
-	public FldDateTimeElem(final FldDateTime fld) {
+public final class ElemFldFlt extends ElemFld {
+	public ElemFldFlt(final FldFlt fld) {
 		super(fld);
 	}
 
@@ -25,18 +25,18 @@ public final class FldDateTimeElem extends ElemFld {
 		final String acc = getAccessorName();
 
 		out.println(HR);
-		out.print("public Timestamp get");
+		out.print("public float get");
 		out.print(acc);
 		out.println("(){");
 		out.print("\t");
-		out.print("return getTs(");
+		out.print("return getFlt(");
 		out.print(fldName);
 		out.println(");");
 		out.println("}");
 		out.println();
 		out.print("public void set");
 		out.print(acc);
-		out.println("(final Timestamp v){");
+		out.println("(final float v){");
 		out.print("\t");
 		out.print("set(");
 		out.print(fldName);

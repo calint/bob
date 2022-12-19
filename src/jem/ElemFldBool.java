@@ -2,10 +2,10 @@ package jem;
 
 import java.io.PrintWriter;
 
-import db.FldFlt;
+import db.FldBool;
 
-public final class FldFltElem extends ElemFld {
-	public FldFltElem(final FldFlt fld) {
+public final class ElemFldBool extends ElemFld {
+	public ElemFldBool(final FldBool fld) {
 		super(fld);
 	}
 
@@ -25,18 +25,18 @@ public final class FldFltElem extends ElemFld {
 		final String acc = getAccessorName();
 
 		out.println(HR);
-		out.print("public float get");
+		out.print("public boolean is"); // ? isBool()
 		out.print(acc);
 		out.println("(){");
 		out.print("\t");
-		out.print("return getFlt(");
+		out.print("return getBool(");
 		out.print(fldName);
 		out.println(");");
 		out.println("}");
 		out.println();
 		out.print("public void set");
 		out.print(acc);
-		out.println("(final float v){");
+		out.println("(final boolean v){");
 		out.print("\t");
 		out.print("set(");
 		out.print(fldName);

@@ -31,7 +31,7 @@ public final class JavaCodeEmitter {
 		for (final DbField dbf : dbc.getDeclaredFields()) {
 			final StringBuilder sb = new StringBuilder();
 			sb.append(getPackageNameForClass(getClass())).append('.');
-			sb.append(getClassNameAfterPackageForClass(dbf.getClass())).append("Elem");
+			sb.append("Elem").append(getClassNameAfterPackageForClass(dbf.getClass()));
 			final String elemClsName = sb.toString();
 			// ? list of package names to be tried with Class.forName
 			try {
@@ -39,14 +39,14 @@ public final class JavaCodeEmitter {
 						.newInstance(dbf);
 				add(jce);
 			} catch (final Throwable t) {
-				System.err.println("cannot create JavaCodeElem of class '" + elemClsName + "' for java class '"
+				out.println("// cannot create JavaCodeElem of class '" + elemClsName + "' for java class '"
 						+ cls.getName() + "' field '" + dbf.getName() + "'");
 			}
 		}
 		for (final DbRelation dbr : dbc.getDeclaredRelations()) {
 			final StringBuilder sb = new StringBuilder();
 			sb.append(getPackageNameForClass(getClass())).append('.');
-			sb.append(getClassNameAfterPackageForClass(dbr.getClass())).append("Elem");
+			sb.append("Elem").append(getClassNameAfterPackageForClass(dbr.getClass()));
 			final String elemClsName = sb.toString();
 
 			try {
@@ -54,8 +54,8 @@ public final class JavaCodeEmitter {
 						.newInstance(dbr);
 				add(jce);
 			} catch (final Throwable t) {
-				System.err.println(
-						"cannot create JavaCodeElem of class '" + elemClsName + "' for java class " + t.getMessage());
+				out.println("// cannot create JavaCodeElem of class '" + elemClsName + "' for java class "
+						+ t.getMessage());
 			}
 		}
 

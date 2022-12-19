@@ -4,8 +4,8 @@ import java.io.PrintWriter;
 
 import db.FldId;
 
-public final class FldIdElem extends ElemFld {
-	public FldIdElem(final FldId fld) {
+public final class ElemFldId extends ElemFld {
+	public ElemFldId(final FldId fld) {
 		super(fld);
 	}
 

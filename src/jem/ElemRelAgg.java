@@ -5,8 +5,8 @@ import java.io.PrintWriter;
 import db.DbObject;
 import db.RelAgg;
 
-public class RelAggElem extends ElemRel {
-	public RelAggElem(final RelAgg rel) {
+public class ElemRelAgg extends ElemRel {
+	public ElemRelAgg(final RelAgg rel) {
 		super(rel);
 	}
 

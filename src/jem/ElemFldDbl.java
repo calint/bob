@@ -2,10 +2,10 @@ package jem;
 
 import java.io.PrintWriter;
 
-import db.FldInt;
+import db.FldDbl;
 
-public final class FldIntElem extends ElemFld {
-	public FldIntElem(final FldInt fld) {
+public final class ElemFldDbl extends ElemFld {
+	public ElemFldDbl(final FldDbl fld) {
 		super(fld);
 	}
 
@@ -25,18 +25,18 @@ public final class FldIntElem extends ElemFld {
 		final String acc = getAccessorName();
 
 		out.println(HR);
-		out.print("public int get");
+		out.print("public double get");
 		out.print(acc);
 		out.println("(){");
 		out.print("\t");
-		out.print("return getInt(");
+		out.print("return getDbl(");
 		out.print(fldName);
 		out.println(");");
 		out.println("}");
 		out.println();
 		out.print("public void set");
 		out.print(acc);
-		out.println("(final int v){");
+		out.println("(final double v){");
 		out.print("\t");
 		out.print("set(");
 		out.print(fldName);
