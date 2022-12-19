@@ -157,7 +157,10 @@ public final class Db {
 	 */
 	public static DbTransaction currentTransaction() {
 //		Db.log("dbo: get current transaction on " + Thread.currentThread());
-		return tn.get();
+		final DbTransaction t = tn.get();
+		if (t == null)
+			throw new RuntimeException("No transaction in the thread. Has Db.initCurrentTransaction() been done?");
+		return t;
 	}
 
 	/**

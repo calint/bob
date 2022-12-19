@@ -1,5 +1,6 @@
 package bob;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -8,7 +9,7 @@ import b.a;
 import b.xwriter;
 
 public abstract class view_table extends view {
-	static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 2;
 
 	public final static int BIT_CLICK_ITEM = 1;
 	/** The actions that are enabled in the table. */
@@ -16,18 +17,22 @@ public abstract class view_table extends view {
 
 	public container ac; // actions
 	public a q; // query field
-	public table t; // the table
+	public table t;
+	public paging p;
+	private TypeInfo typeInfo;
 
 	public view_table(final int view_bits, final int table_bits) {
 		super(view_bits);
 		enabled_table_bits = table_bits;
 		t.setTableView(this);
+		p.setTableView(this);
 		if ((enabled_view_bits & BIT_CREATE) != 0) {
 			ac.add(new action("create", "create"));
 		}
 		if ((enabled_view_bits & BIT_DELETE) != 0) {
 			ac.add(new action("delete", "delete"));
 		}
+		typeInfo = getTypeInfo();
 		final List<action> actions = getActionsList();
 		if (actions == null)
 			return;
@@ -52,6 +57,10 @@ public abstract class view_table extends view {
 			x.nl();
 		}
 		x.divh(t);
+		if (!p.isEnabled())
+			return;
+		x.nl();
+		x.divh(p);
 	}
 
 	@Override
@@ -76,13 +85,23 @@ public abstract class view_table extends view {
 			onAction(x, (action) from);
 			return;
 		}
+		if (from == p) {
+			x.xu(t, p); // update table and paging element
+			x.xscrollToTop();
+			x.xfocus(q);
+			return;
+		}
 		// event unknown by this element
 		super.bubble_event(x, from, o);
 	}
 
 	/** Callback for change in query field. */
 	public final void x_q(final xwriter x, final String s) throws Throwable {
-		x.xu(t);
+		if (p.isEnabled()) {
+			p.setPage(1);
+			x.xu(p); // update paging
+		}
+		x.xu(t); // update table
 	}
 
 	/** Callback for press enter in query field. */
@@ -111,6 +130,20 @@ public abstract class view_table extends view {
 		}
 	}
 
+	protected TypeInfo getTypeInfo() {
+		return new TypeInfo("object", "objects");
+	}
+
+	@Override
+	protected int getObjectsPerPageCount() {
+		return 0;
+	}
+
+	@Override
+	protected int getObjectsCount() {
+		return 0;
+	}
+
 	@Override
 	protected void onActionCreate(final xwriter x, final String init_str) throws Throwable {
 	}
@@ -130,6 +163,128 @@ public abstract class view_table extends view {
 	}
 
 	protected void onRowClick(final xwriter x, final String id) throws Throwable {
+	}
+
+	public final static class TypeInfo implements Serializable {
+		private static final long serialVersionUID = 1L;
+		protected String name;
+		protected String namePlural;
+
+		public TypeInfo(final String name, final String namePlural) {
+			this.name = name;
+			this.namePlural = namePlural;
+		}
+	}
+
+	public final static class paging extends a {
+		private static final long serialVersionUID = 1L;
+		private int currentPage; // page starting at 0
+		private int objectsPerPage;
+		private int npages;
+		private view_table tv;
+		public a pg; // current page
+
+		public void setTableView(final view_table tv) {
+			this.tv = tv;
+			objectsPerPage = tv.getObjectsPerPageCount();
+			pg.set(currentPage + 1);
+		}
+
+		@Override
+		public void to(final xwriter x) throws Throwable {
+			if (!isEnabled())
+				return;
+			final int count = tv.getObjectsCount();
+			if (count < objectsPerPage) {
+				npages = 1;
+			} else {
+				npages = count / objectsPerPage;
+			}
+			x.p(count);
+			x.p(' ');
+			if (count == 1) {
+				x.p(tv.typeInfo.name);
+			} else {
+				x.p(tv.typeInfo.namePlural);
+			}
+			x.p(". Page ");
+			x.inp(pg, null, "nbr center", null, this, "p", null, null, null);
+			x.p(" of ");
+			x.p(npages);
+			x.p(". ");
+
+			if (currentPage != 0) {
+				x.ax(this, "pg prv", "Previous");
+				x.p(" ");
+			}
+			if (currentPage < npages - 1) {
+				x.ax(this, "pg nxt", "Next");
+			}
+		}
+
+		public void x_pg(final xwriter x, final String param) throws Throwable {
+			if ("prv".equals(param)) {
+				currentPage--;
+				if (currentPage < 0) {
+					currentPage = 0;
+				}
+			}
+			if ("nxt".equals(param)) {
+				currentPage++;
+				if (currentPage >= npages) {
+					currentPage = npages - 1;
+				}
+			}
+			pg.set(currentPage + 1);
+			super.bubble_event(x);
+		}
+
+		public void x_p(final xwriter x, final String param) throws Throwable {
+			final int n;
+			try {
+				n = pg.toint();
+			} catch (final Throwable t) {
+				x.xu(tv.p);
+				x.xfocus(pg);
+				x.xalert("Enter a page number.");
+				return;
+			}
+			currentPage = n - 1;
+			if (currentPage < 0) {
+				currentPage = 0;
+				pg.set(currentPage + 1);
+			} else if (currentPage >= npages) {
+				currentPage = npages - 1;
+				pg.set(currentPage + 1);
+			}
+			super.bubble_event(x);
+		}
+
+//
+//		public int getCurrentPage() {
+//			return currentPage;
+//		}
+//
+//		public int getObjectsPerPageCount() {
+//			return getObjectsPerPageCount();
+//		}
+
+		public int getLimitStart() {
+			return currentPage * objectsPerPage;
+		}
+
+		public int getLimitCount() {
+			return objectsPerPage;
+		}
+
+		public boolean isEnabled() {
+			return objectsPerPage != 0;
+		}
+
+		public void setPage(final int page) {
+			currentPage = page - 1;
+			pg.set(page);
+		}
 	}
 
 	public final static class table extends a {

@@ -157,7 +157,7 @@ public final class DbTransaction {
 
 		final Query.TableAliasMap tam = new Query.TableAliasMap();
 		final StringBuilder sbwhere = new StringBuilder(128);
-		if (qry != null) {
+		if (qry != null && !qry.isEmpty()) {
 			sbwhere.append("where ");
 			qry.sql_build(sbwhere, tam);
 		}
@@ -218,7 +218,7 @@ public final class DbTransaction {
 
 		final Query.TableAliasMap tam = new Query.TableAliasMap();
 		final StringBuilder sbwhere = new StringBuilder(128);
-		if (qry != null) {
+		if (qry != null && !qry.isEmpty()) {
 			sbwhere.append("where ");
 			qry.sql_build(sbwhere, tam);
 		}
@@ -325,7 +325,7 @@ public final class DbTransaction {
 
 		final Query.TableAliasMap tam = new Query.TableAliasMap();
 
-		if (qry != null) {
+		if (qry != null && !qry.isEmpty()) {
 			final StringBuilder sbwhere = new StringBuilder(128);
 			qry.sql_build(sbwhere, tam);
 			tam.sql_appendSelectFromTables(sb);

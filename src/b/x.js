@@ -3,6 +3,7 @@ ui.is_dbg=true;
 ui.is_dbg_set=true;
 ui.is_dbg_verbose=false;
 ui.is_dbg_js=true;
+ui.is_dbg_pb=true;
 ui.axconwait=false;
 $=function(eid){return document.getElementById(eid);}
 $d=function(v){console.log(v);}
@@ -88,6 +89,9 @@ ui._hashKey=function(event){
 	const kc=(event.shiftKey?'s':'')+(event.ctrlKey?'c':'')+(event.altKey?'a':'')+(event.metaKey?'m':'')+String.fromCharCode(event.keyCode);
 	$d(kc);
 	return kc;
+}
+ui.scrollToTop=function(){
+	window.scrollTo(0,0);
 }
 ui.keys=[];
 ui.onkey=function(ev){
@@ -190,9 +194,8 @@ ui._onreadystatechange=function(){
 	}
 }
 ui._pbls=[];
-debug_qpb=true;
 ui.qpb=function(e){
-	if(debug_qpb)$d('qpb '+e.id);
+	if(ui.is_dbg_pb)$d('qpb '+e.id);
 	if(ui.qpbhas(e.id))return;
 	ui._pbls[e.id]=e.id;
 }

@@ -34,7 +34,7 @@ public class import_books extends TestCase {
 		CsvReader csv = new CsvReader(in);
 		List<String> ls = csv.nextRecord();// read headers
 		int i = 2; // skip headers
-		Db.log("bounds check file '" + filePath + "'");
+		out.println("\nbounds check file '" + filePath + "'");
 		while (true) {
 			ls = csv.nextRecord();
 			if (ls == null) {
@@ -60,7 +60,7 @@ public class import_books extends TestCase {
 			}
 		}
 		in.close();
-		Db.log("bounds check done. importing " + (i - 2) + " books from " + filePath + "'");
+		out.println("bounds check done. importing " + (i - 2) + " books from " + filePath + "'");
 		in = new FileReader(filePath);
 		csv = new CsvReader(in);
 		ls = csv.nextRecord();// read headers
@@ -83,11 +83,11 @@ public class import_books extends TestCase {
 			d.setMeta(sb.toString());
 
 			if (++i % 100 == 0) {
-				Db.log("  " + i);
+				out.println("  " + i);
 				tn.commit();
 			}
 		}
 		in.close();
-		Db.log("import done. " + (i - 2) + " books imported.");
+		out.println("import done. " + (i - 2) + " books imported.");
 	}
 }

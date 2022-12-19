@@ -36,6 +36,16 @@ public abstract class view extends a implements titled {
 		return null;
 	}
 
+	/**
+	 * Returns the object count per page.
+	 *
+	 * @return objects per page or 0 if paging is disabled.
+	 */
+	protected abstract int getObjectsPerPageCount();
+
+	/** If paging is enabled this will be called before getObjectsList(). */
+	protected abstract int getObjectsCount();
+
 	protected abstract List<?> getObjectsList();
 
 	protected abstract String getIdFrom(Object o);

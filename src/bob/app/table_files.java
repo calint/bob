@@ -45,8 +45,36 @@ public class table_files extends view_table {
 		return nm;
 	}
 
+//	@Override
+//	protected TypeInfo getTypeInfo() {
+//		return new TypeInfo("file", "files");
+//	}
+//
+//	@Override
+//	protected int getObjectsPerPageCount() {
+//		return 20;
+//	}
+//
+//	@Override
+//	protected int getObjectsCount() {
+//		return getResultList().size();
+//	}
+
 	@Override
 	protected List<?> getObjectsList() {
+		final List<String> result = getResultList();
+		Collections.sort(result);
+		if (p.isEnabled()) {
+			int toIndex = p.getLimitStart() + p.getLimitCount();
+			if (toIndex > result.size()) {
+				toIndex = result.size();
+			}
+			return result.subList(p.getLimitStart(), toIndex);
+		}
+		return result;
+	}
+
+	private List<String> getResultList() {
 		final boolean do_query = !b.b.isempty(q.str());
 		final Pattern pattern;
 		final String qstr;
@@ -69,7 +97,6 @@ public class table_files extends view_table {
 				result.add(pthnm);
 			}
 		}
-		Collections.sort(result);
 		return result;
 	}
 

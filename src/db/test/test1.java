@@ -14,6 +14,12 @@ import db.Query;
 public class test1 extends TestCase {
 	@Override
 	public void doRun() throws Throwable {
+		doRun1();
+		doRun2();
+		doRun3();
+	}
+
+	private void doRun1() throws Throwable {
 		final DbTransaction tn = Db.currentTransaction();
 		final User u1 = (User) tn.create(User.class);
 		u1.setName("user name");
@@ -307,9 +313,6 @@ public class test1 extends TestCase {
 		u10.setName("John Doe");
 		tn.commit();
 		tn.delete(u10);
-
-		doRun2();
-		doRun3();
 	}
 
 	private void doRun2() throws Throwable {

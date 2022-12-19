@@ -156,6 +156,10 @@ public final class Query implements Serializable {
 		}
 	}
 
+	public boolean isEmpty() {
+		return elems.isEmpty();
+	}
+
 	Query() {
 	}
 

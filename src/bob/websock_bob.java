@@ -9,6 +9,7 @@ import b.a;
 import b.b;
 import b.websock;
 import b.xwriter;
+import db.Db;
 
 final public class websock_bob extends websock {
 	private final static String axfld = "$";
@@ -22,102 +23,104 @@ final public class websock_bob extends websock {
 	@Override
 	protected void on_opened() throws Throwable {
 //		System.out.println("websocket "+Integer.toHexString(hashCode())+": on_opened");
+		try {
+			Db.initCurrentTransaction();
+			// todo load root from db or create new
+			controller = (a) Class.forName(controller_class_name).getConstructor().newInstance();
 
-		// todo load root from db or create new
-		controller = (a) Class.forName(controller_class_name).getConstructor().newInstance();
+			final xwriter js = new xwriter();
+			final xwriter x = js.xub(controller, true, false);
+			controller.to(x);
+			js.xube();
 
-		final xwriter js = new xwriter();
-		final xwriter x = js.xub(controller, true, false);
-		controller.to(x);
-		js.xube();
-
-		send(js.toString());
+			send(js.toString());
+		} finally {
+			Db.deinitCurrentTransaction();
+		}
 	}
 
 	@Override
 	protected void on_message(final ByteBuffer bb) throws Throwable {
-//		System.out.println("websocket "+Integer.toHexString(hashCode())+": on_message: "+bb.remaining()+" bytes");
-//		System.out.println(new String(bb.array(),bb.position(),bb.remaining()));
-//		System.out.println("-- - -- ------- -- - - - - -- - -");
+		try {
+			Db.initCurrentTransaction();
 
-		final HashMap<String, String> content = populate_content_map_from_buffer(bb);
-//		System.out.println(content);
-
-		// ajax post
-		String ajax_command_string = "";
-		for (final Map.Entry<String, String> me : content.entrySet()) {
-			if (axfld.equals(me.getKey())) {
-				ajax_command_string = me.getValue();
-				continue;
+			final HashMap<String, String> content = populate_content_map_from_buffer(bb);
+			String ajax_command_string = "";
+			for (final Map.Entry<String, String> me : content.entrySet()) {
+				if (axfld.equals(me.getKey())) {
+					ajax_command_string = me.getValue();
+					continue;
+				}
+				// ? indexofloop
+				final String[] paths = me.getKey().split(a.id_path_separator);
+				a e = controller;
+				for (int n = 1; n < paths.length; n++) {
+					e = e.child(paths[n]);
+					if (e == null)
+						throw new RuntimeException("not found: " + me.getKey());
+				}
+				e.set(me.getValue());
 			}
-			// ? indexofloop
-			final String[] paths = me.getKey().split(a.id_path_separator);
-			a e = controller;
-			for (int n = 1; n < paths.length; n++) {
-				e = e.child(paths[n]);
-				if (e == null)
-					throw new RuntimeException("not found: " + me.getKey());
-			}
-			e.set(me.getValue());
-		}
-		if (ajax_command_string.length() == 0)
-			throw new RuntimeException("expectedax");
+			if (ajax_command_string.length() == 0)
+				throw new RuntimeException("expectedax");
 
-		// decode the field id, method name and parameters parameters
-		final String target_elem_id, target_elem_method, target_elem_method_args;
-		final int i1 = ajax_command_string.indexOf(' ');
-		if (i1 == -1) {
-			target_elem_id = ajax_command_string;
-			target_elem_method = target_elem_method_args = "";
-		} else {
-			target_elem_id = ajax_command_string.substring(0, i1);
-			final int i2 = ajax_command_string.indexOf(' ', i1 + 1);
-			if (i2 == -1) {
-				target_elem_method = ajax_command_string.substring(i1 + 1);
-				target_elem_method_args = "";
+			// decode the field id, method name and parameters parameters
+			final String target_elem_id, target_elem_method, target_elem_method_args;
+			final int i1 = ajax_command_string.indexOf(' ');
+			if (i1 == -1) {
+				target_elem_id = ajax_command_string;
+				target_elem_method = target_elem_method_args = "";
 			} else {
-				target_elem_method = ajax_command_string.substring(i1 + 1, i2);
-				target_elem_method_args = ajax_command_string.substring(i2 + 1);
+				target_elem_id = ajax_command_string.substring(0, i1);
+				final int i2 = ajax_command_string.indexOf(' ', i1 + 1);
+				if (i2 == -1) {
+					target_elem_method = ajax_command_string.substring(i1 + 1);
+					target_elem_method_args = "";
+				} else {
+					target_elem_method = ajax_command_string.substring(i1 + 1, i2);
+					target_elem_method_args = ajax_command_string.substring(i2 + 1);
+				}
 			}
-		}
-		// navigate to the target element
-		final String[] path = target_elem_id.split(a.id_path_separator);// ? indexofloop
-		a target_elem = controller;
-		for (int n = 1; n < path.length; n++) {
-			target_elem = target_elem.child(path[n]);
-			if (target_elem == null) {
-				break;
+			// navigate to the target element
+			final String[] path = target_elem_id.split(a.id_path_separator);// ? indexofloop
+			a target_elem = controller;
+			for (int n = 1; n < path.length; n++) {
+				target_elem = target_elem.child(path[n]);
+				if (target_elem == null) {
+					break;
+				}
 			}
-		}
 
-		final xwriter x = new xwriter();
-		if (target_elem == null) {
-			x.xalert("element not found:\n" + target_elem_id);
+			final xwriter x = new xwriter();
+			if (target_elem == null) {
+				x.xalert("element not found:\n" + target_elem_id);
+				x.finish();
+				final String msg = x.toString();
+				send(msg);
+				return;
+			}
+			// invoke method on target element with arguments
+			try {
+				target_elem.getClass().getMethod("x_" + target_elem_method, xwriter.class, String.class)
+						.invoke(target_elem, x, target_elem_method_args);
+			} catch (final InvocationTargetException t) {
+				b.log(t.getTargetException());
+				Throwable e = t;
+				while (e.getCause() != null) {
+					e = e.getCause();
+				}
+				x.xalert(b.isempty(e.getMessage(), e.toString()));
+			} catch (final NoSuchMethodException t) {
+				x.xalert("method not found:\n" + target_elem.getClass().getName() + ".x_" + target_elem_method
+						+ "(xwriter,String)");
+			}
 			x.finish();
+
 			final String msg = x.toString();
 			send(msg);
-			return;
+		} finally {
+			Db.deinitCurrentTransaction();
 		}
-		// invoke method on target element with arguments
-		try {
-			target_elem.getClass().getMethod("x_" + target_elem_method, xwriter.class, String.class).invoke(target_elem,
-					x, target_elem_method_args);
-		} catch (final InvocationTargetException t) {
-			b.log(t.getTargetException());
-			Throwable e = t;
-			while (e.getCause() != null) {
-				e = e.getCause();
-			}
-			x.xalert(b.isempty(e.getMessage(), e.toString()));
-		} catch (final NoSuchMethodException t) {
-			x.xalert("method not found:\n" + target_elem.getClass().getName() + ".x_" + target_elem_method
-					+ "(xwriter,String)");
-		}
-		x.finish();
-
-		final String msg = x.toString();
-//		System.out.println(msg);
-		send(msg);
 	}
 
 	@Override
