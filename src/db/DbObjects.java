@@ -14,7 +14,14 @@ public final class DbObjects implements Serializable {
 	public DbObjects(final DbObjects dbobjects, final Class<? extends DbObject> select, final Query query,
 			final Order order) {
 		this.dbobjects = dbobjects;
-		this.select = select;
+		if (select == null && dbobjects == null) {
+			throw new RuntimeException("'select' must be specified if this DbObjects does not wrap another DbObjects.");
+		}
+		if (select == null) {
+			this.select = dbobjects.select;
+		} else {
+			this.select = select;
+		}
 		this.query = query;
 		this.order = order;
 	}
