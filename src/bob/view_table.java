@@ -85,10 +85,10 @@ public abstract class view_table extends view {
 			onAction(x, (action) from);
 			return;
 		}
-		if (from == p) {
+		if (from == p) { // event from pager
 			x.xu(t, p); // update table and paging element
-			x.xscrollToTop();
 			x.xfocus(q);
+			x.xscrollToTop();
 			return;
 		}
 		// event unknown by this element

@@ -87,9 +87,7 @@ ui._hashKey=function(event){
 	$d(kc);
 	return kc;
 }
-ui.scrollToTop=function(){
-	window.scrollTo(0,0);
-}
+ui.scrollToTop=function(){window.scrollTo({top:0,behavior:'smooth'});}
 ui.keys=[];
 ui.onkey=function(ev){
 	if(!ev)ev=window.event;
