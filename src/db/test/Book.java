@@ -66,5 +66,4 @@ public final class Book extends DbObject {
 	public void deleteData() {
 		data.delete(this);
 	}
-
 }

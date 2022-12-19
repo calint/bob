@@ -170,7 +170,7 @@ public final class Db {
 	public static void deinitCurrentTransaction() { // ? so ugly
 //		Db.log("dbo: deinit transaction on "+Thread.currentThread());
 		final DbTransaction tx = tn.get();
-		if (tx == null)
+		if (tx == null) // ? return instead of exception?
 			throw new RuntimeException("transaction not initiated on this thread.");
 		boolean connection_is_ok = true;
 		if (!tx.rollbacked) {
