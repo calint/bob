@@ -2,10 +2,10 @@ package jem;
 
 import db.DbField;
 
-public abstract class ElemFld extends JavaCodeElem {
+public abstract class JemFld extends JavaCodeElem {
 	final protected DbField fld;
 
-	public ElemFld(final DbField fld) {
+	public JemFld(final DbField fld) {
 		this.fld = fld;
 	}
 

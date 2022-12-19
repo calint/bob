@@ -2,10 +2,10 @@ package jem;
 
 import db.DbRelation;
 
-public abstract class ElemRel extends JavaCodeElem {
+public abstract class JemRel extends JavaCodeElem {
 	final protected DbRelation rel;
 
-	public ElemRel(final DbRelation rel) {
+	public JemRel(final DbRelation rel) {
 		this.rel = rel;
 	}
 

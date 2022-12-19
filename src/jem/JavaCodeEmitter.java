@@ -31,7 +31,7 @@ public final class JavaCodeEmitter {
 		for (final DbField dbf : dbc.getDeclaredFields()) {
 			final StringBuilder sb = new StringBuilder();
 			sb.append(getPackageNameForClass(getClass())).append('.');
-			sb.append("Elem").append(getClassNameAfterPackageForClass(dbf.getClass()));
+			sb.append("Jem").append(getClassNameAfterPackageForClass(dbf.getClass()));
 			final String elemClsName = sb.toString();
 			// ? list of package names to be tried with Class.forName
 			try {
@@ -46,7 +46,7 @@ public final class JavaCodeEmitter {
 		for (final DbRelation dbr : dbc.getDeclaredRelations()) {
 			final StringBuilder sb = new StringBuilder();
 			sb.append(getPackageNameForClass(getClass())).append('.');
-			sb.append("Elem").append(getClassNameAfterPackageForClass(dbr.getClass()));
+			sb.append("Jem").append(getClassNameAfterPackageForClass(dbr.getClass()));
 			final String elemClsName = sb.toString();
 
 			try {

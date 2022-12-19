@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import b.a;
 import b.xwriter;
 
-public class menu extends a {
+public final class menu extends a {
 	private static final long serialVersionUID = 1L;
 
 	private final static class item extends a {

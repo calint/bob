@@ -2,21 +2,22 @@ package jem;
 
 import java.io.PrintWriter;
 
-import db.FldBlob;
+import db.FldBool;
 
-public final class ElemFldBlob extends ElemFld {
-	public ElemFldBlob(final FldBlob fld) {
+public final class JemFldBool extends JemFld {
+	public JemFldBool(final FldBool fld) {
 		super(fld);
 	}
 
 //	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
-//	public byte[] getData() {
-//		return getBytesArray(data);
+//	public int getNLogins() {
+//		return getInt(nlogins);
 //	}
 //
-//	public void setData(byte[] v) {
-//		set(data, v);
+//	public void setNLogins(int v) {
+//		set(nlogins, v);
 //	}
+//
 
 	@Override
 	public void emit(final PrintWriter out) {
@@ -24,18 +25,18 @@ public final class ElemFldBlob extends ElemFld {
 		final String acc = getAccessorName();
 
 		out.println(HR);
-		out.print("public byte[]get");
+		out.print("public boolean is"); // ? isBool()
 		out.print(acc);
 		out.println("(){");
 		out.print("\t");
-		out.print("return getBytesArray(");
+		out.print("return getBool(");
 		out.print(fldName);
 		out.println(");");
 		out.println("}");
 		out.println();
 		out.print("public void set");
 		out.print(acc);
-		out.println("(final byte[]v){");
+		out.println("(final boolean v){");
 		out.print("\t");
 		out.print("set(");
 		out.print(fldName);

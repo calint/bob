@@ -2,21 +2,22 @@ package jem;
 
 import java.io.PrintWriter;
 
-import db.FldClob;
+import db.FldFlt;
 
-public final class ElemFldClob extends ElemFld {
-	public ElemFldClob(final FldClob fld) {
+public final class JemFldFlt extends JemFld {
+	public JemFldFlt(final FldFlt fld) {
 		super(fld);
 	}
 
 //	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
-//	public String getData() {
-//		return getStr(data);
+//	public int getNLogins() {
+//		return getInt(nlogins);
 //	}
 //
-//	public void setData(String v) {
-//		set(data, v);
+//	public void setNLogins(int v) {
+//		set(nlogins, v);
 //	}
+//
 
 	@Override
 	public void emit(final PrintWriter out) {
@@ -24,18 +25,18 @@ public final class ElemFldClob extends ElemFld {
 		final String acc = getAccessorName();
 
 		out.println(HR);
-		out.print("public String get");
+		out.print("public float get");
 		out.print(acc);
 		out.println("(){");
 		out.print("\t");
-		out.print("return getStr(");
+		out.print("return getFlt(");
 		out.print(fldName);
 		out.println(");");
 		out.println("}");
 		out.println();
 		out.print("public void set");
 		out.print(acc);
-		out.println("(final String v){");
+		out.println("(final float v){");
 		out.print("\t");
 		out.print("set(");
 		out.print(fldName);

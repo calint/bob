@@ -19,7 +19,7 @@ public abstract class view_table extends view {
 	public a q; // query field
 	public table t;
 	public paging p;
-	private TypeInfo typeInfo;
+	private TypeInfo typeInfo; // the name and plural of the object type
 
 	public view_table(final int view_bits, final int table_bits) {
 		super(view_bits);
@@ -87,8 +87,8 @@ public abstract class view_table extends view {
 		}
 		if (from == p) { // event from pager
 			x.xu(t, p); // update table and paging element
-			x.xfocus(q);
-			x.xscrollToTop();
+			x.xfocus(q); // focus on query field
+			x.xscrollToTop(); // scroll to top of page
 			return;
 		}
 		// event unknown by this element
@@ -98,7 +98,7 @@ public abstract class view_table extends view {
 	/** Callback for change in query field. */
 	public final void x_q(final xwriter x, final String s) throws Throwable {
 		if (p.isEnabled()) {
-			p.setPage(1);
+			p.setPage(1); // reset the page
 			x.xu(p); // update paging
 		}
 		x.xu(t); // update table
@@ -115,11 +115,6 @@ public abstract class view_table extends view {
 	protected final Set<String> getSelectedIds() {
 		return t.getSelectedIds();
 	}
-
-//	protected void renderLinkedName(xwriter x, Object o) {
-//		final String nm = getNameFrom(o);
-//		renderLinked(x, o, nm);
-//	}
 
 	protected final void renderLinked(final xwriter x, final Object o, final String linkText) {
 		if ((enabled_table_bits & view_table.BIT_CLICK_ITEM) != 0) {

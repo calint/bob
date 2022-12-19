@@ -2,22 +2,21 @@ package jem;
 
 import java.io.PrintWriter;
 
-import db.FldTs;
+import db.FldBlob;
 
-public final class ElemFldTs extends ElemFld {
-	public ElemFldTs(final FldTs fld) {
+public final class JemFldBlob extends JemFld {
+	public JemFldBlob(final FldBlob fld) {
 		super(fld);
 	}
 
 //	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
-//	public int getNLogins() {
-//		return getInt(nlogins);
+//	public byte[] getData() {
+//		return getBytesArray(data);
 //	}
 //
-//	public void setNLogins(int v) {
-//		set(nlogins, v);
+//	public void setData(byte[] v) {
+//		set(data, v);
 //	}
-//
 
 	@Override
 	public void emit(final PrintWriter out) {
@@ -25,18 +24,18 @@ public final class ElemFldTs extends ElemFld {
 		final String acc = getAccessorName();
 
 		out.println(HR);
-		out.print("public Timestamp get");
+		out.print("public byte[]get");
 		out.print(acc);
 		out.println("(){");
 		out.print("\t");
-		out.print("return getTs(");
+		out.print("return getBytesArray(");
 		out.print(fldName);
 		out.println(");");
 		out.println("}");
 		out.println();
 		out.print("public void set");
 		out.print(acc);
-		out.println("(final Timestamp v){");
+		out.println("(final byte[]v){");
 		out.print("\t");
 		out.print("set(");
 		out.print(fldName);

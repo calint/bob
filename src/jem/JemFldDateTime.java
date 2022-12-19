@@ -4,8 +4,8 @@ import java.io.PrintWriter;
 
 import db.FldDateTime;
 
-public final class ElemFldDateTime extends ElemFld {
-	public ElemFldDateTime(final FldDateTime fld) {
+public final class JemFldDateTime extends JemFld {
+	public JemFldDateTime(final FldDateTime fld) {
 		super(fld);
 	}
 

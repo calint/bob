@@ -2,20 +2,20 @@ package jem;
 
 import java.io.PrintWriter;
 
-import db.FldInt;
+import db.FldStr;
 
-public final class ElemFldInt extends ElemFld {
-	public ElemFldInt(final FldInt fld) {
+public final class JemFldStr extends JemFld {
+	public JemFldStr(final FldStr fld) {
 		super(fld);
 	}
 
 //	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
-//	public int getNLogins() {
-//		return getInt(nlogins);
+//	public String getName() {
+//		return getStr(name);
 //	}
 //
-//	public void setNLogins(int v) {
-//		set(nlogins, v);
+//	public void setName(String v) {
+//		set(name, v);
 //	}
 //
 
@@ -25,18 +25,18 @@ public final class ElemFldInt extends ElemFld {
 		final String acc = getAccessorName();
 
 		out.println(HR);
-		out.print("public int get");
+		out.print("public String get");
 		out.print(acc);
 		out.println("(){");
 		out.print("\t");
-		out.print("return getInt(");
+		out.print("return getStr(");
 		out.print(fldName);
 		out.println(");");
 		out.println("}");
 		out.println();
 		out.print("public void set");
 		out.print(acc);
-		out.println("(final int v){");
+		out.println("(final String v){");
 		out.print("\t");
 		out.print("set(");
 		out.print(fldName);
