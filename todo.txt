@@ -12,7 +12,6 @@ b
 [ ]   dbo: connection pool
 [ ] cluster: health-check the database
 [ ] Content-disposition: attachment; filename=file.txt
-[ ] bob,b: window.scrollTo(0, document.body.scrollHeight), element.scrollTop = element.scrollHeight;
 [ ] jem: add package names that contain additional jem fields elements
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 dbo
@@ -72,6 +71,7 @@ dbo
 [ ]   ms sql server?
 [ ]   ibm db2?
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
+[x] bob,b: window.scrollTo(0, document.body.scrollHeight), element.scrollTop = element.scrollHeight;
 [x] remove package c
 [x] req state to enum
 [x] page that does not save state or access session
