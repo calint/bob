@@ -1,6 +1,6 @@
 <!doctype html><meta name=viewport content="width=device-width,initial-scale=1"><meta charset=utf-8><link rel=stylesheet href=/x.css><script src=/x.js></script>
 <title>b.test.t3</title>
-1 <is>$x('- s "\'hello\'"');</is>
+1 <script>$x('- s "\'hello\'"');</script>
 2 <div id="-f" class="bytes" style="background:yellow" onclick="ui.alert('&quot;\'hello\'&quot;')">"'value'"</div>
 3 <div id="-f" class="bytes" style="background:yellow">"'value'"</div>
 4 <input value="&quot;'value'&quot;" id="-f" type="text" class="txt" style="background:yellow" onkeypress="return $r(event,this,'- test &quot;\'hello\'&quot;')" oninput="$b(this);$x('- test \' &quot;chg&quot; \'')">
