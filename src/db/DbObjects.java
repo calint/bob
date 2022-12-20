@@ -3,7 +3,7 @@ package db;
 import java.io.Serializable;
 import java.util.List;
 
-public final class DbObjects implements Serializable {
+public final class DbObjects implements Serializable { // ?  review select
 	private static final long serialVersionUID = 1L;
 
 	private final DbObjects dbobjects;
