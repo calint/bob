@@ -73,6 +73,8 @@ public class table_books extends view_table {
 
 	@Override
 	protected void onActionCreate(xwriter x, String init_str) throws Throwable {
+		final form_book fm = new form_book(null, init_str);
+		super.bubble_event(x, this, fm);
 	}
 
 	@Override
@@ -80,7 +82,7 @@ public class table_books extends view_table {
 		final Set<String> sel = getSelectedIds();
 		for (final String id : sel) {
 			final DbTransaction tn = Db.currentTransaction();
-			final Book b = (Book) tn.get(Book.class, new Query(Book.class, Integer.parseInt(id)), null, null).get(0);
+			final Book b = (Book) tn.get(Book.class, Integer.parseInt(id));
 			tn.delete(b);
 		}
 		sel.clear();
@@ -100,18 +102,14 @@ public class table_books extends view_table {
 	@Override
 	protected void renderRowCells(final xwriter x, final Object o) {
 		final Book b = (Book) o;
-		x.td().p(b.getName()).td().p(b.getAuthors());
+		x.td();
+		renderLinked(x, b, b.getName());
+		x.td().p(b.getAuthors());
 	}
 
 	@Override
 	protected void onRowClick(final xwriter x, final String id) throws Throwable {
-//		final path p = pth.get(id);
-//		if (p.isdir()) {
-//			final table_books f = new table_books(p);
-//			super.bubble_event(x, this, f);
-//			return;
-//		}
-//		final form_file f = new form_file(p);
-//		super.bubble_event(x, this, f);
+		final form_book f = new form_book(id, q.str());
+		super.bubble_event(x, this, f);
 	}
 }

@@ -1,7 +1,7 @@
 package bob;
 
-public class util {
-	public final static String formatSizeInBytes(final long size_B) {
+public final class util {
+	public static String formatSizeInBytes(final long size_B) {
 		long b = size_B;
 		if (b < 1024)
 			return Long.toString(b) + " B";
@@ -16,5 +16,11 @@ public class util {
 			return Long.toString(b) + " GB";
 		b >>= 10;
 		return Long.toString(b) + " TB";
+	}
+
+	public static String str(final Object o, String defaultStr) {
+		if (o == null || o.toString().length() == 0)
+			return defaultStr;
+		return o.toString();
 	}
 }

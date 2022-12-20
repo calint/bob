@@ -151,6 +151,10 @@ public final class DbTransaction {
 		}
 	}
 
+	public DbObject get(final Class<? extends DbObject> cls, final int id) {
+		return get(cls, new Query(cls, id), null, null).get(0);
+	}
+
 	public List<DbObject> get(final Class<?> cls, final Query qry, final Order ord, final Limit lmt) { // ? call get(new
 																										// Class[]..)?
 		flush(); // update database before query
