@@ -61,17 +61,29 @@ div.output{
 	border:1px dotted green;
 }
 input.nbr{
-	width:3em
+	width:3em;
 }
 input.center{
-	text-align:center
+	text-align:center;
 }
+/** bob.form_dbo */
 input.long{
-	width:60em
+	width:60em;
 }
 input.medium{
-	width:30em
+	width:30em;
 }
 input.short{
-	width:15em
+	width:15em;
+}
+table.form{
+	margin-left:auto;
+	margin-right:auto;
+	text-align:left;
+}
+table.form td.lbl{
+	text-align:right;
+}
+table.form td.val{
+	text-align:left;
 }

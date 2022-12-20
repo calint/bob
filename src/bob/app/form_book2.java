@@ -20,6 +20,15 @@ public class form_book2 extends form {
 	private static final long serialVersionUID = 1L;
 
 	final private LinkedHashMap<String, a> fields = new LinkedHashMap<String, a>();
+	
+	final protected void begin(final xwriter x) {
+		x.table("form").nl();
+		x.th().th();
+	}
+
+	final protected void end(final xwriter x) {
+		x.table_().nl();
+	}
 
 	final protected void inputText(final xwriter x, final String label, final DbField f, final String styleClass,
 			final String value) {
@@ -31,7 +40,7 @@ public class form_book2 extends form {
 			fields.put(nm, elem);
 		}
 
-		x.p(label).p(": ").inptxt(elem, this, "sc", null, styleClass).nl();
+		x.tr().td("lbl").p(label).p(": ").td("val").inptxt(elem, this, "sc", null, styleClass);
 	}
 
 	final protected void inputElem(final xwriter x, final DbField f, final a elem) throws Throwable {
@@ -81,11 +90,13 @@ public class form_book2 extends form {
 	@Override
 	protected void render(final xwriter x) throws Throwable {
 		final Book o = (Book) (object_id == null ? null : Db.currentTransaction().get(Book.class, object_id));
+		begin(x);
 		inputText(x, "Name", Book.name, "long", o == null ? init_str : o.getName());
 		inputText(x, "Authors", Book.authors, "long", o == null ? "" : o.getAuthors());
 		inputText(x, "Publisher", Book.publisher, "medium", o == null ? "" : o.getPublisher());
 		inputText(x, "Published date", Book.publishedDate, "short",
 				o == null ? "" : util.tostr(o.getPublishedDate(), ""));
+		end(x);
 	}
 
 	@Override
