@@ -40,7 +40,7 @@ public final class JavaCodeEmitter {
 				add(jce);
 			} catch (final Throwable t) {
 				out.println("// cannot create JavaCodeElem of class '" + elemClsName + "' for java class '"
-						+ cls.getName() + "' field '" + dbf.getName() + "'");
+						+ cls.getName() + "' field '" + dbf.getName() + "' type '" + dbf.getClass().getName() + "'");
 			}
 		}
 		for (final DbRelation dbr : dbc.getDeclaredRelations()) {
@@ -54,8 +54,9 @@ public final class JavaCodeEmitter {
 						.newInstance(dbr);
 				add(jce);
 			} catch (final Throwable t) {
-				out.println("// cannot create JavaCodeElem of class '" + elemClsName + "' for java class "
-						+ t.getMessage());
+				out.println("// cannot create JavaCodeElem of class '" + elemClsName
+						+ "' for java class '" + cls.getName() + "' relation '" + dbr.getName()
+						+ "' type '" + dbr.getClass().getName() + "'");
 			}
 		}
 

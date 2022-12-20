@@ -9,7 +9,7 @@ import b.a;
 import b.xwriter;
 
 public abstract class view_table extends view {
-	private static final long serialVersionUID = 2;
+	private static final long serialVersionUID = 1;
 
 	public final static int BIT_CLICK_ITEM = 1;
 	/** The actions that are enabled in the table. */
