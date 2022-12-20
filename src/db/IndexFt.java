@@ -5,6 +5,8 @@ import java.sql.Statement;
 
 /** Full text index of column(s). */
 public final class IndexFt extends Index {
+	private static final long serialVersionUID = 1L;
+
 	public IndexFt(final DbField... fld) {
 		super(fld);
 	}

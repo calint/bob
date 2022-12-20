@@ -4,6 +4,8 @@ import db.DbObject;
 import db.FldBlob;
 
 public final class DataBinary extends DbObject {
+	private static final long serialVersionUID = 1L;
+
 	public final static FldBlob data = new FldBlob();
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -

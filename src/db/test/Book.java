@@ -9,6 +9,8 @@ import db.IndexRel;
 import db.RelAgg;
 
 public final class Book extends DbObject {
+	private static final long serialVersionUID = 1L;
+
 	public final static FldStr name = new FldStr(800);
 	public final static FldStr authors = new FldStr(3000);
 	public final static FldStr publisher = new FldStr(400);

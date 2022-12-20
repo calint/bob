@@ -11,6 +11,8 @@ import db.FldSerializable;
 import db.FldStr;
 
 public final class TestObj extends DbObject {
+	private static final long serialVersionUID = 1L;
+
 	public final static FldSerializable list = new FldSerializable();
 	public final static FldChars md5 = new FldChars(32, "abc");
 	public final static FldStr subject = new FldStr(200, "no 'subject'");

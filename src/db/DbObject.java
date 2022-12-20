@@ -1,11 +1,14 @@
 package db;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.HashSet;
 
 /** Abstract database object. */
-public abstract class DbObject {
+public abstract class DbObject implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	public final static FldId id = new FldId();
 
 	final HashMap<DbField, Object> fieldValues = new HashMap<DbField, Object>();

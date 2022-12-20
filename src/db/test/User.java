@@ -18,6 +18,8 @@ import db.RelRef;
 import db.RelRefN;
 
 public final class User extends DbObject {
+	private static final long serialVersionUID = 1L;
+
 	public final static FldStr name = new FldStr();
 	public final static FldStr description = new FldStr();
 	public final static FldStr passhash = new FldStr(32);

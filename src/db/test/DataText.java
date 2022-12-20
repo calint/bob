@@ -5,6 +5,8 @@ import db.FldClob;
 import db.IndexFt;
 
 public final class DataText extends DbObject {
+	private static final long serialVersionUID = 1L;
+
 	public final static FldClob meta = new FldClob();
 	public final static FldClob data = new FldClob();
 

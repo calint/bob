@@ -2,6 +2,8 @@ package db;
 
 /** Index of relation column. */
 public class IndexRel extends Index {
+	private static final long serialVersionUID = 1L;
+
 	final private DbRelation rel;
 
 	public IndexRel(final DbRelation r) {

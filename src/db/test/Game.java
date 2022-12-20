@@ -4,6 +4,8 @@ import db.DbObject;
 import db.FldStr;
 
 public final class Game extends DbObject {
+	private static final long serialVersionUID = 1L;
+
 	public final static FldStr name = new FldStr();
 	public final static FldStr description = new FldStr(8000);
 
