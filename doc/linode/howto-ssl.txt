@@ -1,3 +1,5 @@
+https://www.linode.com/docs/products/networking/nodebalancers/guides/ssl-termination/
+
 sudo certbot certonly --manual --preferred-challenges dns
   request: www.<your domain> <your domain>
   follow instructions
