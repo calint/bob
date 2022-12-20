@@ -17,13 +17,12 @@ import db.test.Book;
 import db.test.DataText;
 
 public class form_book2 extends form {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 
 	final private LinkedHashMap<String, a> fields = new LinkedHashMap<String, a>();
-	
+
 	final protected void begin(final xwriter x) {
 		x.table("form").nl();
-		x.th().th();
 	}
 
 	final protected void end(final xwriter x) {
@@ -33,14 +32,13 @@ public class form_book2 extends form {
 	final protected void inputText(final xwriter x, final String label, final DbField f, final String styleClass,
 			final String value) {
 		final String nm = f.getName();
-		final a e = fields.get(nm);
-		final a elem = e != null ? e : new a(this, nm);
-		elem.set(value);
+		a e = fields.get(nm);
 		if (e == null) {
-			fields.put(nm, elem);
+			e = new a(this, nm);
+			e.set(value);
+			fields.put(nm, e);
 		}
-
-		x.tr().td("lbl").p(label).p(": ").td("val").inptxt(elem, this, "sc", null, styleClass);
+		x.tr().td("lbl").p(label).p(": ").td("val").inptxt(e, this, "sc", null, styleClass).nl();
 	}
 
 	final protected void inputElem(final xwriter x, final DbField f, final a elem) throws Throwable {
@@ -97,6 +95,11 @@ public class form_book2 extends form {
 		inputText(x, "Published date", Book.publishedDate, "short",
 				o == null ? "" : util.tostr(o.getPublishedDate(), ""));
 		end(x);
+		x.ax(this, "test", "test").nl();
+	}
+
+	public void x_test(xwriter x, String param) throws Throwable {
+		x.xu(this);
 	}
 
 	@Override

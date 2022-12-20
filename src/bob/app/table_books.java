@@ -73,7 +73,7 @@ public class table_books extends view_table {
 
 	@Override
 	protected void onActionCreate(xwriter x, String init_str) throws Throwable {
-		final form_book fm = new form_book(null, init_str);
+		final form_book2 fm = new form_book2(null, init_str);
 		super.bubble_event(x, this, fm);
 	}
 
