@@ -6,7 +6,9 @@ import java.util.Set;
 import b.xwriter;
 import bob.action;
 import bob.view_table;
+import db.Db;
 import db.DbObjects;
+import db.DbTransaction;
 import db.Limit;
 import db.Query;
 import db.test.Book;
@@ -16,7 +18,7 @@ public class table_books extends view_table {
 	static final long serialVersionUID = 1;
 
 	public table_books() {
-		super(BIT_SEARCH, BIT_CLICK_ITEM);
+		super(BIT_SEARCH | BIT_SELECT | BIT_CREATE | BIT_DELETE, BIT_CLICK_ITEM);
 	}
 
 	public String getTitle() {
@@ -67,6 +69,21 @@ public class table_books extends view_table {
 	protected String getNameFrom(final Object o) {
 		final Book b = (Book) o;
 		return b.getName();
+	}
+
+	@Override
+	protected void onActionCreate(xwriter x, String init_str) throws Throwable {
+	}
+
+	@Override
+	protected void onActionDelete(xwriter x) throws Throwable {
+		final Set<String> sel = getSelectedIds();
+		for (final String id : sel) {
+			final DbTransaction tn = Db.currentTransaction();
+			final Book b = (Book) tn.get(Book.class, new Query(Book.class, Integer.parseInt(id)), null, null).get(0);
+			tn.delete(b);
+		}
+		sel.clear();
 	}
 
 	@Override
