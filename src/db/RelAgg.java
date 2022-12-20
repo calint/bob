@@ -2,6 +2,7 @@ package db;
 
 /** Aggregation One-to-One. */
 public final class RelAgg extends DbRelation {
+	private static final long serialVersionUID = 1L;
 
 	public RelAgg(final Class<? extends DbObject> toCls) {
 		super(toCls);

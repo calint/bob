@@ -4,6 +4,8 @@ import java.util.Map;
 
 /** Long field. */
 public final class FldLng extends DbField {
+	private static final long serialVersionUID = 1L;
+	
 	final private long defval;
 
 	public FldLng(final long def) {

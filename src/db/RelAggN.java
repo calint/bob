@@ -4,6 +4,7 @@ import java.util.List;
 
 /** Aggregation One-to-Many. */
 public final class RelAggN extends DbRelation {
+	private static final long serialVersionUID = 1L;
 
 	public RelAggN(final Class<? extends DbObject> toCls) {
 		super(toCls);

@@ -2,6 +2,8 @@ package db;
 
 /** BLOB field. */
 public final class FldBlob extends DbField {
+	private static final long serialVersionUID = 1L;
+
 	public FldBlob() {
 		super("longblob", 0, null, true, false);
 	}

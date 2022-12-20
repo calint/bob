@@ -7,6 +7,8 @@ import java.util.HashSet;
 
 /** Association One-to-Many. */
 public final class RelRefN extends DbRelation {
+	private static final long serialVersionUID = 1L;
+	
 	RelRefNMeta rrm;
 
 	public RelRefN(final Class<? extends DbObject> toCls) {

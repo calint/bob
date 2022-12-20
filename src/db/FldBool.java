@@ -4,6 +4,8 @@ import java.util.Map;
 
 /** Boolean field. */
 public final class FldBool extends DbField {
+	private static final long serialVersionUID = 1L;
+	
 	final private boolean defval;
 
 	public FldBool(final boolean def) {

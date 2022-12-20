@@ -5,6 +5,8 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 public final class FldSerializable extends DbField {
+	private static final long serialVersionUID = 1L;
+	
 	public FldSerializable() {
 		super("longblob", 0, null, true, false);
 	}

@@ -2,6 +2,8 @@ package db;
 
 /** Primary key integer field. */
 public final class FldId extends DbField {
+	private static final long serialVersionUID = 1L;
+	
 	FldId() {
 		super("int", 0, null, false, false);
 	}

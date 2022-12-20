@@ -68,7 +68,7 @@ public class form_book2 extends form {
 	}
 
 	@Override
-	public a child(String id) {
+	public a child(final String id) {
 		final a e = super.child(id);
 		if (e != null)
 			return e;
