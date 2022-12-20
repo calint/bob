@@ -60,9 +60,18 @@ div.output{
 	padding:1em;
 	border:1px dotted green;
 }
-input.nbr {
-	width:3em;
+input.nbr{
+	width:3em
 }
-input.center {
-	text-align:center;
+input.center{
+	text-align:center
+}
+input.long{
+	width:60em
+}
+input.medium{
+	width:30em
+}
+input.short{
+	width:15em
 }

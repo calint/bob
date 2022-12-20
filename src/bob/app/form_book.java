@@ -25,11 +25,11 @@ public class form_book extends form {
 		name.set(o == null ? init_str : o.getName());
 		authors.set(o == null ? "" : o.getAuthors());
 		publisher.set(o == null ? "" : o.getPublisher());
-		publishedDate.set(o == null ? "" : util.str(o.getPublishedDate(), ""));
+		publishedDate.set(o == null ? "" : util.tostr(o.getPublishedDate(), ""));
 	}
 
 	public String getTitle() {
-		return util.str(name.str(), "New book");
+		return util.tostr(name.str(), "New book");
 	}
 
 	@Override

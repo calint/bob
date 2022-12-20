@@ -109,7 +109,8 @@ public class table_books extends view_table {
 
 	@Override
 	protected void onRowClick(final xwriter x, final String id) throws Throwable {
-		final form_book f = new form_book(id, q.str());
+//		final form_book f = new form_book(id, q.str());
+		final form_book2 f = new form_book2(id, q.str());
 		super.bubble_event(x, this, f);
 	}
 }

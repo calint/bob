@@ -18,9 +18,13 @@ public final class util {
 		return Long.toString(b) + " TB";
 	}
 
-	public static String str(final Object o, String defaultStr) {
+	public static String tostr(final Object o, String defaultStr) {
 		if (o == null || o.toString().length() == 0)
 			return defaultStr;
 		return o.toString();
+	}
+
+	public static boolean isempty(final String s) {
+		return s==null||s.isEmpty();
 	}
 }

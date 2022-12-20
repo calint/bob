@@ -1,10 +1,13 @@
 package db;
 
+import java.io.Serializable;
 import java.sql.DatabaseMetaData;
 import java.util.Map;
 
 /** Abstract field. */
-public abstract class DbField {
+public abstract class DbField implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	String name;
 	Class<? extends DbObject> cls;
 	String tableName;
