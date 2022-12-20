@@ -3,7 +3,7 @@ package bob;
 import b.a;
 import b.xwriter;
 
-public class checkbox extends a {
+public final class checkbox extends a {
 	static final long serialVersionUID = 1;
 	final private static String off = "◻";
 	final private static String on = "▣";
