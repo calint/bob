@@ -118,7 +118,7 @@ public class form_book2 extends form {
 
 		final DataText d = o.getData(true);
 		d.setMeta(o.getName() + " " + o.getAuthors() + " " + o.getPublisher());
-		x.xu(this);
+//		x.xu(this);
 	}
 
 	@Override
