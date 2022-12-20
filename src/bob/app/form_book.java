@@ -21,12 +21,11 @@ public class form_book extends form {
 
 	public form_book(final String object_id, final String init_str) {
 		super(null, object_id, BIT_SAVE_CLOSE | BIT_SAVE | BIT_CLOSE);
-		final Book o = (Book) (object_id == null ? null
-				: Db.currentTransaction().get(Book.class, Integer.parseInt(object_id)));
-		name.set(object_id == null ? init_str : o.getName());
-		authors.set(object_id == null ? "" : o.getAuthors());
-		publisher.set(object_id == null ? "" : o.getPublisher());
-		publishedDate.set(object_id == null ? "" : util.str(o.getPublishedDate(), ""));
+		final Book o = (Book) (object_id == null ? null : Db.currentTransaction().get(Book.class, object_id));
+		name.set(o == null ? init_str : o.getName());
+		authors.set(o == null ? "" : o.getAuthors());
+		publisher.set(o == null ? "" : o.getPublisher());
+		publishedDate.set(o == null ? "" : util.str(o.getPublishedDate(), ""));
 	}
 
 	public String getTitle() {
@@ -40,6 +39,26 @@ public class form_book extends form {
 		x.p("authors: ").inptxt(authors, this, "sc").nl();
 		x.p("publisher: ").inptxt(publisher, this, "sc").nl();
 		x.p("publishedDate: ").inptxt(publishedDate, this, "sc").nl();
+	}
+
+	@Override
+	protected void save(final xwriter x) throws Throwable {
+		final DbTransaction tn = Db.currentTransaction();
+		final Book o;
+		if (object_id == null) { // create new
+			o = (Book) tn.create(Book.class);
+			object_id = Integer.toString(o.id());
+		} else {
+			o = (Book) tn.get(Book.class, object_id);
+		}
+		o.setName(name.str());
+		o.setAuthors(authors.str());
+		o.setPublisher(publisher.str());
+		if (!publishedDate.is_empty())
+			o.setPublishedDate(Timestamp.valueOf(publishedDate.str()));
+
+		final DataText d = o.getData(true);
+		d.setMeta(o.getName() + " " + o.getAuthors() + " " + o.getPublisher());
 	}
 
 //	@Override
@@ -57,25 +76,6 @@ public class form_book extends form {
 //		}
 //		super.onAction(x, act);
 //	}
-
-	@Override
-	protected void save(final xwriter x) throws Throwable {
-		final DbTransaction tn = Db.currentTransaction();
-		final Book o;
-		if (object_id == null) { // create new
-			o = (Book) tn.create(Book.class);
-		} else {
-			o = (Book) tn.get(Book.class, Integer.parseInt(object_id));
-		}
-		o.setName(name.str());
-		o.setAuthors(authors.str());
-		o.setPublisher(publisher.str());
-		if (!publishedDate.is_empty())
-			o.setPublishedDate(Timestamp.valueOf(publishedDate.str()));
-
-		final DataText d = o.getData(true);
-		d.setMeta(o.getName() + " " + o.getAuthors() + " " + o.getPublisher());
-	}
 
 	public final void x_sc(final xwriter x, final String param) throws Throwable {
 		saveAndClose(x);
