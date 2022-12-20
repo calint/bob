@@ -78,6 +78,7 @@ public abstract class view_table extends view {
 				}
 				onActionDelete(x);
 				x.xu(t);
+				x.xu(p);
 				x.xfocus(q);
 				return;
 
