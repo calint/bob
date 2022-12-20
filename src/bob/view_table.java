@@ -187,8 +187,6 @@ public abstract class view_table extends view {
 
 		@Override
 		public void to(final xwriter x) throws Throwable {
-			if (!isEnabled())
-				return;
 			final int count = tv.getObjectsCount();
 			if (count < objectsPerPage) {
 				npages = 1;
@@ -203,7 +201,7 @@ public abstract class view_table extends view {
 				x.p(tv.typeInfo.namePlural);
 			}
 			x.p(". Page ");
-			x.inp(pg, null, "nbr center", null, this, "p", null, null, null);
+			x.inp(pg, null, "nbr center", null, null, this, "p", null, null);
 			x.p(" of ");
 			x.p(npages);
 			x.p(". ");

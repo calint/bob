@@ -226,7 +226,7 @@ public final class xwriter{
 //		return tag("is");
 //	}
 	// ? review this
-	public xwriter inp(final a e,final String type,final String cls,final String style,final a on_enter_callback_elem,final String on_enter_callback,final String default_value,final a on_change_callback_elem,final String on_change_callback){
+	public xwriter inp(final a e,final String type,final String cls,final String style,final String default_value,final a on_enter_callback_elem,final String on_enter_callback,final a on_change_callback_elem,final String on_change_callback){
 		final String value=isempty(e.str(),default_value);
 		tago("input").attr("value",value).default_attrs_for_element(e);
 		if(!isempty(type)){
@@ -305,7 +305,7 @@ public final class xwriter{
 	}
 
 	public xwriter inpax(final a e,final String cls,final a on_change_callback_elem,final String on_change_callback,final String on_enter_callback){
-		return inp(e,null,cls,null,on_change_callback_elem,on_enter_callback,null,on_change_callback_elem,on_change_callback);
+		return inp(e,null,cls,null,null,on_change_callback_elem,on_enter_callback,on_change_callback_elem,on_change_callback);
 	}
 
 	public xwriter inpflt(final a e){
@@ -328,19 +328,19 @@ public final class xwriter{
 	}
 
 	public xwriter inptxt(final a e,final a callback_elem_on_enter){
-		return inp(e,null,null,null,callback_elem_on_enter,null,null,null,null);
+		return inp(e,null,null,null,null,callback_elem_on_enter,null,null,null);
 	}
 
 	public xwriter inptxt(final a e,final a callback_elem_on_enter,final String callback){
-		return inp(e,null,null,null,callback_elem_on_enter,callback,null,null,null);
+		return inp(e,null,null,null,null,callback_elem_on_enter,callback,null,null);
 	}
 
 	public xwriter inptxt(final a e,final a callback_elem_on_enter,final String callback,final String cls){
-		return inp(e,null,cls,null,callback_elem_on_enter,callback,null,null,null);
+		return inp(e,null,cls,null,null,callback_elem_on_enter,callback,null,null);
 	}
 
 	public xwriter inptxt(final a e,final a callback_elem_on_enter,final String callback,final String default_value,final String cls){
-		return inp(e,null,cls,null,callback_elem_on_enter,callback,default_value,null,null);
+		return inp(e,null,cls,null,default_value,callback_elem_on_enter,callback,null,null);
 	}
 
 	public xwriter inptxtarea(final a e){

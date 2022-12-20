@@ -71,6 +71,7 @@ dbo
 [ ]   ms sql server?
 [ ]   ibm db2?
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
+[x] xwriter: review inpx
 [x] bob,b: window.scrollTo(0, document.body.scrollHeight), element.scrollTop = element.scrollHeight;
 [x] remove package c
 [x] req state to enum

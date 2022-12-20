@@ -19,14 +19,14 @@ public class t3 extends a {
 		x.p("2 ").divot(f, "bytes", "background:yellow").p(" onclick=\"ui.alert('&quot;\\'hello\\'&quot;')").p("\"")
 				.tagoe().p(f).div_().nl();
 		x.p("3 ").divot(f, "bytes", "background:yellow").tagoe().p(f).div_().nl();
-		x.p("4 ").inp(f, "text", "txt", "background:yellow", this, "test \"'hello'\"", "default \"''\"", this,
+		x.p("4 ").inp(f, "text", "txt", "background:yellow", "default \"''\"", this, "test \"'hello'\"", this,
 				"test ' \"chg\" '").nl();
-		x.p("5 ").inp(f, "text", "txt", "background:yellow", this, "test \"'hello'\"", "default \"''\"", this, null)
+		x.p("5 ").inp(f, "text", "txt", "background:yellow", "default \"''\"", this, "test \"'hello'\"", this, null)
 				.nl();
-		x.p("6 ").inp(f, "text", "txt", "background:yellow", this, "test \"'hello'\"", "default \"''\"", null, null)
+		x.p("6 ").inp(f, "text", "txt", "background:yellow", "default \"''\"", this, "test \"'hello'\"", null, null)
 				.nl();
-		x.p("7 ").inp(f, "text", "txt", "background:yellow", this, "test \"'hello'\"", null, null, null).nl();
-		x.p("8 ").inp(f, "text", "txt", "background:yellow", this, null, null, null, null).nl();
+		x.p("7 ").inp(f, "text", "txt", "background:yellow", null, this, "test \"'hello'\"", null, null).nl();
+		x.p("8 ").inp(f, "text", "txt", "background:yellow", null, this, null, null, null).nl();
 		x.p("9 ").inp(f, "text", "txt", "background:yellow", null, null, null, null, null).nl();
 		x.p("10 ").inp(f, "text", "txt", null, null, null, null, null, null).nl();
 		x.p("11 ").inp(f, "text", null, null, null, null, null, null, null).nl();
@@ -34,9 +34,9 @@ public class t3 extends a {
 		x.p("13 ").inp(f, "checkbox", null, null, null, null, null, null, null).nl();
 		x.p("14 ").inp(f, "checkbox", null, null, null, null, null, this, "test").nl();
 		x.p("15 ").inp(f, "checkbox", null, null, null, null, null, this, null).nl();
-		x.p("16 ").inp(f, "checkbox", null, null, this, "test \"'test param'\"", null, null, null).nl();
-		x.p("17 ").inp(f, "checkbox", null, null, this, null, null, null, null).nl();
-		x.p("18 ").inp(f, "date", null, null, this, null, null, null, null).nl();
+		x.p("16 ").inp(f, "checkbox", null, null, null, this, "test \"'test param'\"", null, null).nl();
+		x.p("17 ").inp(f, "checkbox", null, null, null, this, null, null, null).nl();
+		x.p("18 ").inp(f, "date", null, null, null, this, null, null, null).nl();
 		x.p("19 ").inp(f, "time", null, null, null, null, null, null, null).nl();
 		x.p("20 ").inp(f, "number", null, null, null, null, null, null, null).nl();
 		x.p("21 ").inp(f, "color", null, null, null, null, null, null, null).nl();
