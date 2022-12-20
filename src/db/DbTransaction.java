@@ -150,14 +150,18 @@ public final class DbTransaction {
 			cache.remove(o);
 		}
 	}
+
 	/** Get object by id. */
 	public DbObject get(final Class<? extends DbObject> cls, final int id) {
-		return get(cls, new Query(cls, id), null, null).get(0);
+		final List<DbObject> ls = get(cls, new Query(cls, id), null, null);
+		if (ls.isEmpty())
+			return null;
+		return ls.get(0);
 	}
 
-	/** Get object by id using string. Convenience method. */
+	/** Get object by id using string. Convenience method that parses the string to integer. */
 	public DbObject get(final Class<? extends DbObject> cls, final String id) {
-		return get(cls, new Query(cls, Integer.parseInt(id)), null, null).get(0);
+		return get(cls, Integer.parseInt(id));
 	}
 
 	public List<DbObject> get(final Class<?> cls, final Query qry, final Order ord, final Limit lmt) { // ? call get(new

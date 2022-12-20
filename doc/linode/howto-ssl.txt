@@ -1,0 +1,8 @@
+sudo certbot certonly --manual --preferred-challenges dns
+
+Certificate is saved at: /etc/letsencrypt/live/<your domain>/fullchain.pem
+Key is saved at:         /etc/letsencrypt/live/<your domain>/privkey.pem
+
+copy fullchain.pem to "SSL Certificate" field in load-balancer--2.png
+copy privkey.pem to "Private Key" field in load-balancer--2.png
+
