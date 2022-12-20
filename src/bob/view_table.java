@@ -77,8 +77,8 @@ public abstract class view_table extends view {
 					return;
 				}
 				onActionDelete(x);
-				x.xu(t);
-				x.xu(p);
+				x.xu(t); // update table
+				x.xu(p); // update paging
 				x.xfocus(q);
 				return;
 
