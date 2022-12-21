@@ -224,6 +224,7 @@ public abstract class ViewTable extends View {
 				x.p(tv.typeInfo.namePlural);
 			}
 			x.p(". Page ");
+			// ! pg may be more than npages when deleting, adjust
 			x.inp(pg, null, "nbr center", null, null, this, "p", null, null);
 			x.p(" of ");
 			x.p(npages);

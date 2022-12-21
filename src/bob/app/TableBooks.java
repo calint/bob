@@ -18,6 +18,7 @@ import db.test.DataText;
 public class TableBooks extends ViewTable {
 	static final long serialVersionUID = 1;
 	public a title;
+	public a id;
 
 	public TableBooks() {
 		super(BIT_SEARCH | BIT_SELECT | BIT_CREATE | BIT_DELETE, BIT_CLICK_ITEM);
@@ -39,6 +40,7 @@ public class TableBooks extends ViewTable {
 
 	@Override
 	protected void renderMoreSearchSection(final xwriter x) {
+		x.p("Id: ").inptxt(id, "nbr").p(' ');
 		x.p("Exact book title: ").inptxt(title, "medium");
 	}
 
@@ -68,6 +70,9 @@ public class TableBooks extends ViewTable {
 		}
 		if (!title.is_empty()) {
 			qry.and(Book.name, Query.EQ, title.str());
+		}
+		if (!id.is_empty()) {
+			qry.and(Book.class, id.toint());
 		}
 		return new DbObjects(null, Book.class, qry, null);
 	}
@@ -109,12 +114,13 @@ public class TableBooks extends ViewTable {
 
 	@Override
 	protected void renderHeaders(final xwriter x) {
-		x.th().p("Name").th().p("Author");
+		x.th().p("Id").th().p("Name").th().p("Author");
 	}
 
 	@Override
 	protected void renderRowCells(final xwriter x, final Object o) {
 		final Book b = (Book) o;
+		x.td().p(b.id());
 		x.td();
 		renderLinked(x, b, b.getName());
 		x.td().p(b.getAuthors());

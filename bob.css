@@ -60,21 +60,21 @@ div.output{
 	padding:1em;
 	border:1px dotted green;
 }
-input.nbr{
-	width:3em;
-}
 input.center{
 	text-align:center;
 }
-/** bob.form_dbo */
+/** bob.form_dbo, bob.view_table more search */
 input.long{
 	width:60em;
 }
 input.medium{
 	width:30em;
 }
-input.short{
+input.small{
 	width:15em;
+}
+input.nbr{
+	width:5em;
 }
 table.form{
 	margin-left:auto;
