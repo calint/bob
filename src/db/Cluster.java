@@ -69,7 +69,7 @@ public final class Cluster {
 		DriverManager.registerDriver(driver);
 
 		if (args.length < 4) {
-			System.out.println("Usage: java db.ClusterNIO <ip:port file> <dbname> <user> <password>");
+			System.out.println("Usage: " + Cluster.class.getName() + " <ip:port file> <dbname> <user> <password>");
 			return;
 		}
 		dbname = args[1];
