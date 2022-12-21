@@ -53,8 +53,6 @@ public abstract class View extends a implements Titled {
 
 	protected abstract String getIdFrom(Object o);
 
-	protected abstract String getNameFrom(Object o);
-
 	protected abstract Set<String> getSelectedIds();
 
 	protected abstract void onActionCreate(xwriter x, String initStr) throws Throwable;

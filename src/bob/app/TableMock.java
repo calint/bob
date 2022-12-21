@@ -38,11 +38,6 @@ public class TableMock extends ViewTable {
 	}
 
 	@Override
-	protected String getNameFrom(final Object o) {
-		return o.toString();
-	}
-
-	@Override
 	protected void onActionCreate(final xwriter x, final String init_str) throws Throwable {
 		final FormMock fm = new FormMock(null, null, init_str);
 		super.bubble_event(x, this, fm);

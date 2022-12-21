@@ -84,22 +84,16 @@ public class TableBooks extends ViewTable {
 	}
 
 	@Override
-	protected String getNameFrom(final Object o) {
-		final Book b = (Book) o;
-		return b.getName();
-	}
-
-	@Override
-	protected void onActionCreate(final xwriter x, final String init_str) throws Throwable {
-		final FormBook2 fm = new FormBook2(null, init_str);
+	protected void onActionCreate(final xwriter x, final String initStr) throws Throwable {
+		final FormBook2 fm = new FormBook2(null, initStr);
 		super.bubble_event(x, this, fm);
 	}
 
 	@Override
 	protected void onActionDelete(final xwriter x) throws Throwable {
 		final Set<String> sel = getSelectedIds();
+		final DbTransaction tn = Db.currentTransaction();
 		for (final String id : sel) {
-			final DbTransaction tn = Db.currentTransaction();
 			final Book b = (Book) tn.get(Book.class, Integer.parseInt(id));
 			tn.delete(b);
 		}

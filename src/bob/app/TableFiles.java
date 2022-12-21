@@ -102,11 +102,6 @@ public class TableFiles extends ViewTable {
 
 	@Override
 	protected String getIdFrom(final Object o) {
-		return getNameFrom(o);
-	}
-
-	@Override
-	protected String getNameFrom(final Object o) {
 		String dispnm = o.toString();
 		if (dispnm.startsWith("./")) {
 			dispnm = dispnm.substring("./".length());
@@ -137,7 +132,7 @@ public class TableFiles extends ViewTable {
 		}
 		renderLinked(x, o, img);
 		x.td();
-		x.p(getNameFrom(o));
+		x.p(p.name());
 //		renderLinkedName(x, o);
 		x.td().p(formatDateTime(p.lastmod()));
 		x.td(null, "text-align:right").p(Util.formatSizeInBytes(p.size()));

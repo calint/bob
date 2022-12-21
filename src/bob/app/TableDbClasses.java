@@ -42,11 +42,6 @@ public class TableDbClasses extends ViewTable {
 
 	@Override
 	protected String getIdFrom(final Object o) {
-		return getNameFrom(o);
-	}
-
-	@Override
-	protected String getNameFrom(final Object o) {
 		return ((DbClass) o).getJavaClass().getName();
 	}
 
