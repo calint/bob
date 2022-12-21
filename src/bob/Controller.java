@@ -20,11 +20,11 @@ public class Controller extends a {
 //	public a test;
 
 	public Controller() {
-		update_serialized_size();
-		update_server_info();
+		updateSerializedSize();
+		updateServerInfo();
 	}
 
-	private void update_server_info() {
+	private void updateServerInfo() {
 		si.set(b.id + " " + req.get().ip().getHostAddress());
 	}
 
@@ -89,12 +89,12 @@ public class Controller extends a {
 
 	public void x_s(final xwriter x, final String param) throws Throwable {
 //		System.out.println("*** param:{"+param+"}");
-		update_serialized_size();
-		update_server_info();
+		updateSerializedSize();
+		updateServerInfo();
 		x.xu(s, sg, si);
 	}
 
-	private void update_serialized_size() {
+	private void updateSerializedSize() {
 		final byte[] ba = serialize(this);
 		s.set(Integer.toString(ba.length));
 		sg.set(Integer.toString(gzip(ba).length));
