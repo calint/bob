@@ -1,5 +1,6 @@
 b
 [ ] bob: controller: when opening a new view or form scroll to top
+[ ] input type checkbox instead of characters
 [ ] RelRef, RelRefN etc find/select using view, create new
 [ ] class_init extended to be able to set statics on any class
 [ ] bob.js: server is busy message box when typing fast
