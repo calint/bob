@@ -9,7 +9,7 @@ MYSQL_NCONS=10
 B_NTHREADS=10
 B_PORT=8888
 
-# the address of the cluster relays
 CLUSTER_MODE=true
+# the address of the cluster manager
 CLUSTER_IP=192.168.145.232
 CLUSTER_PORT=8889
