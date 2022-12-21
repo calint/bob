@@ -6,7 +6,7 @@ import java.util.Set;
 import b.a;
 import b.xwriter;
 
-public abstract class view extends a implements titled {
+public abstract class View extends a implements Titled {
 	static final long serialVersionUID = 1;
 
 	public final static int BIT_CREATE = 1;
@@ -14,10 +14,10 @@ public abstract class view extends a implements titled {
 	public final static int BIT_SEARCH = 4;
 	public final static int BIT_SELECT = 8;
 	/** The actions that are enabled in the view. */
-	final protected int enabled_view_bits;
+	final protected int enabledViewBits;
 
-	public view(final int enabled_bits) {
-		enabled_view_bits = enabled_bits;
+	public View(final int enabledBits) {
+		enabledViewBits = enabledBits;
 	}
 //
 //	protected final void enable(int bit) {
@@ -32,7 +32,7 @@ public abstract class view extends a implements titled {
 //		return (enabled_bits & bit) == bit;
 //	}
 
-	protected List<action> getActionsList() {
+	protected List<Action> getActionsList() {
 		return null;
 	}
 
@@ -54,9 +54,9 @@ public abstract class view extends a implements titled {
 
 	protected abstract Set<String> getSelectedIds();
 
-	protected abstract void onActionCreate(xwriter x, String init_str) throws Throwable;
+	protected abstract void onActionCreate(xwriter x, String initStr) throws Throwable;
 
 	protected abstract void onActionDelete(xwriter x) throws Throwable;
 
-	protected abstract void onAction(xwriter x, action act) throws Throwable;
+	protected abstract void onAction(xwriter x, Action act) throws Throwable;
 }

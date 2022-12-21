@@ -3,13 +3,13 @@ package bob;
 import b.a;
 import b.xwriter;
 
-public final class checkbox extends a {
+public final class Checkbox extends a {
 	static final long serialVersionUID = 1;
 	final private static String off = "◻";
 	final private static String on = "▣";
 	final private String id;
 
-	public checkbox(final String id, final boolean checked) {
+	public Checkbox(final String id, final boolean checked) {
 		set(checked ? on : off);
 		this.id = id;
 	}

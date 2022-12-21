@@ -9,11 +9,11 @@ import java.util.regex.Pattern;
 
 import b.path;
 import b.xwriter;
-import bob.action;
-import bob.util;
-import bob.view_table;
+import bob.Action;
+import bob.Util;
+import bob.ViewTable;
 
-public class table_files extends view_table {
+public class TableFiles extends ViewTable {
 	static final long serialVersionUID = 1;
 
 	public static String icon_file_uri = "/bob/file.png";
@@ -29,11 +29,11 @@ public class table_files extends view_table {
 		return sdf.format(ms);
 	}
 
-	public table_files() {
+	public TableFiles() {
 		this(b.b.path());
 	}
 
-	public table_files(final path pth) {
+	public TableFiles(final path pth) {
 		super(BIT_SEARCH, BIT_CLICK_ITEM);
 		this.pth = pth;
 	}
@@ -115,7 +115,7 @@ public class table_files extends view_table {
 	}
 
 	@Override
-	protected void onAction(final xwriter x, final action act) throws Throwable {
+	protected void onAction(final xwriter x, final Action act) throws Throwable {
 		final Set<String> selectedIds = getSelectedIds();
 		x.xalert(act.name() + selectedIds);
 	}
@@ -140,18 +140,18 @@ public class table_files extends view_table {
 		x.p(getNameFrom(o));
 //		renderLinkedName(x, o);
 		x.td().p(formatDateTime(p.lastmod()));
-		x.td(null, "text-align:right").p(util.formatSizeInBytes(p.size()));
+		x.td(null, "text-align:right").p(Util.formatSizeInBytes(p.size()));
 	}
 
 	@Override
 	protected void onRowClick(final xwriter x, final String id) throws Throwable {
 		final path p = pth.get(id);
 		if (p.isdir()) {
-			final table_files f = new table_files(p);
+			final TableFiles f = new TableFiles(p);
 			super.bubble_event(x, this, f);
 			return;
 		}
-		final form_file f = new form_file(p);
+		final FormFile f = new FormFile(p);
 		super.bubble_event(x, this, f);
 	}
 }

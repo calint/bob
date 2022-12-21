@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Set;
 
 import b.xwriter;
-import bob.action;
-import bob.view_table;
+import bob.Action;
+import bob.ViewTable;
 import db.Db;
 import db.DbObjects;
 import db.DbTransaction;
@@ -14,10 +14,10 @@ import db.Query;
 import db.test.Book;
 import db.test.DataText;
 
-public class table_books extends view_table {
+public class TableBooks extends ViewTable {
 	static final long serialVersionUID = 1;
 
-	public table_books() {
+	public TableBooks() {
 		super(BIT_SEARCH | BIT_SELECT | BIT_CREATE | BIT_DELETE, BIT_CLICK_ITEM);
 	}
 
@@ -73,7 +73,7 @@ public class table_books extends view_table {
 
 	@Override
 	protected void onActionCreate(xwriter x, String init_str) throws Throwable {
-		final form_book2 fm = new form_book2(null, init_str);
+		final FormBook2 fm = new FormBook2(null, init_str);
 		super.bubble_event(x, this, fm);
 	}
 
@@ -89,7 +89,7 @@ public class table_books extends view_table {
 	}
 
 	@Override
-	protected void onAction(final xwriter x, final action act) throws Throwable {
+	protected void onAction(final xwriter x, final Action act) throws Throwable {
 		final Set<String> selectedIds = getSelectedIds();
 		x.xalert(act.name() + selectedIds);
 	}
@@ -110,7 +110,7 @@ public class table_books extends view_table {
 	@Override
 	protected void onRowClick(final xwriter x, final String id) throws Throwable {
 //		final form_book f = new form_book(id, q.str());
-		final form_book2 f = new form_book2(id, q.str());
+		final FormBook2 f = new FormBook2(id, q.str());
 		super.bubble_event(x, this, f);
 	}
 }

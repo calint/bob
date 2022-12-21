@@ -10,14 +10,14 @@ import db.test.Game;
 import db.test.TestObj;
 import db.test.User;
 
-public final class application implements bapp {
-	private static application inst;
+public final class Application implements bapp {
+	private static Application inst;
 
-	public static application instance() {
+	public static Application instance() {
 		return inst;
 	}
 
-	public application() {
+	public Application() {
 		inst = this;
 	}
 
@@ -36,9 +36,9 @@ public final class application implements bapp {
 
 		b.b.set_file_suffix_to_content_type("java", "text/plain");
 
-		b.b.set_path_to_class("/bob/websocket", bob.websock_bob.class);
+		b.b.set_path_to_class("/bob/websocket", bob.WebsockBob.class);
 		b.b.set_path_to_class("/stats", b.a_stats.class);
-		b.b.set_path_to_class("/pbob", bob.app.controller_postback.class);
+		b.b.set_path_to_class("/pbob", bob.app.ControllerPostback.class);
 //		b.b.set_path_to_class("/bob", bob.elem.ctrl.class);
 
 		// qa

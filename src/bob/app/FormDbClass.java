@@ -2,15 +2,15 @@ package bob.app;
 
 import b.osltgt;
 import b.xwriter;
-import bob.form;
+import bob.Form;
 import db.DbClass;
 
-public class form_dbclass extends form {
+public class FormDbClass extends Form {
 	private static final long serialVersionUID = 1L;
 
 	private final String javaClassName;
 
-	public form_dbclass(final DbClass dbclass) {
+	public FormDbClass(final DbClass dbclass) {
 		super(null, dbclass.getJavaClass().getName(), BIT_CLOSE);
 		javaClassName = dbclass.getJavaClass().getName();
 	}

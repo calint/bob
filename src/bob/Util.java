@@ -1,6 +1,6 @@
 package bob;
 
-public final class util {
+public final class Util {
 	public static String formatSizeInBytes(final long size_B) {
 		long b = size_B;
 		if (b < 1024)
@@ -18,13 +18,13 @@ public final class util {
 		return Long.toString(b) + " TB";
 	}
 
-	public static String tostr(final Object o, String defaultStr) {
+	public static String toStr(final Object o, String defaultStr) {
 		if (o == null || o.toString().length() == 0)
 			return defaultStr;
 		return o.toString();
 	}
 
-	public static boolean isempty(final String s) {
+	public static boolean isEmpty(final String s) {
 		return s==null||s.isEmpty();
 	}
 }

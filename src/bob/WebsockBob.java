@@ -11,12 +11,12 @@ import b.websock;
 import b.xwriter;
 import db.Db;
 
-final public class websock_bob extends websock {
+final public class WebsockBob extends websock {
 	private final static String axfld = "$";
-	public String controller_class_name = "bob.app.ctrl";
+	public String controllerClassName = "bob.app.Ctrl";
 	protected a controller;
 
-	public websock_bob() {
+	public WebsockBob() {
 		super(true);
 	}
 
@@ -26,7 +26,7 @@ final public class websock_bob extends websock {
 		try {
 			Db.initCurrentTransaction();
 			// todo load root from db or create new
-			controller = (a) Class.forName(controller_class_name).getConstructor().newInstance();
+			controller = (a) Class.forName(controllerClassName).getConstructor().newInstance();
 
 			final xwriter js = new xwriter();
 			final xwriter x = js.xub(controller, true, false);
@@ -44,7 +44,7 @@ final public class websock_bob extends websock {
 		try {
 			Db.initCurrentTransaction();
 
-			final HashMap<String, String> content = populate_content_map_from_buffer(bb);
+			final HashMap<String, String> content = populateContentMapFromBuffer(bb);
 			String ajax_command_string = "";
 			for (final Map.Entry<String, String> me : content.entrySet()) {
 				if (axfld.equals(me.getKey())) {
@@ -129,12 +129,12 @@ final public class websock_bob extends websock {
 		// todo store root in db
 	}
 
-	private static HashMap<String, String> populate_content_map_from_buffer(final ByteBuffer content_bb)
+	private static HashMap<String, String> populateContentMapFromBuffer(final ByteBuffer bb)
 			throws Throwable {
 		final HashMap<String, String> content = new HashMap<String, String>();
-		final byte[] ba = content_bb.array();
-		int i = content_bb.position();
-		final int n = content_bb.limit();
+		final byte[] ba = bb.array();
+		int i = bb.position();
+		final int n = bb.limit();
 //		System.out.println(new String(ba,i,n-i));
 		String name = "";
 		int s = 0;

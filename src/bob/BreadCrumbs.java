@@ -9,7 +9,7 @@ import b.xwriter;
  * Contains elements in a list. Used to create a name space for dynamically
  * created elements.
  */
-public final class bread_crumbs extends a {
+public final class BreadCrumbs extends a {
 	private static final long serialVersionUID = 1L;
 	private final ArrayList<a> elements = new ArrayList<a>();
 
@@ -21,8 +21,8 @@ public final class bread_crumbs extends a {
 			final a e = elements.get(i);
 			x.p(" &raquo; ");
 			final String nm;
-			if (e instanceof titled) { // ? oop
-				nm = ((titled) e).getTitle();
+			if (e instanceof Titled) { // ? oop
+				nm = ((Titled) e).getTitle();
 			} else { // ? oop
 				nm = getClass().getName();
 			}

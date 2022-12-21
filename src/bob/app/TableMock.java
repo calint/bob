@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.Set;
 
 import b.xwriter;
-import bob.action;
-import bob.view_table;
+import bob.Action;
+import bob.ViewTable;
 
-public class table_mock extends view_table {
+public class TableMock extends ViewTable {
 	static final long serialVersionUID = 1;
 
-	public table_mock() {
+	public TableMock() {
 		super(BIT_CREATE | BIT_DELETE | BIT_SELECT | BIT_SEARCH, BIT_CLICK_ITEM);
 	}
 
@@ -23,7 +23,7 @@ public class table_mock extends view_table {
 	protected List<?> getObjectsList() {
 		final List<String> result = new ArrayList<String>();
 		final String qstr = q.str().toLowerCase();
-		for (final String title : data.ls) {
+		for (final String title : DataMock.ls) {
 			if (!title.toLowerCase().startsWith(qstr)) {
 				continue;
 			}
@@ -52,13 +52,13 @@ public class table_mock extends view_table {
 	protected void onActionDelete(final xwriter x) throws Throwable {
 		final Set<String> selectedIds = getSelectedIds();
 		for (final String id : selectedIds) {
-			data.ls.remove(id);
+			DataMock.ls.remove(id);
 		}
 		selectedIds.clear();
 	}
 
 	@Override
-	protected void onAction(final xwriter x, final action act) throws Throwable {
+	protected void onAction(final xwriter x, final Action act) throws Throwable {
 		final Set<String> selectedIds = getSelectedIds();
 		x.xalert(act.name() + selectedIds);
 	}

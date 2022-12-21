@@ -1,5 +1,5 @@
 package bob;
 
-public interface titled {
+public interface Titled {
 	String getTitle();
 }

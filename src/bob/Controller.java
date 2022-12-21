@@ -9,17 +9,17 @@ import b.b;
 import b.req;
 import b.xwriter;
 
-public class controller extends a {
+public class Controller extends a {
 	static final long serialVersionUID = 1;
 	public a s; // serialized size
 	public a sg; // serialized size, gziped
 	public a si; // server info
-	public bread_crumbs bc;
+	public BreadCrumbs bc;
 	public a ae; // active element
-	public menu m;
+	public Menu m;
 //	public a test;
 
-	public controller() {
+	public Controller() {
 		update_serialized_size();
 		update_server_info();
 	}
@@ -56,12 +56,12 @@ public class controller extends a {
 			return;
 		}
 		if (from == bc) { // event from bread crumb
-			final a e = ((bread_crumbs) from).getActive();
+			final a e = ((BreadCrumbs) from).getActive();
 			e.replace(this, ae); // replace active element
 			x.xu(ae); // update active element
 			return;
 		}
-		if (from instanceof form) { // event from a form
+		if (from instanceof Form) { // event from a form
 			if ("close".equals(o)) {
 				bc.removeLast(); // remove last element in bread crumbs
 				final a e = bc.getActive(); // get current element
@@ -75,7 +75,7 @@ public class controller extends a {
 				return;
 			}
 		}
-		if (o instanceof form || o instanceof view) { // open view
+		if (o instanceof Form || o instanceof View) { // open view
 			final a e = (a) o;
 			bc.add(e); // add to bread crumb
 			e.replace(this, ae); // replace active element

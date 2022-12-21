@@ -8,35 +8,35 @@ import java.util.Set;
 import b.a;
 import b.xwriter;
 
-public abstract class view_table extends view {
+public abstract class ViewTable extends View {
 	private static final long serialVersionUID = 1;
 
 	public final static int BIT_CLICK_ITEM = 1;
 	/** The actions that are enabled in the table. */
-	final protected int enabled_table_bits;
+	final protected int enabledTableBits;
 
-	public container ac; // actions
+	public Container ac; // actions
 	public a q; // query field
-	public table t;
-	public paging p;
+	public Table t;
+	public Paging p;
 	private TypeInfo typeInfo; // the name and plural of the object type
 
-	public view_table(final int view_bits, final int table_bits) {
-		super(view_bits);
-		enabled_table_bits = table_bits;
+	public ViewTable(final int viewBits, final int tableBits) {
+		super(viewBits);
+		enabledTableBits = tableBits;
 		t.setTableView(this);
 		p.setTableView(this);
-		if ((enabled_view_bits & BIT_CREATE) != 0) {
-			ac.add(new action("create", "create"));
+		if ((enabledViewBits & BIT_CREATE) != 0) {
+			ac.add(new Action("create", "create"));
 		}
-		if ((enabled_view_bits & BIT_DELETE) != 0) {
-			ac.add(new action("delete", "delete"));
+		if ((enabledViewBits & BIT_DELETE) != 0) {
+			ac.add(new Action("delete", "delete"));
 		}
 		typeInfo = getTypeInfo();
-		final List<action> actions = getActionsList();
+		final List<Action> actions = getActionsList();
 		if (actions == null)
 			return;
-		for (final action a : actions) {
+		for (final Action a : actions) {
 			ac.add(a);
 		}
 	}
@@ -46,11 +46,11 @@ public abstract class view_table extends view {
 		if (!ac.elements().isEmpty()) {
 			x.nl();
 			x.divh(ac);
-			if ((enabled_view_bits & BIT_SEARCH) == 0) {
+			if ((enabledViewBits & BIT_SEARCH) == 0) {
 				x.nl();
 			}
 		}
-		if ((enabled_view_bits & BIT_SEARCH) != 0) {
+		if ((enabledViewBits & BIT_SEARCH) != 0) {
 			x.inpax(q, "query", this, "q", "new");
 			x.script().xfocus(q).script_();
 		} else {
@@ -65,13 +65,13 @@ public abstract class view_table extends view {
 
 	@Override
 	protected final void bubble_event(final xwriter x, final a from, final Object o) throws Throwable {
-		if (from instanceof action) {
-			final String code = ((action) from).code();
-			if ("create".equals(code) && (enabled_view_bits & BIT_CREATE) != 0) {
+		if (from instanceof Action) {
+			final String code = ((Action) from).code();
+			if ("create".equals(code) && (enabledViewBits & BIT_CREATE) != 0) {
 				onActionCreate(x, q.str());
 				return;
 			}
-			if ("delete".equals(code) && (enabled_view_bits & BIT_DELETE) != 0) {
+			if ("delete".equals(code) && (enabledViewBits & BIT_DELETE) != 0) {
 				if (getSelectedIds().isEmpty()) {
 					x.xalert("No items selected.");
 					return;
@@ -83,7 +83,7 @@ public abstract class view_table extends view {
 				return;
 
 			}
-			onAction(x, (action) from);
+			onAction(x, (Action) from);
 			return;
 		}
 		if (from == p) { // event from pager
@@ -107,7 +107,7 @@ public abstract class view_table extends view {
 
 	/** Callback for press enter in query field. */
 	public final void x_new(final xwriter x, final String s) throws Throwable {
-		if ((enabled_view_bits & BIT_CREATE) != 0) {
+		if ((enabledViewBits & BIT_CREATE) != 0) {
 			onActionCreate(x, q.str());
 		}
 	}
@@ -118,7 +118,7 @@ public abstract class view_table extends view {
 	}
 
 	protected final void renderLinked(final xwriter x, final Object o, final String linkText) {
-		if ((enabled_table_bits & view_table.BIT_CLICK_ITEM) != 0) {
+		if ((enabledTableBits & ViewTable.BIT_CLICK_ITEM) != 0) {
 			final String id = getIdFrom(o);
 			x.ax(t, "clk " + id, linkText);
 		} else {
@@ -141,7 +141,7 @@ public abstract class view_table extends view {
 	}
 
 	@Override
-	protected void onActionCreate(final xwriter x, final String init_str) throws Throwable {
+	protected void onActionCreate(final xwriter x, final String initStr) throws Throwable {
 	}
 
 	@Override
@@ -149,7 +149,7 @@ public abstract class view_table extends view {
 	}
 
 	@Override
-	protected void onAction(final xwriter x, final action act) throws Throwable {
+	protected void onAction(final xwriter x, final Action act) throws Throwable {
 	}
 
 	protected void renderHeaders(final xwriter x) {
@@ -172,15 +172,15 @@ public abstract class view_table extends view {
 		}
 	}
 
-	public final static class paging extends a {
+	public final static class Paging extends a {
 		private static final long serialVersionUID = 1L;
 		private int currentPage; // page starting at 0
 		private int objectsPerPage;
 		private int npages;
-		private view_table tv;
+		private ViewTable tv;
 		public a pg; // current page
 
-		public void setTableView(final view_table tv) {
+		public void setTableView(final ViewTable tv) {
 			this.tv = tv;
 			objectsPerPage = tv.getObjectsPerPageCount();
 			pg.set(currentPage + 1);
@@ -281,13 +281,13 @@ public abstract class view_table extends view {
 		}
 	}
 
-	public final static class table extends a {
+	public final static class Table extends a {
 		static final long serialVersionUID = 1;
-		public container cbs; // checkboxes
-		private view_table tv; // the parent
+		public Container cbs; // checkboxes
+		private ViewTable tv; // the parent
 		private final HashSet<String> selectedIds = new HashSet<String>();
 
-		public void setTableView(final view_table tv) {
+		public void setTableView(final ViewTable tv) {
 			this.tv = tv;
 		}
 
@@ -296,7 +296,7 @@ public abstract class view_table extends view {
 			final List<?> ls = tv.getObjectsList();
 			x.table("f").nl();
 			x.tr();
-			if ((tv.enabled_view_bits & view.BIT_SELECT) != 0) { // header for the checkbox
+			if ((tv.enabledViewBits & View.BIT_SELECT) != 0) { // header for the checkbox
 				x.th();
 			}
 			tv.renderHeaders(x);
@@ -306,9 +306,9 @@ public abstract class view_table extends view {
 			for (final Object o : ls) {
 				final String id = tv.getIdFrom(o);
 				x.tr();
-				if ((tv.enabled_view_bits & view.BIT_SELECT) != 0) { // render checkbox
+				if ((tv.enabledViewBits & View.BIT_SELECT) != 0) { // render checkbox
 					x.td();
-					final checkbox cb = new checkbox(id, selectedIds.contains(id));
+					final Checkbox cb = new Checkbox(id, selectedIds.contains(id));
 					// add to container where the element will get a unique name in the context.
 					// the parent of the checkbox will be the container.
 					cbs.add(cb);
@@ -324,8 +324,8 @@ public abstract class view_table extends view {
 		@Override
 		protected void bubble_event(final xwriter js, final a from, final Object o) throws Throwable {
 			// event bubbled from child
-			if ((tv.enabled_view_bits & view.BIT_SELECT) != 0 && from instanceof checkbox) {
-				final String id = ((checkbox) from).getId();
+			if ((tv.enabledViewBits & View.BIT_SELECT) != 0 && from instanceof Checkbox) {
+				final String id = ((Checkbox) from).getId();
 				if ("checked".equals(o)) {
 					selectedIds.add(id);
 					return;
@@ -341,7 +341,7 @@ public abstract class view_table extends view {
 
 		/** Callback for click on row. */
 		public void x_clk(final xwriter x, final String s) throws Throwable {
-			if ((tv.enabled_table_bits & view_table.BIT_CLICK_ITEM) != 0) {
+			if ((tv.enabledTableBits & ViewTable.BIT_CLICK_ITEM) != 0) {
 				tv.onRowClick(x, s);
 			}
 		}

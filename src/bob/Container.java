@@ -10,7 +10,7 @@ import b.xwriter;
  * Contains elements in a list. Used to create a name space for dynamically
  * created elements.
  */
-public final class container extends a {
+public final class Container extends a {
 	private static final long serialVersionUID = 1L;
 	private final ArrayList<a> elements = new ArrayList<a>();
 

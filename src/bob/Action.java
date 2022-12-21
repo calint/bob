@@ -3,15 +3,15 @@ package bob;
 import b.a;
 import b.xwriter;
 
-public class action extends a {
+public class Action extends a {
 	private static final long serialVersionUID = 1L;
 	private final String code;
 
-	public action() {
+	public Action() {
 		this("", "");
 	}
 
-	public action(final String text, final String code) {
+	public Action(final String text, final String code) {
 		set(text);
 		this.code = code;
 	}

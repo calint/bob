@@ -7,16 +7,16 @@ import java.util.List;
 
 import b.a;
 import b.xwriter;
-import bob.action;
-import bob.form;
-import bob.util;
+import bob.Action;
+import bob.Form;
+import bob.Util;
 import db.Db;
 import db.DbField;
 import db.DbTransaction;
 import db.test.Book;
 import db.test.DataText;
 
-public class form_book2 extends form {
+public class FormBook2 extends Form {
 	private static final long serialVersionUID = 2L;
 
 	final private LinkedHashMap<String, a> fields = new LinkedHashMap<String, a>();
@@ -76,24 +76,24 @@ public class form_book2 extends form {
 	// ----------------------------------------------------------------------------------------
 	private String init_str;
 
-	public form_book2(final String object_id, final String init_str) {
+	public FormBook2(final String object_id, final String init_str) {
 		super(null, object_id, BIT_SAVE_CLOSE | BIT_SAVE | BIT_CLOSE);
 		this.init_str = init_str;
 	}
 
 	public String getTitle() {
-		return util.tostr(getStr(Book.name), "New book");
+		return Util.toStr(getStr(Book.name), "New book");
 	}
 
 	@Override
 	protected void render(final xwriter x) throws Throwable {
-		final Book o = (Book) (object_id == null ? null : Db.currentTransaction().get(Book.class, object_id));
+		final Book o = (Book) (objectId == null ? null : Db.currentTransaction().get(Book.class, objectId));
 		begin(x);
 		inputText(x, "Name", Book.name, "long", o == null ? init_str : o.getName());
 		inputText(x, "Authors", Book.authors, "long", o == null ? "" : o.getAuthors());
 		inputText(x, "Publisher", Book.publisher, "medium", o == null ? "" : o.getPublisher());
 		inputText(x, "Published date", Book.publishedDate, "short",
-				o == null ? "" : util.tostr(o.getPublishedDate(), ""));
+				o == null ? "" : Util.toStr(o.getPublishedDate(), ""));
 		end(x);
 		x.ax(this, "test", "test").nl();
 	}
@@ -106,17 +106,17 @@ public class form_book2 extends form {
 	protected void save(final xwriter x) throws Throwable {
 		final DbTransaction tn = Db.currentTransaction();
 		final Book o;
-		if (object_id == null) { // create new
+		if (objectId == null) { // create new
 			o = (Book) tn.create(Book.class);
-			object_id = Integer.toString(o.id());
+			objectId = Integer.toString(o.id());
 		} else {
-			o = (Book) tn.get(Book.class, object_id);
+			o = (Book) tn.get(Book.class, objectId);
 		}
 		o.setName(getStr(Book.name));
 		o.setAuthors(getStr(Book.authors));
 		o.setPublisher(getStr(Book.publisher));
 		final String pd = getStr(Book.publishedDate);
-		if (!util.isempty(pd))
+		if (!Util.isEmpty(pd))
 			o.setPublishedDate(Timestamp.valueOf(pd));
 
 		final DataText d = o.getData(true);
@@ -125,14 +125,14 @@ public class form_book2 extends form {
 	}
 
 	@Override
-	protected List<action> getActionsList() {
-		final List<action> ls = new ArrayList<action>();
-		ls.add(new action("alert me", "alert"));
+	protected List<Action> getActionsList() {
+		final List<Action> ls = new ArrayList<Action>();
+		ls.add(new Action("alert me", "alert"));
 		return ls;
 	}
 
 	@Override
-	protected void onAction(final xwriter x, final action act) {
+	protected void onAction(final xwriter x, final Action act) {
 		if ("alert".equals(act.code())) {
 			x.xalert("alert");
 			return;

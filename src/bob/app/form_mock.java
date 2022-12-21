@@ -5,10 +5,10 @@ import java.util.List;
 
 import b.a;
 import b.xwriter;
-import bob.action;
-import bob.form;
+import bob.Action;
+import bob.Form;
 
-public class form_mock extends form {
+public class form_mock extends Form {
 	private static final long serialVersionUID = 1L;
 
 //	public final static class action_mock extends action {
@@ -38,15 +38,15 @@ public class form_mock extends form {
 	}
 
 	@Override
-	protected List<action> getActionsList() {
-		final List<action> ls = new ArrayList<action>();
+	protected List<Action> getActionsList() {
+		final List<Action> ls = new ArrayList<Action>();
 //		ls.add(new action_mock());
-		ls.add(new action("alert me", "alert"));
+		ls.add(new Action("alert me", "alert"));
 		return ls;
 	}
 
 	@Override
-	protected void onAction(final xwriter x, final action act) {
+	protected void onAction(final xwriter x, final Action act) {
 		if ("alert".equals(act.code())) {
 			x.xalert("alert");
 			return;
@@ -56,21 +56,21 @@ public class form_mock extends form {
 
 	@Override
 	protected void save(final xwriter x) throws Throwable {
-		if (object_id == null) { // create new
-			data.ls.add(title.str());
-			object_id = title.str();
+		if (objectId == null) { // create new
+			DataMock.ls.add(title.str());
+			objectId = title.str();
 			return;
 		}
 		// edit
-		for (int i = 0; i < data.ls.size(); i++) {
-			final String s = data.ls.get(i);
-			if (s.equals(object_id)) {
-				data.ls.set(i, title.str());
-				object_id = title.str();
+		for (int i = 0; i < DataMock.ls.size(); i++) {
+			final String s = DataMock.ls.get(i);
+			if (s.equals(objectId)) {
+				DataMock.ls.set(i, title.str());
+				objectId = title.str();
 				return;
 			}
 		}
-		throw new RuntimeException("could not find " + object_id);
+		throw new RuntimeException("could not find " + objectId);
 	}
 
 	public final void x_sc(final xwriter x, final String param) throws Throwable {

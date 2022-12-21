@@ -5,7 +5,7 @@ import java.util.List;
 
 import b.a;
 
-public class data {
+public class DataMock {
 	public final static List<String> ls = new ArrayList<String>();
 	static {
 		ls.add("file1.txt");

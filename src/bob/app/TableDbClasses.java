@@ -6,15 +6,15 @@ import java.util.Comparator;
 import java.util.List;
 
 import b.xwriter;
-import bob.view_table;
+import bob.ViewTable;
 import db.Db;
 import db.DbClass;
 import db.DbObject;
 
-public class table_dbclasses extends view_table {
+public class TableDbClasses extends ViewTable {
 	static final long serialVersionUID = 1;
 
-	public table_dbclasses() {
+	public TableDbClasses() {
 		super(BIT_SEARCH, BIT_CLICK_ITEM);
 	}
 
@@ -69,7 +69,7 @@ public class table_dbclasses extends view_table {
 		@SuppressWarnings("unchecked")
 		final Class<? extends DbObject> jc = (Class<? extends DbObject>) Class.forName(id);
 		final DbClass dbc = Db.getDbClassForJavaClass(jc);
-		final form_dbclass f = new form_dbclass(dbc);
+		final FormDbClass f = new FormDbClass(dbc);
 		super.bubble_event(x, this, f);
 	}
 }

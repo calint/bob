@@ -4,14 +4,14 @@ import java.sql.Timestamp;
 
 import b.a;
 import b.xwriter;
-import bob.form;
-import bob.util;
+import bob.Form;
+import bob.Util;
 import db.Db;
 import db.DbTransaction;
 import db.test.Book;
 import db.test.DataText;
 
-public class form_book extends form {
+public class FormBook extends Form {
 	private static final long serialVersionUID = 1L;
 
 	public a name;
@@ -19,17 +19,17 @@ public class form_book extends form {
 	public a publisher;
 	public a publishedDate;
 
-	public form_book(final String object_id, final String init_str) {
+	public FormBook(final String object_id, final String init_str) {
 		super(null, object_id, BIT_SAVE_CLOSE | BIT_SAVE | BIT_CLOSE);
 		final Book o = (Book) (object_id == null ? null : Db.currentTransaction().get(Book.class, object_id));
 		name.set(o == null ? init_str : o.getName());
 		authors.set(o == null ? "" : o.getAuthors());
 		publisher.set(o == null ? "" : o.getPublisher());
-		publishedDate.set(o == null ? "" : util.tostr(o.getPublishedDate(), ""));
+		publishedDate.set(o == null ? "" : Util.toStr(o.getPublishedDate(), ""));
 	}
 
 	public String getTitle() {
-		return util.tostr(name.str(), "New book");
+		return Util.toStr(name.str(), "New book");
 	}
 
 	@Override
@@ -45,11 +45,11 @@ public class form_book extends form {
 	protected void save(final xwriter x) throws Throwable {
 		final DbTransaction tn = Db.currentTransaction();
 		final Book o;
-		if (object_id == null) { // create new
+		if (objectId == null) { // create new
 			o = (Book) tn.create(Book.class);
-			object_id = Integer.toString(o.id());
+			objectId = Integer.toString(o.id());
 		} else {
-			o = (Book) tn.get(Book.class, object_id);
+			o = (Book) tn.get(Book.class, objectId);
 		}
 		o.setName(name.str());
 		o.setAuthors(authors.str());

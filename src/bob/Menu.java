@@ -5,23 +5,23 @@ import java.util.ArrayList;
 import b.a;
 import b.xwriter;
 
-public final class menu extends a {
+public final class Menu extends a {
 	private static final long serialVersionUID = 1L;
 	private int selectedIndex;
 
-	private final static class item extends a {
+	private final static class Item extends a {
 		private static final long serialVersionUID = 1L;
 		Class<? extends a> cls;
 		String title;
 
-		public item(final Class<? extends a> cls, final String title) {
+		public Item(final Class<? extends a> cls, final String title) {
 			this.cls = cls;
 			this.title = title;
 		}
 
 	}
 
-	private final ArrayList<item> items = new ArrayList<item>();
+	private final ArrayList<Item> items = new ArrayList<Item>();
 
 	@Override
 	public void to(final xwriter x) throws Throwable {
@@ -29,7 +29,7 @@ public final class menu extends a {
 		x.tago("select").default_attrs_for_element(this).attr("onchange", "$x('" + id + " s '+this.selectedIndex)");
 		x.tagoe();
 		int i = 0;
-		for (final item im : items) {
+		for (final Item im : items) {
 			x.tago("option").attr("value", i);
 			if (i == selectedIndex) {
 				x.attr("selected");
@@ -41,7 +41,7 @@ public final class menu extends a {
 	}
 
 	public void addItem(final Class<? extends a> cls, final String title) {
-		items.add(new item(cls, title));
+		items.add(new Item(cls, title));
 	}
 
 	public void x_s(final xwriter x, final String param) throws Throwable {
