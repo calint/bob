@@ -44,7 +44,7 @@ public class TableMock extends ViewTable {
 
 	@Override
 	protected void onActionCreate(final xwriter x, final String init_str) throws Throwable {
-		final form_mock fm = new form_mock(null, null, init_str);
+		final FormMock fm = new FormMock(null, null, init_str);
 		super.bubble_event(x, this, fm);
 	}
 
@@ -78,7 +78,7 @@ public class TableMock extends ViewTable {
 
 	@Override
 	protected void onRowClick(final xwriter x, final String id) throws Throwable {
-		final form_mock fm = new form_mock(null, id, null);
+		final FormMock fm = new FormMock(null, id, null);
 		super.bubble_event(x, this, fm);
 	}
 }

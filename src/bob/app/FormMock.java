@@ -8,7 +8,7 @@ import b.xwriter;
 import bob.Action;
 import bob.Form;
 
-public class form_mock extends Form {
+public class FormMock extends Form {
 	private static final long serialVersionUID = 1L;
 
 //	public final static class action_mock extends action {
@@ -21,9 +21,9 @@ public class form_mock extends Form {
 
 	public a title;
 
-	public form_mock(final String parent_id, final String object_id, final String init_str) {
-		super(parent_id, object_id, BIT_SAVE_CLOSE | BIT_SAVE | BIT_CLOSE);
-		title.set(object_id == null ? init_str : object_id);
+	public FormMock(final String parentId, final String objectId, final String initStr) {
+		super(parentId, objectId, BIT_SAVE_CLOSE | BIT_SAVE | BIT_CLOSE);
+		title.set(objectId == null ? initStr : objectId);
 	}
 
 	public String getTitle() {
