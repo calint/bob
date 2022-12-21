@@ -108,7 +108,7 @@ public class TableBooks extends ViewTable {
 
 	@Override
 	protected void renderHeaders(final xwriter x) {
-		x.th().p("Id").th().p("Name").th().p("Author");
+		x.th().p("Id").th().p("Title").th().p("Author");
 	}
 
 	@Override

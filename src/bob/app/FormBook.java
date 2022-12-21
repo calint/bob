@@ -14,7 +14,7 @@ import db.test.DataText;
 public class FormBook extends Form {
 	private static final long serialVersionUID = 1L;
 
-	public a name;
+	public a title;
 	public a authors;
 	public a publisher;
 	public a publishedDate;
@@ -22,20 +22,20 @@ public class FormBook extends Form {
 	public FormBook(final String objectId, final String initStr) {
 		super(null, objectId, BIT_SAVE_CLOSE | BIT_SAVE | BIT_CLOSE);
 		final Book o = (Book) (objectId == null ? null : Db.currentTransaction().get(Book.class, objectId));
-		name.set(o == null ? initStr : o.getName());
+		title.set(o == null ? initStr : o.getName());
 		authors.set(o == null ? "" : o.getAuthors());
 		publisher.set(o == null ? "" : o.getPublisher());
 		publishedDate.set(o == null ? "" : Util.toStr(o.getPublishedDate(), ""));
 	}
 
 	public String getTitle() {
-		return Util.toStr(name.str(), "New book");
+		return Util.toStr(title.str(), "New book");
 	}
 
 	@Override
 	protected void render(final xwriter x) throws Throwable {
-		x.p("title: ").inptxt(name, this, "sc").nl();
-		x.script().xfocus(name).script_();
+		x.p("title: ").inptxt(title, this, "sc").nl();
+		x.script().xfocus(title).script_();
 		x.p("authors: ").inptxt(authors, this, "sc").nl();
 		x.p("publisher: ").inptxt(publisher, this, "sc").nl();
 		x.p("publishedDate: ").inptxt(publishedDate, this, "sc").nl();
@@ -51,7 +51,7 @@ public class FormBook extends Form {
 		} else {
 			o = (Book) tn.get(Book.class, objectId);
 		}
-		o.setName(name.str());
+		o.setName(title.str());
 		o.setAuthors(authors.str());
 		o.setPublisher(publisher.str());
 		if (!publishedDate.is_empty()) {

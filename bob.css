@@ -63,6 +63,12 @@ div.output{
 input.center{
 	text-align:center;
 }
+input.nbr{
+	width:5em;
+}
+input.small_nbr{
+	width:2em;
+}
 /** bob.form_dbo, bob.view_table more search */
 input.long{
 	width:60em;
@@ -72,9 +78,6 @@ input.medium{
 }
 input.small{
 	width:15em;
-}
-input.nbr{
-	width:5em;
 }
 table.form{
 	margin-left:auto;

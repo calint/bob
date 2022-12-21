@@ -89,7 +89,7 @@ public class FormBook2 extends Form {
 	protected void render(final xwriter x) throws Throwable {
 		final Book o = (Book) (objectId == null ? null : Db.currentTransaction().get(Book.class, objectId));
 		begin(x);
-		inputText(x, "Name", Book.name, "long", o == null ? initStr : o.getName());
+		inputText(x, "Title", Book.name, "long", o == null ? initStr : o.getName());
 		inputText(x, "Authors", Book.authors, "long", o == null ? "" : o.getAuthors());
 		inputText(x, "Publisher", Book.publisher, "medium", o == null ? "" : o.getPublisher());
 		inputText(x, "Published date", Book.publishedDate, "short",
