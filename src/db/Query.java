@@ -29,7 +29,7 @@ public final class Query implements Serializable {
 		private int elemOp; // and, or or nop
 		private String lhtbl;// left hand table name
 		private String lh; // left hand field name
-		private int op;
+		private int op; // EQ, NEQ etc
 		private String rhtbl;
 		private String rh;
 
