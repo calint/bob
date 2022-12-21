@@ -1,0 +1,12 @@
+MYSQL_HOST=localhost
+MYSQL_DB=testdb
+MYSQL_USER=c
+MYSQL_PASSWORD=password
+MYSQL_NCONS=10
+B_NTHREADS=10
+B_PORT=8888
+
+# the address of the cluster relays
+CLUSTER_MODE=false
+CLUSTER_IP=127.0.0.1
+CLUSTER_PORT=8889
