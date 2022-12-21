@@ -24,14 +24,14 @@ public final class Query implements Serializable {
 	public final static int FTQ = 8;
 
 	final private static class Elem {
-		int elemOp;
-		String lhtbl;// left hand table name
-		String lh; // left hand field name
-		int op;
-		String rhtbl;
-		String rh;
-		Query query;// if not null then this is a sub query
-		IndexFt ftix;// if not null then this is a full text query
+		private Query query;// if not null then this is a sub query
+		private IndexFt ftix;// if not null then this is a full text query
+		private int elemOp; // and, or or nop
+		private String lhtbl;// left hand table name
+		private String lh; // left hand field name
+		private int op;
+		private String rhtbl;
+		private String rh;
 
 		private void appendElemOp(final StringBuilder sb, final int op) {
 			switch (op) {
