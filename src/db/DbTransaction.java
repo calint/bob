@@ -345,7 +345,7 @@ public final class DbTransaction {
 			qry.sql_build(sbwhere, tam); // build first for tam to know which tables to include
 			final StringBuilder sbfrom = new StringBuilder(128);
 			tam.sql_appendSelectFromTables(sbfrom);
-			if (sbfrom.length() == 0) {
+			if (sbfrom.length() == 0) { // the query might have been empty
 				final DbClass dbcls = Db.dbClassForJavaClass(cls);
 				sb.append(dbcls.tableName);
 			} else {
