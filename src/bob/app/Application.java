@@ -25,7 +25,7 @@ public final class Application implements bapp {
 	public void init() throws Throwable {
 		Db.log(getClass().getName() + ": init");
 //		Db.enable_log=false;
-//		Db.enable_log_sql = false;
+		Db.enable_log_sql = false;
 		Db.register(User.class);
 		Db.register(File.class);
 		Db.register(DataBinary.class);
