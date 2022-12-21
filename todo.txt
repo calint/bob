@@ -1,5 +1,4 @@
 b
-[ ] custom search section in view_table
 [ ] RelRef, RelRefN etc find/select using view
 [ ] class_init extended to be able to set statics on any class
 [ ] bob.js: server is busy message box when typing fast
@@ -76,6 +75,7 @@ dbo
 [ ]   ms sql server?
 [ ]   ibm db2?
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
+[x] custom search section in view_table
 [x] xwriter: review inpx
 [x] bob,b: window.scrollTo(0, document.body.scrollHeight), element.scrollTop = element.scrollHeight;
 [x] remove package c
