@@ -340,9 +340,9 @@ public final class DbTransaction {
 
 		final Query.TableAliasMap tam = new Query.TableAliasMap();
 
-		if (qry != null && !qry.isEmpty()) {
+		if (qry != null) {
 			final StringBuilder sbwhere = new StringBuilder(128);
-			qry.sql_build(sbwhere, tam);
+			qry.sql_build(sbwhere, tam); // build first for tam to know which tables to include
 			final StringBuilder sbfrom = new StringBuilder(128);
 			tam.sql_appendSelectFromTables(sbfrom);
 			if (sbfrom.length() == 0) {

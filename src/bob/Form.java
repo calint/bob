@@ -15,7 +15,7 @@ public abstract class Form extends a implements Titled {
 	final protected int enabledFormBits;
 
 	public Container ans; // actions container
-	public Container scc; // save and close, save and close actions container
+	public Container scc; // save and close, save, close actions container
 	/** Parent object id. */
 	protected String parentId;
 	/** Object id. */

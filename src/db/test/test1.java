@@ -14,9 +14,27 @@ import db.Query;
 public class test1 extends TestCase {
 	@Override
 	public void doRun() throws Throwable {
+		doRun0();
 		doRun1();
 		doRun2();
 		doRun3();
+	}
+
+	/** SQL build bugs */
+	private void doRun0() throws Throwable {
+		final DbTransaction tn = Db.currentTransaction();
+		// empty queries problem
+		final Query q = new Query();
+		final Query q1 = new Query();
+		final Query q2 = new Query();
+		q1.and(q2);
+		q.and(q1);
+		tn.get(User.class, q, null, null);
+		
+		final Query q3=new Query();
+		q3.and(new Query()).and(new Query());
+		tn.get(User.class, q, null, null);		
+		
 	}
 
 	private void doRun1() throws Throwable {

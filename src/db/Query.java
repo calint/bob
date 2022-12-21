@@ -33,8 +33,8 @@ public final class Query implements Serializable {
 		Query query;// if not null then this is a sub query
 		IndexFt ftix;// if not null then this is a full text query
 
-		public void sql_build(final StringBuilder sb, final TableAliasMap tam) {
-			switch (elemOp) {
+		private void appendElemOp(final StringBuilder sb, final int op) {
+			switch (op) {
 			case AND:
 				sb.append(" and ");
 				break;
@@ -44,18 +44,25 @@ public final class Query implements Serializable {
 			case NOP:
 				break;
 			default:
-				throw new RuntimeException("invalid elemOp " + elemOp);
+				throw new RuntimeException("invalid elemOp " + op);
 			}
+		}
 
+		public void sql_build(final StringBuilder sb, final TableAliasMap tam) {
 			// sub query
 			if (query != null) {
-				if (!query.isEmpty()) {
+				final StringBuilder sbSubQuery = new StringBuilder(128);
+				query.sql_build(sbSubQuery, tam);
+				if (sbSubQuery.length() != 0) {
+					appendElemOp(sb, elemOp);
 					sb.append('(');
-					query.sql_build(sb, tam);
+					sb.append(sbSubQuery);
 					sb.append(")");
 				}
 				return;
 			}
+
+			appendElemOp(sb, elemOp);
 
 			// full text query
 			if (ftix != null) {
@@ -156,10 +163,6 @@ public final class Query implements Serializable {
 		for (final Elem e : elems) {
 			e.sql_build(sb, tam);
 		}
-	}
-
-	public boolean isEmpty() {
-		return elems.isEmpty();
 	}
 
 	public Query() {
