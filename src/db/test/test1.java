@@ -6,6 +6,7 @@ import java.util.List;
 
 import db.Db;
 import db.DbObject;
+import db.DbObjects;
 import db.DbTransaction;
 import db.Order;
 import db.Query;
@@ -20,21 +21,29 @@ public class test1 extends TestCase {
 		doRun3();
 	}
 
-	/** SQL build bugs */
 	private void doRun0() throws Throwable {
 		final DbTransaction tn = Db.currentTransaction();
-		// empty queries problem
+		// empty queries bug
 		final Query q = new Query();
 		final Query q1 = new Query();
 		final Query q2 = new Query();
 		q1.and(q2);
 		q.and(q1);
 		tn.get(User.class, q, null, null);
-		
-		final Query q3=new Query();
+
+		final Query q3 = new Query();
 		q3.and(new Query()).and(new Query());
-		tn.get(User.class, q, null, null);		
-		
+		tn.get(User.class, q, null, null);
+
+		//
+		final User u1 = (User) tn.create(User.class);
+		final DbObjects dbo = new DbObjects(User.class);
+		final User u2 = (User) dbo.get(u1.id());
+		if (tn.cache_enabled && u1 != u2)
+			throw new RuntimeException();
+		if (!tn.cache_enabled && u1.id() != u2.id())
+			throw new RuntimeException();
+		tn.delete(u1);
 	}
 
 	private void doRun1() throws Throwable {

@@ -25,6 +25,10 @@ public final class DbObjects implements Serializable { // ? review select
 		this.order = order;
 	}
 
+	public DbObjects(final Class<? extends DbObject> select) {
+		this(null, select, null, null);
+	}
+
 	public List<DbObject> toList(final Limit limit) {
 		final Query qry = new Query();
 		final Order ord = new Order();
@@ -53,6 +57,18 @@ public final class DbObjects implements Serializable { // ? review select
 
 	public DbObjects get(final Query qry) {
 		return get(qry, null);
+	}
+
+	public DbObject get(final int id) {
+		final Query q = new Query(select, id);
+		final List<? extends DbObject> ls = Db.currentTransaction().get(select, q, null, null);
+		if (ls.isEmpty())
+			return null;
+		return ls.get(0);
+	}
+
+	public DbObject get(final String id) {
+		return get(Integer.parseInt(id));
 	}
 
 	public int getCount() {
