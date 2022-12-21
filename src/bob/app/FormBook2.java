@@ -74,11 +74,11 @@ public class FormBook2 extends Form {
 	}
 
 	// ----------------------------------------------------------------------------------------
-	private final String init_str;
+	private final String initStr;
 
-	public FormBook2(final String object_id, final String init_str) {
-		super(null, object_id, BIT_SAVE_CLOSE | BIT_SAVE | BIT_CLOSE);
-		this.init_str = init_str;
+	public FormBook2(final String objectId, final String initStr) {
+		super(null, objectId, BIT_SAVE_CLOSE | BIT_SAVE | BIT_CLOSE);
+		this.initStr = initStr;
 	}
 
 	public String getTitle() {
@@ -89,7 +89,7 @@ public class FormBook2 extends Form {
 	protected void render(final xwriter x) throws Throwable {
 		final Book o = (Book) (objectId == null ? null : Db.currentTransaction().get(Book.class, objectId));
 		begin(x);
-		inputText(x, "Name", Book.name, "long", o == null ? init_str : o.getName());
+		inputText(x, "Name", Book.name, "long", o == null ? initStr : o.getName());
 		inputText(x, "Authors", Book.authors, "long", o == null ? "" : o.getAuthors());
 		inputText(x, "Publisher", Book.publisher, "medium", o == null ? "" : o.getPublisher());
 		inputText(x, "Published date", Book.publishedDate, "short",

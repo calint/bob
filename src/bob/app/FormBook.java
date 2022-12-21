@@ -19,10 +19,10 @@ public class FormBook extends Form {
 	public a publisher;
 	public a publishedDate;
 
-	public FormBook(final String object_id, final String init_str) {
-		super(null, object_id, BIT_SAVE_CLOSE | BIT_SAVE | BIT_CLOSE);
-		final Book o = (Book) (object_id == null ? null : Db.currentTransaction().get(Book.class, object_id));
-		name.set(o == null ? init_str : o.getName());
+	public FormBook(final String objectId, final String initStr) {
+		super(null, objectId, BIT_SAVE_CLOSE | BIT_SAVE | BIT_CLOSE);
+		final Book o = (Book) (objectId == null ? null : Db.currentTransaction().get(Book.class, objectId));
+		name.set(o == null ? initStr : o.getName());
 		authors.set(o == null ? "" : o.getAuthors());
 		publisher.set(o == null ? "" : o.getPublisher());
 		publishedDate.set(o == null ? "" : Util.toStr(o.getPublishedDate(), ""));
