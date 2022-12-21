@@ -1,6 +1,6 @@
 b
 [ ] custom search section in view_table
-[ ] RelRef, RelRefN etc find using view
+[ ] RelRef, RelRefN etc find/select using view
 [ ] class_init extended to be able to set statics on any class
 [ ] bob.js: server is busy message box when typing fast
 [ ]   server busy ui element
@@ -16,6 +16,7 @@ b
 [ ] Content-disposition: attachment; filename=file.txt
 [ ] jem: add package names that contain additional jem fields elements
 [ ] bob.app: dbclass to class
+[ ] rename to java convention
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 dbo
 [ ] cluster client connect to database through DriverManager is slow. Class.forName and register driver.
