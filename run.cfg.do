@@ -1,3 +1,6 @@
+# run.sh configuration
+# (digitalocean)
+
 MYSQL_HOST=localhost
 MYSQL_DB=testdb
 MYSQL_USER=c

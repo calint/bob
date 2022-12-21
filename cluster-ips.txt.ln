@@ -1,3 +1,4 @@
 # a list of ip addresses of cluster nodes
 # first ip is the cluster manager
+# (linode)
 170.187.190.145
