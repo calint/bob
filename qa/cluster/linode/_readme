@@ -1,0 +1,7 @@
+linode.com 2022-12-21
+cluster nodes: 1 virtual CPU, 1G B ram, 25 GB disk ($5/month)
+test: /db/test/t1
+
+note.
+the uneven charts of cluster with more than 4 nodes might be due 
+to virtual cpu, network, uneven mysql response time etc
