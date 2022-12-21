@@ -19,8 +19,8 @@ wait
 echo
 
 for IP in $IPS; do
-	scp run.cfg.do root@$IP:/bob/run.cfg &
-	scp cluster.cfg.do root@$IP:/bob/cluster.cfg &
+	scp run.cfg.$TRGT root@$IP:/bob/run.cfg &
+	scp cluster.cfg.$TRGT root@$IP:/bob/cluster.cfg &
 done
 
 wait
