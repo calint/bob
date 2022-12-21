@@ -11,7 +11,6 @@ import bob.ViewTable;
 import db.Db;
 import db.DbObjects;
 import db.DbTransaction;
-import db.Limit;
 import db.Query;
 import db.test.Book;
 import db.test.DataText;
@@ -56,10 +55,10 @@ public class TableBooks extends ViewTable {
 	@Override
 	protected List<?> getObjectsList() {
 		final DbObjects dbo = getResults();
-		if (!p.isEnabled())
+		if (!p.isEnabled()) // if no paging
 			return dbo.toList();
 
-		return dbo.toList(new Limit(p.getLimitStart(), p.getLimitCount()));
+		return dbo.toList(p.getLimit());
 	}
 
 	private DbObjects getResults() {

@@ -6,6 +6,7 @@ import java.util.Set;
 
 import b.a;
 import b.xwriter;
+import db.Limit;
 
 public abstract class ViewTable extends View {
 	private static final long serialVersionUID = 2L;
@@ -299,6 +300,10 @@ public abstract class ViewTable extends View {
 		public void setPage(final int page) {
 			currentPage = page - 1;
 			pg.set(page);
+		}
+
+		public Limit getLimit() {
+			return new Limit(getLimitStart(), getLimitCount());
 		}
 	}
 
