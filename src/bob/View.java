@@ -1,5 +1,6 @@
 package bob;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
@@ -36,6 +37,8 @@ public abstract class View extends a implements Titled {
 		return null;
 	}
 
+	protected abstract View.TypeInfo getTypeInfo();
+
 	/**
 	 * Returns the object count per page.
 	 *
@@ -59,4 +62,23 @@ public abstract class View extends a implements Titled {
 	protected abstract void onActionDelete(xwriter x) throws Throwable;
 
 	protected abstract void onAction(xwriter x, Action act) throws Throwable;
+
+	public final static class TypeInfo implements Serializable {
+		private static final long serialVersionUID = 1L;
+		protected final String name;
+		protected final String namePlural;
+
+		public TypeInfo(final String name, final String namePlural) {
+			this.name = name;
+			this.namePlural = namePlural;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public String getNamePlural() {
+			return namePlural;
+		}
+	}
 }

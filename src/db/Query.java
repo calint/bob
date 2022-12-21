@@ -36,10 +36,10 @@ public final class Query implements Serializable {
 		public void sql_build(final StringBuilder sb, final TableAliasMap tam) {
 			switch (elemOp) {
 			case AND:
-				sb.append("and ");
+				sb.append(" and ");
 				break;
 			case OR:
-				sb.append("or ");
+				sb.append(" or ");
 				break;
 			case NOP:
 				break;
@@ -49,9 +49,11 @@ public final class Query implements Serializable {
 
 			// sub query
 			if (query != null) {
-				sb.append('(');
-				query.sql_build(sb, tam);
-				sb.append(") ");
+				if (!query.isEmpty()) {
+					sb.append('(');
+					query.sql_build(sb, tam);
+					sb.append(")");
+				}
 				return;
 			}
 
@@ -66,7 +68,7 @@ public final class Query implements Serializable {
 				sb.append(')');
 				sb.append(" against('");
 				DbField.escapeSqlString(sb, rh);
-				sb.append("' in boolean mode) ");
+				sb.append("' in boolean mode)");
 				return;
 			}
 
@@ -108,7 +110,7 @@ public final class Query implements Serializable {
 			if (rhtbl != null) {
 				sb.append(tam.getAliasForTableName(rhtbl)).append('.');
 			}
-			sb.append(rh).append(' ');
+			sb.append(rh);
 		}
 	}
 
@@ -127,12 +129,12 @@ public final class Query implements Serializable {
 		}
 
 		void sql_appendSelectFromTables(final StringBuilder sb) {
+			if (tblToAlias.isEmpty())
+				return;
 			for (final Map.Entry<String, String> kv : tblToAlias.entrySet()) {
-				sb.append(kv.getKey()).append(" ").append(kv.getValue()).append(", ");
+				sb.append(kv.getKey()).append(" ").append(kv.getValue()).append(",");
 			}
-			if (!tblToAlias.isEmpty()) {
-				sb.setLength(sb.length() - 2);
-			}
+			sb.setLength(sb.length() - 1); // remove the last ','
 		}
 	}
 
@@ -160,7 +162,7 @@ public final class Query implements Serializable {
 		return elems.isEmpty();
 	}
 
-	Query() {
+	public Query() {
 	}
 
 	////////////////////////////////////////////////////////
@@ -230,21 +232,21 @@ public final class Query implements Serializable {
 
 	///////////////////////////////////////////////////////////////////////
 	public Query and(final Query q) {
-		if (elems.isEmpty())
-			return append(NOP, q);
 		return append(AND, q);
 	}
 
 	public Query or(final Query q) {
-		if (elems.isEmpty())
-			return append(NOP, q);
 		return append(OR, q);
 	}
 
 	private Query append(final int elemOp, final String lhtbl, final String lh, final int op, final String rhtbl,
 			final String rh) {
 		final Elem e = new Elem();
-		e.elemOp = elemOp;
+		if (elems.isEmpty()) { // first elem is always NOP
+			e.elemOp = NOP;
+		} else {
+			e.elemOp = elemOp;
+		}
 		e.lhtbl = lhtbl;
 		e.lh = lh;
 		e.op = op;
@@ -256,7 +258,11 @@ public final class Query implements Serializable {
 
 	private Query append(final int elemOp, final Query q) {
 		final Elem e = new Elem();
-		e.elemOp = elemOp;
+		if (elems.isEmpty()) { // first elem is always NOP
+			e.elemOp = NOP;
+		} else {
+			e.elemOp = elemOp;
+		}
 		e.query = q;
 		elems.add(e);
 		return this;
@@ -314,7 +320,11 @@ public final class Query implements Serializable {
 
 	public Query and(final IndexFt ix, final String ftquery) {
 		final Elem e = new Elem();
-		e.elemOp = AND;
+		if (elems.isEmpty()) { // first elem is always NOP
+			e.elemOp = NOP;
+		} else {
+			e.elemOp = AND;
+		}
 		e.ftix = ix;
 		e.rh = ftquery;
 		elems.add(e);
@@ -373,7 +383,11 @@ public final class Query implements Serializable {
 
 	public Query or(final IndexFt ix, final String ftquery) {
 		final Elem e = new Elem();
-		e.elemOp = OR;
+		if (elems.isEmpty()) { // first elem is always NOP
+			e.elemOp = NOP;
+		} else {
+			e.elemOp = OR;
+		}
 		e.ftix = ix;
 		e.rh = ftquery;
 		elems.add(e);
@@ -383,13 +397,15 @@ public final class Query implements Serializable {
 	@Override
 	public String toString() {
 		final TableAliasMap tam = new TableAliasMap();
-		final StringBuilder sbw = new StringBuilder(256);
-		sql_build(sbw, tam);
+		final StringBuilder sbwhere = new StringBuilder(256);
+		sql_build(sbwhere, tam);
 
-		final StringBuilder sbf = new StringBuilder(256);
-		tam.sql_appendSelectFromTables(sbf);
-		sbf.append(" where ");
-		sbf.append(sbw);
-		return sbf.toString();
+		final StringBuilder sbfrom = new StringBuilder(256);
+		tam.sql_appendSelectFromTables(sbfrom);
+		if (sbwhere.length() != 0) {
+			sbfrom.append(" where ");
+			sbfrom.append(sbwhere);
+		}
+		return sbfrom.toString();
 	}
 }

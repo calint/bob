@@ -3,7 +3,7 @@ package db;
 /** Field/column that refers to an id. It may be null or 0. */
 final class FldRel extends DbField {
 	private static final long serialVersionUID = 1L;
-	
+
 	public FldRel() {
 		super("int", 0, null, true, false);
 	}

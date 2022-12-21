@@ -5,7 +5,7 @@ import java.util.Map;
 /** String field. */
 public final class FldStr extends DbField {
 	private static final long serialVersionUID = 1L;
-	
+
 	public final static int MAX_SIZE = 65535;
 
 	public FldStr() {

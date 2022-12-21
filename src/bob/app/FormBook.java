@@ -54,8 +54,9 @@ public class FormBook extends Form {
 		o.setName(name.str());
 		o.setAuthors(authors.str());
 		o.setPublisher(publisher.str());
-		if (!publishedDate.is_empty())
+		if (!publishedDate.is_empty()) {
 			o.setPublishedDate(Timestamp.valueOf(publishedDate.str()));
+		}
 
 		final DataText d = o.getData(true);
 		d.setMeta(o.getName() + " " + o.getAuthors() + " " + o.getPublisher());

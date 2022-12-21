@@ -5,7 +5,7 @@ import java.util.Map;
 /** Float field. */
 public final class FldFlt extends DbField {
 	private static final long serialVersionUID = 1L;
-	
+
 	private final float defval;
 
 	public FldFlt(final float def) {

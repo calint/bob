@@ -54,9 +54,8 @@ public final class JavaCodeEmitter {
 						.newInstance(dbr);
 				add(jce);
 			} catch (final Throwable t) {
-				out.println("// cannot create JavaCodeElem of class '" + elemClsName
-						+ "' for java class '" + cls.getName() + "' relation '" + dbr.getName()
-						+ "' type '" + dbr.getClass().getName() + "'");
+				out.println("// cannot create JavaCodeElem of class '" + elemClsName + "' for java class '"
+						+ cls.getName() + "' relation '" + dbr.getName() + "' type '" + dbr.getClass().getName() + "'");
 			}
 		}
 

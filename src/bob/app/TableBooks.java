@@ -3,8 +3,10 @@ package bob.app;
 import java.util.List;
 import java.util.Set;
 
+import b.a;
 import b.xwriter;
 import bob.Action;
+import bob.View;
 import bob.ViewTable;
 import db.Db;
 import db.DbObjects;
@@ -16,18 +18,29 @@ import db.test.DataText;
 
 public class TableBooks extends ViewTable {
 	static final long serialVersionUID = 1;
+	public a title;
 
 	public TableBooks() {
 		super(BIT_SEARCH | BIT_SELECT | BIT_CREATE | BIT_DELETE, BIT_CLICK_ITEM);
 	}
 
 	public String getTitle() {
-		return "Books";
+		return "All books";
 	}
 
 	@Override
-	protected TypeInfo getTypeInfo() {
-		return new TypeInfo("book", "books");
+	protected View.TypeInfo getTypeInfo() {
+		return new View.TypeInfo("book", "books");
+	}
+
+	@Override
+	protected boolean hasMoreSearchSection() {
+		return true;
+	}
+
+	@Override
+	protected void renderMoreSearchSection(final xwriter x) {
+		x.p("Exact book title: ").inptxt(title, "medium");
 	}
 
 	@Override
@@ -50,11 +63,12 @@ public class TableBooks extends ViewTable {
 	}
 
 	private DbObjects getResults() {
-		final Query qry;
-		if (!b.b.isempty(q.str())) {
-			qry = new Query(DataText.ft, q.str()).and(Book.data);
-		} else {
-			qry = null;
+		final Query qry = new Query();
+		if (!q.is_empty()) {
+			qry.and(DataText.ft, q.str()).and(Book.data);
+		}
+		if (!title.is_empty()) {
+			qry.and(Book.name, Query.EQ, title.str());
 		}
 		return new DbObjects(null, Book.class, qry, null);
 	}
@@ -72,13 +86,13 @@ public class TableBooks extends ViewTable {
 	}
 
 	@Override
-	protected void onActionCreate(xwriter x, String init_str) throws Throwable {
+	protected void onActionCreate(final xwriter x, final String init_str) throws Throwable {
 		final FormBook2 fm = new FormBook2(null, init_str);
 		super.bubble_event(x, this, fm);
 	}
 
 	@Override
-	protected void onActionDelete(xwriter x) throws Throwable {
+	protected void onActionDelete(final xwriter x) throws Throwable {
 		final Set<String> sel = getSelectedIds();
 		for (final String id : sel) {
 			final DbTransaction tn = Db.currentTransaction();

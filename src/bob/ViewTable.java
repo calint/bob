@@ -1,6 +1,5 @@
 package bob;
 
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -9,7 +8,7 @@ import b.a;
 import b.xwriter;
 
 public abstract class ViewTable extends View {
-	private static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 2L;
 
 	public final static int BIT_CLICK_ITEM = 1;
 	/** The actions that are enabled in the table. */
@@ -19,7 +18,10 @@ public abstract class ViewTable extends View {
 	public a q; // query field
 	public Table t;
 	public Paging p;
-	private TypeInfo typeInfo; // the name and plural of the object type
+	public a ms; // more search section
+	private boolean ms_display; // true to display more search section
+
+	private View.TypeInfo typeInfo; // the name and plural of the object type
 
 	public ViewTable(final int viewBits, final int tableBits) {
 		super(viewBits);
@@ -53,6 +55,19 @@ public abstract class ViewTable extends View {
 		if ((enabledViewBits & BIT_SEARCH) != 0) {
 			x.inpax(q, "query", this, "q", "new");
 			x.script().xfocus(q).script_();
+			if (hasMoreSearchSection()) {
+				x.ax(this, "more");
+				x.p(" ");
+				x.tago("span").default_attrs_for_element(ms);
+				if (!ms_display) {
+					x.attr("hidden");
+				}
+				x.tagoe();
+				renderMoreSearchSection(x);
+				x.p(" ");
+				x.ax(this, "q", "search");
+				x.tage("span");
+			}
 		} else {
 			x.nl();
 		}
@@ -112,6 +127,12 @@ public abstract class ViewTable extends View {
 		}
 	}
 
+	/** Callback for more search. */
+	public final void x_more(final xwriter x, final String s) throws Throwable {
+		ms_display = !ms_display;
+		x.p("$('").p(ms.id()).p("').hidden=").p(!ms_display).pl(";");
+	}
+
 	@Override
 	protected final Set<String> getSelectedIds() {
 		return t.getSelectedIds();
@@ -126,8 +147,19 @@ public abstract class ViewTable extends View {
 		}
 	}
 
-	protected TypeInfo getTypeInfo() {
-		return new TypeInfo("object", "objects");
+	// -----------------------------------------------------------------------------------
+	// override these in to specialize table
+
+	@Override
+	protected View.TypeInfo getTypeInfo() {
+		return new View.TypeInfo("object", "objects");
+	}
+
+	protected boolean hasMoreSearchSection() {
+		return false;
+	}
+
+	protected void renderMoreSearchSection(final xwriter x) {
 	}
 
 	@Override
@@ -159,17 +191,6 @@ public abstract class ViewTable extends View {
 	}
 
 	protected void onRowClick(final xwriter x, final String id) throws Throwable {
-	}
-
-	public final static class TypeInfo implements Serializable {
-		private static final long serialVersionUID = 1L;
-		protected String name;
-		protected String namePlural;
-
-		public TypeInfo(final String name, final String namePlural) {
-			this.name = name;
-			this.namePlural = namePlural;
-		}
 	}
 
 	public final static class Paging extends a {

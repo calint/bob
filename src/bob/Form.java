@@ -12,7 +12,7 @@ public abstract class Form extends a implements Titled {
 	public final static int BIT_SAVE = 2;
 	public final static int BIT_CLOSE = 4;
 	/** The actions that are enabled on the form. */
-	final protected int enabled_form_bits;
+	final protected int enabledFormBits;
 
 	public Container ans; // actions container
 	public Container scc; // save and close, save and close actions container
@@ -24,7 +24,7 @@ public abstract class Form extends a implements Titled {
 	public Form(final String parentId, final String objectId, final int enabledFormBits) {
 		this.parentId = parentId;
 		this.objectId = objectId;
-		this.enabled_form_bits = enabledFormBits;
+		this.enabledFormBits = enabledFormBits;
 		if ((enabledFormBits & BIT_SAVE_CLOSE) != 0) {
 			scc.add(new Action("save and clode", "sc"));
 		}
@@ -66,17 +66,17 @@ public abstract class Form extends a implements Titled {
 	protected void bubble_event(final xwriter x, final a from, final Object o) throws Throwable {
 		if (from instanceof Action) {
 			final String code = ((Action) from).code();
-			if ("sc".equals(code) && (enabled_form_bits & BIT_SAVE_CLOSE) != 0) {
+			if ("sc".equals(code) && (enabledFormBits & BIT_SAVE_CLOSE) != 0) {
 				save(x);
 				super.bubble_event(x, this, "close");
 				return;
 			}
-			if ("s".endsWith(code) && (enabled_form_bits & BIT_SAVE) != 0) {
+			if ("s".endsWith(code) && (enabledFormBits & BIT_SAVE) != 0) {
 				save(x);
 				super.bubble_event(x, this, "updated");
 				return;
 			}
-			if ("c".equals(code) && (enabled_form_bits & BIT_CLOSE) != 0) {
+			if ("c".equals(code) && (enabledFormBits & BIT_CLOSE) != 0) {
 				super.bubble_event(x, this, "close");
 				return;
 			}

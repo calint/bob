@@ -6,7 +6,7 @@ import java.util.Map;
 /** Timestamp field. */
 public final class FldTs extends DbField {
 	private static final long serialVersionUID = 1L;
-	
+
 	final private Timestamp defval;
 
 	public FldTs(final Timestamp def) {

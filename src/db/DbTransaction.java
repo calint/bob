@@ -159,7 +159,10 @@ public final class DbTransaction {
 		return ls.get(0);
 	}
 
-	/** Get object by id using string. Convenience method that parses the string to integer. */
+	/**
+	 * Get object by id using string. Convenience method that parses the string to
+	 * integer.
+	 */
 	public DbObject get(final Class<? extends DbObject> cls, final String id) {
 		return get(cls, Integer.parseInt(id));
 	}
@@ -170,8 +173,7 @@ public final class DbTransaction {
 
 		final Query.TableAliasMap tam = new Query.TableAliasMap();
 		final StringBuilder sbwhere = new StringBuilder(128);
-		if (qry != null && !qry.isEmpty()) {
-			sbwhere.append("where ");
+		if (qry != null) {
 			qry.sql_build(sbwhere, tam);
 		}
 
@@ -179,21 +181,21 @@ public final class DbTransaction {
 		final StringBuilder sb = new StringBuilder(256);
 		sb.append("select ").append(tam.getAliasForTableName(dbcls.tableName)).append(".* from ");
 		tam.sql_appendSelectFromTables(sb);
-		sb.append(" ");
 
 		if (sbwhere.length() != 0) {
+			sb.append(" where ");
 			sb.append(sbwhere);
 		}
 
-		if (ord != null) {
+		if (ord != null && !ord.isEmpty()) {
+			sb.append(" ");
 			ord.sql_appendToQuery(sb, tam);
 		}
 
 		if (lmt != null) {
+			sb.append(" ");
 			lmt.sql_appendToQuery(sb);
 		}
-
-		sb.setLength(sb.length() - 1);
 
 		final ArrayList<DbObject> ls = new ArrayList<DbObject>(128); // ? magic number, use limit if available
 		try {
@@ -231,8 +233,7 @@ public final class DbTransaction {
 
 		final Query.TableAliasMap tam = new Query.TableAliasMap();
 		final StringBuilder sbwhere = new StringBuilder(128);
-		if (qry != null && !qry.isEmpty()) {
-			sbwhere.append("where ");
+		if (qry != null) {
 			qry.sql_build(sbwhere, tam);
 		}
 
@@ -249,26 +250,27 @@ public final class DbTransaction {
 		for (int i = 0; i < n; i++) {
 			final DbClass c = dbclasses[i];
 			sb.append(tam.getAliasForTableName(c.tableName));
-			sb.append(".*, ");
+			sb.append(".*,");
 		}
-		sb.setLength(sb.length() - 2);
+		sb.setLength(sb.length() - 1); // remove the last ','
 		sb.append(" from ");
 		tam.sql_appendSelectFromTables(sb);
-		sb.append(" ");
 
 		if (sbwhere.length() != 0) {
+			sb.append(" where ");
 			sb.append(sbwhere);
 		}
 
-		if (ord != null) {
+		if (ord != null && !ord.isEmpty()) {
+			sb.append(" ");
 			ord.sql_appendToQuery(sb, tam);
 		}
 
 		if (lmt != null) {
+			sb.append(" ");
 			lmt.sql_appendToQuery(sb);
 		}
 
-		sb.setLength(sb.length() - 1);
 		final ArrayList<DbObject[]> ls = new ArrayList<DbObject[]>(128); // ? magic number, use limit if available
 		try {
 			final Constructor<?>[] ctors = new Constructor<?>[n];
@@ -341,10 +343,18 @@ public final class DbTransaction {
 		if (qry != null && !qry.isEmpty()) {
 			final StringBuilder sbwhere = new StringBuilder(128);
 			qry.sql_build(sbwhere, tam);
-			tam.sql_appendSelectFromTables(sb);
-			sb.append(" where ");
-			sb.append(sbwhere);
-			sb.setLength(sb.length() - 1);
+			final StringBuilder sbfrom = new StringBuilder(128);
+			tam.sql_appendSelectFromTables(sbfrom);
+			if (sbfrom.length() == 0) {
+				final DbClass dbcls = Db.dbClassForJavaClass(cls);
+				sb.append(dbcls.tableName);
+			} else {
+				sb.append(sbfrom);
+			}
+			if (sbwhere.length() != 0) {
+				sb.append(" where ");
+				sb.append(sbwhere);
+			}
 		} else {
 			final DbClass dbcls = Db.dbClassForJavaClass(cls);
 			sb.append(dbcls.tableName);

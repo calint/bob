@@ -38,7 +38,7 @@ public class FormBook2 extends Form {
 			e.set(value);
 			fields.put(nm, e);
 		}
-		x.tr().td("lbl").p(label).p(": ").td("val").inptxt(e, this, "sc", null, styleClass).nl();
+		x.tr().td("lbl").p(label).p(": ").td("val").inptxt(e, styleClass, null, this, "sc").nl();
 	}
 
 	final protected void inputElem(final xwriter x, final DbField f, final a elem) throws Throwable {
@@ -74,7 +74,7 @@ public class FormBook2 extends Form {
 	}
 
 	// ----------------------------------------------------------------------------------------
-	private String init_str;
+	private final String init_str;
 
 	public FormBook2(final String object_id, final String init_str) {
 		super(null, object_id, BIT_SAVE_CLOSE | BIT_SAVE | BIT_CLOSE);
@@ -98,7 +98,7 @@ public class FormBook2 extends Form {
 		x.ax(this, "test", "test").nl();
 	}
 
-	public void x_test(xwriter x, String param) throws Throwable {
+	public void x_test(final xwriter x, final String param) throws Throwable {
 		x.xu(this);
 	}
 
@@ -116,8 +116,9 @@ public class FormBook2 extends Form {
 		o.setAuthors(getStr(Book.authors));
 		o.setPublisher(getStr(Book.publisher));
 		final String pd = getStr(Book.publishedDate);
-		if (!Util.isEmpty(pd))
+		if (!Util.isEmpty(pd)) {
 			o.setPublishedDate(Timestamp.valueOf(pd));
+		}
 
 		final DataText d = o.getData(true);
 		d.setMeta(o.getName() + " " + o.getAuthors() + " " + o.getPublisher());

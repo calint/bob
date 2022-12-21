@@ -5,7 +5,7 @@ import java.util.Map;
 /** Integer field. */
 public final class FldInt extends DbField {
 	private static final long serialVersionUID = 1L;
-	
+
 	final private int defval;
 
 	public FldInt(final int def) {

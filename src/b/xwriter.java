@@ -327,6 +327,10 @@ public final class xwriter{
 		return inp(e,null,null,null,null,null,null,null,null);
 	}
 
+	public xwriter inptxt(final a e, final String cls){
+		return inp(e,cls,null,null,null,null,null,null,null);
+	}
+
 	public xwriter inptxt(final a e,final a callback_elem_on_enter){
 		return inp(e,null,null,null,null,callback_elem_on_enter,null,null,null);
 	}
@@ -335,11 +339,11 @@ public final class xwriter{
 		return inp(e,null,null,null,null,callback_elem_on_enter,callback,null,null);
 	}
 
-	public xwriter inptxt(final a e,final a callback_elem_on_enter,final String callback,final String cls){
+	public xwriter inptxt(final a e,final String cls,final a callback_elem_on_enter,final String callback){
 		return inp(e,null,cls,null,null,callback_elem_on_enter,callback,null,null);
 	}
 
-	public xwriter inptxt(final a e,final a callback_elem_on_enter,final String callback,final String default_value,final String cls){
+	public xwriter inptxt(final a e,final String cls,final String default_value,final a callback_elem_on_enter,final String callback){
 		return inp(e,null,cls,null,default_value,callback_elem_on_enter,callback,null,null);
 	}
 
@@ -489,6 +493,10 @@ public final class xwriter{
 			throw new Error(e);
 		}
 		return this;
+	}
+
+	public xwriter p(final boolean n){
+		return p(Boolean.toString(n));
 	}
 
 	public xwriter pl(){

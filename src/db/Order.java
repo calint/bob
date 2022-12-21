@@ -43,6 +43,10 @@ public final class Order implements Serializable {
 		this(cls, true);
 	}
 
+	public boolean isEmpty() {
+		return elems.isEmpty();
+	}
+
 	public Order append(final DbField fld) {
 		return append(fld, true);
 	}
@@ -68,8 +72,7 @@ public final class Order implements Serializable {
 			}
 			sb.append(',');
 		}
-		sb.setLength(sb.length() - 1);
-		sb.append(' ');
+		sb.setLength(sb.length() - 1); // remove last coma
 	}
 
 	public Order append(final Order ord) {

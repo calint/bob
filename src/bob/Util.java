@@ -18,13 +18,13 @@ public final class Util {
 		return Long.toString(b) + " TB";
 	}
 
-	public static String toStr(final Object o, String defaultStr) {
+	public static String toStr(final Object o, final String defaultStr) {
 		if (o == null || o.toString().length() == 0)
 			return defaultStr;
 		return o.toString();
 	}
 
 	public static boolean isEmpty(final String s) {
-		return s==null||s.isEmpty();
+		return s == null || s.isEmpty();
 	}
 }

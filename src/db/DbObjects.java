@@ -3,7 +3,7 @@ package db;
 import java.io.Serializable;
 import java.util.List;
 
-public final class DbObjects implements Serializable { // ?  review select
+public final class DbObjects implements Serializable { // ? review select
 	private static final long serialVersionUID = 1L;
 
 	private final DbObjects dbobjects;
@@ -14,9 +14,8 @@ public final class DbObjects implements Serializable { // ?  review select
 	public DbObjects(final DbObjects dbobjects, final Class<? extends DbObject> select, final Query query,
 			final Order order) {
 		this.dbobjects = dbobjects;
-		if (select == null && dbobjects == null) { // ? not nice
+		if (select == null && dbobjects == null)
 			throw new RuntimeException("'select' must be specified if this DbObjects does not wrap another DbObjects.");
-		}
 		if (select == null) {
 			this.select = dbobjects.select;
 		} else {

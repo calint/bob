@@ -129,8 +129,7 @@ final public class WebsockBob extends websock {
 		// todo store root in db
 	}
 
-	private static HashMap<String, String> populateContentMapFromBuffer(final ByteBuffer bb)
-			throws Throwable {
+	private static HashMap<String, String> populateContentMapFromBuffer(final ByteBuffer bb) throws Throwable {
 		final HashMap<String, String> content = new HashMap<String, String>();
 		final byte[] ba = bb.array();
 		int i = bb.position();
