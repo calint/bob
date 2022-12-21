@@ -1,5 +1,5 @@
 linode.com 2022-12-21
-cluster nodes: 1 virtual CPU, 1G B ram, 25 GB disk ($5/month)
+cluster nodes (Nanode 1 GB): 1 virtual CPU, 1G B ram, 25 GB disk ($5/month)
 test: /db/test/t1
 
 note.
