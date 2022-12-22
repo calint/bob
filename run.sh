@@ -11,6 +11,7 @@ else
 	CFG=$1
 fi
 echo $CFG
+cat $CFG
 . ./$CFG
 
 java -version
