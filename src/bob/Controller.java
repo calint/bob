@@ -53,12 +53,14 @@ public class Controller extends a {
 			e.replace(this, ae); // replace active element
 			x.xu(ae); // update active element
 			x.xu(bc); // update bread crumbs
+			x.xscrollToTop();
 			return;
 		}
 		if (from == bc) { // event from bread crumb
 			final a e = ((BreadCrumbs) from).getActive();
 			e.replace(this, ae); // replace active element
 			x.xu(ae); // update active element
+			x.xscrollToTop();
 			return;
 		}
 		if (from instanceof Form) { // event from a form
@@ -68,6 +70,7 @@ public class Controller extends a {
 				e.replace(this, ae); // replace active element
 				x.xu(ae); // update active element
 				x.xu(bc); // update bread crumbs
+				x.xscrollToTop();
 				return;
 			}
 			if ("updated".equals(o)) {
@@ -81,6 +84,7 @@ public class Controller extends a {
 			e.replace(this, ae); // replace active element
 			x.xu(ae); // update active element
 			x.xu(bc); // update bread crumbs
+			x.xscrollToTop();
 			return;
 		}
 		// event unknown by this element

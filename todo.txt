@@ -1,5 +1,4 @@
 b
-[ ] bob: controller: when opening a new view or form scroll to top
 [ ] input type checkbox instead of characters
 [ ] RelRef, RelRefN etc find/select using view, create new
 [ ] class_init extended to be able to set statics on any class
@@ -78,6 +77,7 @@ dbo
 [ ]   ms sql server?
 [ ]   ibm db2?
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
+[x] bob: controller: when opening a new view or form scroll to top
 [x] custom search section in view_table
 [x] xwriter: review inpx
 [x] bob,b: window.scrollTo(0, document.body.scrollHeight), element.scrollTop = element.scrollHeight;
