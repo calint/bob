@@ -9,3 +9,7 @@ server {
 
         return 301 https://$host$request_uri;
 }
+
+
+from:
+https://www.linode.com/community/questions/18711/redirect-http80-to-https443-using-only-nodebalancer
