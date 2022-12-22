@@ -18,6 +18,7 @@ b
 [ ] jem: add package names that contain additional jem fields elements
 [ ] bob.app: dbclass to class
 [ ] rename to java convention
+[ ] how to for aws
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 dbo
 [ ] DbObjects: select when multiple classes vs one class inconsistency 
