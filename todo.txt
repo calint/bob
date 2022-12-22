@@ -2,6 +2,7 @@ b
 [ ] FormDbObject with convenience for editing dbobjects
 [ ]   RelRef, RelRefN etc elements to find/select/create
 [ ] input type checkbox instead of characters
+[ ] ViewTabel: infinite scroll instead of paging
 [ ] class_init extended to be able to set statics on any class
 [ ] bob.js: server is busy message box when typing fast
 [ ]   server busy ui element
