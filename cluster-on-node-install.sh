@@ -3,9 +3,10 @@
 set -e
 
 # timeout does not currently work
-#apt-get -o DPkg::Lock::Timeout=-1 update
-while ! apt-get update;do sleep 1;done
-apt-get -o DPkg::Lock::Timeout=-1 -y install default-jdk git default-mysql-server
+#apt -o DPkg::Lock::Timeout=-1 update
+while ! apt update;do sleep 1;done
+apt install unattended-upgrades
+apt -y install default-jdk git default-mysql-server
 cd /
 git clone https://github.com/calint/bob
 cd /bob
