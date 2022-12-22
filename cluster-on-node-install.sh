@@ -1,5 +1,6 @@
 #!/bin/sh
 # run on the node by cluster-install-nodes.sh
+# distribution: Canonical, Ubuntu, 22.04 LTS
 set -e
 
 # timeout does not currently work

@@ -1,0 +1,5 @@
+# a list of ip addresses of cluster nodes
+# first ip is the cluster manager
+# (aws)
+3.66.84.174
+3.74.217.184
