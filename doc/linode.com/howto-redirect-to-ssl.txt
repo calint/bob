@@ -1,6 +1,9 @@
-install nginx and make default site
+from:
+https://www.linode.com/community/questions/18711/redirect-http80-to-https443-using-only-nodebalancer
 
-/etc/nginx/sites-enabled/default 
+apt-get install nginx
+
+cat > /etc/nginx/sites-enabled/default << EOF
 server {
         listen [::]:80 default_server ipv6only=off deferred reuseport;
 
@@ -9,7 +12,6 @@ server {
 
         return 301 https://$host$request_uri;
 }
+EOF
 
-
-from:
-https://www.linode.com/community/questions/18711/redirect-http80-to-https443-using-only-nodebalancer
+systemctl restart nginx
