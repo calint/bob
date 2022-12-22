@@ -4,6 +4,7 @@ b
 [ ] input type checkbox instead of characters
 [ ] ViewTable: infinite scroll instead of paging
 [ ] ViewTable: onRowClick(xwriter,code,id) to have other click types from row
+[ ] WebsockBob: client keep alive with regular pings
 [ ] class_init extended to be able to set statics on any class
 [ ] bob.js: server is busy message box when typing fast
 [ ]   server busy ui element
