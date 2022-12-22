@@ -1,0 +1,11 @@
+install nginx and make default site
+
+/etc/nginx/sites-enabled/default 
+server {
+        listen [::]:80 default_server ipv6only=off deferred reuseport;
+
+        server_name _;
+        access_log off;
+
+        return 301 https://$host$request_uri;
+}
