@@ -94,7 +94,9 @@ public abstract class ViewTable extends View {
 				}
 				onActionDelete(x);
 				x.xu(t); // update table
-				x.xu(p); // update paging
+				if (p.isEnabled()) {
+					x.xu(p); // update paging
+				}
 				x.xfocus(q);
 				return;
 
