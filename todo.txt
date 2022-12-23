@@ -1,8 +1,8 @@
 b
+[ ] callbacks x_... if method not found recursively check super
 [ ] FormDbObject with convenience for editing dbobjects
 [ ]   RelRef, RelRefN etc elements to find/select/create
 [ ]   FormRenderer wrapping xwriter and "this"?
-[ ] callbacks x_... if method not found recursively check super
 [ ] js: from element calling $parent(e,"tr") traverses the nodes until it finds the element type. e.parentNode
 [ ]   ViewTable: save object id in "tr" tag
 [ ] input type checkbox instead of characters
