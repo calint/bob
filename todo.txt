@@ -1,6 +1,7 @@
 b
 [ ] FormDbObject with convenience for editing dbobjects
 [ ]   RelRef, RelRefN etc elements to find/select/create
+[ ] callbacks x_... if method not found check recursively super
 [ ] input type checkbox instead of characters
 [ ] ViewTable: infinite scroll instead of paging
 [ ] ViewTable: onRowClick(xwriter,code,id) to have other click types from row
