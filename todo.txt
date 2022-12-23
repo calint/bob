@@ -1,5 +1,4 @@
 b
-[ ] callbacks x_... if method not found recursively check super
 [ ] FormDbObject with convenience for editing dbobjects
 [ ]   RelRef, RelRefN etc elements to find/select/create
 [ ]   FormRenderer wrapping xwriter and "this"?
@@ -25,6 +24,7 @@ b
 [ ] jem: add package names that contain additional jem fields elements
 [ ] bob.app: dbclass to class
 [ ] b: rename to java convention
+[ ] x.js and bob.js common script extracted
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 dbo
 [ ] DbObjects: select when multiple classes vs one class inconsistency 
@@ -84,6 +84,8 @@ dbo
 [ ]   ms sql server?
 [ ]   ibm db2?
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
+[x] xwriter.xalert when used in error with websocket generates broken javascript. xwriter.is_ub_open
+[x] callbacks x_... if method not found recursively check super. already so.
 [x] how to for aws
 [x] bob: controller: when opening a new view or form scroll to top
 [x] custom search section in view_table

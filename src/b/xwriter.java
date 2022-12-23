@@ -27,6 +27,7 @@ public final class xwriter{
 
 	private final OutputStream os;
 	private boolean xreload_requested=false; // reload page races with element serialization to db
+	private boolean is_xu_open; // if an update to element is open
 
 	public xwriter(){
 		os=new ByteArrayOutputStream();
@@ -845,12 +846,20 @@ public final class xwriter{
 	 * @return xwriter xwriter that will generate a script set call. Will update element inner or outer HTML code. Must be closed with xube().
 	 */
 	public xwriter xub(final a e,final boolean inner,final boolean escltgt){
+		is_xu_open=true;
 		p("$").p(inner?"s":"o").p("('").p(e.id()).p("','");
 		return new xwriter(new osjsstr(escltgt?new osltgt(os):os));
 	}
 
+	public xwriter closeUpdateIfOpen(){
+		if(!is_xu_open)
+			return this;
+		is_xu_open=false;
+		return xube();
+	}
 	/** Completes an xub(...) operation. */
 	public xwriter xube(){
+		is_xu_open=false;
 		return pl("');");
 	}
 

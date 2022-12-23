@@ -144,8 +144,4 @@ public class FormBook2 extends Form {
 		}
 		super.onAction(x, act);
 	}
-
-	public final void x_sc(final xwriter x, final String param) throws Throwable {
-		saveAndClose(x);
-	}
 }

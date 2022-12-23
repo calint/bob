@@ -110,10 +110,12 @@ final public class WebsockBob extends websock {
 				while (e.getCause() != null) {
 					e = e.getCause();
 				}
+				x.closeUpdateIfOpen();
 				x.xalert(b.isempty(e.getMessage(), e.toString()));
 			} catch (final NoSuchMethodException t) {
-				x.xalert("method not found:\n" + target_elem.getClass().getName() + ".x_" + target_elem_method
-						+ "(xwriter,String)");
+				x.closeUpdateIfOpen();
+				x.xalert("method not found:\npublic x_" + target_elem_method + "(xwriter,String) in "
+						+ target_elem.getClass().getName() + " or it's super classes.");
 			}
 			x.finish();
 
