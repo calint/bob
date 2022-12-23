@@ -21,11 +21,11 @@ public class FormBook2 extends Form {
 
 	final private LinkedHashMap<String, a> fields = new LinkedHashMap<String, a>();
 
-	final protected void begin(final xwriter x) {
+	final protected void beginForm(final xwriter x) {
 		x.table("form").nl();
 	}
 
-	final protected void end(final xwriter x) {
+	final protected void endForm(final xwriter x) {
 		x.table_().nl();
 	}
 
@@ -54,6 +54,10 @@ public class FormBook2 extends Form {
 				throw new RuntimeException("expected same element");
 			e.to(x);
 		}
+	}
+
+	public void focus(final xwriter x, final DbField f) {
+		x.script().xfocus(getElem(f)).script_();
 	}
 
 	final protected String getStr(final DbField f) {
@@ -88,13 +92,14 @@ public class FormBook2 extends Form {
 	@Override
 	protected void render(final xwriter x) throws Throwable {
 		final Book o = (Book) (objectId == null ? null : Db.currentTransaction().get(Book.class, objectId));
-		begin(x);
+		beginForm(x);
 		inputText(x, "Title", Book.name, "long", o == null ? initStr : o.getName());
+		focus(x, Book.name);
 		inputText(x, "Authors", Book.authors, "long", o == null ? "" : o.getAuthors());
 		inputText(x, "Publisher", Book.publisher, "medium", o == null ? "" : o.getPublisher());
 		inputText(x, "Published date", Book.publishedDate, "short",
 				o == null ? "" : Util.toStr(o.getPublishedDate(), ""));
-		end(x);
+		endForm(x);
 		x.ax(this, "test", "test").nl();
 	}
 

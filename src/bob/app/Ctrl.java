@@ -12,8 +12,7 @@ public class Ctrl extends Controller {
 	public Ctrl() {
 		m.addItem(TableFiles.class, "Files browser");
 		bc.add(new TableFiles());
-		m.addItem(TableDbClasses.class, "Classes");
-		m.addItem(TableMock.class, "Mock");
 		m.addItem(TableBooks.class, "Books");
+		m.addItem(TableDbClasses.class, "Classes");
 	}
 }
