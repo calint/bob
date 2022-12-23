@@ -27,7 +27,7 @@ public final class xwriter{
 
 	private final OutputStream os;
 	private boolean xreload_requested=false; // reload page races with element serialization to db
-	private boolean is_xu_open; // if an update to element is open
+	private boolean is_xu_open;
 
 	public xwriter(){
 		os=new ByteArrayOutputStream();
