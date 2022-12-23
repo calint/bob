@@ -23,8 +23,7 @@ b
 [ ] Content-disposition: attachment; filename=file.txt
 [ ] jem: add package names that contain additional jem fields elements
 [ ] bob.app: dbclass to class
-[ ] rename to java convention
-[ ] how to for aws
+[ ] b: rename to java convention
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 dbo
 [ ] DbObjects: select when multiple classes vs one class inconsistency 
@@ -84,6 +83,7 @@ dbo
 [ ]   ms sql server?
 [ ]   ibm db2?
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
+[x] how to for aws
 [x] bob: controller: when opening a new view or form scroll to top
 [x] custom search section in view_table
 [x] xwriter: review inpx
