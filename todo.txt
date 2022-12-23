@@ -6,6 +6,7 @@ b
 [ ]   ViewTable: save object id in "tr" tag
 [ ] input type checkbox instead of characters
 [ ] ViewTable: infinite scroll instead of paging
+[ ]   https://stackoverflow.com/questions/19315948/how-to-insert-html-before-element-in-javascript-without-jquery
 [ ] ViewTable: onRowClick(xwriter,code,id) to have other click types from row
 [ ] WebsockBob: client keep alive with regular pings
 [ ] class_init extended to be able to set statics on any class
