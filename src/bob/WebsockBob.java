@@ -99,7 +99,8 @@ final public class WebsockBob extends websock {
 				send(msg);
 				return;
 			}
-			// invoke method on target element with arguments
+			// invoke method on target element with arguments'
+			// ! try to find method recursively
 			try {
 				target_elem.getClass().getMethod("x_" + target_elem_method, xwriter.class, String.class)
 						.invoke(target_elem, x, target_elem_method_args);
