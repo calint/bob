@@ -1,7 +1,7 @@
 b
 [ ] class_init extended to be to set statics on any class
 [x] ViewTable: review code, nl() css padding etc
-[o] ViewTable: infinite scroll instead of paging
+[o] ViewTable: infinite scroll instead of paging (?)
 [ ]   review code
 [ ]   when initial page fits the page
 [x]   mobile chromium vertical document height (white-space:pre caused it)
