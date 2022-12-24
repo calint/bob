@@ -362,16 +362,18 @@ public abstract class ViewTable extends View {
 			cbs.elements().clear();
 			renderRows(x);
 			x.table_();
+			x.script();
 			if (inifiniteScroll) {
 //				x.script().p(
 //						"window.addEventListener('scroll',(e)=>{if((window.innerHeight+window.scrollY)>=document.body.offsetHeight){$x('"
 //								+ id() + " is');}})")
 //						.script_();
-				x.script().p(
-						"window.onscroll=(e)=>{if((window.innerHeight+window.scrollY)>=document.body.offsetHeight){$x('"
-								+ id() + " is');}}")
-						.script_();
+				x.p("window.onscroll=(e)=>{if((window.innerHeight+window.scrollY)>=document.body.offsetHeight){$x('"
+						+ id() + " is');}}");
+			} else {
+				x.p("window.onscroll=null;"); // disable infinite scroll event
 			}
+			x.script_();
 		}
 
 		private void renderRows(final xwriter x) throws Throwable {
