@@ -272,7 +272,6 @@ public abstract class ViewTable extends View {
 			try {
 				n = pg.toint();
 			} catch (final Throwable t) {
-				x.xu(tv.p);
 				x.xfocus(pg);
 				x.xalert("Enter a page number.");
 				return;
@@ -379,7 +378,7 @@ public abstract class ViewTable extends View {
 				tv.renderRowCells(x, o);
 				x.nl();
 			}
-			if (tv.isInifiniteScroll()) {
+			if (tv.isInifiniteScroll()) { // insertion point for more rows
 				x.p("<tr id=" + is.id() + ">");
 			}
 		}
@@ -411,10 +410,10 @@ public abstract class ViewTable extends View {
 
 		/** Callback for infinite scroll. */
 		public void x_is(final xwriter y, final String s) throws Throwable {
-			if (!tv.p.nextPage())
+			if (!tv.p.nextPage()) // if there are no more pages
 				return;
 
-			final xwriter x = y.xub(is, false, false);
+			final xwriter x = y.xub(is, false, false); // render more rows at the insertion tag
 			renderRows(x);
 			y.xube();
 		}
