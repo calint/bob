@@ -18,8 +18,9 @@ b
 [ ] fix for client that makes many threaded requests and then stalls them to starve server of threads or create too many. ddos.
 [ ]   slowhttptest
 [ ] thread pool: get first, create if none available
-[ ] fix "// todo" comments
-[ ]   websock: implement ping/pong
+[x] fix "// todo" comments
+[x]   websock: implement ping/pong, not implemented by browsers
+[ ]   timeout on client and send empty message every x minutes
 [ ] use java.util.concurrent (keep it compatible with java 1.5)
 [ ]   b: request queue, thread pool
 [ ]   dbo: connection pool
