@@ -347,7 +347,7 @@ public final class xwriter{
 		return inp(e,null,null,null,null,null,null,null,null);
 	}
 
-	public xwriter inptxt(final a e, final String cls){
+	public xwriter inptxt(final a e,final String cls){
 		return inp(e,null,cls,null,null,null,null,null,null);
 	}
 
