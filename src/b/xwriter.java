@@ -2,6 +2,7 @@ package b;
 
 import static b.b.isempty;
 import static b.b.tobytes;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -247,7 +248,7 @@ public final class xwriter{
 //	}
 	// ? review this
 	public xwriter inp(final a e,final String type,final String cls,final String style,final String default_value,final a on_enter_callback_elem,final String on_enter_callback,final a on_change_callback_elem,final String on_change_callback){
-		final String value=isempty(e.str(),default_value);
+		final String value=e.is_empty()?default_value:e.str();
 		tago("input").attr("value",value).default_attrs_for_element(e);
 		if(!isempty(type)){
 			attr("type",type);
@@ -822,7 +823,7 @@ public final class xwriter{
 	}
 
 	public xwriter xtitle(final String s){
-		return p("$t('").jsstr(b.isempty(s,"")).pl("');");
+		return p("$t('").jsstr(s).pl("');");
 	}
 
 	/** Updates inner HTML of element e. */
