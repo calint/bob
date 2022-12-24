@@ -1,7 +1,7 @@
 package b;
 import java.io.IOException;
 import java.io.OutputStream;
-final class osjsstr extends OutputStream{
+public final class osjsstr extends OutputStream{
 	private static final byte[] b_jsstr_sq="\\'".getBytes();
 	private static final byte[] b_jsstr_cr="\\r".getBytes();
 	private static final byte[] b_jsstr_nl="\\n".getBytes();

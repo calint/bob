@@ -9,7 +9,7 @@ import b.xwriter;
 import db.Limit;
 
 public abstract class ViewTable extends View {
-	private static final long serialVersionUID = 2L;
+	private static final long serialVersionUID = 3L;
 
 	public final static int BIT_CLICK_ITEM = 1;
 	/** The actions that are enabled in the table. */
@@ -20,6 +20,7 @@ public abstract class ViewTable extends View {
 	public Table t;
 	public Paging p;
 	public a ms; // more search section
+
 	private boolean ms_display; // true to display more search section
 
 	private View.TypeInfo typeInfo; // the name and plural of the object type
@@ -72,11 +73,20 @@ public abstract class ViewTable extends View {
 		} else {
 			x.nl();
 		}
+		final boolean inifiniteScroll = isInifiniteScroll();
+		if (inifiniteScroll) {
+			p.upd();
+			p.setPage(1);
+		}
 		x.divh(t);
-		if (!p.isEnabled())
-			return;
-		x.nl();
-		x.divh(p);
+		if (p.isEnabled() && !inifiniteScroll) {
+			x.nl();
+			x.divh(p);
+		}
+	}
+
+	protected boolean isInifiniteScroll() {
+		return false;
 	}
 
 	@Override
@@ -94,7 +104,7 @@ public abstract class ViewTable extends View {
 				}
 				onActionDelete(x);
 				x.xu(t); // update table
-				if (p.isEnabled()) {
+				if (p.isEnabled() && !isInifiniteScroll()) {
 					x.xu(p); // update paging
 				}
 				x.xfocus(q);
@@ -200,6 +210,7 @@ public abstract class ViewTable extends View {
 		private static final long serialVersionUID = 1L;
 		private int currentPage; // page starting at 0
 		private int objectsPerPage;
+		private int objectsCount;
 		private int npages;
 		private ViewTable tv;
 		public a pg; // current page
@@ -210,17 +221,22 @@ public abstract class ViewTable extends View {
 			pg.set(currentPage + 1);
 		}
 
-		@Override
-		public void to(final xwriter x) throws Throwable {
-			final int count = tv.getObjectsCount();
-			if (count < objectsPerPage) {
+		public void upd() {
+			objectsCount = tv.getObjectsCount();
+			if (objectsCount < objectsPerPage) {
 				npages = 1;
 			} else {
-				npages = count / objectsPerPage;
+				npages = objectsCount / objectsPerPage;
 			}
-			x.p(count);
+
+		}
+
+		@Override
+		public void to(final xwriter x) throws Throwable {
+			upd();
+			x.p(objectsCount);
 			x.p(' ');
-			if (count == 1) {
+			if (objectsCount == 1) {
 				x.p(tv.typeInfo.name);
 			} else {
 				x.p(tv.typeInfo.namePlural);
@@ -249,13 +265,20 @@ public abstract class ViewTable extends View {
 				}
 			}
 			if ("nxt".equals(param)) {
-				currentPage++;
-				if (currentPage >= npages) {
-					currentPage = npages - 1;
-				}
+				nextPage();
 			}
 			pg.set(currentPage + 1);
 			super.bubble_event(x);
+		}
+
+		public boolean nextPage() {
+			currentPage++;
+			if (currentPage >= npages) {
+				currentPage = npages - 1;
+				return false;
+			}
+			pg.set(currentPage + 1);
+			return true;
 		}
 
 		public void x_p(final xwriter x, final String param) throws Throwable {
@@ -313,6 +336,8 @@ public abstract class ViewTable extends View {
 	public final static class Table extends a {
 		static final long serialVersionUID = 1;
 		public Container cbs; // checkboxes
+		public a is; // infinite scroll marker
+
 		private ViewTable tv; // the parent
 		private final HashSet<String> selectedIds = new HashSet<String>();
 
@@ -322,7 +347,10 @@ public abstract class ViewTable extends View {
 
 		@Override
 		public void to(final xwriter x) throws Throwable {
-			final List<?> ls = tv.getObjectsList();
+			final boolean inifiniteScroll = tv.isInifiniteScroll();
+			if (inifiniteScroll) {
+				tv.p.setPage(1);
+			}
 			x.table("f").nl();
 			x.tr();
 			if ((tv.enabledViewBits & View.BIT_SELECT) != 0) { // header for the checkbox
@@ -332,6 +360,22 @@ public abstract class ViewTable extends View {
 			x.nl();
 
 			cbs.elements().clear();
+			renderRows(x);
+			x.table_();
+			if (inifiniteScroll) {
+//				x.script().p(
+//						"window.addEventListener('scroll',(e)=>{if((window.innerHeight+window.scrollY)>=document.body.offsetHeight){$x('"
+//								+ id() + " is');}})")
+//						.script_();
+				x.script().p(
+						"window.onscroll=(e)=>{if((window.innerHeight+window.scrollY)>=document.body.offsetHeight){$x('"
+								+ id() + " is');}}")
+						.script_();
+			}
+		}
+
+		private void renderRows(final xwriter x) throws Throwable {
+			final List<?> ls = tv.getObjectsList();
 			for (final Object o : ls) {
 				final String id = tv.getIdFrom(o);
 				x.tr();
@@ -347,7 +391,9 @@ public abstract class ViewTable extends View {
 				tv.renderRowCells(x, o);
 				x.nl();
 			}
-			x.table_();
+			if (tv.isInifiniteScroll()) {
+				x.p("<tr id=" + is.id() + ">");
+			}
 		}
 
 		@Override
@@ -373,6 +419,16 @@ public abstract class ViewTable extends View {
 			if ((tv.enabledTableBits & ViewTable.BIT_CLICK_ITEM) != 0) {
 				tv.onRowClick(x, s);
 			}
+		}
+
+		/** Callback for infinite scroll. */
+		public void x_is(final xwriter y, final String s) throws Throwable {
+			if (!tv.p.nextPage())
+				return;
+
+			final xwriter x = y.xub(is, false, false);
+			renderRows(x);
+			y.xube();
 		}
 
 		protected Set<String> getSelectedIds() {

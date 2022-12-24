@@ -16,7 +16,7 @@ import db.test.Book;
 import db.test.DataText;
 
 public class TableBooks extends ViewTable {
-	static final long serialVersionUID = 1;
+	static final long serialVersionUID = 2;
 	public a title;
 	public a id;
 
@@ -53,6 +53,11 @@ public class TableBooks extends ViewTable {
 	protected int getObjectsCount() {
 		return getResults().getCount();
 	}
+	
+	@Override
+	protected boolean isInifiniteScroll() {
+		return true;
+	}
 
 	@Override
 	protected List<?> getObjectsList() {
@@ -63,7 +68,7 @@ public class TableBooks extends ViewTable {
 		return dbo.toList(p.getLimit());
 	}
 
-	private DbObjects getResults() {
+	protected DbObjects getResults() {
 		final Query qry = new Query();
 		if (!q.is_empty()) {
 			qry.and(DataText.ft, q.str()).and(Book.data);
