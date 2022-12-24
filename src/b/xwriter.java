@@ -117,6 +117,25 @@ public final class xwriter{
 		return tage("div");
 	}
 
+	/** Renders a complete div with HTML escaped element output. */
+	public xwriter div(final a e,final String cls,final String style){
+		divo(e,cls,style);
+		try{
+			e.to(new osltgt(os));
+		}catch(final Throwable t){
+			throw new Error(t);
+		}
+		return div_();
+	}
+
+	public xwriter div(final a e,final String cls){
+		return div(e,cls,null);
+	}
+
+	public xwriter div(final a e){
+		return div(e,null,null);
+	}
+
 	/** Renders a div tag with element content. */
 	public xwriter div_html(final a e,final String cls,final String style){
 		return divh(e,cls,style);
@@ -172,6 +191,7 @@ public final class xwriter{
 		return divo(null,cls,style);
 	}
 
+	/** Opens a div tag so that other attributes can be added. Close with tagoe(). */
 	public xwriter divot(final a e,final String cls,final String style){
 		tago("div");
 		if(e!=null){
@@ -550,7 +570,7 @@ public final class xwriter{
 		return span(e,cls,null);
 	}
 
-	/** Renders a complete span with HTML escaped value. */
+	/** Renders a complete span with HTML escaped element output. */
 	public xwriter span(final a e,final String cls,final String style){
 		spano(e,cls,style);
 		try{
@@ -604,13 +624,13 @@ public final class xwriter{
 		return tagoe();
 	}
 
-	public xwriter spanot(final a e){
-		return spanot(e,null,null);
-	}
-
-	public xwriter spanot(final a e,final String cls){
-		return spanot(e,cls,null);
-	}
+//	public xwriter spanot(final a e){
+//		return spanot(e,null,null);
+//	}
+//
+//	public xwriter spanot(final a e,final String cls){
+//		return spanot(e,cls,null);
+//	}
 
 	/**
 	 * Opens a span tag with id, class and style allowing the appending of additional attributes. Must be closed with tagoe().

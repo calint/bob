@@ -5,6 +5,8 @@ b
 [ ]   review code
 [ ]   when initial page fits the page
 [x]   mobile chromium vertical document height
+[ ]     form has extra white space at the bottom from white-space:pre in div.output
+[ ] xwriter: inconsistency spano spanot divo etc 
 [ ] FormDbObject with convenience for editing dbobjects
 [ ]   RelRef, RelRefN etc elements to find/select/create
 [ ]   FormRenderer wrapping xwriter and "this"?
