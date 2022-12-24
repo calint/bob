@@ -7,6 +7,7 @@ a,a:visited{text-decoration:none;color:#00a;transition:all .3s ease-in-out}
 a:focus,a:hover,a:active{color:green;text-shadow:0 0 1rem rgba(0,0,0,.7)}
 em{font-weight:bold}
 input,select,textarea{margin:.5rem;padding:.5rem;border:1px dotted green}
+input:focus,select:focus{background-color:yellow;}
 /** index.html */
 div.disp{text-align:center}
 /** bob.Controller */
@@ -62,8 +63,9 @@ table.t td{
 table.t td:first-child{
 	border-left:0
 }
-table.t td.ar{
-	text-align:right
+table.t td.nbr{
+	text-align:right;
+	white-space:nowrap;
 }
 /** bob.Form */
 div.output{

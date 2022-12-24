@@ -4,7 +4,8 @@ b
 [ ]   review code
 [ ]   when initial page fits the page
 [x]   mobile chromium vertical document height (white-space:pre caused it)
-[ ]     form has extra white space at the bottom from white-space:pre in div.output
+[ ]     form has white space at the end of page from white-space:pre in div.output
+[ ]     form has white space at the end of page from input.long{width:60rem;} overflowing x-axis
 [ ] FormDbObject with convenience for editing dbobjects
 [ ]   RelRef, RelRefN etc elements to find/select/create
 [ ]   FormRenderer wrapping xwriter and "this"? cookie.eat() or eat(cookie)

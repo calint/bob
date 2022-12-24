@@ -119,7 +119,7 @@ public class TableBooks extends ViewTable {
 	@Override
 	protected void renderRowCells(final xwriter x, final Object o) {
 		final Book b = (Book) o;
-		x.td().p(b.id());
+		x.td("nbr").p(b.id());
 		x.td();
 		renderLinked(x, b, b.getName());
 		x.td().p(b.getAuthors());
@@ -127,7 +127,7 @@ public class TableBooks extends ViewTable {
 
 	@Override
 	protected void onRowClick(final xwriter x, final String id) throws Throwable {
-//		final form_book f = new form_book(id, q.str());
+//		final FormBook f = new FormBook(id, q.str());
 		final FormBook2 f = new FormBook2(id, q.str());
 		super.bubble_event(x, this, f);
 	}

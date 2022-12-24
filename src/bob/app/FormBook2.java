@@ -38,7 +38,11 @@ public class FormBook2 extends Form {
 			e.set(value);
 			fields.put(nm, e);
 		}
+//		x.tr().td("lbl").p(label).p(": ").td_().td("val").inptxt(e, styleClass, null, this, "sc").td_().tr_().nl();
 		x.tr().td("lbl").p(label).p(": ").td("val").inptxt(e, styleClass, null, this, "sc").nl();
+//		x.tr().td("lbl").p(label).p(": ").td("val").inptxt(e, null, null, this, "sc").nl();
+//		x.inptxt(e, null, null, this, "sc");
+//		x.inptxt(e, styleClass, null, this, "sc");
 	}
 
 	final protected void inputElem(final xwriter x, final DbField f, final a elem) throws Throwable {
@@ -86,7 +90,8 @@ public class FormBook2 extends Form {
 	}
 
 	public String getTitle() {
-		return Util.toStr(getStr(Book.name), "New book");
+		final Book o = (Book) (objectId == null ? null : Db.currentTransaction().get(Book.class, objectId));
+		return o == null ? "New book" : o.getName();
 	}
 
 	@Override

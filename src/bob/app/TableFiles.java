@@ -135,7 +135,7 @@ public class TableFiles extends ViewTable {
 		x.p(p.name());
 //		renderLinkedName(x, o);
 		x.td().p(formatDateTime(p.lastmod()));
-		x.td(null, "text-align:right").p(Util.formatSizeInBytes(p.size()));
+		x.td("nbr").p(Util.formatSizeInBytes(p.size()));
 	}
 
 	@Override
