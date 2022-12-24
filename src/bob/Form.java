@@ -52,7 +52,7 @@ public abstract class Form extends a implements Titled {
 
 	@Override
 	public final void to(final xwriter x) throws Throwable {
-		x.script().p("window.onscroll=null;").script_();
+		x.script().p("window.onscroll=null;").script_(); // disable infinite scroll event
 		x.nl();
 		if (!ans.elements().isEmpty()) {
 			x.divh(ans);
