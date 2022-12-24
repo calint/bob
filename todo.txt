@@ -1,10 +1,10 @@
 b
 [ ] class_init extended to be to set statics on any class
-[ ] ViewTable: review code, nl() css padding etc
+[o] ViewTable: review code, nl() css padding etc
 [o] ViewTable: infinite scroll instead of paging
 [ ]   review code
 [ ]   when initial page fits the page
-[ ]   mobile chromium vertical document height
+[x]   mobile chromium vertical document height
 [ ] FormDbObject with convenience for editing dbobjects
 [ ]   RelRef, RelRefN etc elements to find/select/create
 [ ]   FormRenderer wrapping xwriter and "this"?
