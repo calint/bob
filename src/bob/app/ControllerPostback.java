@@ -15,7 +15,7 @@ public class ControllerPostback extends a {
 		x.pl("<title>bob</title>");
 		x.pl("<link rel=stylesheet href=/bob.css>");
 		ajaxsts.to(x);
-		x.divh(c, "disp");
-		x.nl().nl();
+		x.nl();
+		x.divh(c, "disp").nl();
 	}
 }

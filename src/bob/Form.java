@@ -58,7 +58,7 @@ public abstract class Form extends a implements Titled {
 			x.divh(ans, "ac").nl();
 		}
 		render(x);
-		x.divh(scc, "sc");
+		x.divh(scc, "sc").nl();
 	}
 
 	@Override

@@ -1,10 +1,10 @@
 b
 [ ] class_init extended to be to set statics on any class
-[o] ViewTable: review code, nl() css padding etc
+[x] ViewTable: review code, nl() css padding etc
 [o] ViewTable: infinite scroll instead of paging
 [ ]   review code
 [ ]   when initial page fits the page
-[x]   mobile chromium vertical document height
+[x]   mobile chromium vertical document height (white-space:pre caused it)
 [ ]     form has extra white space at the bottom from white-space:pre in div.output
 [x] xwriter: inconsistency spano spanot divo etc 
 [ ] FormDbObject with convenience for editing dbobjects
