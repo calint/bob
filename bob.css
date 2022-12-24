@@ -1,4 +1,4 @@
-*{padding:0;margin:0;border:0;outline:0;white-space:pre;font-family:inherit;font-size:inherit;background:inherit;color:inherit}
+*{padding:0;margin:0;border:0;outline:0;font-family:inherit;font-size:inherit;background:inherit;color:inherit}
 html{font-family:monospace}
 table{border-collapse:collapse;empty-cells:show}
 ul{list-style:none inside}
@@ -8,48 +8,63 @@ a:focus,a:hover,a:active{color:green;text-shadow:0 0 1em rgba(0,0,0,.7)}
 em{font-weight:bold}
 input{padding:.5em;border:1px dotted green}
 select{padding:.5em;border:1px dotted green}
-
+/** index.html */
 div.disp{text-align:center}
+/** bob.Controller */
+.top{ /* menu and bread crumbs */
+	margin:.5em;
+}
+.ser{ /* serialized size and server info */
+	margin:1em;
+}
+/** bob.ViewTable */
+.ac{ /* actions */
+	padding:.5em;
+}
+.pgr{ /* pager */
+	margin:.5em;
+}
+input.query {
+	background:yellow;
+	border:1px dotted #555;
+	width:13em;
+	margin:.5em;
+	padding:.5em
+}
 /** bob.ViewTable.Table */	
-table.f{
+table.t{
+	margin-top:.5em;
+	margin-bottom:.5em;
 	margin-left:auto;
 	margin-right:auto;
 	text-align:left;
 }
-table.f tr:first-child{
+table.t tr:first-child{
 	border:0;
 	border-bottom:1px solid green;
 	border-top:1px solid #070
 }
-table.f tr:last-child{
+table.t tr:last-child{
 	border:0;
 	border-bottom:1px solid #040
 }
-table.f th{
+table.t th{
 	padding:.5em;
 	background:#fefefe;
 	border-bottom:1px solid green
 }
-table.f td{
+table.t td{
 	padding:.5em;
 	vertical-align:middle;
 	border-left:1px dotted #ccc;
 	border-bottom:1px dotted #ccc;
 	white-space:normal;
 }
-table.f td:first-child{
+table.t td:first-child{
 	border-left:0
 }
-table.f td.ar{
+table.t td.ar{
 	text-align:right
-}
-/** bob.ViewTable */
-input.query {
-	background:yellow;
-	border:1px dotted #555;
-	width:13em;
-	margin:1em;
-	padding:.5em
 }
 /** bob.Form */
 div.output{
@@ -59,6 +74,7 @@ div.output{
 	margin-right:2em;
 	padding:1em;
 	border:1px dotted green;
+	white-space:pre;
 }
 input.center{
 	text-align:center;
@@ -69,7 +85,7 @@ input.nbr{
 input.small-nbr{
 	width:2em;
 }
-/** bob.form_dbo, bob.view_table more search */
+/** bob.Form, bob.ViewTable more search */
 input.long{
 	width:60em;
 }
@@ -82,18 +98,21 @@ input.small{
 input.tiny{
 	width:7em;
 }
-table.form{
+table.f{
 	margin-left:auto;
 	margin-right:auto;
 	text-align:left;
 }
-table.form td{
+table.f td{
 	padding:.5em;
 }
-table.form td.lbl{
+table.f td.lbl{
 	text-align:right;
 	font-weight:bold;
 }
-table.form td.val{
+table.f td.val{
 	text-align:left;
+}
+.sc{ /* save, close actions */
+	margin:.5em;
 }

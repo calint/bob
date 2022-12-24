@@ -48,11 +48,8 @@ public abstract class ViewTable extends View {
 	@Override
 	public final void to(final xwriter x) throws Throwable {
 		if (!ac.elements().isEmpty()) {
+			x.divh(ac, "ac");
 			x.nl();
-			x.divh(ac);
-			if ((enabledViewBits & BIT_SEARCH) == 0) {
-				x.nl();
-			}
 		}
 		if ((enabledViewBits & BIT_SEARCH) != 0) {
 			x.inpax(q, "query", this, "q", "new");
@@ -70,8 +67,6 @@ public abstract class ViewTable extends View {
 				x.ax(this, "q", "search");
 				x.tage("span");
 			}
-		} else {
-			x.nl();
 		}
 		final boolean inifiniteScroll = isInifiniteScroll();
 		if (inifiniteScroll) {
@@ -79,9 +74,10 @@ public abstract class ViewTable extends View {
 			p.setPage(1);
 		}
 		x.divh(t);
+		x.nl();
 		if (p.isEnabled()) {
+			x.divh(p, "pgr");
 			x.nl();
-			x.divh(p);
 		}
 	}
 
@@ -351,7 +347,7 @@ public abstract class ViewTable extends View {
 			if (inifiniteScroll) {
 				tv.p.setPage(1);
 			}
-			x.table("f").nl();
+			x.table("t").nl();
 			x.tr();
 			if ((tv.enabledViewBits & View.BIT_SELECT) != 0) { // header for the checkbox
 				x.th();

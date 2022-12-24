@@ -44,10 +44,10 @@ public class TableBooks extends ViewTable {
 		x.p("Exact book title: ").inptxt(title, "medium");
 	}
 
-//	@Override
-//	protected boolean isInifiniteScroll() {
-//		return true;
-//	}
+	@Override
+	protected boolean isInifiniteScroll() {
+		return false;
+	}
 
 	@Override
 	protected int getObjectsPerPageCount() {
@@ -58,7 +58,7 @@ public class TableBooks extends ViewTable {
 	protected int getObjectsCount() {
 		return getResults().getCount();
 	}
-	
+
 	@Override
 	protected List<?> getObjectsList() {
 		final DbObjects dbo = getResults();

@@ -1,8 +1,10 @@
 b
-[x] ViewTable: infinite scroll instead of paging
+[ ] class_init extended to be to set statics on any class
+[ ] ViewTable: review code, nl() css padding etc
+[o] ViewTable: infinite scroll instead of paging
 [ ]   review code
 [ ]   when initial page fits the page
-[ ]   mobile chromium
+[ ]   mobile chromium vertical document height
 [ ] FormDbObject with convenience for editing dbobjects
 [ ]   RelRef, RelRefN etc elements to find/select/create
 [ ]   FormRenderer wrapping xwriter and "this"?
@@ -12,7 +14,6 @@ b
 [ ]   https://stackoverflow.com/questions/19315948/how-to-insert-html-before-element-in-javascript-without-jquery
 [ ] ViewTable: onRowClick(xwriter,code,id) to have other click types from row
 [ ] WebsockBob: client keep alive with regular pings
-[ ] class_init extended to be able to set statics on any class
 [ ] bob.js: server is busy message box when typing fast
 [ ]   server busy ui element
 [ ] fix for client that makes many threaded requests and then stalls them to starve server of threads or create too many. ddos.
@@ -32,6 +33,7 @@ b
 [ ] x.js and bob.js common script extracted
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 dbo
+[ ] Db.engine from config
 [ ] DbObjects: select when multiple classes vs one class inconsistency 
 [ ] cluster client connect to database through DriverManager is slow. Class.forName and register driver?
 [ ] cluster hangs when droplet is destroyed

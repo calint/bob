@@ -22,7 +22,7 @@ public class FormBook2 extends Form {
 	final private LinkedHashMap<String, a> fields = new LinkedHashMap<String, a>();
 
 	final protected void beginForm(final xwriter x) {
-		x.table("form").nl();
+		x.table("f").nl();
 	}
 
 	final protected void endForm(final xwriter x) {

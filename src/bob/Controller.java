@@ -30,18 +30,19 @@ public class Controller extends a {
 
 	@Override
 	public void to(final xwriter x) throws Throwable {
-		x.nl();
+		x.divo("top");
 		x.spanh(m);
 		x.spanh(bc);
-//		x.divh(m);
-//		x.divh(bc);
+		x.div_();
+		x.nl();
 		final a active_elem = bc.getActive();
 		active_elem.replace(this, ae);
 		x.divh(ae);
 		x.nl();
+		x.divo("ser");
 		x.p("serialized: ").span(s).p(" B  gziped: ").span(sg).p(" B ").ax(this, "s", ":: refresh").nl();
 		x.p("server: ").span(si);
-		x.nl();
+		x.div_();
 	}
 
 	@Override

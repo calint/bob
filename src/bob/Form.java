@@ -26,7 +26,7 @@ public abstract class Form extends a implements Titled {
 		this.objectId = objectId;
 		this.enabledFormBits = enabledFormBits;
 		if ((enabledFormBits & BIT_SAVE_CLOSE) != 0) {
-			scc.add(new Action("save and clode", "sc"));
+			scc.add(new Action("save and close", "sc"));
 		}
 		if ((enabledFormBits & BIT_SAVE) != 0) {
 			scc.add(new Action("save", "s"));
@@ -55,12 +55,12 @@ public abstract class Form extends a implements Titled {
 		x.script().p("window.onscroll=null;").script_(); // disable infinite scroll event
 		x.nl();
 		if (!ans.elements().isEmpty()) {
-			x.divh(ans);
+			x.divh(ans, "ac");
 			x.nl();
 		}
 		render(x);
 		x.nl();
-		x.divh(scc);
+		x.divh(scc, "sc");
 	}
 
 	@Override

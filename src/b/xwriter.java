@@ -119,6 +119,18 @@ public final class xwriter{
 
 	/** Renders a div tag with element content. */
 	public xwriter div_html(final a e,final String cls,final String style){
+		return divh(e,cls,style);
+	}
+
+	public xwriter divh(final a e){
+		return divh(e,null,null);
+	}
+
+	public xwriter divh(final a e,final String cls){
+		return divh(e,cls,null);
+	}
+
+	public xwriter divh(final a e,final String cls,final String style){
 		tago("div").attr("id",e.id());
 		if(!isempty(cls)){
 			attr("class",cls);
@@ -133,19 +145,6 @@ public final class xwriter{
 			throw new Error(t);
 		}
 		return div_();
-	}
-
-	public xwriter divh(final a e){
-		return divh(e,null,null);
-	}
-
-	public xwriter divh(final a e,final String cls){
-		return divh(e,cls,null);
-	}
-
-	/** Alias for div_html(...). */
-	public xwriter divh(final a e,final String cls,final String style){
-		return div_html(e,cls,style);
 	}
 
 	public xwriter divo(){
