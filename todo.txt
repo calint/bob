@@ -1,4 +1,7 @@
 b
+[o] fix "// todo" comments
+[x]   websock: implement ping/pong. not implemented by browsers
+[ ]   timeout on client and send empty message every x minutes
 [ ] class_init extended to be to set statics on any class
 [o] ViewTable: infinite scroll instead of paging (?)
 [ ]   review code
@@ -12,17 +15,12 @@ b
 [ ] js: from element calling $parent(e,"tr") traverses the nodes until it finds the element type. e.parentNode
 [ ]   ViewTable: save object id in "tr" tag
 [ ] input type checkbox instead of characters
-[ ]   https://stackoverflow.com/questions/19315948/how-to-insert-html-before-element-in-javascript-without-jquery
 [ ] ViewTable: onRowClick(xwriter,code,id) to have other click types from row
-[ ] WebsockBob: client keep alive with regular pings
 [ ] bob.js: server is busy message box when typing fast
 [ ]   server busy ui element
 [ ] fix for client that makes many threaded requests and then stalls them to starve server of threads or create too many. ddos.
 [ ]   slowhttptest
 [ ] thread pool: get first, create if none available
-[x] fix "// todo" comments
-[x]   websock: implement ping/pong, not implemented by browsers
-[ ]   timeout on client and send empty message every x minutes
 [ ] use java.util.concurrent (keep it compatible with java 1.5)
 [ ]   b: request queue, thread pool
 [ ]   dbo: connection pool
