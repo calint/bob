@@ -52,6 +52,7 @@ public abstract class Form extends a implements Titled {
 
 	@Override
 	public final void to(final xwriter x) throws Throwable {
+		x.script().p("window.onscroll=null;").script_();
 		x.nl();
 		if (!ans.elements().isEmpty()) {
 			x.divh(ans);
@@ -103,7 +104,7 @@ public abstract class Form extends a implements Titled {
 
 	protected void save(final xwriter x) throws Throwable {
 	}
-	
+
 	/** Callback for save and close. */
 	public void x_sc(final xwriter x, final String param) throws Throwable {
 		saveAndClose(x);
