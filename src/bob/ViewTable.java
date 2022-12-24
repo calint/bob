@@ -79,7 +79,7 @@ public abstract class ViewTable extends View {
 			p.setPage(1);
 		}
 		x.divh(t);
-		if (p.isEnabled() && !inifiniteScroll) {
+		if (p.isEnabled()) {
 			x.nl();
 			x.divh(p);
 		}
