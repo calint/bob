@@ -474,14 +474,14 @@ final public class b{
 	public static boolean isempty(final String s){
 		return s==null||s.length()==0;
 	}
-	public static String isempty(final String s,final String def){
-		if(isempty(s)){
-			if(def==null)
-				return "";
-			return def;
-		}
-		return s;
-	}
+//	public static String isempty(final String s,final String def){
+//		if(isempty(s)){
+//			if(def==null)
+//				return "";
+//			return def;
+//		}
+//		return s;
+//	}
 //	public static long get_session_bits_for_sessionid(final String sesid){// ? dubious function
 //		//? file(system){sha1(sessionid),bits}
 //		if("".equals(sesid))return 0;
