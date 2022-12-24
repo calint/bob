@@ -100,7 +100,7 @@ public class FormBook2 extends Form {
 		inputText(x, "Published date", Book.publishedDate, "short",
 				o == null ? "" : Util.toStr(o.getPublishedDate(), ""));
 		endForm(x);
-		x.ax(this, "test", "test").nl();
+//		x.ax(this, "test", "test").nl();
 	}
 
 	public void x_test(final xwriter x, final String param) throws Throwable {

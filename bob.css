@@ -69,9 +69,7 @@ table.t td.ar{
 /** bob.Form */
 div.output{
 	text-align:left;
-	margin:0;
-	margin-left:2em;
-	margin-right:2em;
+	margin:.5em 2em .5em 2em;
 	padding:1em;
 	border:1px dotted green;
 	white-space:pre;

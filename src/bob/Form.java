@@ -55,11 +55,9 @@ public abstract class Form extends a implements Titled {
 		x.script().p("window.onscroll=null;").script_(); // disable infinite scroll event
 		x.nl();
 		if (!ans.elements().isEmpty()) {
-			x.divh(ans, "ac");
-			x.nl();
+			x.divh(ans, "ac").nl();
 		}
 		render(x);
-		x.nl();
 		x.divh(scc, "sc");
 	}
 

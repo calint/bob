@@ -41,7 +41,7 @@ public class TableBooks extends ViewTable {
 	@Override
 	protected void renderMoreSearchSection(final xwriter x) {
 		x.p("Id: ").inptxt(id, "nbr").p(' ');
-		x.p("Exact book title: ").inptxt(title, "medium");
+		x.p("Exact book title: ").inptxt(title, "small");
 	}
 
 	@Override
