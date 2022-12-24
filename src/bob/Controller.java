@@ -30,11 +30,8 @@ public class Controller extends a {
 
 	@Override
 	public void to(final xwriter x) throws Throwable {
-		x.divo("top");
-		x.spanh(m);
-		x.spanh(bc);
-		x.div_();
-		x.nl();
+		x.divh(m, "menu").nl();
+		x.divh(bc, "bc").nl();
 		final a active_elem = bc.getActive();
 		active_elem.replace(this, ae);
 		x.divh(ae).nl();

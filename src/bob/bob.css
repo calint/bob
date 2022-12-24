@@ -7,11 +7,14 @@ a,a:visited{text-decoration:none;color:#00a;transition:all .3s ease-in-out}
 a:focus,a:hover,a:active{color:green;text-shadow:0 0 1rem rgba(0,0,0,.7)}
 em{font-weight:bold}
 input,select,textarea{margin:.5rem;padding:.5rem;border:1px dotted green}
-input:focus,select:focus{background-color:yellow;}
+input:focus,select:focus{background-color:#ffd;transition:all .3s ease-in-out}
 /** index.html */
-div.disp{text-align:center}
+.disp{text-align:center}
 /** bob.Controller */
-.top{ /* menu and bread crumbs */
+.menu{
+	margin:.5rem;
+}
+.bc{ /* bread crumbs */
 	margin:.5rem;
 }
 .ser{ /* serialized size and server info */
@@ -26,7 +29,7 @@ div.disp{text-align:center}
 }
 input.query {
 	background:yellow;
-	border:1px dotted #555;
+	border:1px dotted green;
 	width:13rem;
 	margin:.5rem;
 	padding:.5rem

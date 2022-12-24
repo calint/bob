@@ -61,7 +61,7 @@ public abstract class ViewTable extends View {
 				renderMoreSearchSection(x);
 				x.p(" ");
 				x.ax(this, "q", "search");
-				x.tage("span");
+				x.tage("span").nl();
 			}
 		}
 		final boolean inifiniteScroll = isInifiniteScroll();
