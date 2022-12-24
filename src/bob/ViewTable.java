@@ -55,6 +55,7 @@ public abstract class ViewTable extends View {
 			x.inpax(q, "query", this, "q", "new");
 			x.script().xfocus(q).script_();
 			if (hasMoreSearchSection()) {
+				x.p(' ');
 				x.ax(this, "more");
 				x.p(" ");
 				x.tago("span").default_attrs_for_element(ms);

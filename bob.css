@@ -19,7 +19,7 @@ div.disp{text-align:center}
 }
 /** bob.ViewTable */
 .ac{ /* actions */
-	padding:.5em;
+	margin:.5em;
 }
 .pgr{ /* pager */
 	margin:.5em;
