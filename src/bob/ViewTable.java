@@ -10,20 +10,16 @@ import db.Limit;
 
 public abstract class ViewTable extends View {
 	private static final long serialVersionUID = 3L;
-
 	public final static int BIT_CLICK_ITEM = 1;
-	/** The actions that are enabled in the table. */
-	final protected int enabledTableBits;
-
 	public Container ac; // actions
 	public a q; // query field
 	public Table t;
 	public Paging p;
 	public a ms; // more search section
-
 	private boolean ms_display; // true to display more search section
-
-	private View.TypeInfo typeInfo; // the name and plural of the object type
+	final private View.TypeInfo typeInfo; // the name and plural of the object type
+	/** The actions that are enabled in the table. */
+	final protected int enabledTableBits;
 
 	public ViewTable(final int viewBits, final int tableBits) {
 		super(viewBits);
@@ -38,18 +34,17 @@ public abstract class ViewTable extends View {
 		}
 		typeInfo = getTypeInfo();
 		final List<Action> actions = getActionsList();
-		if (actions == null)
-			return;
-		for (final Action a : actions) {
-			ac.add(a);
+		if (actions != null) {
+			for (final Action a : actions) {
+				ac.add(a);
+			}
 		}
 	}
 
 	@Override
 	public final void to(final xwriter x) throws Throwable {
 		if (!ac.elements().isEmpty()) {
-			x.divh(ac, "ac");
-			x.nl();
+			x.divh(ac, "ac").nl();
 		}
 		if ((enabledViewBits & BIT_SEARCH) != 0) {
 			x.inpax(q, "query", this, "q", "new");
@@ -74,16 +69,10 @@ public abstract class ViewTable extends View {
 			p.upd();
 			p.setPage(1);
 		}
-		x.divh(t);
-		x.nl();
+		x.divh(t).nl();
 		if (p.isEnabled()) {
-			x.divh(p, "pgr");
-			x.nl();
+			x.divh(p, "pgr").nl();
 		}
-	}
-
-	protected boolean isInifiniteScroll() {
-		return false;
 	}
 
 	@Override
@@ -177,6 +166,10 @@ public abstract class ViewTable extends View {
 		return 0;
 	}
 
+	protected boolean isInifiniteScroll() {
+		return false;
+	}
+
 	@Override
 	protected int getObjectsCount() {
 		return 0;
@@ -207,8 +200,8 @@ public abstract class ViewTable extends View {
 		private static final long serialVersionUID = 1L;
 		private int currentPage; // page starting at 0
 		private int objectsPerPage;
-		private int objectsCount;
-		private int npages;
+		private int objectsCount; // objects in view
+		private int npages; // pages
 		private ViewTable tv;
 		public a pg; // current page
 
@@ -225,7 +218,6 @@ public abstract class ViewTable extends View {
 			} else {
 				npages = objectsCount / objectsPerPage;
 			}
-
 		}
 
 		@Override
@@ -241,10 +233,7 @@ public abstract class ViewTable extends View {
 			x.p(". Page ");
 			// ! pg may be more than npages when deleting, adjust
 			x.inp(pg, null, "small-nbr center", null, null, this, "p", null, null);
-			x.p(" of ");
-			x.p(npages);
-			x.p(". ");
-
+			x.p(" of ").p(npages).p(". ");
 			if (currentPage != 0) {
 				x.ax(this, "pg prv", "Previous");
 				x.p(" ");
