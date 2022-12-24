@@ -1,6 +1,8 @@
 b
 [x] ViewTable: infinite scroll instead of paging
 [ ]   review code
+[ ]   when initial page fits the page
+[ ]   mobile chromium
 [ ] FormDbObject with convenience for editing dbobjects
 [ ]   RelRef, RelRefN etc elements to find/select/create
 [ ]   FormRenderer wrapping xwriter and "this"?
