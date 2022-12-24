@@ -4,36 +4,36 @@ table{border-collapse:collapse;empty-cells:show}
 ul{list-style:none inside}
 ol{list-style-position:inside}
 a,a:visited{text-decoration:none;color:#00a;transition:all .3s ease-in-out}
-a:focus,a:hover,a:active{color:green;text-shadow:0 0 1em rgba(0,0,0,.7)}
+a:focus,a:hover,a:active{color:green;text-shadow:0 0 1rem rgba(0,0,0,.7)}
 em{font-weight:bold}
-input,select{margin:.5em;padding:.5em;border:1px dotted green}
+input,select,textarea{margin:.5rem;padding:.5rem;border:1px dotted green}
 /** index.html */
 div.disp{text-align:center}
 /** bob.Controller */
 .top{ /* menu and bread crumbs */
-	margin:.5em;
+	margin:.5rem;
 }
 .ser{ /* serialized size and server info */
-	margin:1em;
+	margin:1rem;
 }
 /** bob.ViewTable */
 .ac{ /* actions */
-	margin:.5em;
+	margin:.5rem;
 }
 .pgr{ /* pager */
-	margin:.5em;
+	margin:.5rem;
 }
 input.query {
 	background:yellow;
 	border:1px dotted #555;
-	width:13em;
-	margin:.5em;
-	padding:.5em
+	width:13rem;
+	margin:.5rem;
+	padding:.5rem
 }
 /** bob.ViewTable.Table */	
 table.t{
-	margin-top:.5em;
-	margin-bottom:.5em;
+	margin-top:.5rem;
+	margin-bottom:.5rem;
 	margin-left:auto;
 	margin-right:auto;
 	text-align:left;
@@ -48,12 +48,12 @@ table.t tr:last-child{
 	border-bottom:1px solid #040
 }
 table.t th{
-	padding:.5em;
+	padding:.5rem;
 	background:#fefefe;
 	border-bottom:1px solid green
 }
 table.t td{
-	padding:.5em;
+	padding:.5rem;
 	vertical-align:middle;
 	border-left:1px dotted #ccc;
 	border-bottom:1px dotted #ccc;
@@ -68,8 +68,8 @@ table.t td.ar{
 /** bob.Form */
 div.output{
 	text-align:left;
-	margin:.5em 2em .5em 2em;
-	padding:1em;
+	margin:.5rem 2rem .5rem 2rem;
+	padding:1rem;
 	border:1px dotted green;
 	white-space:pre;
 }
@@ -77,23 +77,23 @@ input.center{
 	text-align:center;
 }
 input.nbr{
-	width:5em;
+	width:5rem;
 }
 input.small-nbr{
-	width:2em;
+	width:2rem;
 }
 /** bob.Form, bob.ViewTable more search */
 input.long{
-	width:60em;
+	width:60rem;
 }
 input.medium{
-	width:30em;
+	width:30rem;
 }
 input.small{
-	width:15em;
+	width:15rem;
 }
 input.tiny{
-	width:7em;
+	width:7rem;
 }
 table.f{
 	margin-left:auto;
@@ -108,5 +108,5 @@ table.f td.val{
 	text-align:left;
 }
 .sc{ /* save, close actions */
-	margin:.5em;
+	margin:.5rem;
 }
