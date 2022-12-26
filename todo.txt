@@ -1,5 +1,7 @@
 b
-[ ] session: created,updated time stamp
+[ ] xwriter: select renderer
+[ ] csv sample books: parse authors, separated by new line, parse publishing date
+[ ] session: created, updated time stamp
 [ ] class_init extended to set statics on any class
 [ ] ViewTable sort options
 [ ] FormDbObject with convenience for editing dbobjects

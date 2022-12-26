@@ -1,1 +1,3 @@
 https://www.serverkaka.com/2018/01/how-to-login-as-root-user-on-aws.html
+
+This example contains a custom vpc and subnets. The default vpc should be used instead.
