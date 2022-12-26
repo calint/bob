@@ -6,9 +6,9 @@ ol{list-style-position:inside}
 a,a:visited{text-decoration:none;color:#00a}
 a:focus,a:hover,a:active{color:green;text-shadow:0 0 1rem rgba(0,0,0,.7)}
 em{font-weight:bold}
-input,select,textarea{margin:.5rem;padding:.5rem;border:1px dotted green}
+input,select,textarea{margin:.5rem;padding:.5rem;border:1px dotted green;border-radius:.3rem}
 input:focus,select:focus{background-color:#ffd}
-input[type="checkbox"]:focus{background-color:#ffd;outline:1px solid #ffd;}
+input[type="checkbox"]:focus{background-color:#ffd;outline:1px dotted green}
 /** index.html */
 .disp{text-align:center}
 /** bob.Controller */
@@ -110,9 +110,7 @@ table.f td.lbl{
 	text-align:right;
 	font-weight:bold;
 }
-table.f td.val{
-	text-align:left;
-}
+table.f td.val{}
 .sc{ /* save, close actions */
 	margin:.5rem;
 }
