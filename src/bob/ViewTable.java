@@ -85,7 +85,7 @@ public abstract class ViewTable extends View {
 			}
 			if ("delete".equals(code) && (enabledViewBits & BIT_DELETE) != 0) {
 				if (getSelectedIds().isEmpty()) {
-					x.xalert("No items selected.");
+					x.xalert("No " + typeInfo.namePlural + " selected.");
 					return;
 				}
 				onActionDelete(x);
