@@ -273,7 +273,7 @@ public final class xwriter{
 		final StringBuilder sb=new StringBuilder(64);
 		if("checkbox".equals(type)){
 			if("1".equals(value)){
-				attr("checked","checked");
+				attr("checked");
 			}
 			sb.append("this.value=this.checked?'1':'0';$b(this)");
 			if(on_change_callback_elem!=null){

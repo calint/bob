@@ -193,4 +193,4 @@ setInterval(()=>{
 		return;
 	console.log('sending keep alive');
 	ui.ws.send('');
-},60000);
+},5*60*1000);
