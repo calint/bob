@@ -1,8 +1,5 @@
 b
 [o] fix "// todo" comments
-[x]   websock: implement ping/pong. not implemented by browsers
-[x]   timeout on client and send empty message every x minutes
-[ ] input type checkbox instead of characters
 [ ] class_init extended to be to set statics on any class
 [o] ViewTable: infinite scroll instead of paging (?)
 [ ]   review code
@@ -90,6 +87,9 @@ dbo
 [ ]   ms sql server?
 [ ]   ibm db2?
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
+[x] websock: implement ping/pong. not implemented by browsers
+[x] timeout on client and send empty message every x minutes
+[x] input type checkbox instead of characters
 [x] ViewTable: review code, nl() css padding etc
 [x] xwriter: inconsistency spano spanot divo etc 
 [x] xwriter.xalert when used in error with websocket generates broken javascript. xwriter.is_ub_open
