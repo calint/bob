@@ -1,5 +1,5 @@
 b
-[ ] xwriter.xuvcb(e): update checkbox value by setting attribute "checked"
+[x] xwriter.xucb(e): update checkbox value by setting attribute "checked"
 [ ] ViewTable sort options
 [ ] FormDbObject with convenience for editing dbobjects
 [ ]   RelRef, RelRefN etc elements to find/select/create

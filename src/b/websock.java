@@ -125,7 +125,7 @@ public abstract class websock{
 					// handle the other opcodes
 					// https://www.rfc-editor.org/rfc/rfc6455#section-5.2
 					// ping/pong not implemented in FireFox and Chromium as of 2022-12-26
-					
+
 					// parse header
 					final int b1=bb.get();
 					is_masked=(b1&128)==128;

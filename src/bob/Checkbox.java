@@ -20,19 +20,11 @@ public final class Checkbox extends a {
 
 	@Override
 	public void to(final xwriter x) throws Throwable {
-		final String cb = "0".equals(str()) ? "s" : "u";
-		x.inp(this, "checkbox", null, null, str(), this, cb, this, cb);
+		x.inp(this, "checkbox", null, null, str(), null, null, this, null);
 	}
 
-	public void x_s(final xwriter x, final String param) throws Throwable {
-		set(on);
-		bubble_event(x, this, "checked"); // bubble event
-		x.xuo(this); // replace outer html element with this id with the output of this element
-	}
-
-	public void x_u(final xwriter x, final String param) throws Throwable {
-		set(off);
-		bubble_event(x, this, "unchecked"); // bubble event
-		x.xuo(this); // replace outer html element with this id with the output of this element
+	public void x_(final xwriter x, final String param) throws Throwable {
+		bubble_event(x, this, on.equals(str()) ? "checked" : "unchecked"); // bubble event
+		x.xucb(this); // update checkbox
 	}
 }
