@@ -825,6 +825,11 @@ public final class xwriter{
 	public xwriter xtitle(final String s){
 		return p("$t('").jsstr(s).pl("');");
 	}
+	
+	/** Updates value attribute of the HTML rendered by element. */
+	public xwriter xuv(final a e) throws Throwable{
+		return p("$s('").p(e.id()).p("','").p(enc_js_str(e.str())).pl("');");
+	}
 
 	/** Updates inner HTML of element e. */
 	public xwriter xu(final a e) throws Throwable{
@@ -860,6 +865,7 @@ public final class xwriter{
 	}
 
 	/**
+	 * Update inner or outer element.
 	 * @param e       element
 	 * @param inner   true if update inner HTML, false if update outter element.
 	 * @param escltgt true to escape lt and gt.
