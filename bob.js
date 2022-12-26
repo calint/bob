@@ -137,7 +137,6 @@ $x=function(pb){
 		ui.alert('Connection to server is not open.');
 		return;
 	}
-	// todo if a new post is made before the previous has been completed?
 	let post='$='+pb+'\r';
 	for(const id in ui._pbls){
 		//$d('field '+id);
