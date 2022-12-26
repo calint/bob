@@ -41,6 +41,8 @@ final public class WebsockBob extends websock {
 
 	@Override
 	protected void on_message(final ByteBuffer bb) throws Throwable {
+		if (bb.remaining() == 0) // a keep-alive message from bob.js
+			return;
 		try {
 			Db.initCurrentTransaction();
 

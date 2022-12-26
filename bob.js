@@ -187,3 +187,11 @@ ui.ws.onclose=function(e){
 		ui.alert('Connection to server lost.');
 	}
 };
+setInterval(()=>{
+	if(ui.is_busy)
+		return;
+	if(!ui.is_open)
+		return;
+	console.log('sending keep alive');
+	ui.ws.send('');
+},60000);
