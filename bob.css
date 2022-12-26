@@ -1,13 +1,14 @@
-*{padding:0;margin:0;border:0;outline:0;font-family:inherit;font-size:inherit;background:inherit;color:inherit}
+*{padding:0;margin:0;border:0;outline:0;font-family:inherit;font-size:inherit;background:inherit;color:inherit;transition:all .3s ease-in-out}
 html{font-family:monospace}
 table{border-collapse:collapse;empty-cells:show}
 ul{list-style:none inside}
 ol{list-style-position:inside}
-a,a:visited{text-decoration:none;color:#00a;transition:all .3s ease-in-out}
+a,a:visited{text-decoration:none;color:#00a}
 a:focus,a:hover,a:active{color:green;text-shadow:0 0 1rem rgba(0,0,0,.7)}
 em{font-weight:bold}
 input,select,textarea{margin:.5rem;padding:.5rem;border:1px dotted green}
-input:focus,select:focus{background-color:#ffd;transition:all .3s ease-in-out}
+input:focus,select:focus{background-color:#ffd}
+input[type="checkbox"]:focus{background-color:#ffd;outline:1px solid #ffd;}
 /** index.html */
 .disp{text-align:center}
 /** bob.Controller */
