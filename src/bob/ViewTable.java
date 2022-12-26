@@ -101,7 +101,8 @@ public abstract class ViewTable extends View {
 			return;
 		}
 		if (from == p) { // event from pager
-			x.xu(t, p); // update table and paging element
+			x.xu(t); // update table
+			x.xu(p); // update paging
 			x.xfocus(q); // focus on query field
 			x.xscrollToTop(); // scroll to top of page
 			return;

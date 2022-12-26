@@ -1,11 +1,12 @@
 b
+[ ] session: created,updated time stamp
+[ ] class_init extended to set statics on any class
 [ ] ViewTable sort options
 [ ] FormDbObject with convenience for editing dbobjects
 [ ]   RelRef, RelRefN etc elements to find/select/create
 [ ]   FormRenderer wrapping xwriter and "this"? cookie.eat() or eat(cookie)
 [ ] fix "// todo" comments
 [ ]   WebsockBob: load/save element at on_open and on_close
-[ ] class_init extended to be to set statics on any class
 [o] ViewTable: infinite scroll instead of paging (?)
 [ ]   review code
 [ ]   when initial page fits the page

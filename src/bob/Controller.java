@@ -92,7 +92,9 @@ public class Controller extends a {
 //		System.out.println("*** param:{"+param+"}");
 		updateSerializedSize();
 		updateServerInfo();
-		x.xu(s, sg, si);
+		x.xu(s);
+		x.xu(sg);
+		x.xu(si);
 	}
 
 	private void updateSerializedSize() {

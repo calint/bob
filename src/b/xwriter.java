@@ -853,14 +853,14 @@ public final class xwriter{
 		return xu(e,false);
 	}
 
-	/** Updates inner HTML of elements e... */
-	public xwriter xu(final a...es) throws Throwable{
-		for(final a e:es){
-			e.to(xub(e,true,false));
-			xube();
-		}
-		return this;
-	}
+//	/** Updates inner HTML of elements e... */
+//	public xwriter xu(final a...es) throws Throwable{
+//		for(final a e:es){
+//			e.to(xub(e,true,false));
+//			xube();
+//		}
+//		return this;
+//	}
 
 	/**
 	 * Updates inner HTML of element.
@@ -873,21 +873,21 @@ public final class xwriter{
 		return xube();
 	}
 
-	public xwriter xu(final a e,final String s){
-		return xu(e.id(),s);
-	}
+//	public xwriter xu(final a e,final String s){
+//		return xu(e.id(),s);
+//	}
 
-	public xwriter xu(final String id,final String s){
-		return p("$s('").p(id).p("','").jsstr(s).pl("');");
-	}
+//	public xwriter xu(final String id,final String s){
+//		return p("$s('").p(id).p("','").jsstr(s).pl("');");
+//	}
 
 	/**
-	 * Update inner or outer element.
+	 * Begin an update inner or outer element call.
 	 *
 	 * @param e       element
-	 * @param inner   true if update inner HTML, false if update outter element.
+	 * @param inner   true if update inner HTML, false if update outer element.
 	 * @param escltgt true to escape lt and gt.
-	 * @return xwriter xwriter that will generate a script set call. Will update element inner or outer HTML code. Must be closed with xube().
+	 * @return xwriter that will generate a set call. Will replace element inner or outer HTML code. Must be closed with xube().
 	 */
 	public xwriter xub(final a e,final boolean inner,final boolean escltgt){
 		is_xu_open=true;
@@ -902,7 +902,7 @@ public final class xwriter{
 		return xube();
 	}
 
-	/** Completes an xub(...) operation. */
+	/** Completes an xub(...) call. */
 	public xwriter xube(){
 		is_xu_open=false;
 		return pl("');");
