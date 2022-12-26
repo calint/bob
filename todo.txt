@@ -1,4 +1,7 @@
 b
+[ ] FormDbObject with convenience for editing dbobjects
+[ ]   RelRef, RelRefN etc elements to find/select/create
+[ ]   FormRenderer wrapping xwriter and "this"? cookie.eat() or eat(cookie)
 [o] fix "// todo" comments
 [ ] class_init extended to be to set statics on any class
 [o] ViewTable: infinite scroll instead of paging (?)
@@ -7,9 +10,6 @@ b
 [x]   mobile chromium vertical document height (white-space:pre caused it)
 [ ] FormFile: form has white space at the end of page from white-space:pre in div.output
 [ ] FormBook: form has white space at the end of page from input.long{width:60rem;} overflowing x-axis
-[ ] FormDbObject with convenience for editing dbobjects
-[ ]   RelRef, RelRefN etc elements to find/select/create
-[ ]   FormRenderer wrapping xwriter and "this"? cookie.eat() or eat(cookie)
 [ ] js: from element calling $parent(e,"tr") traverses the nodes until it finds the element type. e.parentNode
 [ ]   ViewTable: save object id in "tr" tag
 [ ] ViewTable: onRowClick(xwriter,code,id) to have other click types from row
