@@ -173,7 +173,7 @@ final public class b{
 //						r.socket_channel.socket().setReceiveBufferSize(1);
 //						r.socket_channel.socket().setSendBufferSize(1);
 
-						if(tcpnodelay){ // todo for performance in benchmarks. remove in production.
+						if(tcpnodelay){ // for performance in benchmarks. remove in production.
 							// r.socket_channel.setOption(StandardSocketOptions.TCP_NODELAY,true);
 							r.socket_channel.socket().setTcpNoDelay(true);
 						}
