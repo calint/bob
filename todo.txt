@@ -1,6 +1,6 @@
 b
 [x] xwriter: select renderer
-[ ] xwriter review consistency tago etc
+[o] xwriter review consistency tago etc
 [ ] ViewTable: onRowClick(xwriter,code,id) to have other click types from row
 [ ] ViewTable sort options
 [ ] FormDbObject with convenience for editing dbobjects
