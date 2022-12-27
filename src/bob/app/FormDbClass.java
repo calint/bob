@@ -21,7 +21,7 @@ public class FormDbClass extends Form {
 
 	@Override
 	protected void render(final xwriter x) throws Throwable {
-		x.tago("div").attr("class","output").tagoe();
+		x.tago("div").attr("class", "output").tagoe();
 		jem.Main.main(javaClassName, new osltgt(x.outputstream()));
 		x.div_();
 	}

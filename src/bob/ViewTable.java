@@ -47,7 +47,7 @@ public abstract class ViewTable extends View {
 			x.divh(ac, "ac").nl();
 		}
 		if ((enabledViewBits & BIT_SEARCH) != 0) {
-			x.inp(q,null,"query",null,null,this,"new",this,"q");
+			x.inp(q, null, "query", null, null, this, "new", this, "q");
 			x.script().xfocus(q).script_();
 			if (hasMoreSearchSection()) {
 				x.p(' ');
@@ -147,6 +147,10 @@ public abstract class ViewTable extends View {
 		}
 	}
 
+	protected final void renderLinked(final xwriter x, final String type, final String cid, final String linkText) {
+		x.ax(t, "c " + type + " " + cid, linkText);
+	}
+
 	// -----------------------------------------------------------------------------------
 	// override these in to specialize table
 
@@ -195,6 +199,9 @@ public abstract class ViewTable extends View {
 	}
 
 	protected void onRowClick(final xwriter x, final String id) throws Throwable {
+	}
+
+	protected void onRowClickTyped(final xwriter x, final String type, final String id) throws Throwable {
 	}
 
 	public final static class Paging extends a {
@@ -407,6 +414,14 @@ public abstract class ViewTable extends View {
 			if ((tv.enabledTableBits & ViewTable.BIT_CLICK_ITEM) != 0) {
 				tv.onRowClick(x, s);
 			}
+		}
+
+		/** Callback for click on row. */
+		public void x_c(final xwriter x, final String s) throws Throwable {
+			final int i = s.indexOf(' ');
+			final String type = s.substring(0, i);
+			final String cid = s.substring(i + 1);
+			tv.onRowClickTyped(x, type, cid);
 		}
 
 		/** Callback for infinite scroll. */

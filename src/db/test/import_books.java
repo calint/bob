@@ -2,10 +2,16 @@ package db.test;
 
 import java.io.FileReader;
 import java.io.StringReader;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import db.Db;
+import db.DbObject;
 import db.DbTransaction;
+import db.Query;
 import imp.CsvReader;
 import imp.Util;
 
@@ -26,6 +32,10 @@ public class import_books extends TestCase {
 	public String getTestName() {
 		return getClass().getName() + " " + filePath;
 	}
+
+	private final SimpleDateFormat year = new SimpleDateFormat("yyyy");
+	private final SimpleDateFormat yearMonth = new SimpleDateFormat("yyyy-MM");
+	private final SimpleDateFormat yearMonthDay = new SimpleDateFormat("yyyy-MM-dd");
 
 	@Override
 	public void doRun() throws Throwable {
@@ -57,6 +67,11 @@ public class import_books extends TestCase {
 				throw new RuntimeException("record " + i + " has size of publisher " + publisher.length()
 						+ " but field length is " + Book.publisher.getSize());
 
+			final String categoriesStr = ls.get(8);
+			if (categoriesStr.length() > Book.categoriesStr.getSize())
+				throw new RuntimeException("record " + i + " has size of category " + categoriesStr.length()
+						+ " but field length is " + Book.categoriesStr.getSize());
+
 			if (++i % 100 == 0) {
 				out.println("  " + i);
 			}
@@ -82,7 +97,7 @@ public class import_books extends TestCase {
 				for (final String s : authorsList) {
 					authorsSb.append(s).append(';');
 				}
-				if (authorsSb.length() > 1) { // remove last new line
+				if (authorsSb.length() > 1) { // remove last delimiter
 					authorsSb.setLength(authorsSb.length() - 1);
 				}
 				o.setAuthors(authorsSb.toString());
@@ -90,6 +105,36 @@ public class import_books extends TestCase {
 				o.setAuthors("");
 			}
 			o.setPublisher(ls.get(5));
+			final String pd = ls.get(6);
+			if (pd.length() != 0) {
+				final Timestamp ts = parseDate(pd);
+				o.setPublishedDate(ts);
+			}
+			final String categoriesStr = ls.get(8);
+			if (categoriesStr.length() != 0) {
+				final List<String> categoriesList = Util.readList(new StringReader(categoriesStr), ',', '\'');
+				final StringBuilder categoriesSb = new StringBuilder(128);
+				for (final String s : categoriesList) {
+					categoriesSb.append(s).append(';');
+					final List<DbObject> cls = tn.get(BookCategory.class, new Query(BookCategory.name, Query.EQ, s),
+							null, null);
+					final BookCategory bc;
+					if (cls.isEmpty()) {
+						bc = (BookCategory) tn.create(BookCategory.class);
+						bc.setName(s);
+					} else {
+						bc = (BookCategory) cls.get(0);
+					}
+					o.addCategory(bc);
+				}
+				if (categoriesSb.length() > 1) { // remove last delimiter
+					categoriesSb.setLength(categoriesSb.length() - 1);
+				}
+				o.setCategoriesStr(categoriesSb.toString());
+			} else {
+				o.setCategoriesStr("");
+			}
+
 			final DataText d = o.getData(true);
 			d.setData(ls.get(1));
 
@@ -104,5 +149,24 @@ public class import_books extends TestCase {
 		}
 		in.close();
 		out.println("import done. " + (i - 2) + " books imported.");
+	}
+
+	private Timestamp parseDate(final String d) {
+		try {
+			final Date dt = yearMonthDay.parse(d);
+			return new Timestamp(dt.getTime());
+		} catch (final ParseException ok) {
+		}
+		try {
+			final Date dt = yearMonth.parse(d);
+			return new Timestamp(dt.getTime());
+		} catch (final ParseException ok) {
+		}
+		try {
+			final Date dt = year.parse(d);
+			return new Timestamp(dt.getTime());
+		} catch (final ParseException ok) {
+		}
+		return null;
 	}
 }

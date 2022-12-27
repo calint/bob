@@ -3,6 +3,7 @@ package bob.app;
 import b.bapp;
 import db.Db;
 import db.test.Book;
+import db.test.BookCategory;
 import db.test.DataBinary;
 import db.test.DataText;
 import db.test.File;
@@ -31,6 +32,7 @@ public final class Application implements bapp {
 		Db.register(DataBinary.class);
 		Db.register(DataText.class);
 		Db.register(Book.class);
+		Db.register(BookCategory.class);
 		Db.register(Game.class);
 		Db.register(TestObj.class);
 

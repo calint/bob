@@ -3,10 +3,12 @@ package db.test;
 import java.sql.Timestamp;
 
 import db.DbObject;
+import db.DbObjects;
+import db.FldDateTime;
 import db.FldStr;
-import db.FldTs;
 import db.IndexRel;
 import db.RelAgg;
+import db.RelRefN;
 
 public final class Book extends DbObject {
 	private static final long serialVersionUID = 1L;
@@ -14,8 +16,10 @@ public final class Book extends DbObject {
 	public final static FldStr name = new FldStr(800);
 	public final static FldStr authors = new FldStr(3000);
 	public final static FldStr publisher = new FldStr(400);
-	public final static FldTs publishedDate = new FldTs();
+	public final static FldDateTime publishedDate = new FldDateTime();
 	public final static RelAgg data = new RelAgg(DataText.class);
+	public final static FldStr categoriesStr = new FldStr(800);
+	public final static RelRefN categories = new RelRefN(BookCategory.class);
 
 	// optimizes Book join with DataText when doing full text query
 	public final static IndexRel ixRelData = new IndexRel(data);
@@ -57,6 +61,15 @@ public final class Book extends DbObject {
 	}
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
+	public String getCategoriesStr() {
+		return getStr(categoriesStr);
+	}
+
+	public void setCategoriesStr(final String v) {
+		set(categoriesStr, v);
+	}
+
+	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
 	public int getDataId() {
 		return data.getId(this);
 	}
@@ -67,5 +80,26 @@ public final class Book extends DbObject {
 
 	public void deleteData() {
 		data.delete(this);
+	}
+
+	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
+	public void addCategory(final int id) {
+		categories.add(this, id);
+	}
+
+	public void addCategory(final BookCategory o) {
+		categories.add(this, o.id());
+	}
+
+	public DbObjects getCategories() {
+		return categories.get(this);
+	}
+
+	public void removeCategory(final int id) {
+		categories.remove(this, id);
+	}
+
+	public void removeCategory(final BookCategory o) {
+		categories.remove(this, o.id());
 	}
 }

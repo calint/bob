@@ -21,7 +21,7 @@ public class FormFile extends Form {
 
 	@Override
 	protected void render(final xwriter x) throws Throwable {
-		x.tago("div").attr("class","output").tagoe();
+		x.tago("div").attr("class", "output").tagoe();
 		pth.to(new osltgt(x.outputstream()));
 		x.div_();
 	}
