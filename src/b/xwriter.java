@@ -3,7 +3,6 @@ package b;
 import static b.b.isempty;
 import static b.b.tobytes;
 import static b.b.tostr;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -28,9 +27,9 @@ public final class xwriter{
 		return text.replace("\"","&quot;");
 	}
 
+	private boolean is_xu_open; // if xu is open then it needs to be closed at error messaging to client
 	private final OutputStream os;
-	private boolean xreload_requested=false; // reload page races with element serialization to db
-	private boolean is_xu_open;
+	private boolean xreload_requested; // reload page races with element serialization to db
 
 	public xwriter(){
 		os=new ByteArrayOutputStream();
@@ -87,6 +86,13 @@ public final class xwriter{
 		return tag("br");
 	}
 
+	public xwriter closeUpdateIfOpen(){
+		if(!is_xu_open)
+			return this;
+		is_xu_open=false;
+		return xube();
+	}
+
 	public xwriter code(){
 		return tag("code");
 	}
@@ -111,6 +117,10 @@ public final class xwriter{
 		return p("@font-face{font-family:").p(name).p(";src:url(").p(url).p(");}");
 	}
 
+	public xwriter default_attrs_for_element(final a e){
+		return default_attrs_for_element(e,null,null);
+	}
+
 	public xwriter default_attrs_for_element(final a e,final String cls,final String style){
 		if(e!=null){
 			attr("id",e.id());
@@ -124,12 +134,12 @@ public final class xwriter{
 		return this;
 	}
 
-	public xwriter default_attrs_for_element(final a e){
-		return default_attrs_for_element(e,null,null);
+	public xwriter div(final a e){
+		return div(e,null,null);
 	}
 
-	public xwriter div_(){
-		return tage("div");
+	public xwriter div(final a e,final String cls){
+		return div(e,cls,null);
 	}
 
 	/** Renders a complete div with HTML escaped element output. */
@@ -143,12 +153,8 @@ public final class xwriter{
 		return div_();
 	}
 
-	public xwriter div(final a e,final String cls){
-		return div(e,cls,null);
-	}
-
-	public xwriter div(final a e){
-		return div(e,null,null);
+	public xwriter div_(){
+		return tage("div");
 	}
 
 	/** Renders a div tag with element content. */
@@ -162,23 +168,6 @@ public final class xwriter{
 
 	public xwriter divh(final a e,final String cls){
 		return divh(e,cls,null);
-	}
-
-	public xwriter divh(final a e,final String cls,final String style){
-		tago("div").attr("id",e.id());
-		if(!isempty(cls)){
-			attr("class",cls);
-		}
-		if(!isempty(style)){
-			attr("style",style);
-		}
-		tagoe();
-		try{
-			e.to(this);
-		}catch(final Throwable t){
-			throw new Error(t);
-		}
-		return div_();
 	}
 
 //	public xwriter divo(){
@@ -200,6 +189,23 @@ public final class xwriter{
 //	public xwriter divo(final String cls,final String style){
 //		return divo(null,cls,style);
 //	}
+
+	public xwriter divh(final a e,final String cls,final String style){
+		tago("div").attr("id",e.id());
+		if(!isempty(cls)){
+			attr("class",cls);
+		}
+		if(!isempty(style)){
+			attr("style",style);
+		}
+		tagoe();
+		try{
+			e.to(this);
+		}catch(final Throwable t){
+			throw new Error(t);
+		}
+		return div_();
+	}
 
 	/**
 	 * Opens a div tag so that other attributes can be added. Close with tagoe().
@@ -236,11 +242,11 @@ public final class xwriter{
 		return script().p("$f('").p(e.id()).p("')").script_();
 	}
 
-	public xwriter hr(){
+public xwriter hr(){
 		return tag("hr");
 	}
 
-//	/** Closes inline script tag. */
+	//	/** Closes inline script tag. */
 //	public xwriter inline_js_close(){
 //		return tage("is");
 //	}
@@ -340,16 +346,16 @@ public final class xwriter{
 		return inp(e,null,null,null,null,null,null,null,null);
 	}
 
-	public xwriter inptxt(final a e,final String cls){
-		return inp(e,null,cls,null,null,null,null,null,null);
-	}
-
 	public xwriter inptxt(final a e,final a callback_elem_on_enter){
 		return inp(e,null,null,null,null,callback_elem_on_enter,null,null,null);
 	}
 
 	public xwriter inptxt(final a e,final a callback_elem_on_enter,final String callback){
 		return inp(e,null,null,null,null,callback_elem_on_enter,callback,null,null);
+	}
+
+	public xwriter inptxt(final a e,final String cls){
+		return inp(e,null,cls,null,null,null,null,null,null);
 	}
 
 	public xwriter inptxt(final a e,final String cls,final a callback_elem_on_enter,final String callback){
@@ -364,7 +370,7 @@ public final class xwriter{
 		return inptxtarea(e,null);
 	}
 
-	/** Input text area. */
+/** Input text area. */
 	public xwriter inptxtarea(final a e,final String cls){
 		tago("textarea").default_attrs_for_element(e,cls,null).attr("onchange","$b(this)").attr("onkeydown","$b(this)");
 		attr("wrap","off").attr("spellcheck","false").tagoe();
@@ -377,7 +383,7 @@ public final class xwriter{
 		return tage("textarea");
 	}
 
-//	/** Alias for inline_js_close() */
+	//	/** Alias for inline_js_close() */
 //	public xwriter is_(){
 //		return inline_js_close();
 //	}
@@ -438,16 +444,16 @@ public final class xwriter{
 		return p("&nbsp;");
 	}
 
-	public xwriter nl(){
-		return p('\n');
-	}
-
 //	public xwriter nl(final int number_of_newlines){
 //		for(int i=0;i<number_of_newlines;i++){
 //			p('\n');
 //		}
 //		return this;
 //	}
+
+	public xwriter nl(){
+		return p('\n');
+	}
 
 	public xwriter ol(){
 		return tag("ol");
@@ -463,6 +469,10 @@ public final class xwriter{
 
 	public xwriter p(final a e){
 		return p(e.str());
+	}
+
+	public xwriter p(final boolean n){
+		return p(Boolean.toString(n));
 	}
 
 	public xwriter p(final byte n){
@@ -502,10 +512,6 @@ public final class xwriter{
 			throw new Error(e);
 		}
 		return this;
-	}
-
-	public xwriter p(final boolean n){
-		return p(Boolean.toString(n));
 	}
 
 	public xwriter pl(){
@@ -551,23 +557,23 @@ public final class xwriter{
 		return tage("script");
 	}
 
-	public xwriter select(final a e,final String cls,final String style,final List<String>options){
+	public xwriter select(final a e,final String cls,final String style,final List<String> options){
 		selecto(e,cls,style).tagoe();
 		select_options(e,options);
 		return tage("select");
 	}
 
-	/** 
+	/**
 	 * Renders select options list.
-	 * 
-	 * @param e element.
+	 *
+	 * @param e       element.
 	 * @param options text and value separated by |. Value is optional. If none provided text is used.
 	 * @return this
 	 */
-	public xwriter select_options(final a e,final List<String>options){
+	public xwriter select_options(final a e,final List<String> options){
 		final String v=tostr(e.str(),"");
 		for(final String s:options){
-			final String[]sa=s.split("|");
+			final String[] sa=s.split("|");
 			final String value=sa.length>1?sa[1]:sa[0];
 			tago("option").attr("value",value);
 			if(value.equals(v)){
@@ -625,11 +631,6 @@ public final class xwriter{
 		return span_html(e,cls,null);
 	}
 
-	/** Alias for span_html(...). */
-	public xwriter spanh(final a e,final String cls,final String style){
-		return span_html(e,cls,style);
-	}
-
 //	public xwriter spano(final a e){
 //		spanot(e,null,null);
 //		return tagoe();
@@ -640,8 +641,6 @@ public final class xwriter{
 //		return tagoe();
 //	}
 
-	
-
 //	public xwriter spanot(final a e){
 //		return spanot(e,null,null);
 //	}
@@ -649,6 +648,11 @@ public final class xwriter{
 //	public xwriter spanot(final a e,final String cls){
 //		return spanot(e,cls,null);
 //	}
+
+	/** Alias for span_html(...). */
+	public xwriter spanh(final a e,final String cls,final String style){
+		return span_html(e,cls,style);
+	}
 
 	/**
 	 * Opens a span tag with id, class and style allowing the appending of additional attributes. Must be closed with tagoe().
@@ -832,29 +836,13 @@ public final class xwriter{
 		return this;
 	}
 
+	/** Scrolls page to top */
+	public xwriter xscrollToTop(){
+		return pl("ui.scrollToTop();");
+	}
+
 	public xwriter xtitle(final String s){
 		return p("$t('").jsstr(s).pl("');");
-	}
-
-	/**
-	 * Updates value attribute of the HTML rendered by element. If HTML element does not have value attribute it replaces the inner HTML.
-	 */
-	public xwriter xuv(final a e){
-		return p("$s('").p(e.id()).p("','").p(enc_js_str(e.str())).pl("');");
-	}
-
-	/**
-	 * Updates the rendered checkbox for element.
-	 */
-	public xwriter xucb(final a e){
-		p("$s('").p(e.id()).p("','").p(enc_js_str(e.str())).p("');");
-		p("$('").p(e.id()).p("').checked=");
-		if("1".equals(e.str())){
-			p("true");
-		}else{
-			p("false");
-		}
-		return pl(";");
 	}
 
 	/** Updates inner HTML of element e. */
@@ -904,17 +892,24 @@ public final class xwriter{
 		return new xwriter(new osjsstr(escltgt?new osltgt(os):os));
 	}
 
-	public xwriter closeUpdateIfOpen(){
-		if(!is_xu_open)
-			return this;
-		is_xu_open=false;
-		return xube();
-	}
-
 	/** Completes an xub(...) call. */
 	public xwriter xube(){
 		is_xu_open=false;
 		return pl("');");
+	}
+
+	/**
+	 * Updates the rendered checkbox for element.
+	 */
+	public xwriter xucb(final a e){
+		p("$s('").p(e.id()).p("','").p(enc_js_str(e.str())).p("');");
+		p("$('").p(e.id()).p("').checked=");
+		if("1".equals(e.str())){
+			p("true");
+		}else{
+			p("false");
+		}
+		return pl(";");
 	}
 
 	/** Updates element outer HTML. */
@@ -923,8 +918,10 @@ public final class xwriter{
 		return xube();
 	}
 
-	/** Scrolls page to top */
-	public xwriter xscrollToTop(){
-		return pl("ui.scrollToTop();");
+	/**
+	 * Updates value attribute of the HTML rendered by element. If HTML element does not have value attribute it replaces the inner HTML.
+	 */
+	public xwriter xuv(final a e){
+		return p("$s('").p(e.id()).p("','").p(enc_js_str(e.str())).pl("');");
 	}
 }
