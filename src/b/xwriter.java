@@ -442,12 +442,12 @@ public final class xwriter{
 		return p('\n');
 	}
 
-	public xwriter nl(final int number_of_newlines){
-		for(int i=0;i<number_of_newlines;i++){
-			p('\n');
-		}
-		return this;
-	}
+//	public xwriter nl(final int number_of_newlines){
+//		for(int i=0;i<number_of_newlines;i++){
+//			p('\n');
+//		}
+//		return this;
+//	}
 
 	public xwriter ol(){
 		return tag("ol");
@@ -557,6 +557,13 @@ public final class xwriter{
 		return tage("select");
 	}
 
+	/** 
+	 * Renders select options list.
+	 * 
+	 * @param e element.
+	 * @param options text and value separated by |. Value is optional. If none provided text is used.
+	 * @return this
+	 */
 	public xwriter select_options(final a e,final List<String>options){
 		final String v=tostr(e.str(),"");
 		for(final String s:options){
