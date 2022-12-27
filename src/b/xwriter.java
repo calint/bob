@@ -830,14 +830,14 @@ public final class xwriter{
 	/**
 	 * Updates value attribute of the HTML rendered by element. If HTML element does not have value attribute it replaces the inner HTML.
 	 */
-	public xwriter xuv(final a e) throws Throwable{
+	public xwriter xuv(final a e){
 		return p("$s('").p(e.id()).p("','").p(enc_js_str(e.str())).pl("');");
 	}
 
 	/**
 	 * Updates the rendered checkbox for element.
 	 */
-	public xwriter xucb(final a e) throws Throwable{
+	public xwriter xucb(final a e){
 		p("$s('").p(e.id()).p("','").p(enc_js_str(e.str())).p("');");
 		p("$('").p(e.id()).p("').checked=");
 		if("1".equals(e.str())){

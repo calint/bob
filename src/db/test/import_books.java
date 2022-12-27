@@ -1,11 +1,13 @@
 package db.test;
 
 import java.io.FileReader;
+import java.io.StringReader;
 import java.util.List;
 
-import csv.CsvReader;
 import db.Db;
 import db.DbTransaction;
+import imp.CsvReader;
+import imp.Util;
 
 // import-200k-book
 //   download csv at https://www.kaggle.com/datasets/mohamedbakhet/amazon-books-reviews
@@ -56,7 +58,7 @@ public class import_books extends TestCase {
 						+ " but field length is " + Book.publisher.getSize());
 
 			if (++i % 100 == 0) {
-				Db.log("  " + i);
+				out.println("  " + i);
 			}
 		}
 		in.close();
@@ -73,7 +75,20 @@ public class import_books extends TestCase {
 			}
 			final Book o = (Book) tn.create(Book.class);
 			o.setName(ls.get(0));
-			o.setAuthors(ls.get(2));
+			final String authors = ls.get(2);
+			if (authors.length() != 0) {
+				final List<String> authorsList = Util.readList(new StringReader(authors), ',', '\'');
+				final StringBuilder authorsSb = new StringBuilder(128);
+				for (final String s : authorsList) {
+					authorsSb.append(s).append('\n');
+				}
+				if (authorsSb.length() > 1) { // remove last new line
+					authorsSb.setLength(authorsSb.length() - 1);
+				}
+				o.setAuthors(authorsSb.toString());
+			} else {
+				o.setAuthors("");
+			}
 			o.setPublisher(ls.get(5));
 			final DataText d = o.getData(true);
 			d.setData(ls.get(1));

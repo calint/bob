@@ -122,7 +122,10 @@ public class TableBooks extends ViewTable {
 		x.td("nbr").p(b.id());
 		x.td();
 		renderLinked(x, b, b.getName());
-		x.td().p(b.getAuthors());
+		x.td();
+		final String s = b.getAuthors();
+		final String sh = s.replaceAll("\\n", "<br>");
+		x.p(sh);
 	}
 
 	@Override
