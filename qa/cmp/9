@@ -3,13 +3,13 @@
 1 <script>$x('- s "\'hello\'"');</script>
 2 <div id="-f" class="bytes" style="background:yellow" onclick="ui.alert('&quot;\'hello\'&quot;')">"'value'"</div>
 3 <div id="-f" class="bytes" style="background:yellow">"'value'"</div>
-4 <input value="&quot;'value'&quot;" id="-f" type="text" class="txt" style="background:yellow" onkeypress="return $r(event,this,'- test &quot;\'hello\'&quot;')" oninput="$b(this);$x('- test \' &quot;chg&quot; \'')">
-5 <input value="&quot;'value'&quot;" id="-f" type="text" class="txt" style="background:yellow" onkeypress="return $r(event,this,'- test &quot;\'hello\'&quot;')" oninput="$b(this);$x('-')">
-6 <input value="&quot;'value'&quot;" id="-f" type="text" class="txt" style="background:yellow" onkeypress="return $r(event,this,'- test &quot;\'hello\'&quot;')" oninput="$b(this)">
-7 <input value="&quot;'value'&quot;" id="-f" type="text" class="txt" style="background:yellow" onkeypress="return $r(event,this,'- test &quot;\'hello\'&quot;')" oninput="$b(this)">
-8 <input value="&quot;'value'&quot;" id="-f" type="text" class="txt" style="background:yellow" onkeypress="return $r(event,this,'-')" oninput="$b(this)">
-9 <input value="&quot;'value'&quot;" id="-f" type="text" class="txt" style="background:yellow" oninput="$b(this)">
-10 <input value="&quot;'value'&quot;" id="-f" type="text" class="txt" oninput="$b(this)">
+4 <input value="&quot;'value'&quot;" id="-f" class="txt" style="background:yellow" type="text" onkeypress="return $r(event,this,'- test &quot;\'hello\'&quot;')" oninput="$b(this);$x('- test \' &quot;chg&quot; \'')">
+5 <input value="&quot;'value'&quot;" id="-f" class="txt" style="background:yellow" type="text" onkeypress="return $r(event,this,'- test &quot;\'hello\'&quot;')" oninput="$b(this);$x('-')">
+6 <input value="&quot;'value'&quot;" id="-f" class="txt" style="background:yellow" type="text" onkeypress="return $r(event,this,'- test &quot;\'hello\'&quot;')" oninput="$b(this)">
+7 <input value="&quot;'value'&quot;" id="-f" class="txt" style="background:yellow" type="text" onkeypress="return $r(event,this,'- test &quot;\'hello\'&quot;')" oninput="$b(this)">
+8 <input value="&quot;'value'&quot;" id="-f" class="txt" style="background:yellow" type="text" onkeypress="return $r(event,this,'-')" oninput="$b(this)">
+9 <input value="&quot;'value'&quot;" id="-f" class="txt" style="background:yellow" type="text" oninput="$b(this)">
+10 <input value="&quot;'value'&quot;" id="-f" class="txt" type="text" oninput="$b(this)">
 11 <input value="&quot;'value'&quot;" id="-f" type="text" oninput="$b(this)">
 12 <input value="&quot;'value'&quot;" id="-f" oninput="$b(this)">
 13 <input value="&quot;'value'&quot;" id="-f" type="checkbox" oninput="this.value=this.checked?'1':'0';$b(this)">
@@ -24,8 +24,7 @@
 22 <input value="&quot;'value'&quot;" id="-f" type="image" oninput="$b(this)">
 23 <input value="&quot;'value'&quot;" id="-f" type="file" oninput="$b(this)">
 24 <input value="&quot;'value'&quot;" id="-f" type="search" oninput="$b(this)">
-25 <textarea id="-f" onchange="$b(this)" onkeydown="$b(this)" class="txtarea" wrap="off" spellcheck="false">"'value'"</textarea>
+25 <textarea id="-f" class="txtarea" onchange="$b(this)" onkeydown="$b(this)" wrap="off" spellcheck="false">"'value'"</textarea>
 26 <textarea id="-f" onchange="$b(this)" onkeydown="$b(this)" wrap="off" spellcheck="false">"'value'"</textarea>
-27 <input value="&quot;'value'&quot;" id="-f" class="txt" onkeypress="return $r(event,this,'- sel &quot;\'hello\'&quot;')" oninput="$b(this);$x('- test &quot;\'hello\'&quot;')">
-28 <a href="url&quot;'test'&quot;">link</a>
+27 <a href="url&quot;'test'&quot;">link</a>
 
