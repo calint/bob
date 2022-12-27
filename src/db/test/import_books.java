@@ -80,7 +80,7 @@ public class import_books extends TestCase {
 				final List<String> authorsList = Util.readList(new StringReader(authors), ',', '\'');
 				final StringBuilder authorsSb = new StringBuilder(128);
 				for (final String s : authorsList) {
-					authorsSb.append(s).append('\n');
+					authorsSb.append(s).append(';');
 				}
 				if (authorsSb.length() > 1) { // remove last new line
 					authorsSb.setLength(authorsSb.length() - 1);
