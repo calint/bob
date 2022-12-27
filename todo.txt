@@ -1,7 +1,15 @@
 b
 [x] xwriter: select renderer
 [o] xwriter review consistency tago etc
-[ ] ViewTable: onRowClick(xwriter,code,id) to have other click types from row
+[o] csv sample books:
+[x]   parse authors, separated by new line
+[x]   parse published date
+[ ]   authors object and reverse lookup author->books
+[x]   categories
+[o] ViewTable: onRowClick(xwriter,code,id) to have other click types from row
+[x]   onRowClickTyped(xwriter,code,id)
+[ ]   onRowClickTyped(xwriter,code,pid,id)
+[ ]   rename onRowClickTyped
 [ ] ViewTable sort options
 [ ] FormDbObject with convenience for editing dbobjects
 [ ]   RelRef, RelRefN etc elements to find/select/create
@@ -13,10 +21,6 @@ b
 [ ]     keep reading pages until scroll bar appears
 [ ]   review code
 [x]   mobile chromium vertical document height (white-space:pre caused it)
-[o] csv sample books:
-[x]   parse authors, separated by new line
-[ ]   parse publishing date
-[ ]   authors object and reverse lookup author->books
 [ ] session: created, updated time stamp
 [ ] class_init extended to set statics on any class
 [ ] fix "// todo" comments
