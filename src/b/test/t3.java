@@ -16,9 +16,9 @@ public class t3 extends a {
 	public void to(final xwriter x) throws Throwable {
 		x.nl().title(getClass().getName()).nl();
 		x.p("1 ").script().js_x(this, "s \"'hello'\"", false).script_().nl();
-		x.p("2 ").divot(f, "bytes", "background:yellow").p(" onclick=\"ui.alert('&quot;\\'hello\\'&quot;')").p("\"")
+		x.p("2 ").divo(f, "bytes", "background:yellow").p(" onclick=\"ui.alert('&quot;\\'hello\\'&quot;')").p("\"")
 				.tagoe().p(f).div_().nl();
-		x.p("3 ").divot(f, "bytes", "background:yellow").tagoe().p(f).div_().nl();
+		x.p("3 ").divo(f, "bytes", "background:yellow").tagoe().p(f).div_().nl();
 		x.p("4 ").inp(f, "text", "txt", "background:yellow", "default \"''\"", this, "test \"'hello'\"", this,
 				"test ' \"chg\" '").nl();
 		x.p("5 ").inp(f, "text", "txt", "background:yellow", "default \"''\"", this, "test \"'hello'\"", this, null)
@@ -45,8 +45,7 @@ public class t3 extends a {
 		x.p("24 ").inp(f, "search", null, null, null, null, null, null, null).nl();
 		x.p("25 ").inptxtarea(f, "txtarea").nl();
 		x.p("26 ").inptxtarea(f, null).nl();
-		x.p("27 ").inpax(f, "txt", this, "test \"'hello'\"", "sel \"'hello'\"").nl();
-		x.p("28 ").a("url\"'test'\"", "link").nl();
+		x.p("27 ").a("url\"'test'\"", "link").nl();
 		x.nl();
 	}
 

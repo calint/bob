@@ -47,7 +47,7 @@ public abstract class ViewTable extends View {
 			x.divh(ac, "ac").nl();
 		}
 		if ((enabledViewBits & BIT_SEARCH) != 0) {
-			x.inpax(q, "query", this, "q", "new");
+			x.inp(q,null,"query",null,null,this,"new",this,"q");
 			x.script().xfocus(q).script_();
 			if (hasMoreSearchSection()) {
 				x.p(' ');

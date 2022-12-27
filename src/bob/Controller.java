@@ -35,7 +35,7 @@ public class Controller extends a {
 		final a active_elem = bc.getActive();
 		active_elem.replace(this, ae);
 		x.divh(ae).nl();
-		x.divo("ser");
+		x.tago("div").attr("class", "ser").tagoe();
 		x.p("serialized: ").span(s).p(" B  gziped: ").span(sg).p(" B ").ax(this, "s", "refresh").p(" server: ")
 				.span(si);
 		x.div_().nl();

@@ -11,7 +11,7 @@ public @stateless class t3 extends a {
 
 	@Override
 	public void to(final xwriter x) throws Throwable {
-		runTest(x, 1, new import_books("../csv-samples/books_data.csv"));
+		runTest(x, 1, new import_books("../csv-samples/books_data_200k.csv"));
 	}
 
 	private void runTest(final xwriter x, final int nruns, final TestCase c) throws Throwable {
