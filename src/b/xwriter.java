@@ -552,7 +552,7 @@ public final class xwriter{
 	}
 
 	public xwriter select(final a e,final String cls,final String style,final List<String>options){
-		selectot(e,cls,style).tagoe();
+		selecto(e,cls,style).tagoe();
 		select_options(e,options);
 		return tage("select");
 	}
@@ -571,7 +571,7 @@ public final class xwriter{
 		return this;
 	}
 
-	public xwriter selectot(final a e,final String cls,final String style){
+	public xwriter selecto(final a e,final String cls,final String style){
 		return tago("select").default_attrs_for_element(e,cls,style);
 	}
 

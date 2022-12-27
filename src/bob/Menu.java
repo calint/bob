@@ -26,7 +26,7 @@ public final class Menu extends a {
 	@Override
 	public void to(final xwriter x) throws Throwable {
 		final String id = id();
-		x.selectot(this, null, null).attr("onchange", "$x('" + id + " s '+this.selectedIndex)").tagoe();
+		x.selecto(this, null, null).attr("onchange", "$x('" + id + " s '+this.selectedIndex)").tagoe();
 		int i = 0;
 		for (final Item im : items) {
 			x.tago("option").attr("value", i);
