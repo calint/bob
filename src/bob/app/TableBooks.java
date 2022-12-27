@@ -124,7 +124,7 @@ public class TableBooks extends ViewTable {
 		renderLinked(x, b, b.getName());
 		x.td();
 		final String s = b.getAuthors();
-		final String sh = s.replaceAll(";", "<br>");
+		final String sh = s.replaceAll(";\\s*", "<br>");
 		x.p(sh);
 	}
 
