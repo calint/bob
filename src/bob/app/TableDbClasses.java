@@ -19,7 +19,7 @@ public class TableDbClasses extends ViewTable {
 	}
 
 	public String getTitle() {
-		return "List";
+		return "Classes";
 	}
 
 	@Override

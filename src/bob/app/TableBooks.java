@@ -6,6 +6,7 @@ import java.util.Set;
 import b.a;
 import b.xwriter;
 import bob.Action;
+import bob.Util;
 import bob.View;
 import bob.ViewTable;
 import db.Db;
@@ -26,7 +27,7 @@ public class TableBooks extends ViewTable {
 	}
 
 	public String getTitle() {
-		return "All books";
+		return "Books";
 	}
 
 	@Override
@@ -126,13 +127,15 @@ public class TableBooks extends ViewTable {
 		x.td().p(b.getAuthors().replaceAll("\\s*;\\s*", "<br>"));
 		x.td();
 		final String c = b.getCategoriesStr();
-		final String[] ca = c.split("\\s*;\\s*");
-		int i = 0;
-		for (final String s : ca) {
-			renderLinked(x, "c", s, s);
-			i++;
-			if (i < ca.length) {
-				x.p("<br>");
+		if (!Util.isEmpty(c)) {
+			final String[] ca = c.split("\\s*;\\s*");
+			int i = 0;
+			for (final String s : ca) {
+				renderLinked(x, "c", s, s);
+				i++;
+				if (i < ca.length) {
+					x.p("<br>");
+				}
 			}
 		}
 	}

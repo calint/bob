@@ -7,8 +7,9 @@ a,a:visited{text-decoration:none;color:#00a}
 a:focus,a:hover,a:active{color:green;text-shadow:0 0 1rem rgba(0,0,0,.7)}
 em{font-weight:bold}
 input,select,textarea{margin:.5rem;padding:.5rem;border:1px dotted green;border-radius:.3rem}
-input:focus,select:focus{background-color:#ffd}
+input:focus,select:focus,textarea:focus{background-color:#ffd}
 input[type="checkbox"]:focus{background-color:#ffd;outline:1px dotted green}
+
 /** index.html */
 .disp{text-align:center}
 /** bob.Controller */
@@ -101,6 +102,22 @@ input.small{
 }
 input.tiny{
 	width:7rem;
+}
+textarea.tiny{
+	width:20rem;
+	height:5rem;
+}
+textarea.small{
+	width:40rem;
+	height:10rem;
+}
+textarea.medium{
+	width:50rem;
+	height:30rem;
+}
+textarea.large{
+	width:80rem;
+	height:40rem;
 }
 table.f{
 	margin-left:auto;

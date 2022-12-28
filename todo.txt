@@ -1,7 +1,7 @@
 b
 [x] xwriter: select renderer
 [o] xwriter review consistency tago etc
-[x] pager rendering if there is only l page
+[x] pager rendering if there is only 1 page
 [o] csv sample books:
 [x]   parse authors, separated by new line
 [x]   parse published date

@@ -373,7 +373,8 @@ public xwriter hr(){
 /** Input text area. */
 	public xwriter inptxtarea(final a e,final String cls){
 		tago("textarea").default_attrs_for_element(e,cls,null).attr("onchange","$b(this)").attr("onkeydown","$b(this)");
-		attr("wrap","off").attr("spellcheck","false").tagoe();
+//		attr("wrap","off").attr("spellcheck","false").tagoe();
+		tagoe();
 		try{
 			e.to(new osltgt(outputstream()));
 		}catch(final Throwable t){
