@@ -367,12 +367,16 @@ public xwriter hr(){
 	}
 
 	public xwriter inptxtarea(final a e){
-		return inptxtarea(e,null);
+		return inptxtarea(e,null,null);
+	}
+
+	public xwriter inptxtarea(final a e,final String cls){
+		return inptxtarea(e,cls,null);
 	}
 
 /** Input text area. */
-	public xwriter inptxtarea(final a e,final String cls){
-		tago("textarea").default_attrs_for_element(e,cls,null).attr("onchange","$b(this)").attr("onkeydown","$b(this)");
+	public xwriter inptxtarea(final a e,final String cls,final String style){
+		tago("textarea").default_attrs_for_element(e,cls,style).attr("onchange","$b(this)").attr("onkeydown","$b(this)");
 //		attr("wrap","off").attr("spellcheck","false").tagoe();
 		tagoe();
 		try{
