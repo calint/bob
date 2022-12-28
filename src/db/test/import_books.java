@@ -62,10 +62,10 @@ public class import_books extends TestCase {
 				throw new RuntimeException("record " + i + " has size of authors " + authors.length()
 						+ " but field length is " + Book.authors.getSize());
 
-			final String publisher = ls.get(5);
-			if (publisher.length() > Book.publisher.getSize())
-				throw new RuntimeException("record " + i + " has size of publisher " + publisher.length()
-						+ " but field length is " + Book.publisher.getSize());
+			final String publisherStr = ls.get(5);
+			if (publisherStr.length() > Book.publisherStr.getSize())
+				throw new RuntimeException("record " + i + " has size of publisher " + publisherStr.length()
+						+ " but field length is " + Book.publisherStr.getSize());
 
 			final String categoriesStr = ls.get(8);
 			if (categoriesStr.length() > Book.categoriesStr.getSize())
@@ -104,7 +104,20 @@ public class import_books extends TestCase {
 			} else {
 				o.setAuthors("");
 			}
-			o.setPublisher(ls.get(5));
+			final String publisherStr = ls.get(5);
+			o.setPublisherStr(publisherStr);
+			if (publisherStr.length() > 0) {
+				final List<DbObject> res = tn.get(Publisher.class, new Query(Publisher.name, Query.EQ, publisherStr),
+						null, null);
+				final Publisher p;
+				if (res.isEmpty()) {
+					p = (Publisher) tn.create(Publisher.class);
+					p.setName(publisherStr);
+				} else {
+					p = (Publisher) res.get(0);
+				}
+				o.setPublisher(p);
+			}
 			final String pd = ls.get(6);
 			if (pd.length() != 0) {
 				final Timestamp ts = parseDate(pd);
@@ -116,14 +129,14 @@ public class import_books extends TestCase {
 				final StringBuilder categoriesSb = new StringBuilder(128);
 				for (final String s : categoriesList) {
 					categoriesSb.append(s).append(';');
-					final List<DbObject> cls = tn.get(BookCategory.class, new Query(BookCategory.name, Query.EQ, s),
-							null, null);
-					final BookCategory bc;
+					final List<DbObject> cls = tn.get(Category.class, new Query(Category.name, Query.EQ, s), null,
+							null);
+					final Category bc;
 					if (cls.isEmpty()) {
-						bc = (BookCategory) tn.create(BookCategory.class);
+						bc = (Category) tn.create(Category.class);
 						bc.setName(s);
 					} else {
-						bc = (BookCategory) cls.get(0);
+						bc = (Category) cls.get(0);
 					}
 					o.addCategory(bc);
 				}
@@ -139,7 +152,7 @@ public class import_books extends TestCase {
 			d.setData(ls.get(1));
 
 			sb.setLength(0);
-			sb.append(o.getName()).append(" ").append(o.getAuthors()).append(" ").append(o.getPublisher());
+			sb.append(o.getName()).append(" ").append(o.getAuthors()).append(" ").append(o.getPublisherStr());
 			d.setMeta(sb.toString());
 
 			if (++i % 100 == 0) {

@@ -13,23 +13,23 @@ import db.DbObjects;
 import db.DbTransaction;
 import db.Query;
 import db.test.Book;
-import db.test.BookCategory;
+import db.test.Category;
 import db.test.DataText;
 
-public class TableBookCategory extends ViewTable {
+public class TableCategory extends ViewTable {
 	static final long serialVersionUID = 2;
 	public a title;
 	public a id;
 
 	private final int categoryId;
 
-	public TableBookCategory(final int categoryId) {
+	public TableCategory(final int categoryId) {
 		super(BIT_SEARCH | BIT_SELECT | BIT_CREATE | BIT_DELETE, BIT_CLICK_ITEM);
 		this.categoryId = categoryId;
 	}
 
 	public String getTitle() {
-		final BookCategory bc = (BookCategory) Db.currentTransaction().get(BookCategory.class, categoryId);
+		final Category bc = (Category) Db.currentTransaction().get(Category.class, categoryId);
 		return bc.getName();
 	}
 
@@ -84,7 +84,7 @@ public class TableBookCategory extends ViewTable {
 		if (!id.is_empty()) {
 			qry.and(Book.class, id.toint());
 		}
-		qry.and(Book.categories).and(BookCategory.class, categoryId);
+		qry.and(Book.categories).and(Category.class, categoryId);
 		return new DbObjects(null, Book.class, qry, null);
 	}
 

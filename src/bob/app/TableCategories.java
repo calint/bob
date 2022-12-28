@@ -8,22 +8,22 @@ import bob.ViewTable;
 import db.DbObjects;
 import db.Order;
 import db.Query;
-import db.test.BookCategory;
+import db.test.Category;
 
-public class TableBookCategories extends ViewTable {
+public class TableCategories extends ViewTable {
 	static final long serialVersionUID = 2;
 
-	public TableBookCategories() {
+	public TableCategories() {
 		super(BIT_SEARCH, BIT_CLICK_ITEM);
 	}
 
 	public String getTitle() {
-		return "Book categories";
+		return "Categories";
 	}
 
 	@Override
 	protected View.TypeInfo getTypeInfo() {
-		return new View.TypeInfo("book category", "book categories");
+		return new View.TypeInfo("category", "categories");
 	}
 
 	@Override
@@ -48,14 +48,14 @@ public class TableBookCategories extends ViewTable {
 	protected DbObjects getResults() {
 		final Query qry = new Query();
 		if (!q.is_empty()) {
-			qry.and(BookCategory.name, Query.LIKE, "%" + q.str() + "%");
+			qry.and(Category.name, Query.LIKE, "%" + q.str() + "%");
 		}
-		return new DbObjects(null, BookCategory.class, qry, new Order(BookCategory.name));
+		return new DbObjects(null, Category.class, qry, new Order(Category.name));
 	}
 
 	@Override
 	protected String getIdFrom(final Object o) {
-		final BookCategory bc = (BookCategory) o;
+		final Category bc = (Category) o;
 		return Integer.toString(bc.id());
 	}
 
@@ -66,14 +66,14 @@ public class TableBookCategories extends ViewTable {
 
 	@Override
 	protected void renderRowCells(final xwriter x, final Object o) {
-		final BookCategory bc = (BookCategory) o;
+		final Category bc = (Category) o;
 		x.td();
 		renderLinked(x, bc, bc.getName());
 	}
 
 	@Override
 	protected void onRowClick(final xwriter x, final String id) throws Throwable {
-		final TableBookCategory tbc = new TableBookCategory(Integer.parseInt(id));
+		final TableCategory tbc = new TableCategory(Integer.parseInt(id));
 		super.bubble_event(x, this, tbc);
 	}
 }

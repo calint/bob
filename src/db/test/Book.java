@@ -8,6 +8,7 @@ import db.FldDateTime;
 import db.FldStr;
 import db.IndexRel;
 import db.RelAgg;
+import db.RelRef;
 import db.RelRefN;
 
 public final class Book extends DbObject {
@@ -15,11 +16,12 @@ public final class Book extends DbObject {
 
 	public final static FldStr name = new FldStr(800);
 	public final static FldStr authors = new FldStr(3000);
-	public final static FldStr publisher = new FldStr(400);
+	public final static FldStr publisherStr = new FldStr(400);
+	public final static RelRef publisher = new RelRef(Publisher.class);
 	public final static FldDateTime publishedDate = new FldDateTime();
 	public final static RelAgg data = new RelAgg(DataText.class);
 	public final static FldStr categoriesStr = new FldStr(800);
-	public final static RelRefN categories = new RelRefN(BookCategory.class);
+	public final static RelRefN categories = new RelRefN(Category.class);
 
 	// optimizes Book join with DataText when doing full text query
 	public final static IndexRel ixRelData = new IndexRel(data);
@@ -43,12 +45,12 @@ public final class Book extends DbObject {
 	}
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
-	public String getPublisher() {
-		return getStr(publisher);
+	public String getPublisherStr() {
+		return getStr(publisherStr);
 	}
 
-	public void setPublisher(final String v) {
-		set(publisher, v);
+	public void setPublisherStr(final String v) {
+		set(publisherStr, v);
 	}
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
@@ -70,6 +72,23 @@ public final class Book extends DbObject {
 	}
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
+	public int getPublisherId() {
+		return publisher.getId(this);
+	}
+
+	public Publisher getPublisher() {
+		return (Publisher) publisher.get(this);
+	}
+
+	public void setPublisher(final int id) {
+		publisher.set(this, id);
+	}
+
+	public void setPublisher(final Publisher o) {
+		publisher.set(this, o.id());
+	}
+
+	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
 	public int getDataId() {
 		return data.getId(this);
 	}
@@ -87,7 +106,7 @@ public final class Book extends DbObject {
 		categories.add(this, id);
 	}
 
-	public void addCategory(final BookCategory o) {
+	public void addCategory(final Category o) {
 		categories.add(this, o.id());
 	}
 
@@ -99,7 +118,7 @@ public final class Book extends DbObject {
 		categories.remove(this, id);
 	}
 
-	public void removeCategory(final BookCategory o) {
+	public void removeCategory(final Category o) {
 		categories.remove(this, o.id());
 	}
 }

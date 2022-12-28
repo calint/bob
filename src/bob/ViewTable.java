@@ -147,6 +147,7 @@ public abstract class ViewTable extends View {
 		}
 	}
 
+	// ? review
 	protected final void renderLinked(final xwriter x, final String type, final String cid, final String linkText) {
 		x.ax(t, "c " + type + " " + cid, linkText);
 	}
@@ -238,16 +239,19 @@ public abstract class ViewTable extends View {
 			} else {
 				x.p(tv.typeInfo.namePlural);
 			}
-			x.p(". Page ");
-			// ! pg may be more than npages when deleting, adjust
-			x.inp(pg, null, "small-nbr center", null, null, this, "p", null, null);
-			x.p(" of ").p(npages).p(". ");
-			if (currentPage != 0) {
-				x.ax(this, "pg prv", "Previous");
-				x.p(" ");
-			}
-			if (currentPage < npages - 1) {
-				x.ax(this, "pg nxt", "Next");
+			x.p(". ");
+			if (npages > 1) {
+				x.p("Page ");
+				// ! pg may be more than npages when deleting, adjust
+				x.inp(pg, null, "small-nbr center", null, null, this, "p", null, null);
+				x.p(" of ").p(npages).p(". ");
+				if (currentPage != 0) {
+					x.ax(this, "pg prv", "Previous");
+					x.p(" ");
+				}
+				if (currentPage < npages - 1) {
+					x.ax(this, "pg nxt", "Next");
+				}
 			}
 		}
 

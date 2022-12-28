@@ -1,19 +1,26 @@
 b
 [x] xwriter: select renderer
 [o] xwriter review consistency tago etc
+[x] pager rendering if there is only l page
 [o] csv sample books:
 [x]   parse authors, separated by new line
 [x]   parse published date
 [ ]   authors object and reverse lookup author->books
 [x]   categories
+[x]   publisher
+[ ] FormDbObject with convenience for editing dbobjects
+[ ]   find/select/create
+[ ]     RelRefN
+[ ]     RelRef
+[ ]     RelAgg
+[ ]     RelAggN
+[ ]   FormRenderer wrapping xwriter and "this"? cookie.eat() or eat(cookie)
 [o] ViewTable: onRowClick(xwriter,code,id) to have other click types from row
 [x]   onRowClickTyped(xwriter,code,id)
 [ ]   onRowClickTyped(xwriter,code,pid,id)
 [ ]   rename onRowClickTyped
 [ ] ViewTable sort options
-[ ] FormDbObject with convenience for editing dbobjects
-[ ]   RelRef, RelRefN etc elements to find/select/create
-[ ]   FormRenderer wrapping xwriter and "this"? cookie.eat() or eat(cookie)
+[ ] ViewTable rendered by javascript?
 [ ] b.user: email, password hash, security bits. b.session: ref user
 [o] ViewTable:
 [x]   infinite scroll instead of paging (?)

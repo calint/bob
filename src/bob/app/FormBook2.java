@@ -101,7 +101,7 @@ public class FormBook2 extends Form {
 		inputText(x, "Title", Book.name, "long", o == null ? initStr : o.getName());
 		focus(x, Book.name);
 		inputText(x, "Authors", Book.authors, "long", o == null ? "" : o.getAuthors());
-		inputText(x, "Publisher", Book.publisher, "medium", o == null ? "" : o.getPublisher());
+		inputText(x, "Publisher", Book.publisherStr, "medium", o == null ? "" : o.getPublisherStr());
 		inputText(x, "Published date", Book.publishedDate, "short",
 				o == null ? "" : Util.toStr(o.getPublishedDate(), ""));
 		endForm(x);
@@ -124,7 +124,7 @@ public class FormBook2 extends Form {
 		}
 		o.setName(getStr(Book.name));
 		o.setAuthors(getStr(Book.authors));
-		o.setPublisher(getStr(Book.publisher));
+		o.setPublisherStr(getStr(Book.publisherStr));
 		final String pd = getStr(Book.publishedDate);
 		if (!Util.isEmpty(pd)) {
 			o.setPublishedDate(Timestamp.valueOf(pd));

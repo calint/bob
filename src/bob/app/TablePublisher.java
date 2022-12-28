@@ -13,20 +13,24 @@ import db.DbObjects;
 import db.DbTransaction;
 import db.Query;
 import db.test.Book;
-import db.test.Category;
 import db.test.DataText;
+import db.test.Publisher;
 
-public class TableBooks extends ViewTable {
+public class TablePublisher extends ViewTable {
 	static final long serialVersionUID = 2;
 	public a title;
 	public a id;
 
-	public TableBooks() {
+	private final int publisherId;
+
+	public TablePublisher(final int publisherId) {
 		super(BIT_SEARCH | BIT_SELECT | BIT_CREATE | BIT_DELETE, BIT_CLICK_ITEM);
+		this.publisherId = publisherId;
 	}
 
 	public String getTitle() {
-		return "All books";
+		final Publisher bc = (Publisher) Db.currentTransaction().get(Publisher.class, publisherId);
+		return bc.getName();
 	}
 
 	@Override
@@ -80,6 +84,7 @@ public class TableBooks extends ViewTable {
 		if (!id.is_empty()) {
 			qry.and(Book.class, id.toint());
 		}
+		qry.and(Book.publisher).and(Publisher.class, publisherId);
 		return new DbObjects(null, Book.class, qry, null);
 	}
 
@@ -114,7 +119,7 @@ public class TableBooks extends ViewTable {
 
 	@Override
 	protected void renderHeaders(final xwriter x) {
-		x.th().p("Id").th().p("Title").th().p("Author").th().p("Categories");
+		x.th().p("Id").th().p("Title").th().p("Author");
 	}
 
 	@Override
@@ -124,17 +129,6 @@ public class TableBooks extends ViewTable {
 		x.td();
 		renderLinked(x, b, b.getName());
 		x.td().p(b.getAuthors().replaceAll("\\s*;\\s*", "<br>"));
-		x.td();
-		final String c = b.getCategoriesStr();
-		final String[] ca = c.split("\\s*;\\s*");
-		int i = 0;
-		for (final String s : ca) {
-			renderLinked(x, "c", s, s);
-			i++;
-			if (i < ca.length) {
-				x.p("<br>");
-			}
-		}
 	}
 
 	@Override
@@ -142,15 +136,5 @@ public class TableBooks extends ViewTable {
 //		final FormBook f = new FormBook(id, q.str());
 		final FormBook2 f = new FormBook2(id, q.str());
 		super.bubble_event(x, this, f);
-	}
-
-	@Override
-	protected void onRowClickTyped(final xwriter x, final String type, final String id) throws Throwable {
-		if ("c".equals(type)) { // category link
-			final Category bc = (Category) Db.currentTransaction()
-					.get(Category.class, new Query(Category.name, Query.EQ, id), null, null).get(0);
-			final TableCategory tbc = new TableCategory(bc.id());
-			super.bubble_event(x, this, tbc);
-		}
 	}
 }

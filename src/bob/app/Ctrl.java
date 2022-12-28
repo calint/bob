@@ -13,7 +13,8 @@ public class Ctrl extends Controller {
 		m.addItem(TableFiles.class, "Files browser");
 		bc.add(new TableFiles());
 		m.addItem(TableBooks.class, "Books");
-		m.addItem(TableBookCategories.class, "Book Categories");
+		m.addItem(TableCategories.class, "Categories");
+		m.addItem(TablePublishers.class, "Publishers");
 		m.addItem(TableDbClasses.class, "Classes");
 	}
 }

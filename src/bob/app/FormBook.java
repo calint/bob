@@ -16,7 +16,7 @@ public class FormBook extends Form {
 
 	public a title;
 	public a authors;
-	public a publisher;
+	public a publisherStr;
 	public a publishedDate;
 
 	public FormBook(final String objectId, final String initStr) {
@@ -24,7 +24,7 @@ public class FormBook extends Form {
 		final Book o = (Book) (objectId == null ? null : Db.currentTransaction().get(Book.class, objectId));
 		title.set(o == null ? initStr : o.getName());
 		authors.set(o == null ? "" : o.getAuthors());
-		publisher.set(o == null ? "" : o.getPublisher());
+		publisherStr.set(o == null ? "" : o.getPublisherStr());
 		publishedDate.set(o == null ? "" : Util.toStr(o.getPublishedDate(), ""));
 	}
 
@@ -37,7 +37,7 @@ public class FormBook extends Form {
 		x.p("title: ").inptxt(title, this, "sc").nl();
 		x.script().xfocus(title).script_();
 		x.p("authors: ").inptxt(authors, this, "sc").nl();
-		x.p("publisher: ").inptxt(publisher, this, "sc").nl();
+		x.p("publisher: ").inptxt(publisherStr, this, "sc").nl();
 		x.p("publishedDate: ").inptxt(publishedDate, this, "sc").nl();
 	}
 
@@ -53,7 +53,7 @@ public class FormBook extends Form {
 		}
 		o.setName(title.str());
 		o.setAuthors(authors.str());
-		o.setPublisher(publisher.str());
+		o.setPublisherStr(publisherStr.str());
 		if (!publishedDate.is_empty()) {
 			o.setPublishedDate(Timestamp.valueOf(publishedDate.str()));
 		}
