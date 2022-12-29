@@ -185,7 +185,7 @@ public class FormBook2 extends Form {
 		inputText(x, "Publisher", Book.publisherStr, "medium", o == null ? "" : o.getPublisherStr());
 		inputDate(x, "Published date", Book.publishedDate, "short", o == null ? null : o.getPublishedDate());
 		inputText(x, "Categories", Book.categoriesStr, "medium", o == null ? "" : o.getCategoriesStr());
-		inputTextArea(x, "Description", DataText.data, "medium", o == null ? "" : o.getData(true).getData());
+		inputTextArea(x, "Description", DataText.data, "large", o == null ? "" : o.getData(true).getData());
 		endForm(x);
 //		x.ax(this, "test", "test").nl();
 	}

@@ -85,39 +85,39 @@ input.center{
 	text-align:center;
 }
 input.nbr{
-	width:5rem;
+	width:5ch;
 }
 input.small-nbr{
-	width:2rem;
+	width:2ch;
 }
 /** bob.Form, bob.ViewTable more search */
 input.long{
-	width:60rem;
+	width:100ch;
 }
 input.medium{
-	width:30rem;
+	width:50ch;
 }
 input.small{
-	width:15rem;
+	width:20ch;
 }
 input.tiny{
-	width:7rem;
+	width:10ch;
 }
 textarea.tiny{
-	width:20rem;
-	height:5rem;
+	width:20ch;
+	height:5ch;
 }
 textarea.small{
-	width:40rem;
-	height:10rem;
+	width:40ch;
+	height:10ch;
 }
 textarea.medium{
-	width:50rem;
-	height:30rem;
+	width:60ch;
+	height:30ch;
 }
 textarea.large{
-	width:80rem;
-	height:40rem;
+	width:100ch;
+	height:40ch;
 }
 table.f{
 	margin-left:auto;
