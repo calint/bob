@@ -6,10 +6,10 @@ import java.util.Map;
 public final class FldStr extends DbField {
 	private static final long serialVersionUID = 1L;
 
-	public final static int MAX_SIZE = 65535;
+	public final static int MAX_SIZE = 65535; // ? this is mysql specific
 
 	public FldStr() {
-		this(255, null, true);
+		this(250, null, true);
 	}
 
 	public FldStr(final int size) {
@@ -17,7 +17,7 @@ public final class FldStr extends DbField {
 	}
 
 	public FldStr(final String def) {
-		this(255, def, true);
+		this(250, def, true);
 	}
 
 	public FldStr(final int size, final String def) {
