@@ -1,4 +1,5 @@
 b
+[ ] xwriter: button tag
 [ ] review x.css using bob.css
 [ ] x.js and bob.js common script extracted
 [x] xwriter: select renderer
