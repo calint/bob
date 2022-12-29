@@ -54,6 +54,8 @@ b
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 dbo
 [ ] Db.engine from config
+[ ] Index: specify key length
+[ ] Db.driver with engine specific limitations, differences, etc
 [ ] DbObjects: select when multiple classes vs one class inconsistency 
 [ ] cluster client connect to database through DriverManager is slow at first connect
 [x]   Class.forName and register driver? no impact.
