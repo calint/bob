@@ -58,6 +58,10 @@ public abstract class DbRelation implements Serializable {
 		return name;
 	}
 
+	public final Class<? extends DbObject> getFromClass() {
+		return cls;
+	}
+
 	public final Class<? extends DbObject> getToClass() {
 		return toCls;
 	}

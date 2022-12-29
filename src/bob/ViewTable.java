@@ -239,10 +239,9 @@ public abstract class ViewTable extends View {
 
 		public void upd() {
 			objectsCount = tv.getObjectsCount();
-			if (objectsCount < objectsPerPage) {
-				npages = 1;
-			} else {
-				npages = objectsCount / objectsPerPage + 1;
+			npages = objectsCount / objectsPerPage;
+			if (objectsCount % objectsPerPage != 0) {
+				npages++;
 			}
 		}
 

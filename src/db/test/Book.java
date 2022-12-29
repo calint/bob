@@ -2,6 +2,7 @@ package db.test;
 
 import java.sql.Timestamp;
 
+import bob.Titled;
 import db.DbObject;
 import db.DbObjects;
 import db.FldDateTime;
@@ -11,7 +12,7 @@ import db.RelAgg;
 import db.RelRef;
 import db.RelRefN;
 
-public final class Book extends DbObject {
+public final class Book extends DbObject implements Titled {
 	private static final long serialVersionUID = 1L;
 
 	public final static FldStr name = new FldStr(800);
@@ -26,6 +27,10 @@ public final class Book extends DbObject {
 
 	// optimizes Book join with DataText when doing full text query
 	public final static IndexRel ixRelData = new IndexRel(data);
+
+	public String getTitle() {
+		return getName();
+	}
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
 	public String getName() {

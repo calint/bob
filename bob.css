@@ -6,7 +6,7 @@ ol{list-style-position:inside}
 a,a:visited{text-decoration:none;color:#00a}
 a:focus,a:hover,a:active{color:green;text-shadow:0 0 1rem rgba(0,0,0,.7)}
 em{font-weight:bold}
-input,select,textarea{margin:.5rem;padding:.5rem;border:1px dotted green;border-radius:.3rem}
+input,select,textarea{margin:0;padding:.5rem;border:1px dotted green;border-radius:.3rem}
 input:focus,select:focus,textarea:focus{background-color:#ffd}
 input[type="checkbox"]:focus{background-color:#ffd;outline:1px dotted green}
 
@@ -128,8 +128,12 @@ table.f{
 	margin-right:auto;
 	text-align:left;
 }
+table.f td{
+	padding:.5rem;
+}
 table.f td.lbl{
 	text-align:right;
 	font-weight:bold;
 }
-table.f td.val{}
+table.f td.val{
+}
