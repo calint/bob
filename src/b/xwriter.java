@@ -396,20 +396,20 @@ public xwriter hr(){
 //	public xwriter is(){
 //		return inline_js_open();
 //	}
-	public xwriter js_x(final a e,final boolean encode_for_attribute){
-		return js_x(e,null,encode_for_attribute);
-	}
-
-	public xwriter js_x(final a e,final String callback){
-		return js_x(e,callback,false);
-	}
+//	public xwriter js_x(final a e,final boolean encode_for_attribute){
+//		return js_x(e,null,encode_for_attribute);
+//	}
+//
+//	public xwriter js_x(final a e,final String callback){
+//		return js_x(e,callback,false);
+//	}
 
 	/**
 	 * Renders script for a callback.
 	 *
 	 * @param e                    element to call
 	 * @param callback             first word is method name and remaining string is the parameter.
-	 * @param encode_for_attribute true to encode param for script in HTML attribute.
+	 * @param encode_for_attribute true to encode parameter for script in HTML attribute.
 	 */
 	public xwriter js_x(final a e,final String callback,final boolean encode_for_attribute){
 		p("$x('").p(e.id());
