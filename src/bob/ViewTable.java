@@ -145,7 +145,7 @@ public abstract class ViewTable extends View {
 	 * @param o
 	 * @param linkText
 	 */
-	protected final void renderLinked(final xwriter x, final Object o, final String linkText) {
+	protected final void renderLink(final xwriter x, final Object o, final String linkText) {
 		if ((enabledTableBits & ViewTable.BIT_CLICK_ITEM) != 0) {
 			final String id = getIdFrom(o);
 			x.ax(t, "clk " + id, linkText);
@@ -163,7 +163,7 @@ public abstract class ViewTable extends View {
 	 * @param cmd
 	 * @param linkText
 	 */
-	protected final void renderLinked(final xwriter x, final String id, final String cmd, final String linkText) {
+	protected final void renderLink(final xwriter x, final String id, final String cmd, final String linkText) {
 		x.ax(t, "c " + cmd + " " + id, linkText);
 	}
 

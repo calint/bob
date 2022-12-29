@@ -54,7 +54,7 @@ public class TableDbClasses extends ViewTable {
 	protected void renderRowCells(final xwriter x, final Object o) {
 		final DbClass c = (DbClass) o;
 		x.td();
-		renderLinked(x, o, c.getJavaClass().getName());
+		renderLink(x, o, c.getJavaClass().getName());
 		x.td("ar").p(c.getDeclaredFields().size());
 		x.td("ar").p(c.getDeclaredRelations().size());
 	}

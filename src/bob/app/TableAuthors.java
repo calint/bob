@@ -68,7 +68,7 @@ public class TableAuthors extends ViewTable {
 	protected void renderRowCells(final xwriter x, final Object o) {
 		final Author bc = (Author) o;
 		x.td();
-		renderLinked(x, bc, bc.getName());
+		renderLink(x, bc, bc.getName());
 	}
 
 	@Override

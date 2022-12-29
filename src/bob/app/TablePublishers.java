@@ -68,7 +68,7 @@ public class TablePublishers extends ViewTable {
 	protected void renderRowCells(final xwriter x, final Object o) {
 		final Publisher bc = (Publisher) o;
 		x.td();
-		renderLinked(x, bc, bc.getName());
+		renderLink(x, bc, bc.getName());
 	}
 
 	@Override

@@ -128,14 +128,14 @@ public class TableAuthor extends ViewTable {
 		final Book b = (Book) o;
 		x.td("nbr").p(b.id());
 		x.td();
-		renderLinked(x, b, b.getName());
+		renderLink(x, b, b.getName());
 		x.td();
 		final String a = b.getAuthorsStr();
 		if (!Util.isEmpty(a)) {
 			final String[] ca = a.split("\\s*;\\s*");
 			int i = 0;
 			for (final String s : ca) {
-				renderLinked(x, s, "a", s);
+				renderLink(x, s, "a", s);
 				i++;
 				if (i < ca.length) {
 					x.p("<br>");

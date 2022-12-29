@@ -68,7 +68,7 @@ public class TableCategories extends ViewTable {
 	protected void renderRowCells(final xwriter x, final Object o) {
 		final Category bc = (Category) o;
 		x.td();
-		renderLinked(x, bc, bc.getName());
+		renderLink(x, bc, bc.getName());
 	}
 
 	@Override

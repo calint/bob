@@ -130,7 +130,7 @@ public class TableFiles extends ViewTable {
 		} else {
 			img = "<img src=" + icon_file_uri + ">";
 		}
-		renderLinked(x, o, img);
+		renderLink(x, o, img);
 		x.td();
 		x.p(p.name());
 //		renderLinkedName(x, o);

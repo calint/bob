@@ -129,14 +129,14 @@ public class TableCategory extends ViewTable {
 		final Book b = (Book) o;
 		x.td("nbr").p(b.id());
 		x.td();
-		renderLinked(x, b, b.getName());
+		renderLink(x, b, b.getName());
 		x.td();
 		final String c = b.getAuthorsStr();
 		if (!Util.isEmpty(c)) {
 			final String[] ca = c.split("\\s*;\\s*");
 			int i = 0;
 			for (final String s : ca) {
-				renderLinked(x, s, "a", s);
+				renderLink(x, s, "a", s);
 				i++;
 				if (i < ca.length) {
 					x.p("<br>");
