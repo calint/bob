@@ -6,7 +6,7 @@ import db.FldStr;
 public final class Category extends DbObject {
 	private static final long serialVersionUID = 1L;
 
-	public final static FldStr name = new FldStr(800);
+	public final static FldStr name = new FldStr(800); // ? field length is too big for one case, truncate at import
 //	public final static Index ixName=new Index(name); // ? key length is max 250 in mysam tables
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
