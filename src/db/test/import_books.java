@@ -62,6 +62,15 @@ public class import_books extends TestCase {
 				throw new RuntimeException("record " + i + " has size of authors " + authorsStr.length()
 						+ " but field length is " + Book.authorsStr.getSize());
 
+			if (authorsStr.length() != 0) {
+				final List<String> authorsList = Util.readList(new StringReader(authorsStr), ',', '\'');
+				for (final String s : authorsList) {
+					if (s.length() > Author.name.getSize())
+						throw new RuntimeException("record " + i + " has size of author name " + s.length()
+								+ " but field length is " + Author.name.getSize());
+				}
+			}
+
 			final String publisherStr = ls.get(5);
 			if (publisherStr.length() > Book.publisherStr.getSize())
 				throw new RuntimeException("record " + i + " has size of publisher " + publisherStr.length()
@@ -71,6 +80,15 @@ public class import_books extends TestCase {
 			if (categoriesStr.length() > Book.categoriesStr.getSize())
 				throw new RuntimeException("record " + i + " has size of category " + categoriesStr.length()
 						+ " but field length is " + Book.categoriesStr.getSize());
+
+			if (categoriesStr.length() != 0) {
+				final List<String> categoriesList = Util.readList(new StringReader(categoriesStr), ',', '\'');
+				for (final String s : categoriesList) {
+					if (s.length() > Category.name.getSize())
+						throw new RuntimeException("record " + i + " has size of category name " + s.length()
+								+ " but field length is " + Category.name.getSize());
+				}
+			}
 
 			if (++i % 100 == 0) {
 				out.println("  " + i);
