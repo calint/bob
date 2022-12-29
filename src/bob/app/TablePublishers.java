@@ -72,7 +72,7 @@ public class TablePublishers extends ViewTable {
 	}
 
 	@Override
-	protected void onRowClick(final xwriter x, final String id) throws Throwable {
+	protected void onRowClick(final xwriter x, final String id, final String cmd) throws Throwable {
 		final TablePublisher tp = new TablePublisher(Integer.parseInt(id));
 		super.bubble_event(x, this, tp);
 	}

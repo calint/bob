@@ -72,7 +72,7 @@ public class TableAuthors extends ViewTable {
 	}
 
 	@Override
-	protected void onRowClick(final xwriter x, final String id) throws Throwable {
+	protected void onRowClick(final xwriter x, final String id, final String cmd) throws Throwable {
 		final TableAuthor t = new TableAuthor(Integer.parseInt(id));
 		super.bubble_event(x, this, t);
 	}

@@ -1,7 +1,6 @@
 b
 [x] xwriter: select renderer
 [o] xwriter review consistency tago etc
-[x] pager rendering if there is only 1 page
 [o] csv sample books:
 [x]   parse authors, separated by ';'
 [x]   parse published date
@@ -17,10 +16,6 @@ b
 [ ]     RelAgg
 [ ]     RelAggN
 [ ]   FormRenderer wrapping xwriter and "this"? cookie.eat() or eat(cookie)
-[o] ViewTable: onRowClick(xwriter,code,id) to have other click types from row
-[x]   onRowClickTyped(xwriter,code,id)
-[ ]   onRowClickTyped(xwriter,code,pid,id)
-[ ]   refactor onRowClickTyped to onRowClick() with parameter which may be null
 [ ] ViewTable sort options
 [ ] ViewTable rendered by javascript?
 [ ] b.user: email, password hash, security bits. b.session: ref user
@@ -116,6 +111,11 @@ dbo
 [ ]   ms sql server?
 [ ]   ibm db2?
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
+[x] pager rendering if there is only 1 page
+[x] ViewTable: onRowClick(xwriter,code,id) to have other click types from row
+[x]   onRowClickTyped(xwriter,code,id)
+[-]   onRowClickTyped(xwriter,code,pid,id). use case not yet encountered.
+[x]   refactor onRowClickTyped to onRowClick() with parameter which may be null
 [x] xwriter.xucb(e): update checkbox value by setting attribute "checked"
 [x] websock: implement ping/pong. not implemented by browsers
 [x] timeout on client and send empty message every x minutes

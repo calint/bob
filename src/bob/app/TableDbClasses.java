@@ -60,7 +60,7 @@ public class TableDbClasses extends ViewTable {
 	}
 
 	@Override
-	protected void onRowClick(final xwriter x, final String id) throws Throwable {
+	protected void onRowClick(final xwriter x, final String id, final String cmd) throws Throwable {
 		@SuppressWarnings("unchecked")
 		final Class<? extends DbObject> jc = (Class<? extends DbObject>) Class.forName(id);
 		final DbClass dbc = Db.getDbClassForJavaClass(jc);

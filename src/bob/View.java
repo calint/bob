@@ -51,6 +51,10 @@ public abstract class View extends a implements Titled {
 
 	protected abstract List<?> getObjectsList();
 
+	/**
+	 * Called to get the id from an object. Used to link views to other views or
+	 * forms.
+	 */
 	protected abstract String getIdFrom(Object o);
 
 	protected abstract Set<String> getSelectedIds();

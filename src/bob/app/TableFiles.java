@@ -139,7 +139,7 @@ public class TableFiles extends ViewTable {
 	}
 
 	@Override
-	protected void onRowClick(final xwriter x, final String id) throws Throwable {
+	protected void onRowClick(final xwriter x, final String id, final String cmd) throws Throwable {
 		final path p = pth.get(id);
 		if (p.isdir()) {
 			final TableFiles f = new TableFiles(p);

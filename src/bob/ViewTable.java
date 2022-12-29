@@ -138,6 +138,13 @@ public abstract class ViewTable extends View {
 		return t.getSelectedIds();
 	}
 
+	/**
+	 * Renders a link with object id that calls onRowClick(...) with command null.
+	 *
+	 * @param x
+	 * @param o
+	 * @param linkText
+	 */
 	protected final void renderLinked(final xwriter x, final Object o, final String linkText) {
 		if ((enabledTableBits & ViewTable.BIT_CLICK_ITEM) != 0) {
 			final String id = getIdFrom(o);
@@ -147,9 +154,17 @@ public abstract class ViewTable extends View {
 		}
 	}
 
-	// ? review
-	protected final void renderLinked(final xwriter x, final String type, final String cid, final String linkText) {
-		x.ax(t, "c " + type + " " + cid, linkText);
+	/**
+	 * Renders a link with id and command that call onRowClick(...) with specified
+	 * command.
+	 * 
+	 * @param x
+	 * @param id
+	 * @param cmd
+	 * @param linkText
+	 */
+	protected final void renderLinked(final xwriter x, final String id, final String cmd, final String linkText) {
+		x.ax(t, "c " + cmd + " " + id, linkText);
 	}
 
 	// -----------------------------------------------------------------------------------
@@ -199,10 +214,12 @@ public abstract class ViewTable extends View {
 	protected void renderRowCells(final xwriter x, final Object o) {
 	}
 
-	protected void onRowClick(final xwriter x, final String id) throws Throwable {
-	}
-
-	protected void onRowClickTyped(final xwriter x, final String type, final String id) throws Throwable {
+	/**
+	 * Called when a row is clicked.
+	 * 
+	 * @param cmd specified at renderLinked(...), null if default.
+	 **/
+	protected void onRowClick(final xwriter x, final String id, final String cmd) throws Throwable {
 	}
 
 	public final static class Paging extends a {
@@ -416,7 +433,7 @@ public abstract class ViewTable extends View {
 		/** Callback for click on row. */
 		public void x_clk(final xwriter x, final String s) throws Throwable {
 			if ((tv.enabledTableBits & ViewTable.BIT_CLICK_ITEM) != 0) {
-				tv.onRowClick(x, s);
+				tv.onRowClick(x, s, null);
 			}
 		}
 
@@ -424,8 +441,8 @@ public abstract class ViewTable extends View {
 		public void x_c(final xwriter x, final String s) throws Throwable {
 			final int i = s.indexOf(' ');
 			final String type = s.substring(0, i);
-			final String cid = s.substring(i + 1);
-			tv.onRowClickTyped(x, type, cid);
+			final String id = s.substring(i + 1);
+			tv.onRowClick(x, id, type);
 		}
 
 		/** Callback for infinite scroll. */

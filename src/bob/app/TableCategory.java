@@ -136,7 +136,7 @@ public class TableCategory extends ViewTable {
 			final String[] ca = c.split("\\s*;\\s*");
 			int i = 0;
 			for (final String s : ca) {
-				renderLinked(x, "a", s, s);
+				renderLinked(x, s, "a", s);
 				i++;
 				if (i < ca.length) {
 					x.p("<br>");
@@ -145,16 +145,16 @@ public class TableCategory extends ViewTable {
 		}
 	}
 
-	@Override
-	protected void onRowClick(final xwriter x, final String id) throws Throwable {
-//		final FormBook f = new FormBook(id, q.str());
-		final FormBook2 f = new FormBook2(id, q.str());
-		super.bubble_event(x, this, f);
-	}
 
 	@Override
-	protected void onRowClickTyped(final xwriter x, final String type, final String id) throws Throwable {
-		if ("a".equals(type)) { // category link
+	protected void onRowClick(final xwriter x, final String id, final String cmd) throws Throwable {
+		if (cmd == null) {
+//			final FormBook f = new FormBook(id, q.str());
+			final FormBook2 f = new FormBook2(id, q.str());
+			super.bubble_event(x, this, f);
+			return;
+		}
+		if ("a".equals(cmd)) { // category link
 			final Author o = (Author) Db.currentTransaction()
 					.get(Author.class, new Query(Author.name, Query.EQ, id), null, null).get(0);
 			final TableAuthor t = new TableAuthor(o.id());
