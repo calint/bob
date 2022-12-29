@@ -1,4 +1,6 @@
 b
+[ ] review x.css using bob.css
+[ ] x.js and bob.js common script extracted
 [x] xwriter: select renderer
 [o] xwriter review consistency tago etc
 [o] csv sample books:
@@ -40,7 +42,6 @@ b
 [ ] cluster: health-check the database
 [ ] jem: add package names that contain additional jem fields elements
 [ ] b: rename to java convention
-[ ] x.js and bob.js common script extracted
 [ ] thread pool: get first, create if none available
 [ ] use java.util.concurrent (keep it compatible with java 1.5)
 [ ]   b: request queue, thread pool
