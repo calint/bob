@@ -1,7 +1,7 @@
 package bob;
 
 public final class Util {
-	public static String formatSizeInBytes(final long size_B) {
+	public static String formatSizeInBytes(final long size_B) { // ! one decimal point precision. example 4.1 KB instead of 4 K
 		long b = size_B;
 		if (b < 1024)
 			return Long.toString(b) + " B";
