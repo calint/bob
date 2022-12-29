@@ -14,6 +14,7 @@ public class Ctrl extends Controller {
 		bc.add(new TableFiles());
 		m.addItem(TableBooks.class, "Books");
 		m.addItem(TableCategories.class, "Categories");
+		m.addItem(TableAuthors.class, "Authors");
 		m.addItem(TablePublishers.class, "Publishers");
 		m.addItem(TableDbClasses.class, "Classes");
 	}

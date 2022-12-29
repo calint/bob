@@ -20,6 +20,8 @@ public final class RelRefN extends DbRelation {
 		rrm = new RelRefNMeta(c.javaClass, name, toCls);
 		Db.relRefNMeta.add(rrm);
 		final DbClass todbcls = Db.dbClassForJavaClass(toCls);
+		if (todbcls == null)
+			throw new RuntimeException("class " + toCls + " not found in Db. Db.register(...)?");
 		todbcls.referingRefN.add(this);
 	}
 

@@ -181,7 +181,7 @@ public class FormBook2 extends Form {
 		beginForm(x);
 		inputText(x, "Title", Book.name, "long", o == null ? initStr : o.getName());
 		focus(x, Book.name);
-		inputText(x, "Authors", Book.authors, "long", o == null ? "" : o.getAuthors());
+		inputText(x, "Authors", Book.authorsStr, "long", o == null ? "" : o.getAuthorsStr());
 		inputText(x, "Publisher", Book.publisherStr, "medium", o == null ? "" : o.getPublisherStr());
 		inputDate(x, "Published date", Book.publishedDate, "short", o == null ? null : o.getPublishedDate());
 		inputText(x, "Categories", Book.categoriesStr, "medium", o == null ? "" : o.getCategoriesStr());
@@ -201,7 +201,7 @@ public class FormBook2 extends Form {
 			o = (Book) tn.get(Book.class, objectId);
 		}
 		o.setName(getStr(Book.name));
-		o.setAuthors(getStr(Book.authors));
+		o.setAuthorsStr(getStr(Book.authorsStr));
 		o.setPublisherStr(getStr(Book.publisherStr));
 		o.setPublishedDate(getDate(Book.publishedDate));
 		o.setCategoriesStr(getStr(Book.categoriesStr));

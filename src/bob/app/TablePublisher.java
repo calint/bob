@@ -6,12 +6,14 @@ import java.util.Set;
 import b.a;
 import b.xwriter;
 import bob.Action;
+import bob.Util;
 import bob.View;
 import bob.ViewTable;
 import db.Db;
 import db.DbObjects;
 import db.DbTransaction;
 import db.Query;
+import db.test.Author;
 import db.test.Book;
 import db.test.DataText;
 import db.test.Publisher;
@@ -128,7 +130,19 @@ public class TablePublisher extends ViewTable {
 		x.td("nbr").p(b.id());
 		x.td();
 		renderLinked(x, b, b.getName());
-		x.td().p(b.getAuthors().replaceAll("\\s*;\\s*", "<br>"));
+		x.td();
+		final String a = b.getAuthorsStr();
+		if (!Util.isEmpty(a)) {
+			final String[] ca = a.split("\\s*;\\s*");
+			int i = 0;
+			for (final String s : ca) {
+				renderLinked(x, "a", s, s);
+				i++;
+				if (i < ca.length) {
+					x.p("<br>");
+				}
+			}
+		}
 	}
 
 	@Override
@@ -136,5 +150,15 @@ public class TablePublisher extends ViewTable {
 //		final FormBook f = new FormBook(id, q.str());
 		final FormBook2 f = new FormBook2(id, q.str());
 		super.bubble_event(x, this, f);
+	}
+
+	@Override
+	protected void onRowClickTyped(final xwriter x, final String type, final String id) throws Throwable {
+		if ("a".equals(type)) { // category link
+			final Author o = (Author) Db.currentTransaction()
+					.get(Author.class, new Query(Author.name, Query.EQ, id), null, null).get(0);
+			final TableAuthor t = new TableAuthor(o.id());
+			super.bubble_event(x, this, t);
+		}
 	}
 }

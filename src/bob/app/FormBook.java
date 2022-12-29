@@ -15,7 +15,7 @@ public class FormBook extends Form {
 	private static final long serialVersionUID = 1L;
 
 	public a title;
-	public a authors;
+	public a authorsStr;
 	public a publisherStr;
 	public a publishedDate;
 
@@ -23,7 +23,7 @@ public class FormBook extends Form {
 		super(null, objectId, BIT_SAVE_CLOSE | BIT_SAVE | BIT_CLOSE);
 		final Book o = (Book) (objectId == null ? null : Db.currentTransaction().get(Book.class, objectId));
 		title.set(o == null ? initStr : o.getName());
-		authors.set(o == null ? "" : o.getAuthors());
+		authorsStr.set(o == null ? "" : o.getAuthorsStr());
 		publisherStr.set(o == null ? "" : o.getPublisherStr());
 		publishedDate.set(o == null ? "" : Util.toStr(o.getPublishedDate(), ""));
 	}
@@ -36,7 +36,7 @@ public class FormBook extends Form {
 	protected void render(final xwriter x) throws Throwable {
 		x.p("title: ").inptxt(title, this, "sc").nl();
 		x.script().xfocus(title).script_();
-		x.p("authors: ").inptxt(authors, this, "sc").nl();
+		x.p("authors: ").inptxt(authorsStr, this, "sc").nl();
 		x.p("publisher: ").inptxt(publisherStr, this, "sc").nl();
 		x.p("publishedDate: ").inptxt(publishedDate, this, "sc").nl();
 	}
@@ -52,14 +52,14 @@ public class FormBook extends Form {
 			o = (Book) tn.get(Book.class, objectId);
 		}
 		o.setName(title.str());
-		o.setAuthors(authors.str());
+		o.setAuthorsStr(authorsStr.str());
 		o.setPublisherStr(publisherStr.str());
 		if (!publishedDate.is_empty()) {
 			o.setPublishedDate(Timestamp.valueOf(publishedDate.str()));
 		}
 
 		final DataText d = o.getData(true);
-		d.setMeta(o.getName() + " " + o.getAuthors() + " " + o.getPublisher());
+		d.setMeta(o.getName() + " " + o.getAuthorsStr() + " " + o.getPublisher());
 	}
 
 //	@Override

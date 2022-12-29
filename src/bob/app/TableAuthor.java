@@ -15,23 +15,22 @@ import db.DbTransaction;
 import db.Query;
 import db.test.Author;
 import db.test.Book;
-import db.test.Category;
 import db.test.DataText;
 
-public class TableCategory extends ViewTable {
+public class TableAuthor extends ViewTable {
 	static final long serialVersionUID = 2;
 	public a title;
 	public a id;
 
-	private final int categoryId;
+	private final int authorId;
 
-	public TableCategory(final int categoryId) {
+	public TableAuthor(final int authorId) {
 		super(BIT_SEARCH | BIT_SELECT | BIT_CREATE | BIT_DELETE, BIT_CLICK_ITEM);
-		this.categoryId = categoryId;
+		this.authorId = authorId;
 	}
 
 	public String getTitle() {
-		final Category bc = (Category) Db.currentTransaction().get(Category.class, categoryId);
+		final Author bc = (Author) Db.currentTransaction().get(Author.class, authorId);
 		return bc.getName();
 	}
 
@@ -86,7 +85,7 @@ public class TableCategory extends ViewTable {
 		if (!id.is_empty()) {
 			qry.and(Book.class, id.toint());
 		}
-		qry.and(Book.categories).and(Category.class, categoryId);
+		qry.and(Book.authors).and(Author.class, authorId);
 		return new DbObjects(null, Book.class, qry, null);
 	}
 
@@ -131,9 +130,9 @@ public class TableCategory extends ViewTable {
 		x.td();
 		renderLinked(x, b, b.getName());
 		x.td();
-		final String c = b.getAuthorsStr();
-		if (!Util.isEmpty(c)) {
-			final String[] ca = c.split("\\s*;\\s*");
+		final String a = b.getAuthorsStr();
+		if (!Util.isEmpty(a)) {
+			final String[] ca = a.split("\\s*;\\s*");
 			int i = 0;
 			for (final String s : ca) {
 				renderLinked(x, "a", s, s);

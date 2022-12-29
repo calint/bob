@@ -13,6 +13,7 @@ import db.Db;
 import db.DbObjects;
 import db.DbTransaction;
 import db.Query;
+import db.test.Author;
 import db.test.Book;
 import db.test.Category;
 import db.test.DataText;
@@ -124,16 +125,29 @@ public class TableBooks extends ViewTable {
 		x.td("nbr").p(b.id());
 		x.td();
 		renderLinked(x, b, b.getName());
-		x.td().p(b.getAuthors().replaceAll("\\s*;\\s*", "<br>"));
+		x.td();
+		final String a = b.getAuthorsStr();
+		if (!Util.isEmpty(a)) {
+			final String[] ca = a.split("\\s*;\\s*");
+			int i = 0;
+			for (final String s : ca) {
+				renderLinked(x, "a", s, s);
+				i++;
+				if (i < ca.length) {
+					x.p("<br>");
+				}
+			}
+		}
+
 		x.td();
 		final String c = b.getCategoriesStr();
 		if (!Util.isEmpty(c)) {
-			final String[] ca = c.split("\\s*;\\s*");
+			final String[] aa = c.split("\\s*;\\s*");
 			int i = 0;
-			for (final String s : ca) {
+			for (final String s : aa) {
 				renderLinked(x, "c", s, s);
 				i++;
-				if (i < ca.length) {
+				if (i < aa.length) {
 					x.p("<br>");
 				}
 			}
@@ -150,10 +164,18 @@ public class TableBooks extends ViewTable {
 	@Override
 	protected void onRowClickTyped(final xwriter x, final String type, final String id) throws Throwable {
 		if ("c".equals(type)) { // category link
-			final Category bc = (Category) Db.currentTransaction()
+			final Category o = (Category) Db.currentTransaction()
 					.get(Category.class, new Query(Category.name, Query.EQ, id), null, null).get(0);
-			final TableCategory tbc = new TableCategory(bc.id());
-			super.bubble_event(x, this, tbc);
+			final TableCategory t = new TableCategory(o.id());
+			super.bubble_event(x, this, t);
+			return;
 		}
+		if ("a".equals(type)) { // category link
+			final Author o = (Author) Db.currentTransaction()
+					.get(Author.class, new Query(Author.name, Query.EQ, id), null, null).get(0);
+			final TableAuthor t = new TableAuthor(o.id());
+			super.bubble_event(x, this, t);
+		}
+
 	}
 }

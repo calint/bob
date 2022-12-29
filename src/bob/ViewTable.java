@@ -225,7 +225,7 @@ public abstract class ViewTable extends View {
 			if (objectsCount < objectsPerPage) {
 				npages = 1;
 			} else {
-				npages = objectsCount / objectsPerPage;
+				npages = objectsCount / objectsPerPage + 1;
 			}
 		}
 

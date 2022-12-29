@@ -57,10 +57,10 @@ public class import_books extends TestCase {
 				throw new RuntimeException("record " + i + " has size of name " + name.length()
 						+ " but field length is " + Book.name.getSize());
 
-			final String authors = ls.get(2);
-			if (authors.length() > Book.authors.getSize())
-				throw new RuntimeException("record " + i + " has size of authors " + authors.length()
-						+ " but field length is " + Book.authors.getSize());
+			final String authorsStr = ls.get(2);
+			if (authorsStr.length() > Book.authorsStr.getSize())
+				throw new RuntimeException("record " + i + " has size of authors " + authorsStr.length()
+						+ " but field length is " + Book.authorsStr.getSize());
 
 			final String publisherStr = ls.get(5);
 			if (publisherStr.length() > Book.publisherStr.getSize())
@@ -96,13 +96,22 @@ public class import_books extends TestCase {
 				final StringBuilder authorsSb = new StringBuilder(128);
 				for (final String s : authorsList) {
 					authorsSb.append(s).append(';');
+					final List<DbObject> lsa = tn.get(Author.class, new Query(Author.name, Query.EQ, s), null, null);
+					final Author a;
+					if (lsa.isEmpty()) {
+						a = (Author) tn.create(Author.class);
+						a.setName(s);
+					} else {
+						a = (Author) lsa.get(0);
+					}
+					o.addAuthor(a);
 				}
 				if (authorsSb.length() > 1) { // remove last delimiter
 					authorsSb.setLength(authorsSb.length() - 1);
 				}
-				o.setAuthors(authorsSb.toString());
+				o.setAuthorsStr(authorsSb.toString());
 			} else {
-				o.setAuthors("");
+				o.setAuthorsStr("");
 			}
 			final String publisherStr = ls.get(5);
 			o.setPublisherStr(publisherStr);

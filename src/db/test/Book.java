@@ -15,7 +15,8 @@ public final class Book extends DbObject {
 	private static final long serialVersionUID = 1L;
 
 	public final static FldStr name = new FldStr(800);
-	public final static FldStr authors = new FldStr(3000);
+	public final static FldStr authorsStr = new FldStr(3000);
+	public final static RelRefN authors = new RelRefN(Author.class);
 	public final static FldStr publisherStr = new FldStr(400);
 	public final static RelRef publisher = new RelRef(Publisher.class);
 	public final static FldDateTime publishedDate = new FldDateTime();
@@ -36,12 +37,12 @@ public final class Book extends DbObject {
 	}
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
-	public String getAuthors() {
-		return getStr(authors);
+	public String getAuthorsStr() {
+		return getStr(authorsStr);
 	}
 
-	public void setAuthors(final String v) {
-		set(authors, v);
+	public void setAuthorsStr(final String v) {
+		set(authorsStr, v);
 	}
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
@@ -69,6 +70,27 @@ public final class Book extends DbObject {
 
 	public void setCategoriesStr(final String v) {
 		set(categoriesStr, v);
+	}
+
+	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
+	public void addAuthor(final int id) {
+		authors.add(this, id);
+	}
+
+	public void addAuthor(final Author o) {
+		authors.add(this, o.id());
+	}
+
+	public DbObjects getAuthors() {
+		return authors.get(this);
+	}
+
+	public void removeAuthor(final int id) {
+		authors.remove(this, id);
+	}
+
+	public void removeAuthor(final Author o) {
+		authors.remove(this, o.id());
 	}
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
