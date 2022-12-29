@@ -74,21 +74,25 @@ table.t td.nbr{
 	white-space:nowrap;
 }
 /** bob.Form */
+.sc{ /* save, close actions */
+	margin:.5rem;
+}
 div.output{
 	text-align:left;
 	margin:.5rem 2rem .5rem 2rem;
 	padding:1rem;
 	border:1px dotted green;
 	white-space:pre;
+	border-radius:.3rem;
 }
 input.center{
 	text-align:center;
 }
 input.nbr{
-	width:5ch;
+	width:6ch;
 }
 input.small-nbr{
-	width:2ch;
+	width:3ch;
 }
 /** bob.Form, bob.ViewTable more search */
 input.long{
@@ -129,6 +133,3 @@ table.f td.lbl{
 	font-weight:bold;
 }
 table.f td.val{}
-.sc{ /* save, close actions */
-	margin:.5rem;
-}
