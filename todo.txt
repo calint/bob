@@ -3,7 +3,7 @@ b
 [o] xwriter review consistency tago etc
 [x] pager rendering if there is only 1 page
 [o] csv sample books:
-[x]   parse authors, separated by new line
+[x]   parse authors, separated by ';'
 [x]   parse published date
 [x]   authors object and reverse lookup author->books
 [x]   categories
