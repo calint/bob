@@ -112,7 +112,7 @@ public final class Book extends DbObject implements Titled {
 	}
 
 	public void setPublisher(final Publisher o) {
-		publisher.set(this, o.id());
+		publisher.set(this, o == null ? 0 : o.id());
 	}
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -

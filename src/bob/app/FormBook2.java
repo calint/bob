@@ -70,10 +70,15 @@ public class FormBook2 extends FormDbo {
 		}
 		o.setAuthorsStr(authorsSb.toString());
 
-		final Publisher publisher = (Publisher) tn.get(Publisher.class, getSelectedId(Book.publisher));
-		o.setPublisher(publisher);
-		o.setPublisherStr(publisher.getName());
-
+		final int publisherId = getSelectedId(Book.publisher);
+		if (publisherId != 0) {
+			final Publisher publisher = (Publisher) tn.get(Publisher.class, publisherId);
+			o.setPublisher(publisher);
+			o.setPublisherStr(publisher.getName());
+		}else {
+			o.setPublisher(null);
+			o.setPublisherStr("");
+		}
 		o.setPublishedDate(getDate(Book.publishedDate));
 		o.setCategoriesStr(getStr(Book.categoriesStr));
 

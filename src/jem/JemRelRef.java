@@ -69,7 +69,7 @@ public class JemRelRef extends JemRel {
 		out.println(" o){");
 		out.print("\t");
 		out.print(rel.getName());
-		out.println(".set(this,o.id());");
+		out.println(".set(this,o==null?0:o.id());");
 		out.println("}");
 		out.println();
 	}
