@@ -52,7 +52,7 @@ public final class InputRef extends a {
 		}
 		if (viewTableSelectClass != null) {
 			x.spc();
-			x.ax(this, "s", "find");
+			x.ax(this, "s", "select");
 			if (createFormCls != null) {
 				x.spc();
 			}

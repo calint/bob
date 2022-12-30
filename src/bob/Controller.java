@@ -75,7 +75,7 @@ public class Controller extends a {
 				return;
 			}
 		}
-		if ((from instanceof View) && "close".equals(o)) {
+		if (from instanceof View && "close".equals(o)) {
 			bc.removeLast(); // remove last element in bread crumbs
 			final a e = bc.getActive(); // get current element
 			e.replace(this, ae); // replace active element

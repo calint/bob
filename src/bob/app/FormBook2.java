@@ -11,6 +11,7 @@ import db.Db;
 import db.DbTransaction;
 import db.test.Author;
 import db.test.Book;
+import db.test.Category;
 import db.test.DataText;
 import db.test.Publisher;
 
@@ -41,7 +42,8 @@ public class FormBook2 extends FormDbo {
 		inputRefN(x, "Authors", o, Book.authors, TableAuthors.class, null);
 		inputRef(x, "Publisher", o, Book.publisher, TablePublishers.class, null);
 		inputDate(x, "Published date", Book.publishedDate, "short", o == null ? null : o.getPublishedDate());
-		inputText(x, "Categories", Book.categoriesStr, "medium", o == null ? "" : o.getCategoriesStr());
+//		inputText(x, "Categories", Book.categoriesStr, "medium", o == null ? "" : o.getCategoriesStr());
+		inputRefN(x, "Categories", o, Book.categories, TableCategories.class, null);
 		inputTextArea(x, "Description", DataText.data, "large", o == null ? "" : o.getData(true).getData());
 		endForm(x);
 		x.ax(this, "test", "test").nl();
@@ -75,12 +77,22 @@ public class FormBook2 extends FormDbo {
 			final Publisher publisher = (Publisher) tn.get(Publisher.class, publisherId);
 			o.setPublisher(publisher);
 			o.setPublisherStr(publisher.getName());
-		}else {
+		} else {
 			o.setPublisher(null);
 			o.setPublisherStr("");
 		}
 		o.setPublishedDate(getDate(Book.publishedDate));
-		o.setCategoriesStr(getStr(Book.categoriesStr));
+
+		final StringBuilder categoriesSb = new StringBuilder(128);
+		final Set<String> selectedCategories = getSelectedIds(Book.categories);
+		for (final String id : selectedCategories) {
+			final Category c = (Category) tn.get(Category.class, id);
+			categoriesSb.append(c.getName()).append(';');
+		}
+		if (categoriesSb.length() > 1) {
+			categoriesSb.setLength(categoriesSb.length() - 1);
+		}
+		o.setCategoriesStr(categoriesSb.toString());
 
 		final DataText d = o.getData(true);
 		d.setMeta(o.getName() + " " + o.getAuthorsStr() + " " + o.getPublisherStr() + " " + o.getCategoriesStr());

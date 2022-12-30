@@ -51,7 +51,7 @@ public final class InputRefN extends a {
 	public void to(final xwriter x) throws Throwable {
 		final DbTransaction tn = Db.currentTransaction();
 		if (viewTableSelectClass != null) {
-			x.ax(this, "s", "find");
+			x.ax(this, "s", "select");
 			if (createFormCls != null) {
 				x.spc();
 			}
