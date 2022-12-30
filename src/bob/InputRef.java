@@ -37,15 +37,17 @@ public final class InputRef extends a {
 		final DbTransaction tn = Db.currentTransaction();
 		if (objId != 0) {
 			final DbObject o = tn.get(rel.getFromClass(), objId);
-			final DbObject ro = tn.get(rel.getToClass(), selectedId);
-			if (ro != null) {
-				if (ro instanceof Titled) {
-					final Titled t = (Titled) ro;
-					x.p(t.getTitle());
-				} else {
-					x.p(ro.id());
+			if (selectedId != 0) {
+				final DbObject ro = tn.get(rel.getToClass(), selectedId);
+				if (ro != null) {
+					if (ro instanceof Titled) {
+						final Titled t = (Titled) ro;
+						x.p(t.getTitle());
+					} else {
+						x.p(ro.id());
+					}
+					x.spc().ax(this, "r " + o.id(), "[x]");
 				}
-				x.spc().ax(this, "r " + o.id(), "[x]");
 			}
 		}
 		if (viewTableSelectClass != null) {
