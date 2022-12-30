@@ -14,6 +14,7 @@ public final class Author extends DbObject implements Titled {
 	public String getTitle() {
 		return getName();
 	}
+
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
 	public String getName() {
 		return getStr(name);

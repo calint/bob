@@ -1,6 +1,7 @@
 package bob;
 
-import java.util.HashSet;
+import java.io.Serializable;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -10,6 +11,15 @@ import db.Limit;
 
 public abstract class ViewTable extends View {
 	private static final long serialVersionUID = 3L;
+
+	public interface SelectReceiverMulti extends Serializable {
+		void onSelect(Set<String> selected);
+	}
+
+	public interface SelectReceiverSingle extends Serializable {
+		void onSelect(String selected);
+	}
+
 	public final static int BIT_CLICK_ITEM = 1;
 	public Container ac; // actions
 	public a q; // query field
@@ -20,6 +30,10 @@ public abstract class ViewTable extends View {
 	final private View.TypeInfo typeInfo; // the name and plural of the object type
 	/** The actions that are enabled in the table. */
 	final protected int enabledTableBits;
+	private boolean isSelectMode; // if true view renders to select an item
+	private boolean isSelectModeMulti; // if true view renders to select multiple items
+	private SelectReceiverMulti selectReceiverMulti;
+	private SelectReceiverSingle selectReceiverSingle;
 
 	public ViewTable(final int viewBits, final int tableBits) {
 		super(viewBits);
@@ -41,8 +55,30 @@ public abstract class ViewTable extends View {
 		}
 	}
 
+	public final void setSelectMode(final Set<String> initialSelection, final SelectReceiverMulti sr) {
+		isSelectMode = true;
+		isSelectModeMulti = true;
+		selectReceiverMulti = sr;
+		t.selectedIds.clear();
+		t.selectedIds.addAll(initialSelection);
+	}
+
+	public final void setSelectMode(final String selected, final SelectReceiverSingle sr) {
+		isSelectMode = true;
+		isSelectModeMulti = false;
+		selectReceiverSingle = sr;
+	}
+
 	@Override
 	public final void to(final xwriter x) throws Throwable {
+		if (isSelectMode) {
+			if (isSelectModeMulti) {
+				x.p("select " + typeInfo.namePlural + " then click ");
+				x.ax(this, "sel", "select");
+			} else {
+				x.p("select " + typeInfo.name);
+			}
+		}
 		if (!ac.elements().isEmpty()) {
 			x.divh(ac, "ac").nl();
 		}
@@ -146,9 +182,12 @@ public abstract class ViewTable extends View {
 	 * @param linkText
 	 */
 	protected final void renderLink(final xwriter x, final Object o, final String linkText) {
-		if ((enabledTableBits & ViewTable.BIT_CLICK_ITEM) != 0) {
+		if (isSelectMode && !isSelectModeMulti) {
 			final String id = getIdFrom(o);
-			x.ax(t, "clk " + id, linkText);
+			x.ax(this, "sels " + id, linkText);
+		} else if ((enabledTableBits & ViewTable.BIT_CLICK_ITEM) != 0) {
+			final String id = getIdFrom(o);
+			x.ax(this, "clk " + id, linkText);
 		} else {
 			x.p(linkText);
 		}
@@ -157,14 +196,41 @@ public abstract class ViewTable extends View {
 	/**
 	 * Renders a link with id and command that call onRowClick(...) with specified
 	 * command.
-	 * 
+	 *
 	 * @param x
 	 * @param id
 	 * @param cmd
 	 * @param linkText
 	 */
 	protected final void renderLink(final xwriter x, final String id, final String cmd, final String linkText) {
-		x.ax(t, "c " + cmd + " " + id, linkText);
+		x.ax(this, "c " + cmd + " " + id, linkText);
+	}
+
+	/** Callback for click on row. */
+	public void x_clk(final xwriter x, final String s) throws Throwable {
+		if ((enabledTableBits & ViewTable.BIT_CLICK_ITEM) != 0) {
+			onRowClick(x, s, null);
+		}
+	}
+
+	/** Callback for click on row. */
+	public void x_c(final xwriter x, final String s) throws Throwable {
+		final int i = s.indexOf(' ');
+		final String type = s.substring(0, i);
+		final String id = s.substring(i + 1);
+		onRowClick(x, id, type);
+	}
+
+	/** Callback for click on select when in select multi mode. */
+	public void x_sel(final xwriter x, final String s) throws Throwable {
+		selectReceiverMulti.onSelect(getSelectedIds());
+		super.bubble_event(x, this, "close");
+	}
+
+	/** Callback for click on row in select single mode. */
+	public void x_sels(final xwriter x, final String s) throws Throwable {
+		selectReceiverSingle.onSelect(s);
+		super.bubble_event(x, this, "close");
 	}
 
 	// -----------------------------------------------------------------------------------
@@ -216,7 +282,7 @@ public abstract class ViewTable extends View {
 
 	/**
 	 * Called when a row is clicked.
-	 * 
+	 *
 	 * @param cmd specified at renderLinked(...), null if default.
 	 **/
 	protected void onRowClick(final xwriter x, final String id, final String cmd) throws Throwable {
@@ -352,7 +418,7 @@ public abstract class ViewTable extends View {
 		public a is; // infinite scroll marker
 
 		private ViewTable tv; // the parent
-		private final HashSet<String> selectedIds = new HashSet<String>();
+		private final LinkedHashSet<String> selectedIds = new LinkedHashSet<String>();
 
 		public void setTableView(final ViewTable tv) {
 			this.tv = tv;
@@ -366,7 +432,7 @@ public abstract class ViewTable extends View {
 			}
 			x.table("t").nl();
 			x.tr();
-			if ((tv.enabledViewBits & View.BIT_SELECT) != 0) { // header for the checkbox
+			if ((tv.enabledViewBits & View.BIT_SELECT) != 0 || tv.isSelectModeMulti) { // header for the checkbox
 				x.th();
 			}
 			tv.renderHeaders(x);
@@ -394,7 +460,7 @@ public abstract class ViewTable extends View {
 			for (final Object o : ls) {
 				final String id = tv.getIdFrom(o);
 				x.tr();
-				if ((tv.enabledViewBits & View.BIT_SELECT) != 0) { // render checkbox
+				if ((tv.enabledViewBits & View.BIT_SELECT) != 0 || tv.isSelectModeMulti) { // render checkbox
 					x.td();
 					final Checkbox cb = new Checkbox(id, selectedIds.contains(id));
 					// add to container where the element will get a unique name in the context.
@@ -414,7 +480,7 @@ public abstract class ViewTable extends View {
 		@Override
 		protected void bubble_event(final xwriter js, final a from, final Object o) throws Throwable {
 			// event bubbled from child
-			if ((tv.enabledViewBits & View.BIT_SELECT) != 0 && from instanceof Checkbox) {
+			if (from instanceof Checkbox && ((tv.enabledViewBits & View.BIT_SELECT) != 0 || tv.isSelectModeMulti)) {
 				final String id = ((Checkbox) from).getId();
 				if ("checked".equals(o)) {
 					selectedIds.add(id);
@@ -427,21 +493,6 @@ public abstract class ViewTable extends View {
 			}
 			// event unknown by this element, bubble to parent
 			super.bubble_event(js, from, o);
-		}
-
-		/** Callback for click on row. */
-		public void x_clk(final xwriter x, final String s) throws Throwable {
-			if ((tv.enabledTableBits & ViewTable.BIT_CLICK_ITEM) != 0) {
-				tv.onRowClick(x, s, null);
-			}
-		}
-
-		/** Callback for click on row. */
-		public void x_c(final xwriter x, final String s) throws Throwable {
-			final int i = s.indexOf(' ');
-			final String type = s.substring(0, i);
-			final String id = s.substring(i + 1);
-			tv.onRowClick(x, id, type);
 		}
 
 		/** Callback for infinite scroll. */

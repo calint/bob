@@ -4,11 +4,13 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.LinkedHashMap;
+import java.util.Set;
 
 import b.a;
 import b.xwriter;
 import db.DbField;
 import db.DbObject;
+import db.RelRef;
 import db.RelRefN;
 
 public abstract class FormDbo extends Form {
@@ -97,10 +99,11 @@ public abstract class FormDbo extends Form {
 	}
 
 	final protected void inputRefN(final xwriter x, final String label, final String field, final DbObject o,
-			final RelRefN rel, final Class<? extends View> selectViewClass, final Class<? extends Form> createFormCls) {
+			final RelRefN rel, final Class<? extends ViewTable> viewTableSelectClass,
+			final Class<? extends Form> createFormCls) {
 		InputRefN e = (InputRefN) fields.get(field);
 		if (e == null) {
-			e = new InputRefN(rel, selectViewClass, createFormCls, "<br>");
+			e = new InputRefN(rel, viewTableSelectClass, createFormCls, "<br>");
 			e.parent(this);
 			e.name(field);
 			fields.put(field, e);
@@ -113,8 +116,48 @@ public abstract class FormDbo extends Form {
 	}
 
 	final protected void inputRefN(final xwriter x, final String label, final DbObject o, final RelRefN rel,
-			final Class<? extends View> selectViewClass, final Class<? extends Form> createFormCls) {
-		inputRefN(x, label, rel.getName(), o, rel, selectViewClass, createFormCls);
+			final Class<? extends ViewTable> viewTableSelectClass, final Class<? extends Form> createFormCls) {
+		inputRefN(x, label, rel.getName(), o, rel, viewTableSelectClass, createFormCls);
+	}
+
+	final protected Set<String> getSelectedIds(final String field) {
+		final InputRefN e = (InputRefN) fields.get(field);
+		return e.getSelectedIds();
+	}
+
+	final protected Set<String> getSelectedIds(final RelRefN rel) {
+		return getSelectedIds(rel.getName());
+	}
+
+	final protected void inputRef(final xwriter x, final String label, final String field, final DbObject o,
+			final RelRef rel, final Class<? extends ViewTable> viewTableSelectClass,
+			final Class<? extends Form> createFormCls) {
+		InputRef e = (InputRef) fields.get(field);
+		if (e == null) {
+			e = new InputRef(rel, viewTableSelectClass, createFormCls);
+			e.parent(this);
+			e.name(field);
+			fields.put(field, e);
+		}
+		if (o != null) {
+			e.refreshCurrentId(o);
+		}
+		x.tr().td("lbl").p(label).p(":").td("val");
+		x.divh(e);
+	}
+
+	final protected void inputRef(final xwriter x, final String label, final DbObject o, final RelRef rel,
+			final Class<? extends ViewTable> viewTableSelectClass, final Class<? extends Form> createFormCls) {
+		inputRef(x, label, rel.getName(), o, rel, viewTableSelectClass, createFormCls);
+	}
+
+	final protected int getSelectedId(final String field) {
+		final InputRef e = (InputRef) fields.get(field);
+		return e.getSelectedId();
+	}
+
+	final protected int getSelectedId(final RelRef rel) {
+		return getSelectedId(rel.getName());
 	}
 
 	final protected void inputElem(final xwriter x, final String label, final String field, final a elem)

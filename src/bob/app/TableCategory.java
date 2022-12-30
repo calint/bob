@@ -145,7 +145,6 @@ public class TableCategory extends ViewTable {
 		}
 	}
 
-
 	@Override
 	protected void onRowClick(final xwriter x, final String id, final String cmd) throws Throwable {
 		if (cmd == null) {

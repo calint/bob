@@ -2,14 +2,17 @@ package bob.app;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import b.xwriter;
 import bob.Action;
 import bob.FormDbo;
 import db.Db;
 import db.DbTransaction;
+import db.test.Author;
 import db.test.Book;
 import db.test.DataText;
+import db.test.Publisher;
 
 public class FormBook2 extends FormDbo {
 	private static final long serialVersionUID = 1L;
@@ -35,9 +38,8 @@ public class FormBook2 extends FormDbo {
 		beginForm(x);
 		inputText(x, "Title", Book.name, "long", o == null ? initStr : o.getName());
 		focus(x, Book.name);
-		inputText(x, "Authors", Book.authorsStr, "long", o == null ? "" : o.getAuthorsStr());
-		inputRefN(x, "Authors", o, Book.authors, null, null);
-		inputText(x, "Publisher", Book.publisherStr, "medium", o == null ? "" : o.getPublisherStr());
+		inputRefN(x, "Authors", o, Book.authors, TableAuthors.class, null);
+		inputRef(x, "Publisher", o, Book.publisher, TablePublishers.class, null);
 		inputDate(x, "Published date", Book.publishedDate, "short", o == null ? null : o.getPublishedDate());
 		inputText(x, "Categories", Book.categoriesStr, "medium", o == null ? "" : o.getCategoriesStr());
 		inputTextArea(x, "Description", DataText.data, "large", o == null ? "" : o.getData(true).getData());
@@ -56,13 +58,27 @@ public class FormBook2 extends FormDbo {
 			o = (Book) tn.get(Book.class, objectId);
 		}
 		o.setName(getStr(Book.name));
-		o.setAuthorsStr(getStr(Book.authorsStr));
-		o.setPublisherStr(getStr(Book.publisherStr));
+
+		final StringBuilder authorsSb = new StringBuilder(128);
+		final Set<String> selectedAuthors = getSelectedIds(Book.authors);
+		for (final String id : selectedAuthors) {
+			final Author a = (Author) tn.get(Author.class, id);
+			authorsSb.append(a.getName()).append(';');
+		}
+		if (authorsSb.length() > 1) {
+			authorsSb.setLength(authorsSb.length() - 1);
+		}
+		o.setAuthorsStr(authorsSb.toString());
+
+		final Publisher publisher = (Publisher) tn.get(Publisher.class, getSelectedId(Book.publisher));
+		o.setPublisher(publisher);
+		o.setPublisherStr(publisher.getName());
+
 		o.setPublishedDate(getDate(Book.publishedDate));
 		o.setCategoriesStr(getStr(Book.categoriesStr));
 
 		final DataText d = o.getData(true);
-		d.setMeta(o.getName() + " " + o.getAuthors() + " " + o.getPublisherStr() + " " + o.getCategoriesStr());
+		d.setMeta(o.getName() + " " + o.getAuthorsStr() + " " + o.getPublisherStr() + " " + o.getCategoriesStr());
 		d.setData(getStr(DataText.data));
 
 		saveElems(x);

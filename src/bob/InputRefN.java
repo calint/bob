@@ -1,9 +1,12 @@
 package bob;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import b.a;
 import b.xwriter;
+import bob.ViewTable.SelectReceiverMulti;
 import db.Db;
 import db.DbObject;
 import db.DbObjects;
@@ -13,21 +16,21 @@ import db.RelRefN;
 public final class InputRefN extends a {
 	private static final long serialVersionUID = 1L;
 	final private RelRefN rel;
-	final private Class<? extends View> selectViewCls;
+	final private Class<? extends ViewTable> viewTableSelectClass;
 	final private Class<? extends Form> createFormCls;
-	final private HashSet<String> currentIds;
-	final private HashSet<String> selectedIds;
+	final private LinkedHashSet<String> initialSelectedIds;
+	final private LinkedHashSet<String> selectedIds;
 	final private String itemSeparator;
 	private int objId;
 	private boolean selectedIdsInitiated;
 
-	public InputRefN(final RelRefN rel, final Class<? extends View> selectViewCls,
+	public InputRefN(final RelRefN rel, final Class<? extends ViewTable> viewTableSelectClass,
 			final Class<? extends Form> createFormCls, final String itemSeparator) {
 		this.rel = rel;
-		this.selectViewCls = selectViewCls;
+		this.viewTableSelectClass = viewTableSelectClass;
 		this.createFormCls = createFormCls;
-		this.currentIds = new HashSet<String>();
-		this.selectedIds = new HashSet<String>();
+		initialSelectedIds = new LinkedHashSet<String>();
+		selectedIds = new LinkedHashSet<String>();
 		this.itemSeparator = itemSeparator;
 	}
 
@@ -36,19 +39,19 @@ public final class InputRefN extends a {
 		final DbObjects dbos = rel.get(obj);
 		for (final DbObject o : dbos.toList()) {
 			final String idstr = Integer.toString(o.id());
-			currentIds.add(idstr);
+			initialSelectedIds.add(idstr);
 		}
-		if (!selectedIdsInitiated) { // if first call 
-			selectedIds.addAll(currentIds);
+		if (!selectedIdsInitiated) { // if first call
+			selectedIds.addAll(initialSelectedIds);
 			selectedIdsInitiated = true;
 		}
 	}
 
 	@Override
-	public void to(xwriter x) throws Throwable {
+	public void to(final xwriter x) throws Throwable {
 		final DbTransaction tn = Db.currentTransaction();
-		if (selectViewCls != null) {
-			x.ax(this, "s", "select");
+		if (viewTableSelectClass != null) {
+			x.ax(this, "s", "find");
 			if (createFormCls != null) {
 				x.spc();
 			}
@@ -56,14 +59,15 @@ public final class InputRefN extends a {
 		if (createFormCls != null) {
 			x.ax(this, "c", "create");
 		}
-		if (selectViewCls != null || createFormCls != null) {
+		if (viewTableSelectClass != null || createFormCls != null) {
 			x.br();
 		}
 		for (final String s : selectedIds) {
 			final int id = Integer.parseInt(s);
 			final DbObject o = tn.get(rel.getToClass(), id);
-			if (o == null)
+			if (o == null) {
 				continue;
+			}
 			if (o instanceof Titled) {
 				final Titled t = (Titled) o;
 				x.p(t.getTitle());
@@ -75,9 +79,23 @@ public final class InputRefN extends a {
 		x.nl();
 	}
 
-	/** Callback "select". */
-	public void x_s(final xwriter x, final String param) {
+	/**
+	 * Callback "select".
+	 *
+	 * @throws IllegalAccessException
+	 * @throws InstantiationException
+	 */
+	public void x_s(final xwriter x, final String param) throws Throwable {
+		final ViewTable t = viewTableSelectClass.newInstance();
+		t.setSelectMode(selectedIds, new SelectReceiverMulti() {
+			private static final long serialVersionUID = 1L;
 
+			public void onSelect(final Set<String> selected) {
+				selectedIds.clear();
+				selectedIds.addAll(selected);
+			}
+		});
+		super.bubble_event(x, this, t); // display t
 	}
 
 	/** Callback "create". */
@@ -95,16 +113,28 @@ public final class InputRefN extends a {
 		final DbTransaction tn = Db.currentTransaction();
 		final DbObject o = tn.get(rel.getFromClass(), objId);
 		for (final String s : selectedIds) {
-			if (currentIds.contains(s))
+			if (initialSelectedIds.contains(s)) {
 				continue;
+			}
 			final int id = Integer.parseInt(s);
 			rel.add(o, id);
+			initialSelectedIds.add(s);
 		}
-		for (final String s : currentIds) {
-			if (selectedIds.contains(s))
+		final ArrayList<String> removedIds = new ArrayList<String>();
+		for (final String s : initialSelectedIds) {
+			if (selectedIds.contains(s)) {
 				continue;
+			}
 			final int id = Integer.parseInt(s);
 			rel.remove(o, id);
+			removedIds.add(s);
 		}
+		for (final String s : removedIds) {
+			initialSelectedIds.remove(s);
+		}
+	}
+
+	public Set<String> getSelectedIds() {
+		return selectedIds;
 	}
 }

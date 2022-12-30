@@ -1,6 +1,6 @@
 b
 [ ] xwriter: button tag
-[ ] review x.css using bob.css
+[x] review x.css using bob.css
 [ ] x.js and bob.js common script extracted
 [x] xwriter: select renderer
 [o] xwriter review consistency tago etc
@@ -12,12 +12,12 @@ b
 [x]   publisher
 [x]   indexes on author, category and publisher name to speed up lookup
 [ ]     category has one case with exceptionally long name, truncate?
-[ ] FormDbObject with convenience for editing dbobjects
-[ ]   find/select/create
-[ ]     RelRefN
-[ ]     RelRef
-[ ]     RelAgg
-[ ]     RelAggN
+[o] FormDbObject with convenience for editing dbobjects
+[o]   find/select/create
+[o]     RelRefN
+[o]     RelRef
+[ ]     RelAgg. object must first be saved before aggregation is created.
+[ ]     RelAggN. object must first be saved before aggregation is created.
 [ ]   FormRenderer wrapping xwriter and "this"? cookie.eat() or eat(cookie)
 [ ] ViewTable sort options
 [ ] ViewTable rendered by javascript?

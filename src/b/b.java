@@ -72,7 +72,7 @@ final public class b{
 	public static @conf boolean gc_before_stats=false;
 //	public static @conf final String webobjpkg="a.";
 	public static @conf String datetimefmtstr="yyyy-MM-dd HH:mm:ss.sss";
-	public static @conf String resources_etag="\"2022-12-24--1\"";
+	public static @conf String resources_etag="\"2022-12-29--1\"";
 //	public static HashSet<String>resources_in_b=new HashSet<String>(Arrays.asList("x.js","x.css","favicon.ico"));
 //	public static @conf boolean resources_enable_any_path=false;
 	public static @conf boolean enable_upload=true;

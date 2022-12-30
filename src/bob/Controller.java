@@ -75,6 +75,15 @@ public class Controller extends a {
 				return;
 			}
 		}
+		if ((from instanceof View) && "close".equals(o)) {
+			bc.removeLast(); // remove last element in bread crumbs
+			final a e = bc.getActive(); // get current element
+			e.replace(this, ae); // replace active element
+			x.xu(ae); // update active element
+			x.xu(bc); // update bread crumbs
+			x.xscrollToTop();
+			return;
+		}
 		if (o instanceof Form || o instanceof View) { // open view
 			final a e = (a) o;
 			bc.add(e); // add to bread crumb
