@@ -1,5 +1,6 @@
 b
 [ ] xwriter: button tag
+[ ] xwriter: <elem> tag instead of duplicate code for span and div
 [x] review x.css using bob.css
 [ ] x.js and bob.js common script extracted
 [x] xwriter: select renderer
