@@ -16,7 +16,7 @@ import db.RelRefN;
 public final class InputRefN extends a {
 	private static final long serialVersionUID = 1L;
 	final private RelRefN rel;
-	final private Class<? extends ViewTable> viewTableSelectClass;
+	final private Class<? extends ViewTable> viewTableSelectClass; // the view to use when selecting
 	final private Class<? extends Form> createFormCls;
 	final private LinkedHashSet<String> initialSelectedIds;
 	final private LinkedHashSet<String> selectedIds;
@@ -34,7 +34,7 @@ public final class InputRefN extends a {
 		this.itemSeparator = itemSeparator;
 	}
 
-	public void refreshCurrentIds(final DbObject obj) {
+	public void refreshInitialIds(final DbObject obj) {
 		objId = obj.id();
 		final DbObjects dbos = rel.get(obj);
 		for (final DbObject o : dbos.toList()) {

@@ -18,6 +18,7 @@ b
 [o]     RelRef
 [ ]     RelAgg. object must first be saved before aggregation is created.
 [ ]     RelAggN. object must first be saved before aggregation is created.
+[ ]   make it pretty. DboField, DboRel, save etc
 [ ]   FormRenderer wrapping xwriter and "this"? cookie.eat() or eat(cookie)
 [ ] ViewTable sort options
 [ ] ViewTable rendered by javascript?

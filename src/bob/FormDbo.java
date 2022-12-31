@@ -109,7 +109,7 @@ public abstract class FormDbo extends Form {
 			fields.put(field, e);
 		}
 		if (o != null) {
-			e.refreshCurrentIds(o);
+			e.refreshInitialIds(o);
 		}
 		x.tr().td("lbl").p(label).p(":").td("val");
 		x.divh(e);
