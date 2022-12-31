@@ -18,7 +18,7 @@ import db.test.Book;
 import db.test.Category;
 import db.test.DataText;
 
-public class TableCategory extends ViewTable {
+public final class TableCategory extends ViewTable {
 	static final long serialVersionUID = 2;
 	public a title;
 	public a id;

@@ -4,7 +4,7 @@ import b.a;
 import b.a_ajaxsts;
 import b.xwriter;
 
-public class ControllerPostback extends a {
+public final class ControllerPostback extends a {
 	private static final long serialVersionUID = 3L;
 
 	public Ctrl c;

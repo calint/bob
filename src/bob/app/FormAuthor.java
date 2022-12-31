@@ -6,7 +6,7 @@ import db.Db;
 import db.DbTransaction;
 import db.test.Author;
 
-public class FormAuthor extends FormDbo {
+public final class FormAuthor extends FormDbo {
 	private static final long serialVersionUID = 1L;
 	private final String initStr;
 

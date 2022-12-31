@@ -114,12 +114,12 @@ public abstract class Form extends a implements Titled {
 	}
 
 	/** Callback for "save and close" action. */
-	public void x_sc(final xwriter x, final String param) throws Throwable {
+	public final void x_sc(final xwriter x, final String param) throws Throwable {
 		saveAndClose(x);
 	}
 
 	/** Triggers a write to the interface when an object has been created. */
-	public void setSelectMode(final SelectReceiverSingle receiver) {
+	public final void setSelectMode(final SelectReceiverSingle receiver) {
 		objectIdReceiver = receiver;
 	}
 }

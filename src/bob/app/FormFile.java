@@ -5,7 +5,7 @@ import b.path;
 import b.xwriter;
 import bob.Form;
 
-public class FormFile extends Form {
+public final class FormFile extends Form {
 	private static final long serialVersionUID = 1L;
 
 	private final path pth;

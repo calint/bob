@@ -15,7 +15,7 @@ import db.test.Category;
 import db.test.DataText;
 import db.test.Publisher;
 
-public class FormBook2 extends FormDbo {
+public final class FormBook2 extends FormDbo {
 	private static final long serialVersionUID = 1L;
 	private final String initStr;
 

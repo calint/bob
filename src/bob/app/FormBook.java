@@ -11,7 +11,7 @@ import db.DbTransaction;
 import db.test.Book;
 import db.test.DataText;
 
-public class FormBook extends Form {
+public final class FormBook extends Form {
 	private static final long serialVersionUID = 1L;
 
 	public a title;

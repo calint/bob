@@ -11,7 +11,7 @@ import db.Db;
 import db.DbClass;
 import db.DbObject;
 
-public class TableDbClasses extends ViewTable {
+public final class TableDbClasses extends ViewTable {
 	static final long serialVersionUID = 1;
 
 	public TableDbClasses() {

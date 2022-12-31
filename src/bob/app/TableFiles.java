@@ -13,7 +13,7 @@ import bob.Action;
 import bob.Util;
 import bob.ViewTable;
 
-public class TableFiles extends ViewTable {
+public final class TableFiles extends ViewTable {
 	static final long serialVersionUID = 1;
 
 	public static String icon_file_uri = "/bob/file.png";
@@ -123,7 +123,7 @@ public class TableFiles extends ViewTable {
 	@Override
 	protected void renderRowCells(final xwriter x, final Object o) {
 		final path p = pth.get(o.toString());
-		x.td();
+		x.td("icn");
 		final String img;
 		if (p.isdir()) {
 			img = "<img src=" + icon_folder_uri + ">";

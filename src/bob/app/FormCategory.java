@@ -6,7 +6,7 @@ import db.Db;
 import db.DbTransaction;
 import db.test.Category;
 
-public class FormCategory extends FormDbo {
+public final class FormCategory extends FormDbo {
 	private static final long serialVersionUID = 1L;
 	private final String initStr;
 

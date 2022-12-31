@@ -88,18 +88,18 @@ public abstract class ViewTable extends View {
 			x.inp(q, null, "query", null, null, this, "new", this, "q");
 			x.script().xfocus(q).script_();
 			if (hasMoreSearchSection()) {
-				x.p(' ');
+				x.spc();
 				x.ax(this, "more");
-				x.p(" ");
-				x.tago("span").default_attrs_for_element(ms);
+				x.spc();
+				x.tago("div").default_attrs_for_element(ms);
 				if (!ms_display) {
 					x.attr("hidden");
 				}
 				x.tagoe();
 				renderMoreSearchSection(x);
-				x.p(" ");
+				x.spc();
 				x.ax(this, "q", "search");
-				x.tage("span").nl();
+				x.tage("div").nl();
 			}
 		}
 		final boolean inifiniteScroll = isInifiniteScroll();
@@ -165,7 +165,7 @@ public abstract class ViewTable extends View {
 		}
 	}
 
-	/** Callback for more search. */
+	/** Callback for "more" search. */
 	public final void x_more(final xwriter x, final String s) throws Throwable {
 		ms_display = !ms_display;
 		x.p("$('").p(ms.id()).p("').hidden=").p(!ms_display).pl(";");
@@ -209,14 +209,14 @@ public abstract class ViewTable extends View {
 	}
 
 	/** Callback for click on row. */
-	public void x_clk(final xwriter x, final String s) throws Throwable {
+	public final void x_clk(final xwriter x, final String s) throws Throwable {
 		if ((enabledTableBits & ViewTable.BIT_CLICK_ITEM) != 0) {
 			onRowClick(x, s, null);
 		}
 	}
 
 	/** Callback for click on row. */
-	public void x_c(final xwriter x, final String s) throws Throwable {
+	public final void x_c(final xwriter x, final String s) throws Throwable {
 		final int i = s.indexOf(' ');
 		final String type = s.substring(0, i);
 		final String id = s.substring(i + 1);
@@ -224,13 +224,13 @@ public abstract class ViewTable extends View {
 	}
 
 	/** Callback for click on "select" when in select multi mode. */
-	public void x_sm(final xwriter x, final String s) throws Throwable {
+	public final void x_sm(final xwriter x, final String s) throws Throwable {
 		selectReceiverMulti.onSelect(getSelectedIds());
 		super.bubble_event(x, this, "close");
 	}
 
 	/** Callback for click on row in select single mode. */
-	public void x_ss(final xwriter x, final String s) throws Throwable {
+	public final void x_ss(final xwriter x, final String s) throws Throwable {
 		selectReceiverSingle.onSelect(s);
 		super.bubble_event(x, this, "close");
 	}

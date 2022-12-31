@@ -5,7 +5,7 @@ import b.xwriter;
 import bob.Form;
 import db.DbClass;
 
-public class FormDbClass extends Form {
+public final class FormDbClass extends Form {
 	private static final long serialVersionUID = 1L;
 
 	private final String javaClassName;

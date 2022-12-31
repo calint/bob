@@ -13,7 +13,7 @@ import db.Order;
 import db.Query;
 import db.test.Author;
 
-public class TableAuthors extends ViewTable {
+public final class TableAuthors extends ViewTable {
 	static final long serialVersionUID = 2;
 
 	public TableAuthors() {

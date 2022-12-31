@@ -13,7 +13,7 @@ import db.Order;
 import db.Query;
 import db.test.Category;
 
-public class TableCategories extends ViewTable {
+public final class TableCategories extends ViewTable {
 	static final long serialVersionUID = 2;
 
 	public TableCategories() {
