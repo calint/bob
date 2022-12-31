@@ -16,9 +16,9 @@ b
 [x]   indexes on author, category and publisher name to speed up lookup
 [ ]     category has one case with exceptionally long name, truncate?
 [o] FormDbObject with convenience for editing dbobjects
-[o]   find/select/create
-[o]     RelRefN
-[o]     RelRef
+[x]   find/select/create
+[x]     RelRefN
+[x]     RelRef
 [ ]     RelAgg. object must first be saved before aggregation is created.
 [ ]     RelAggN. object must first be saved before aggregation is created.
 [ ]   make it pretty. DboField, DboRel, save etc
