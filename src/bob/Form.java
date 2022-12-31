@@ -120,6 +120,6 @@ public abstract class Form extends a implements Titled {
 
 	/** Triggers a write to the interface when an object has been created. */
 	public void setSelectMode(final SelectReceiverSingle receiver) {
-		this.objectIdReceiver = receiver;
+		objectIdReceiver = receiver;
 	}
 }

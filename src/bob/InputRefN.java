@@ -99,7 +99,8 @@ public final class InputRefN extends a {
 		final Form f = createFormCls.newInstance();
 		f.setSelectMode(new SelectReceiverSingle() {
 			private static final long serialVersionUID = 1L;
-			public void onSelect(String selected) {
+
+			public void onSelect(final String selected) {
 				selectedIds.add(selected);
 			}
 		});
