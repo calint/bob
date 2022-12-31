@@ -39,11 +39,11 @@ public class FormBook2 extends FormDbo {
 		beginForm(x);
 		inputText(x, "Title", Book.name, "long", o == null ? initStr : o.getName());
 		focus(x, Book.name);
-		inputRefN(x, "Authors", o, Book.authors, TableAuthors.class, null);
-		inputRef(x, "Publisher", o, Book.publisher, TablePublishers.class, null);
+		inputRefN(x, "Authors", o, Book.authors, TableAuthors.class, FormAuthor.class);
+		inputRef(x, "Publisher", o, Book.publisher, TablePublishers.class, FormPublisher.class);
 		inputDate(x, "Published date", Book.publishedDate, "short", o == null ? null : o.getPublishedDate());
 //		inputText(x, "Categories", Book.categoriesStr, "medium", o == null ? "" : o.getCategoriesStr());
-		inputRefN(x, "Categories", o, Book.categories, TableCategories.class, null);
+		inputRefN(x, "Categories", o, Book.categories, TableCategories.class, FormCategory.class);
 		inputTextArea(x, "Description", DataText.data, "large", o == null ? "" : o.getData(true).getData());
 		endForm(x);
 		x.ax(this, "test", "test").nl();

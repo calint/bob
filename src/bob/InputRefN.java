@@ -7,6 +7,7 @@ import java.util.Set;
 import b.a;
 import b.xwriter;
 import bob.ViewTable.SelectReceiverMulti;
+import bob.ViewTable.SelectReceiverSingle;
 import db.Db;
 import db.DbObject;
 import db.DbObjects;
@@ -53,7 +54,7 @@ public final class InputRefN extends a {
 		if (viewTableSelectClass != null) {
 			x.ax(this, "s", "select");
 			if (createFormCls != null) {
-				x.spc();
+				x.p(" • ");
 			}
 		}
 		if (createFormCls != null) {
@@ -74,17 +75,12 @@ public final class InputRefN extends a {
 			} else {
 				x.p(o.id());
 			}
-			x.spc().ax(this, "r " + o.id(), "[x]").p(itemSeparator);
+			x.spc().ax(this, "r " + o.id(), "✖").p(itemSeparator);
 		}
 		x.nl();
 	}
 
-	/**
-	 * Callback "select".
-	 *
-	 * @throws IllegalAccessException
-	 * @throws InstantiationException
-	 */
+	/** Callback "select". */
 	public void x_s(final xwriter x, final String param) throws Throwable {
 		final ViewTable t = viewTableSelectClass.newInstance();
 		t.setSelectMode(selectedIds, new SelectReceiverMulti() {
@@ -95,12 +91,19 @@ public final class InputRefN extends a {
 				selectedIds.addAll(selected);
 			}
 		});
-		super.bubble_event(x, this, t); // display t
+		super.bubble_event(x, this, t); // display the table
 	}
 
 	/** Callback "create". */
-	public void x_c(final xwriter x, final String param) {
-
+	public void x_c(final xwriter x, final String param) throws Throwable {
+		final Form f = createFormCls.newInstance();
+		f.setSelectMode(new SelectReceiverSingle() {
+			private static final long serialVersionUID = 1L;
+			public void onSelect(String selected) {
+				selectedIds.add(selected);
+			}
+		});
+		super.bubble_event(x, this, f); // display the form
 	}
 
 	/** Callback "remove". */

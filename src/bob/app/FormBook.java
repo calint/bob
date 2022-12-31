@@ -78,8 +78,8 @@ public class FormBook extends Form {
 //		super.onAction(x, act);
 //	}
 
-	@Override
-	public final void x_sc(final xwriter x, final String param) throws Throwable {
-		saveAndClose(x);
-	}
+//	@Override
+//	public final void x_sc(final xwriter x, final String param) throws Throwable {
+//		saveAndClose(x);
+//	}
 }

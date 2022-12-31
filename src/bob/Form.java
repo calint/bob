@@ -4,6 +4,7 @@ import java.util.List;
 
 import b.a;
 import b.xwriter;
+import bob.ViewTable.SelectReceiverSingle;
 
 public abstract class Form extends a implements Titled {
 	static final long serialVersionUID = 1;
@@ -20,6 +21,8 @@ public abstract class Form extends a implements Titled {
 	protected String parentId;
 	/** Object id. */
 	protected String objectId;
+
+	private SelectReceiverSingle objectIdReceiver;
 
 	public Form(final String parentId, final String objectId, final int enabledFormBits) {
 		this.parentId = parentId;
@@ -66,12 +69,16 @@ public abstract class Form extends a implements Titled {
 		if (from instanceof Action) {
 			final String code = ((Action) from).code();
 			if ("sc".equals(code) && (enabledFormBits & BIT_SAVE_CLOSE) != 0) {
-				save(x);
-				super.bubble_event(x, this, "close");
+				saveAndClose(x);
+//				save(x);
+//				super.bubble_event(x, this, "close");
 				return;
 			}
 			if ("s".endsWith(code) && (enabledFormBits & BIT_SAVE) != 0) {
 				save(x);
+				if (objectIdReceiver != null) {
+					objectIdReceiver.onSelect(objectId);
+				}
 				super.bubble_event(x, this, "updated");
 				return;
 			}
@@ -95,6 +102,9 @@ public abstract class Form extends a implements Titled {
 
 	protected final void saveAndClose(final xwriter x) throws Throwable {
 		save(x);
+		if (objectIdReceiver != null) {
+			objectIdReceiver.onSelect(objectId);
+		}
 		super.bubble_event(x, this, "close");
 	}
 
@@ -103,8 +113,13 @@ public abstract class Form extends a implements Titled {
 	protected void save(final xwriter x) throws Throwable {
 	}
 
-	/** Callback for save and close. */
+	/** Callback for "save and close" action. */
 	public void x_sc(final xwriter x, final String param) throws Throwable {
 		saveAndClose(x);
+	}
+
+	/** Triggers a write to the interface when an object has been created. */
+	public void setSelectMode(final SelectReceiverSingle receiver) {
+		this.objectIdReceiver = receiver;
 	}
 }

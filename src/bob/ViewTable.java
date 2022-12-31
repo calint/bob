@@ -72,12 +72,14 @@ public abstract class ViewTable extends View {
 	@Override
 	public final void to(final xwriter x) throws Throwable {
 		if (isSelectMode) {
+			x.tago("div").attr("class", "attention").tagoe();
 			if (isSelectModeMulti) {
 				x.p("select " + typeInfo.namePlural + " then click ");
-				x.ax(this, "sel", "select");
+				x.ax(this, "sm", "select");
 			} else {
 				x.p("select " + typeInfo.name);
 			}
+			x.tage("div");
 		}
 		if (!ac.elements().isEmpty()) {
 			x.divh(ac, "ac").nl();
@@ -184,7 +186,7 @@ public abstract class ViewTable extends View {
 	protected final void renderLink(final xwriter x, final Object o, final String linkText) {
 		if (isSelectMode && !isSelectModeMulti) {
 			final String id = getIdFrom(o);
-			x.ax(this, "sels " + id, linkText);
+			x.ax(this, "ss " + id, linkText);
 		} else if ((enabledTableBits & ViewTable.BIT_CLICK_ITEM) != 0) {
 			final String id = getIdFrom(o);
 			x.ax(this, "clk " + id, linkText);
@@ -221,14 +223,14 @@ public abstract class ViewTable extends View {
 		onRowClick(x, id, type);
 	}
 
-	/** Callback for click on select when in select multi mode. */
-	public void x_sel(final xwriter x, final String s) throws Throwable {
+	/** Callback for click on "select" when in select multi mode. */
+	public void x_sm(final xwriter x, final String s) throws Throwable {
 		selectReceiverMulti.onSelect(getSelectedIds());
 		super.bubble_event(x, this, "close");
 	}
 
 	/** Callback for click on row in select single mode. */
-	public void x_sels(final xwriter x, final String s) throws Throwable {
+	public void x_ss(final xwriter x, final String s) throws Throwable {
 		selectReceiverSingle.onSelect(s);
 		super.bubble_event(x, this, "close");
 	}

@@ -35,7 +35,12 @@ input.query {
 	border:1px dotted green;
 	width:13rem;
 	margin:.5rem;
-	padding:.5rem
+	padding:.5rem;
+}
+.attention{
+	background-color:#ffd;
+	padding:1rem;
+	margin:1rem;
 }
 /** bob.ViewTable.Table */	
 table.t{
@@ -48,16 +53,16 @@ table.t{
 table.t tr:first-child{
 	border:0;
 	border-bottom:1px solid green;
-	border-top:1px solid #070
+	border-top:1px solid #070;
 }
 table.t tr:last-child{
 	border:0;
-	border-bottom:1px solid #040
+	border-bottom:1px solid #040;
 }
 table.t th{
 	padding:.5rem;
 	background:#fefefe;
-	border-bottom:1px solid green
+	border-bottom:1px solid green;
 }
 table.t td{
 	padding:.5rem;
@@ -67,7 +72,7 @@ table.t td{
 	white-space:normal;
 }
 table.t td:first-child{
-	border-left:0
+	border-left:0;
 }
 table.t td.nbr{
 	text-align:right;

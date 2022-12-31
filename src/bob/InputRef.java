@@ -46,7 +46,7 @@ public final class InputRef extends a {
 					} else {
 						x.p(ro.id());
 					}
-					x.spc().ax(this, "r " + o.id(), "[x]");
+					x.spc().ax(this, "r " + o.id(), "✖");
 				}
 			}
 		}
@@ -54,7 +54,7 @@ public final class InputRef extends a {
 			x.spc();
 			x.ax(this, "s", "select");
 			if (createFormCls != null) {
-				x.spc();
+				x.p(" • ");
 			}
 		}
 		if (createFormCls != null) {
