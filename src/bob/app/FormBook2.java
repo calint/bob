@@ -65,7 +65,9 @@ public class FormBook2 extends FormDbo {
 		final Set<String> selectedAuthors = getSelectedIds(Book.authors);
 		for (final String id : selectedAuthors) {
 			final Author a = (Author) tn.get(Author.class, id);
-			authorsSb.append(a.getName()).append(';');
+			if (a != null) {
+				authorsSb.append(a.getName()).append(';');
+			}
 		}
 		if (authorsSb.length() > 1) {
 			authorsSb.setLength(authorsSb.length() - 1);
@@ -87,7 +89,9 @@ public class FormBook2 extends FormDbo {
 		final Set<String> selectedCategories = getSelectedIds(Book.categories);
 		for (final String id : selectedCategories) {
 			final Category c = (Category) tn.get(Category.class, id);
-			categoriesSb.append(c.getName()).append(';');
+			if (c != null) {
+				categoriesSb.append(c.getName()).append(';');
+			}
 		}
 		if (categoriesSb.length() > 1) {
 			categoriesSb.setLength(categoriesSb.length() - 1);
