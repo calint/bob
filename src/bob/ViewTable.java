@@ -12,11 +12,11 @@ import db.Limit;
 public abstract class ViewTable extends View {
 	private static final long serialVersionUID = 3L;
 
-	public interface SelectReceiverMulti extends Serializable {
+	interface SelectReceiverMulti extends Serializable {
 		void onSelect(Set<String> selected);
 	}
 
-	public interface SelectReceiverSingle extends Serializable {
+	interface SelectReceiverSingle extends Serializable {
 		void onSelect(String selected);
 	}
 
