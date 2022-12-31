@@ -65,7 +65,7 @@ public class FormBook2 extends FormDbo {
 		final Set<String> selectedAuthors = getSelectedIds(Book.authors);
 		for (final String id : selectedAuthors) {
 			final Author a = (Author) tn.get(Author.class, id);
-			if (a != null) {
+			if (a != null) { // ?  what to do with dangling references
 				authorsSb.append(a.getName()).append(';');
 			}
 		}
@@ -89,7 +89,7 @@ public class FormBook2 extends FormDbo {
 		final Set<String> selectedCategories = getSelectedIds(Book.categories);
 		for (final String id : selectedCategories) {
 			final Category c = (Category) tn.get(Category.class, id);
-			if (c != null) {
+			if (c != null) { // ?  what to do with dangling references
 				categoriesSb.append(c.getName()).append(';');
 			}
 		}
