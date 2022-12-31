@@ -2,6 +2,7 @@ b
 [ ] xwriter: button tag
 [ ] xwriter: <elem> tag instead of duplicate code for span and div
 [ ] b: move convenience string methods etc to util
+[ ] ViewTable: on mouse over row css
 [x] review x.css using bob.css
 [ ] x.js and bob.js common script extracted
 [x] xwriter: select renderer
