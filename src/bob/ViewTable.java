@@ -30,7 +30,7 @@ public abstract class ViewTable extends View {
 	final private View.TypeInfo typeInfo; // the name and plural of the object type
 	/** The actions that are enabled in the table. */
 	final protected int enabledTableBits;
-	private boolean isSelectMode; // if true view renders to select an item
+	private boolean isSelectMode; // if true view renders to select item(s)
 	private boolean isSelectModeMulti; // if true view renders to select multiple items
 	private SelectReceiverMulti selectReceiverMulti;
 	private SelectReceiverSingle selectReceiverSingle;
@@ -40,13 +40,13 @@ public abstract class ViewTable extends View {
 		enabledTableBits = tableBits;
 		t.setTableView(this);
 		p.setTableView(this);
+		typeInfo = getTypeInfo();
 		if ((enabledViewBits & BIT_CREATE) != 0) {
-			ac.add(new Action("create", "create"));
+			ac.add(new Action("create " + typeInfo.name, "create"));
 		}
 		if ((enabledViewBits & BIT_DELETE) != 0) {
-			ac.add(new Action("delete", "delete"));
+			ac.add(new Action("delete " + typeInfo.namePlural, "delete"));
 		}
-		typeInfo = getTypeInfo();
 		final List<Action> actions = getActionsList();
 		if (actions != null) {
 			for (final Action a : actions) {
