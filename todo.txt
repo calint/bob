@@ -53,6 +53,7 @@ b
 [ ]   dbo: connection pool
 [ ] bob.app: dbclass to class
 [ ] Content-disposition: attachment; filename=file.txt
+[ ] howto for google cloud
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 dbo
 [ ] Db.engine from config
