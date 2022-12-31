@@ -54,7 +54,7 @@ b
 [ ] bob.app: dbclass to class
 [ ] Content-disposition: attachment; filename=file.txt
 [ ] howto for google cloud
---------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 dbo
 [ ] Db.engine from config
 [ ] Index: specify key length
@@ -117,7 +117,7 @@ dbo
 [ ]   oracle?
 [ ]   ms sql server?
 [ ]   ibm db2?
---------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 [x] pager rendering if there is only 1 page
 [x] ViewTable: onRowClick(xwriter,code,id) to have other click types from row
 [x]   onRowClickTyped(xwriter,code,id)
