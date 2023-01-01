@@ -1,10 +1,7 @@
 ui={}
 ui.is_dbg=true;
 ui.is_dbg_set=true;
-ui.is_dbg_verbose=false;
-ui.is_dbg_js=true;
 ui.is_dbg_pb=true;
-ui.axconwait=false;
 $=function(eid){return document.getElementById(eid);}
 $d=function(v){console.log(v);}
 $s=function(eid,txt){
@@ -48,12 +45,12 @@ $sv=function(eid,txt){
 	const e=$(eid);
 	if(ui.is_dbg_set)$d(eid+'{'+txt+'}');
 	if(!e){$d(eid+' notfound');return;}
-	if(e.nodeName=="INPUT"||e.nodeName=="TEXTAREA"||e.nodeName=="OUTPUT"){
+	if(e.nodeName=='INPUT'||e.nodeName=='TEXTAREA'||e.nodeName=='OUTPUT'){
 		e.value=txt;
 		$b(e);
 	}else{
 		e.innerHTML=txt;
-		if(e.contentEditable=="true")
+		if(e.contentEditable=='true')
 			$b(e);
 	}
 }
@@ -63,12 +60,12 @@ $o=function(eid,txt){
 }
 $p=function(eid,txt){
 	const e=$(eid);
-	if(e.nodeName=="INPUT"||e.nodeName=="TEXTAREA"||e.nodeName=="OUTPUT"){
+	if(e.nodeName=='INPUT'||e.nodeName=='TEXTAREA'||e.nodeName=='OUTPUT'){
 		e.value+=txt;
 		$b(e);
 	}else{
 		e.innerHTML+=txt;
-		if(e.contentEditable=="true")
+		if(e.contentEditable=='true')
 			$b(e);
 	}
 }
@@ -103,7 +100,7 @@ ui.onkey=function(ev){
 	if(cmd)eval(cmd);
 }
 ui.fmtsize=function(num){
-	return num.toString().replace(/\B(?=(\d{3})+\b)/g,",");
+	return num.toString().replace(/\B(?=(\d{3})+\b)/g,',');
 }
 ui.fmt_data_per_second=function(nbytes,ms){
 	let b_per_s=Math.floor(nbytes*1024/ms);
@@ -127,6 +124,19 @@ ui.fmt_data_per_second=function(nbytes,ms){
 		return b_per_s+' TB/s';
 	}
 }
+ui._pbls=[];
+ui.qpb=function(e){
+	if(ui.is_dbg_pb)$d('qpb '+e.id);
+	if(ui.qpbhas(e.id))return;
+	ui._pbls[e.id]=e.id;
+}
+$b=ui.qpb;
+ui.qpbhas=function(id){return id in ui._pbls;}
+ui._axc=0;
+
+ui.is_dbg_verbose=false;
+ui.is_dbg_js=true;
+ui.axconwait=false;
 ui._onreadystatechange=function(){
 //	$d(" * stage "+this.readyState);
 	const elsts=$('-ajaxsts');
@@ -196,15 +206,6 @@ ui._onreadystatechange=function(){
 	default:throw "unknown state";	
 	}
 }
-ui._pbls=[];
-ui.qpb=function(e){
-	if(ui.is_dbg_pb)$d('qpb '+e.id);
-	if(ui.qpbhas(e.id))return;
-	ui._pbls[e.id]=e.id;
-}
-$b=ui.qpb;
-ui.qpbhas=function(id){return id in ui._pbls;}
-ui._axc=0;
 $x=function(pb){
 	ui._axc++;
 	$d("\n\nrequest #"+ui._axc);
