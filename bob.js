@@ -95,7 +95,6 @@ ui.debounce=function(callback,interval){
 }
 ui.keys=[];
 ui.onkey=function(ev){
-	if(!ev)ev=window.event;
 	const cmd=ui.keys[ui._hashKey(ev)];
 	if(cmd)eval(cmd);
 }
