@@ -85,7 +85,10 @@ public abstract class ViewTable extends View {
 			x.divh(ac, "ac").nl();
 		}
 		if ((enabledViewBits & BIT_SEARCH) != 0) {
-			x.inp(q, null, "query", null, null, this, "new", this, "q");
+//			x.inp(q, null, "query", null, null, this, "new", this, "q");
+			x.tago("input").default_attrs_for_element(q, "query", null);
+			x.attr("oninput", "ui.debounce(()=>{$b($('" + q.id() + "'));$x('" + id() + " q')},500)");
+			x.tagoe();
 			x.script().xfocus(q).script_();
 			if (hasMoreSearchSection()) {
 				x.spc();

@@ -91,6 +91,11 @@ ui._hashKey=function(event){
 	return kc;
 }
 ui.scrollToTop=function(){window.scrollTo({top:0,behavior:'smooth'});}
+ui.debounceTimeoutId=null;
+ui.debounce=function(callback,interval){
+	clearTimeout(ui.debounceTimeoutId);
+	ui.debounceTimeoutId=setTimeout(()=>{callback()},interval);
+}
 ui.keys=[];
 ui.onkey=function(ev){
 	if(!ev)ev=window.event;
