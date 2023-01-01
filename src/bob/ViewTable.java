@@ -88,8 +88,10 @@ public abstract class ViewTable extends View {
 //			x.inp(q, null, "query", null, null, this, "new", this, "q");
 			x.tago("input").default_attrs_for_element(q, "query", null);
 			final String eid = id();
-			x.attr("onkeypress", "if(event.keyCode!=13)return true;clearTimeout(ui.debounceTimeoutId);$x('" + eid
-					+ " new');return false;");
+			if ((enabledViewBits & BIT_CREATE) != 0) {
+				x.attr("onkeypress", "if(event.keyCode!=13)return true;clearTimeout(ui.debounceTimeoutId);$x('" + eid
+						+ " new');return false;");
+			}
 			x.attr("oninput", "$b(this);ui.debounce(()=>$x('" + eid + " q'),500)");
 			x.attr("value", q.str());
 			x.tagoe();

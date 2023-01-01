@@ -22,8 +22,9 @@ b
 [x]   find/select/create
 [x]     RelRefN
 [x]     RelRef
-[ ]     RelAgg. object must first be saved before aggregation is created.
-[ ]     RelAggN. object must first be saved before aggregation is created.
+[ ]     RelAgg. object must first be saved.
+[ ]       create object with state "editing" when form is opened. when saved state "published"
+[ ]     RelAggN. object must first be saved.
 [ ]   make it pretty. DboField, DboRel, save etc
 [ ]   FormRenderer wrapping xwriter and "this"? cookie.eat() or eat(cookie)
 [ ] ViewTable sort options
