@@ -71,7 +71,7 @@ $p=function(eid,txt){
 }
 //$l=function(){if(ui.keys)document.onkeyup=ui.onkey;}
 $a=function(eid,a,v){$(eid).setAttribute(a,v);}
-$r=function(ev,ths,axpb){if(!ev)ev=window.event;$b(ths);if(ev.keyCode!=13)return true;$x(axpb);return false;}
+$r=function(ev,ths,axpb){if(event.keyCode!=13)return true;$x(axpb);return false;}
 $f=function(eid){
 	const e=$(eid);
 	if(!e)return;
