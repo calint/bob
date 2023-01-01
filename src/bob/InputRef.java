@@ -70,7 +70,7 @@ public final class InputRef extends a {
 	 * @throws InstantiationException
 	 */
 	public void x_s(final xwriter x, final String param) throws Throwable {
-		final ViewTable t = viewTableSelectClass.newInstance();
+		final ViewTable t = viewTableSelectClass.getConstructor().newInstance();
 		t.setSelectMode(Integer.toString(selectedId), new SelectReceiverSingle() {
 			private static final long serialVersionUID = 1L;
 

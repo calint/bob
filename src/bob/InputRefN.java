@@ -82,7 +82,7 @@ public final class InputRefN extends a {
 
 	/** Callback "select". */
 	public void x_s(final xwriter x, final String param) throws Throwable {
-		final ViewTable t = viewTableSelectClass.newInstance();
+		final ViewTable t = viewTableSelectClass.getConstructor().newInstance();
 		t.setSelectMode(selectedIds, new SelectReceiverMulti() {
 			private static final long serialVersionUID = 1L;
 
@@ -96,7 +96,7 @@ public final class InputRefN extends a {
 
 	/** Callback "create". */
 	public void x_c(final xwriter x, final String param) throws Throwable {
-		final Form f = createFormCls.newInstance();
+		final Form f = createFormCls.getConstructor().newInstance();
 		f.setSelectMode(new SelectReceiverSingle() {
 			private static final long serialVersionUID = 1L;
 
