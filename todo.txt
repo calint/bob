@@ -1,6 +1,6 @@
 b
 [x] ViewTable: Query: throttle queries to one every nth milliseconds
-[ ] bob.js: server is busy message box when typing fast
+[x] bob.js: server is busy message box when typing fast
 [ ]   server busy ui element
 [ ] xwriter: button tag
 [ ] xwriter: <elem> tag instead of duplicate code for span and div
