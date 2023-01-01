@@ -87,7 +87,10 @@ public abstract class ViewTable extends View {
 		if ((enabledViewBits & BIT_SEARCH) != 0) {
 //			x.inp(q, null, "query", null, null, this, "new", this, "q");
 			x.tago("input").default_attrs_for_element(q, "query", null);
-			x.attr("oninput", "ui.debounce(()=>{$b($('" + q.id() + "'));$x('" + id() + " q')},500)");
+			x.attr("onkeypress", "if(event.keyCode!=13)return true;clearTimeout(ui.debounceTimeoutId);$x('"
+					+ id() + " new');return false;");
+			x.attr("oninput", "$b($('" + q.id() + "'));ui.debounce(()=>{$x('" + id() + " q')},500)");
+			x.attr("value", q.str());
 			x.tagoe();
 			x.script().xfocus(q).script_();
 			if (hasMoreSearchSection()) {
