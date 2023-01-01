@@ -90,7 +90,7 @@ public abstract class ViewTable extends View {
 			final String eid = id();
 			x.attr("onkeypress", "if(event.keyCode!=13)return true;clearTimeout(ui.debounceTimeoutId);$x('" + eid
 					+ " new');return false;");
-			x.attr("oninput", "$b($('" + q.id() + "'));ui.debounce(()=>$x('" + eid + " q'),500)");
+			x.attr("oninput", "$b(this);ui.debounce(()=>$x('" + eid + " q'),500)");
 			x.attr("value", q.str());
 			x.tagoe();
 			x.script().xfocus(q).script_();
