@@ -376,7 +376,8 @@ public xwriter hr(){
 
 /** Input text area. */
 	public xwriter inptxtarea(final a e,final String cls,final String style){
-		tago("textarea").default_attrs_for_element(e,cls,style).attr("onchange","$b(this)").attr("onkeydown","$b(this)");
+//		tago("textarea").default_attrs_for_element(e,cls,style).attr("onchange","$b(this)").attr("onkeydown","$b(this)");
+		tago("textarea").default_attrs_for_element(e,cls,style).attr("oninput","$b(this)");
 //		attr("wrap","off").attr("spellcheck","false").tagoe();
 		tagoe();
 		try{
