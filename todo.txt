@@ -22,6 +22,7 @@ b
 [x]   publisher
 [x]   indexes on author, category and publisher name to speed up lookup
 [ ]     category has one case with exceptionally long name, truncate?
+[x]   trim values
 [o] FormDbObject with convenience for editing dbobjects
 [x]   find/select/create
 [x]     RelRefN

@@ -107,18 +107,19 @@ public class import_books extends TestCase {
 				break;
 			}
 			final Book o = (Book) tn.create(Book.class);
-			o.setName(ls.get(0));
-			final String authors = ls.get(2);
+			o.setName(ls.get(0).trim());
+			final String authors = ls.get(2).trim();
 			if (authors.length() != 0) {
 				final List<String> authorsList = Util.readList(new StringReader(authors), ',', '\'');
 				final StringBuilder authorsSb = new StringBuilder(128);
 				for (final String s : authorsList) {
-					authorsSb.append(s).append(';');
-					final List<DbObject> lsa = tn.get(Author.class, new Query(Author.name, Query.EQ, s), null, null);
+					final String st = s.trim();
+					authorsSb.append(st).append(';');
+					final List<DbObject> lsa = tn.get(Author.class, new Query(Author.name, Query.EQ, st), null, null);
 					final Author a;
 					if (lsa.isEmpty()) {
 						a = (Author) tn.create(Author.class);
-						a.setName(s);
+						a.setName(st);
 					} else {
 						a = (Author) lsa.get(0);
 					}
@@ -131,7 +132,7 @@ public class import_books extends TestCase {
 			} else {
 				o.setAuthorsStr("");
 			}
-			final String publisherStr = ls.get(5);
+			final String publisherStr = ls.get(5).trim();
 			o.setPublisherStr(publisherStr);
 			if (publisherStr.length() > 0) {
 				final List<DbObject> res = tn.get(Publisher.class, new Query(Publisher.name, Query.EQ, publisherStr),
@@ -145,23 +146,24 @@ public class import_books extends TestCase {
 				}
 				o.setPublisher(p);
 			}
-			final String pd = ls.get(6);
+			final String pd = ls.get(6).trim();
 			if (pd.length() != 0) {
 				final Timestamp ts = parseDate(pd);
 				o.setPublishedDate(ts);
 			}
-			final String categoriesStr = ls.get(8);
+			final String categoriesStr = ls.get(8).trim();
 			if (categoriesStr.length() != 0) {
 				final List<String> categoriesList = Util.readList(new StringReader(categoriesStr), ',', '\'');
 				final StringBuilder categoriesSb = new StringBuilder(128);
 				for (final String s : categoriesList) {
-					categoriesSb.append(s).append(';');
-					final List<DbObject> cls = tn.get(Category.class, new Query(Category.name, Query.EQ, s), null,
+					final String st = s.trim();
+					categoriesSb.append(st).append(';');
+					final List<DbObject> cls = tn.get(Category.class, new Query(Category.name, Query.EQ, st), null,
 							null);
 					final Category bc;
 					if (cls.isEmpty()) {
 						bc = (Category) tn.create(Category.class);
-						bc.setName(s);
+						bc.setName(st);
 					} else {
 						bc = (Category) cls.get(0);
 					}
@@ -176,10 +178,10 @@ public class import_books extends TestCase {
 			}
 
 			final DataText d = o.getData(true);
-			d.setData(ls.get(1));
+			d.setData(ls.get(1).trim());
 
 			sb.setLength(0);
-			sb.append(o.getName()).append(" ").append(o.getAuthors()).append(" ").append(o.getPublisherStr());
+			sb.append(o.getName()).append(" ").append(o.getAuthorsStr()).append(" ").append(o.getPublisherStr());
 			d.setMeta(sb.toString());
 
 			if (++i % 100 == 0) {

@@ -51,7 +51,7 @@ table.t{
 	text-align:left;
 }
 table.t tr:hover{
-	background-color:#ffd;
+	background-color:#ffe;
 }
 table.t tr:first-child{
 	border:0;

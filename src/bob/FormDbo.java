@@ -223,9 +223,9 @@ public abstract class FormDbo extends Form {
 		return fields.get(id);
 	}
 
-	final protected void saveElems(final xwriter x) { // ? ugly
+	final protected void saveElems(final xwriter x) {
 		for (final a e : fields.values()) {
-			if (e instanceof InputRefN) {
+			if (e instanceof InputRefN) { // ? ugly instanceof
 				final InputRefN r = (InputRefN) e;
 				r.save();
 			}
