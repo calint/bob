@@ -6,10 +6,10 @@ b
 [ ] xwriter: button tag
 [ ] xwriter: <elem> tag instead of duplicate code for span and div
 [ ] b: move convenience string methods etc to util
-[ ] ViewTable: on mouse over row css
+[x] ViewTable: on mouse over row css
 [ ] ViewTable: click on row callback working with other links in the row
-[ ]   event.stopPropagation() or event.preventDefault()
-[ ]     https://stackoverflow.com/questions/32404185/event-onclick-on-td-and-tr
+[ ]   https://stackoverflow.com/questions/32404185/event-onclick-on-td-and-tr
+[ ]   https://stackoverflow.com/questions/28477422/checkbox-click-overriding-table-row-click
 [x] review x.css using bob.css
 [ ] x.js and bob.js common script extracted
 [x] xwriter: select renderer
