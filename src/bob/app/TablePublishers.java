@@ -72,6 +72,7 @@ public final class TablePublishers extends ViewTable {
 		final Publisher po = (Publisher) o;
 		x.td();
 		renderLink(x, po, po.getName());
+//		x.p(po.getName());
 		x.td("icn");
 		renderLink(x, Integer.toString(po.id()), "b", "<img src=/bob/link.png>");
 	}

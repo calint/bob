@@ -50,6 +50,9 @@ table.t{
 	margin-right:auto;
 	text-align:left;
 }
+table.t tr:hover{
+	background-color:#ffd;
+}
 table.t tr:first-child{
 	border:0;
 	border-bottom:1px solid green;

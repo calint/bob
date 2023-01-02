@@ -469,9 +469,20 @@ public abstract class ViewTable extends View {
 		private void renderRows(final xwriter x) throws Throwable {
 			final List<?> ls = tv.getObjectsList();
 			for (final Object o : ls) {
-				final String id = tv.getIdFrom(o);
-				x.tr();
+//				final String id = tv.getIdFrom(o);
+//				if ((tv.enabledViewBits & BIT_CLICK_ITEM) != 0) {
+//					x.tago("tr");
+//					x.attr("data-href", "url://localhost:8888");
+//					final xwriter js = new xwriter();
+//					js.js_x(tv, "clk " + id, false);
+//					x.attr("onclick", js.toString());
+////					x.attr("onclick", "$x('" + tv.id() + xwriter.enc_js_str(" clk " + id) + "')");
+//					x.tagoe();
+//				} else {
+					x.tr();
+//				}
 				if ((tv.enabledViewBits & View.BIT_SELECT) != 0 || tv.isSelectModeMulti) { // render checkbox
+					final String id = tv.getIdFrom(o);
 					x.td();
 					final Checkbox cb = new Checkbox(id, selectedIds.contains(id));
 					// add to container where the element will get a unique name in the context.
