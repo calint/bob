@@ -59,7 +59,7 @@ public final class FormBook2 extends FormDbo {
 		} else {
 			o = (Book) tn.get(Book.class, objectId);
 		}
-		saveElems(x); // ? sort of ugly
+		saveElems(x, o); // ? sort of ugly
 
 		o.setName(getStr(Book.name));
 

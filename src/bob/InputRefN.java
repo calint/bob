@@ -22,7 +22,7 @@ public final class InputRefN extends a {
 	final private LinkedHashSet<String> initialSelectedIds;
 	final private LinkedHashSet<String> selectedIds;
 	final private String itemSeparator;
-	private int objId;
+//	private int objId;
 	private boolean selectedIdsInitiated;
 
 	public InputRefN(final RelRefN rel, final Class<? extends ViewTable> viewTableSelectClass,
@@ -36,7 +36,7 @@ public final class InputRefN extends a {
 	}
 
 	public void refreshInitialIds(final DbObject obj) {
-		objId = obj.id();
+//		objId = obj.id();
 		final DbObjects dbos = rel.get(obj);
 		for (final DbObject o : dbos.toList()) {
 			final String idstr = Integer.toString(o.id());
@@ -113,9 +113,9 @@ public final class InputRefN extends a {
 		x.xu(this);
 	}
 
-	public void save() {
-		final DbTransaction tn = Db.currentTransaction();
-		final DbObject o = tn.get(rel.getFromClass(), objId);
+	public void save(final DbObject o) {
+//		final DbTransaction tn = Db.currentTransaction();
+//		final DbObject o = tn.get(rel.getFromClass(), objId);
 		for (final String s : selectedIds) {
 			if (initialSelectedIds.contains(s)) {
 				continue;

@@ -223,11 +223,11 @@ public abstract class FormDbo extends Form {
 		return fields.get(id);
 	}
 
-	final protected void saveElems(final xwriter x) {
+	final protected void saveElems(final xwriter x, final DbObject o) {
 		for (final a e : fields.values()) {
 			if (e instanceof InputRefN) { // ? ugly instanceof
 				final InputRefN r = (InputRefN) e;
-				r.save();
+				r.save(o);
 			}
 		}
 	}
