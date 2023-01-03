@@ -59,6 +59,8 @@ public final class FormBook2 extends FormDbo {
 		} else {
 			o = (Book) tn.get(Book.class, objectId);
 		}
+		saveElems(x); // ? sort of ugly
+
 		o.setName(getStr(Book.name));
 
 		final StringBuilder authorsSb = new StringBuilder(128);
@@ -101,8 +103,6 @@ public final class FormBook2 extends FormDbo {
 		final DataText d = o.getData(true);
 		d.setMeta(o.getName() + " " + o.getAuthorsStr() + " " + o.getPublisherStr() + " " + o.getCategoriesStr());
 		d.setData(getStr(DataText.data));
-
-		saveElems(x);
 	}
 
 	@Override
