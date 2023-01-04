@@ -2,14 +2,12 @@ package bob.app;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import b.xwriter;
 import bob.Action;
 import bob.FormDbo;
 import db.Db;
 import db.DbObject;
-import db.DbTransaction;
 import db.test.Author;
 import db.test.Book;
 import db.test.Category;
@@ -43,7 +41,6 @@ public final class FormBook2 extends FormDbo {
 		inputRefN(x, "Authors", o, Book.authors, TableAuthors.class, FormAuthor.class);
 		inputRef(x, "Publisher", o, Book.publisher, TablePublishers.class, FormPublisher.class);
 		inputDate(x, "Published date", Book.publishedDate, "short", o == null ? null : o.getPublishedDate());
-//		inputText(x, "Categories", Book.categoriesStr, "medium", o == null ? "" : o.getCategoriesStr());
 		inputRefN(x, "Categories", o, Book.categories, TableCategories.class, FormCategory.class);
 		inputTextArea(x, "Description", DataText.data, "large", o == null ? "" : o.getData(true).getData());
 		endForm(x);
@@ -63,7 +60,6 @@ public final class FormBook2 extends FormDbo {
 	@Override
 	protected void writeToObject(final DbObject obj) throws Throwable {
 		final Book o = (Book) obj;
-		final DbTransaction tn = Db.currentTransaction();
 		o.setName(getStr(Book.name));
 
 		final StringBuilder authorsSb = new StringBuilder(128);
