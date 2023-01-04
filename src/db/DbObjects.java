@@ -29,15 +29,19 @@ public final class DbObjects implements Serializable {
 		this(null, select, null, null);
 	}
 
-	public List<DbObject> toList(final Limit limit) {
+	public List<DbObject> toList(final Class<?> cls, final Limit limit) {
 		final Query qry = new Query();
 		final Order ord = new Order();
 		buildQuery(qry, ord);
-		return Db.currentTransaction().get(select, qry, ord, limit);
+		return Db.currentTransaction().get(cls, qry, ord, limit);
+	}
+
+	public List<DbObject> toList(final Limit limit) {
+		return toList(select, limit);
 	}
 
 	public List<DbObject> toList() {
-		return toList((Limit) null);
+		return toList(select, null);
 	}
 
 	public List<DbObject[]> toList(final Class<?>[] classes, final Limit limit) {
@@ -72,7 +76,7 @@ public final class DbObjects implements Serializable {
 	/**
 	 * Convenience for get(int id).
 	 *
-	 * @return null if id is null.
+	 * @return null if id is null otherwise get(id).
 	 */
 	public DbObject get(final String id) {
 		if (id == null)
@@ -93,7 +97,9 @@ public final class DbObjects implements Serializable {
 		if (query != null) {
 			qry.and(query);
 		}
-		if (order != null && ord != null) {
+		if (ord == null) // ignore order if irrelevant
+			return;
+		if (order != null) {
 			ord.append(order);
 		}
 	}
