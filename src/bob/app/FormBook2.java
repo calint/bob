@@ -67,39 +67,27 @@ public final class FormBook2 extends FormDbo {
 		o.setName(getStr(Book.name));
 
 		final StringBuilder authorsSb = new StringBuilder(128);
-		final Set<String> selectedAuthors = getSelectedIds(Book.authors);
-		for (final String id : selectedAuthors) {
-			final Author a = (Author) tn.get(Author.class, id);
-			if (a != null) { // ? what to do with dangling references
-				authorsSb.append(a.getName()).append(';');
-			}
+		// note authors relation updated by FormDbo
+		for (final DbObject ao : o.getAuthors().toList()) {
+			Author a = (Author) ao;
+			authorsSb.append(a.getName()).append(';');
 		}
 		if (authorsSb.length() > 1) {
 			authorsSb.setLength(authorsSb.length() - 1);
 		}
 		o.setAuthorsStr(authorsSb.toString());
 
-//		final int publisherId = getSelectedId(Book.publisher);
-//		if (publisherId != 0) {
-//			final Publisher publisher = (Publisher) tn.get(Publisher.class, publisherId);
-//			o.setPublisher(publisher);
-//			o.setPublisherStr(publisher.getName());
-//		} else {
-//			o.setPublisher(null);
-//			o.setPublisherStr("");
-//		}
+		// note publisher relation updated by FormDbo
 		final Publisher publisher = o.getPublisher();
 		o.setPublisherStr(publisher == null ? "" : publisher.getName());
 
 		o.setPublishedDate(getDate(Book.publishedDate));
 
 		final StringBuilder categoriesSb = new StringBuilder(128);
-		final Set<String> selectedCategories = getSelectedIds(Book.categories);
-		for (final String id : selectedCategories) {
-			final Category c = (Category) tn.get(Category.class, id);
-			if (c != null) { // ? what to do with dangling references
-				categoriesSb.append(c.getName()).append(';');
-			}
+		// note categories relation updated by FormDbo
+		for (final DbObject co : o.getCategories().toList()) {
+			Category c = (Category) co;
+			categoriesSb.append(c.getName()).append(';');
 		}
 		if (categoriesSb.length() > 1) {
 			categoriesSb.setLength(categoriesSb.length() - 1);
