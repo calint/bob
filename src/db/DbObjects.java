@@ -60,8 +60,10 @@ public final class DbObjects implements Serializable { // ? review select
 	}
 
 	public DbObject get(final int id) {
-		final Query q = new Query(select, id);
-		final List<? extends DbObject> ls = Db.currentTransaction().get(select, q, null, null);
+		final Query qry = new Query();
+		buildQuery(qry, null);
+		qry.and(new Query(select, id));
+		final List<? extends DbObject> ls = Db.currentTransaction().get(select, qry, null, null);
 		if (ls.isEmpty())
 			return null;
 		return ls.get(0);
