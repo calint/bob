@@ -3,11 +3,11 @@ package db;
 import java.io.Serializable;
 import java.util.List;
 
-public final class DbObjects implements Serializable { // ? review select
+public final class DbObjects implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private final DbObjects dbobjects;
-	private final Class<? extends DbObject> select;
+	private final Class<? extends DbObject> select; // ? review select. generalize with Class[]
 	private final Query query;
 	private final Order order;
 
