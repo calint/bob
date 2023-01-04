@@ -24,7 +24,7 @@
 22 <input value="&quot;'value'&quot;" id="-f" type="image" oninput="$b(this)">
 23 <input value="&quot;'value'&quot;" id="-f" type="file" oninput="$b(this)">
 24 <input value="&quot;'value'&quot;" id="-f" type="search" oninput="$b(this)">
-25 <textarea id="-f" class="txtarea" onchange="$b(this)" onkeydown="$b(this)" wrap="off" spellcheck="false">"'value'"</textarea>
-26 <textarea id="-f" onchange="$b(this)" onkeydown="$b(this)" wrap="off" spellcheck="false">"'value'"</textarea>
+25 <textarea id="-f" class="txtarea" oninput="$b(this)">"'value'"</textarea>
+26 <textarea id="-f" oninput="$b(this)">"'value'"</textarea>
 27 <a href="url&quot;'test'&quot;">link</a>
 
