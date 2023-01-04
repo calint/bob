@@ -15,7 +15,7 @@ public final class DbObjects implements Serializable {
 			final Order order) {
 		this.dbobjects = dbobjects;
 		if (select == null && dbobjects == null)
-			throw new RuntimeException("'select' must be specified if this DbObjects does not wrap another DbObjects.");
+			throw new RuntimeException("'select' must be specified if this DbObjects does not wrap a DbObjects.");
 		if (select == null) {
 			this.select = dbobjects.select;
 		} else {
