@@ -48,7 +48,7 @@ public final class FormBook2 extends FormDbo {
 	}
 
 	@Override
-	protected DbObject createNewObject() {
+	protected DbObject createObject() {
 		return Db.currentTransaction().create(Book.class);
 	}
 

@@ -245,7 +245,7 @@ public abstract class FormDbo extends Form {
 	protected final void save(final xwriter x) throws Throwable {
 		final DbObject o;
 		if (objectId == null) { // create new
-			o = createNewObject();
+			o = createObject();
 			objectId = Integer.toString(o.id());
 		} else {
 			o = getObject();
@@ -255,7 +255,7 @@ public abstract class FormDbo extends Form {
 		writeToObject(o);
 	}
 
-	protected abstract DbObject createNewObject();
+	protected abstract DbObject createObject();
 
 	protected abstract DbObject getObject();
 

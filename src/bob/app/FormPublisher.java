@@ -34,7 +34,7 @@ public final class FormPublisher extends FormDbo {
 	}
 
 	@Override
-	protected DbObject createNewObject() {
+	protected DbObject createObject() {
 		return Db.currentTransaction().create(Publisher.class);
 	}
 

@@ -39,7 +39,7 @@ public final class FormCategory extends FormDbo {
 	}
 
 	@Override
-	protected DbObject createNewObject() {
+	protected DbObject createObject() {
 		return Db.currentTransaction().create(Category.class);
 	}
 
