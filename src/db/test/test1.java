@@ -43,7 +43,16 @@ public class test1 extends TestCase {
 			throw new RuntimeException();
 		if (!tn.cache_enabled && u1.id() != u2.id())
 			throw new RuntimeException();
+
+		final File f1 = u1.createFile();
+		final DbObjects files = u1.getFiles();
+		final File f2 = (File) files.get(f1.id());
+		if (tn.cache_enabled && f1 != f2)
+			throw new RuntimeException();
+		if (!tn.cache_enabled && f1.id() != f2.id())
+			throw new RuntimeException();
 		tn.delete(u1);
+
 	}
 
 	private void doRun1() throws Throwable {

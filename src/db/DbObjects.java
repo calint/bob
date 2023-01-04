@@ -71,7 +71,7 @@ public final class DbObjects implements Serializable {
 
 	/**
 	 * Convenience for get(int id).
-	 * 
+	 *
 	 * @return null if id is null.
 	 */
 	public DbObject get(final String id) {
