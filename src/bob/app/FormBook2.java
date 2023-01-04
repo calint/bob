@@ -79,15 +79,18 @@ public final class FormBook2 extends FormDbo {
 		}
 		o.setAuthorsStr(authorsSb.toString());
 
-		final int publisherId = getSelectedId(Book.publisher);
-		if (publisherId != 0) {
-			final Publisher publisher = (Publisher) tn.get(Publisher.class, publisherId);
-			o.setPublisher(publisher);
-			o.setPublisherStr(publisher.getName());
-		} else {
-			o.setPublisher(null);
-			o.setPublisherStr("");
-		}
+//		final int publisherId = getSelectedId(Book.publisher);
+//		if (publisherId != 0) {
+//			final Publisher publisher = (Publisher) tn.get(Publisher.class, publisherId);
+//			o.setPublisher(publisher);
+//			o.setPublisherStr(publisher.getName());
+//		} else {
+//			o.setPublisher(null);
+//			o.setPublisherStr("");
+//		}
+		final Publisher publisher = o.getPublisher();
+		o.setPublisherStr(publisher == null ? "" : publisher.getName());
+
 		o.setPublishedDate(getDate(Book.publishedDate));
 
 		final StringBuilder categoriesSb = new StringBuilder(128);

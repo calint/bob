@@ -16,7 +16,7 @@ import db.RelRefN;
 
 public final class InputRefN extends a {
 	private static final long serialVersionUID = 1L;
-	final private RelRefN rel;
+	final RelRefN rel;
 	final private Class<? extends ViewTable> viewTableSelectClass; // the view to use when selecting
 	final private Class<? extends Form> createFormCls;
 	final private LinkedHashSet<String> initialSelectedIds;

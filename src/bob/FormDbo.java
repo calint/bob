@@ -227,7 +227,17 @@ public abstract class FormDbo extends Form {
 		for (final a e : fields.values()) {
 			if (e instanceof InputRefN) { // ? ugly instanceof
 				final InputRefN r = (InputRefN) e;
-				r.save(o);
+				if (o.getClass().equals(r.rel.getFromClass())) {
+					r.save(o);
+				}
+				continue;
+			}
+			if (e instanceof InputRef) { // ? ugly instanceof
+				final InputRef r = (InputRef) e;
+				if (o.getClass().equals(r.rel.getFromClass())) {
+					r.save(o);
+				}
+				continue;
 			}
 		}
 	}

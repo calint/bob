@@ -10,7 +10,7 @@ import db.RelRef;
 
 public final class InputRef extends a {
 	private static final long serialVersionUID = 1L;
-	final private RelRef rel;
+	final RelRef rel;
 	final private Class<? extends ViewTable> viewTableSelectClass; // the view to use when selecting
 	final private Class<? extends Form> createFormCls;
 	private int selectedId;
@@ -92,9 +92,7 @@ public final class InputRef extends a {
 		x.xu(this);
 	}
 
-	public void save() {
-		final DbTransaction tn = Db.currentTransaction();
-		final DbObject o = tn.get(rel.getFromClass(), objId);
+	public void save(final DbObject o) {
 		rel.set(o, selectedId);
 	}
 
