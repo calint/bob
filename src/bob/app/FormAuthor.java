@@ -20,13 +20,13 @@ public final class FormAuthor extends FormDbo {
 	}
 
 	public String getTitle() {
-		final Author o = (Author) getObject(parentId, objectId);
+		final Author o = (Author) getObject();
 		return o == null ? "New author" : o.getName();
 	}
 
 	@Override
 	protected void render(final xwriter x) throws Throwable {
-		final Author o = (Author) getObject(parentId, objectId);
+		final Author o = (Author) getObject();
 		beginForm(x);
 		inputText(x, "Name", Author.name, "medium", o == null ? initStr : o.getName());
 		focus(x, Author.name);
@@ -34,13 +34,13 @@ public final class FormAuthor extends FormDbo {
 	}
 
 	@Override
-	protected DbObject createNewObject(final String parentId) {
+	protected DbObject createNewObject() {
 		return Db.currentTransaction().create(Author.class);
 	}
 
 	@Override
-	protected DbObject getObject(final String parentId, final String objectId) {
-		return Db.currentTransaction().get(Author.class, objectId);
+	protected DbObject getObject() {
+		return Db.currentTransaction().get(Author.class, getObjectId());
 	}
 
 	@Override

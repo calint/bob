@@ -30,13 +30,13 @@ public final class FormBook2 extends FormDbo {
 	}
 
 	public String getTitle() {
-		final Book o = (Book) getObject(parentId, objectId);
+		final Book o = (Book) getObject();
 		return o == null ? "New book" : o.getName();
 	}
 
 	@Override
 	protected void render(final xwriter x) throws Throwable {
-		final Book o = (Book) getObject(parentId, objectId);
+		final Book o = (Book) getObject();
 		beginForm(x);
 		inputText(x, "Title", Book.name, "long", o == null ? initStr : o.getName());
 		focus(x, Book.name);
@@ -51,13 +51,13 @@ public final class FormBook2 extends FormDbo {
 	}
 
 	@Override
-	protected DbObject createNewObject(final String parentId) {
+	protected DbObject createNewObject() {
 		return Db.currentTransaction().create(Book.class);
 	}
 
 	@Override
-	protected DbObject getObject(final String parentId, final String objectId) {
-		return Db.currentTransaction().get(Book.class, objectId);
+	protected DbObject getObject() {
+		return Db.currentTransaction().get(Book.class, getObjectId());
 	}
 
 	@Override

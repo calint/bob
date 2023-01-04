@@ -236,19 +236,19 @@ public abstract class FormDbo extends Form {
 	protected final void save(final xwriter x) throws Throwable {
 		final DbObject o;
 		if (objectId == null) { // create new
-			o = createNewObject(parentId);
+			o = createNewObject();
 			objectId = Integer.toString(o.id());
 		} else {
-			o = getObject(parentId, objectId);
+			o = getObject();
 		}
 		saveElems(o);
 
 		writeToObject(o);
 	}
 
-	protected abstract DbObject createNewObject(final String parentId);
+	protected abstract DbObject createNewObject();
 
-	protected abstract DbObject getObject(final String parentId, final String objectId);
+	protected abstract DbObject getObject();
 
 	protected abstract void writeToObject(final DbObject obj) throws Throwable;
 }

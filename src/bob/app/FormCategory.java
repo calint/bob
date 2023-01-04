@@ -20,13 +20,13 @@ public final class FormCategory extends FormDbo {
 	}
 
 	public String getTitle() {
-		final Category o = (Category) getObject(parentId, objectId);
+		final Category o = (Category) getObject();
 		return o == null ? "New category" : o.getName();
 	}
 
 	@Override
 	protected void render(final xwriter x) throws Throwable {
-		final Category o = (Category) getObject(parentId, objectId);
+		final Category o = (Category) getObject();
 		beginForm(x);
 		inputText(x, "Name", Category.name, "medium", o == null ? initStr : o.getName());
 		focus(x, Category.name);
@@ -34,12 +34,12 @@ public final class FormCategory extends FormDbo {
 	}
 
 	@Override
-	protected DbObject getObject(final String parentId, final String objectId) {
-		return Db.currentTransaction().get(Category.class, objectId);
+	protected DbObject getObject() {
+		return Db.currentTransaction().get(Category.class, getObjectId());
 	}
 
 	@Override
-	protected DbObject createNewObject(final String parentId) {
+	protected DbObject createNewObject() {
 		return Db.currentTransaction().create(Category.class);
 	}
 

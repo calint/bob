@@ -20,13 +20,13 @@ public final class FormPublisher extends FormDbo {
 	}
 
 	public String getTitle() {
-		final Publisher o = (Publisher) getObject(parentId, objectId);
+		final Publisher o = (Publisher) getObject();
 		return o == null ? "New publisher" : o.getName();
 	}
 
 	@Override
 	protected void render(final xwriter x) throws Throwable {
-		final Publisher o = (Publisher) getObject(parentId, objectId);
+		final Publisher o = (Publisher) getObject();
 		beginForm(x);
 		inputText(x, "Name", Publisher.name, "medium", o == null ? initStr : o.getName());
 		focus(x, Publisher.name);
@@ -34,13 +34,13 @@ public final class FormPublisher extends FormDbo {
 	}
 
 	@Override
-	protected DbObject createNewObject(final String parentId) {
+	protected DbObject createNewObject() {
 		return Db.currentTransaction().create(Publisher.class);
 	}
 
 	@Override
-	protected DbObject getObject(final String parentId, final String objectId) {
-		return Db.currentTransaction().get(Publisher.class, objectId);
+	protected DbObject getObject() {
+		return Db.currentTransaction().get(Publisher.class, getObjectId());
 	}
 
 	@Override
