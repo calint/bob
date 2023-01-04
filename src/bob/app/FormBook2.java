@@ -8,6 +8,7 @@ import b.xwriter;
 import bob.Action;
 import bob.FormDbo;
 import db.Db;
+import db.DbObject;
 import db.DbTransaction;
 import db.test.Author;
 import db.test.Book;
@@ -29,13 +30,13 @@ public final class FormBook2 extends FormDbo {
 	}
 
 	public String getTitle() {
-		final Book o = (Book) (objectId == null ? null : Db.currentTransaction().get(Book.class, objectId));
+		final Book o = (Book) getObject(parentId, objectId);
 		return o == null ? "New book" : o.getName();
 	}
 
 	@Override
 	protected void render(final xwriter x) throws Throwable {
-		final Book o = (Book) (objectId == null ? null : Db.currentTransaction().get(Book.class, objectId));
+		final Book o = (Book) getObject(parentId, objectId);
 		beginForm(x);
 		inputText(x, "Title", Book.name, "long", o == null ? initStr : o.getName());
 		focus(x, Book.name);
@@ -50,17 +51,19 @@ public final class FormBook2 extends FormDbo {
 	}
 
 	@Override
-	protected void save(final xwriter x) throws Throwable {
-		final DbTransaction tn = Db.currentTransaction();
-		final Book o;
-		if (objectId == null) { // create new
-			o = (Book) tn.create(Book.class);
-			objectId = Integer.toString(o.id());
-		} else {
-			o = (Book) tn.get(Book.class, objectId);
-		}
-		saveElems(x, o); // ? sort of ugly
+	protected DbObject createNewObject(final String parentId) {
+		return Db.currentTransaction().create(Book.class);
+	}
 
+	@Override
+	protected DbObject getObject(final String parentId, final String objectId) {
+		return Db.currentTransaction().get(Book.class, objectId);
+	}
+
+	@Override
+	protected void writeToObject(final DbObject obj) throws Throwable {
+		final Book o = (Book) obj;
+		final DbTransaction tn = Db.currentTransaction();
 		o.setName(getStr(Book.name));
 
 		final StringBuilder authorsSb = new StringBuilder(128);

@@ -10,6 +10,7 @@ b
 [ ] ViewTable: click on row callback working with other links in the row
 [ ]   https://stackoverflow.com/questions/32404185/event-onclick-on-td-and-tr
 [ ]   https://stackoverflow.com/questions/28477422/checkbox-click-overriding-table-row-click
+[ ] bob: Form: include view
 [x] review x.css using bob.css
 [ ] x.js and bob.js common script extracted
 [x] xwriter: select renderer
@@ -33,7 +34,7 @@ b
 [ ]   make it pretty. DboField, DboRel, save etc
 [ ]   FormRenderer wrapping xwriter and "this"? cookie.eat() or eat(cookie)
 [ ] ViewTable sort options
-[ ] ViewTable rendered by javascript?
+[ ] ViewTable rendered by javascript backed by json?
 [ ] b.user: email, password hash, security bits. b.session: ref user
 [o] ViewTable:
 [x]   infinite scroll instead of paging (?)

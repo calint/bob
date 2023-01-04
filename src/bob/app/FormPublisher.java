@@ -3,7 +3,7 @@ package bob.app;
 import b.xwriter;
 import bob.FormDbo;
 import db.Db;
-import db.DbTransaction;
+import db.DbObject;
 import db.test.Publisher;
 
 public final class FormPublisher extends FormDbo {
@@ -20,15 +20,13 @@ public final class FormPublisher extends FormDbo {
 	}
 
 	public String getTitle() {
-		final Publisher o = (Publisher) (objectId == null ? null
-				: Db.currentTransaction().get(Publisher.class, objectId));
+		final Publisher o = (Publisher) getObject(parentId, objectId);
 		return o == null ? "New publisher" : o.getName();
 	}
 
 	@Override
 	protected void render(final xwriter x) throws Throwable {
-		final Publisher o = (Publisher) (objectId == null ? null
-				: Db.currentTransaction().get(Publisher.class, objectId));
+		final Publisher o = (Publisher) getObject(parentId, objectId);
 		beginForm(x);
 		inputText(x, "Name", Publisher.name, "medium", o == null ? initStr : o.getName());
 		focus(x, Publisher.name);
@@ -36,15 +34,18 @@ public final class FormPublisher extends FormDbo {
 	}
 
 	@Override
-	protected void save(final xwriter x) throws Throwable {
-		final DbTransaction tn = Db.currentTransaction();
-		final Publisher o;
-		if (objectId == null) { // create new
-			o = (Publisher) tn.create(Publisher.class);
-			objectId = Integer.toString(o.id());
-		} else {
-			o = (Publisher) tn.get(Publisher.class, objectId);
-		}
+	protected DbObject createNewObject(final String parentId) {
+		return Db.currentTransaction().create(Publisher.class);
+	}
+
+	@Override
+	protected DbObject getObject(final String parentId, final String objectId) {
+		return Db.currentTransaction().get(Publisher.class, objectId);
+	}
+
+	@Override
+	protected void writeToObject(final DbObject obj) throws Throwable {
+		final Publisher o = (Publisher) obj;
 		o.setName(getStr(Publisher.name));
 	}
 }

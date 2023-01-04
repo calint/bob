@@ -162,8 +162,12 @@ public final class DbTransaction {
 	/**
 	 * Get object by id using string. Convenience method that parses the string to
 	 * integer.
+	 *
+	 * @return null if id is null or object of type cls with id parsed to integer.
 	 */
 	public DbObject get(final Class<? extends DbObject> cls, final String id) {
+		if (id == null)
+			return null;
 		return get(cls, Integer.parseInt(id));
 	}
 

@@ -479,7 +479,7 @@ public abstract class ViewTable extends View {
 ////					x.attr("onclick", "$x('" + tv.id() + xwriter.enc_js_str(" clk " + id) + "')");
 //					x.tagoe();
 //				} else {
-					x.tr();
+				x.tr();
 //				}
 				if ((tv.enabledViewBits & View.BIT_SELECT) != 0 || tv.isSelectModeMulti) { // render checkbox
 					final String id = tv.getIdFrom(o);

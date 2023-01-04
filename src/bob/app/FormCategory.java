@@ -3,7 +3,7 @@ package bob.app;
 import b.xwriter;
 import bob.FormDbo;
 import db.Db;
-import db.DbTransaction;
+import db.DbObject;
 import db.test.Category;
 
 public final class FormCategory extends FormDbo {
@@ -20,13 +20,13 @@ public final class FormCategory extends FormDbo {
 	}
 
 	public String getTitle() {
-		final Category o = (Category) (objectId == null ? null : Db.currentTransaction().get(Category.class, objectId));
+		final Category o = (Category) getObject(parentId, objectId);
 		return o == null ? "New category" : o.getName();
 	}
 
 	@Override
 	protected void render(final xwriter x) throws Throwable {
-		final Category o = (Category) (objectId == null ? null : Db.currentTransaction().get(Category.class, objectId));
+		final Category o = (Category) getObject(parentId, objectId);
 		beginForm(x);
 		inputText(x, "Name", Category.name, "medium", o == null ? initStr : o.getName());
 		focus(x, Category.name);
@@ -34,15 +34,18 @@ public final class FormCategory extends FormDbo {
 	}
 
 	@Override
-	protected void save(final xwriter x) throws Throwable {
-		final DbTransaction tn = Db.currentTransaction();
-		final Category o;
-		if (objectId == null) { // create new
-			o = (Category) tn.create(Category.class);
-			objectId = Integer.toString(o.id());
-		} else {
-			o = (Category) tn.get(Category.class, objectId);
-		}
+	protected DbObject getObject(final String parentId, final String objectId) {
+		return Db.currentTransaction().get(Category.class, objectId);
+	}
+
+	@Override
+	protected DbObject createNewObject(final String parentId) {
+		return Db.currentTransaction().create(Category.class);
+	}
+
+	@Override
+	protected void writeToObject(final DbObject obj) throws Throwable {
+		final Category o = (Category) obj;
 		o.setName(getStr(Category.name));
 	}
 }

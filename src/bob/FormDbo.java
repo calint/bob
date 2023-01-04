@@ -223,7 +223,7 @@ public abstract class FormDbo extends Form {
 		return fields.get(id);
 	}
 
-	final protected void saveElems(final xwriter x, final DbObject o) {
+	private void saveElems(final DbObject o) {
 		for (final a e : fields.values()) {
 			if (e instanceof InputRefN) { // ? ugly instanceof
 				final InputRefN r = (InputRefN) e;
@@ -231,4 +231,24 @@ public abstract class FormDbo extends Form {
 			}
 		}
 	}
+
+	@Override
+	protected final void save(final xwriter x) throws Throwable {
+		final DbObject o;
+		if (objectId == null) { // create new
+			o = createNewObject(parentId);
+			objectId = Integer.toString(o.id());
+		} else {
+			o = getObject(parentId, objectId);
+		}
+		saveElems(o);
+
+		writeToObject(o);
+	}
+
+	protected abstract DbObject createNewObject(final String parentId);
+
+	protected abstract DbObject getObject(final String parentId, final String objectId);
+
+	protected abstract void writeToObject(final DbObject obj) throws Throwable;
 }

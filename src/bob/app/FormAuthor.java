@@ -3,7 +3,7 @@ package bob.app;
 import b.xwriter;
 import bob.FormDbo;
 import db.Db;
-import db.DbTransaction;
+import db.DbObject;
 import db.test.Author;
 
 public final class FormAuthor extends FormDbo {
@@ -20,13 +20,13 @@ public final class FormAuthor extends FormDbo {
 	}
 
 	public String getTitle() {
-		final Author o = (Author) (objectId == null ? null : Db.currentTransaction().get(Author.class, objectId));
+		final Author o = (Author) getObject(parentId, objectId);
 		return o == null ? "New author" : o.getName();
 	}
 
 	@Override
 	protected void render(final xwriter x) throws Throwable {
-		final Author o = (Author) (objectId == null ? null : Db.currentTransaction().get(Author.class, objectId));
+		final Author o = (Author) getObject(parentId, objectId);
 		beginForm(x);
 		inputText(x, "Name", Author.name, "medium", o == null ? initStr : o.getName());
 		focus(x, Author.name);
@@ -34,15 +34,18 @@ public final class FormAuthor extends FormDbo {
 	}
 
 	@Override
-	protected void save(final xwriter x) throws Throwable {
-		final DbTransaction tn = Db.currentTransaction();
-		final Author o;
-		if (objectId == null) { // create new
-			o = (Author) tn.create(Author.class);
-			objectId = Integer.toString(o.id());
-		} else {
-			o = (Author) tn.get(Author.class, objectId);
-		}
+	protected DbObject createNewObject(final String parentId) {
+		return Db.currentTransaction().create(Author.class);
+	}
+
+	@Override
+	protected DbObject getObject(final String parentId, final String objectId) {
+		return Db.currentTransaction().get(Author.class, objectId);
+	}
+
+	@Override
+	protected void writeToObject(final DbObject obj) throws Throwable {
+		final Author o = (Author) obj;
 		o.setName(getStr(Author.name));
 	}
 }
