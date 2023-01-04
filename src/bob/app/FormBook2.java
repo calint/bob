@@ -71,6 +71,7 @@ public final class FormBook2 extends FormDbo {
 		if (authorsSb.length() > 1) {
 			authorsSb.setLength(authorsSb.length() - 1);
 		}
+		// denormalize for better performance
 		o.setAuthorsStr(authorsSb.toString());
 
 		// note publisher relation updated by FormDbo
@@ -88,6 +89,7 @@ public final class FormBook2 extends FormDbo {
 		if (categoriesSb.length() > 1) {
 			categoriesSb.setLength(categoriesSb.length() - 1);
 		}
+		// denormalize for better performance
 		o.setCategoriesStr(categoriesSb.toString());
 
 		final DataText d = o.getData(true);
