@@ -1,7 +1,7 @@
 # bob
 experimental web application built using server b and object persistence dbo
 
-- exploring using digitalocean.com and linode.com services
+exploring using digitalocean.com and linode.com services
   - load balancing
   - mysql cluster
   - ssl enabled
