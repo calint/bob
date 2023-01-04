@@ -108,9 +108,9 @@ public class import_books extends TestCase {
 			}
 			final Book o = (Book) tn.create(Book.class);
 			o.setName(ls.get(0).trim());
-			final String authors = ls.get(2).trim();
-			if (authors.length() != 0) {
-				final List<String> authorsList = Util.readList(new StringReader(authors), ',', '\'');
+			final String authorsStr = ls.get(2).trim();
+			if (authorsStr.length() != 0) {
+				final List<String> authorsList = Util.readList(new StringReader(authorsStr), ',', '\'');
 				final StringBuilder authorsSb = new StringBuilder(128);
 				for (final String s : authorsList) {
 					final String st = s.trim();
