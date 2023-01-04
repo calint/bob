@@ -67,7 +67,14 @@ public final class DbObjects implements Serializable { // ? review select
 		return ls.get(0);
 	}
 
+	/**
+	 * Convenience for get(int id).
+	 * 
+	 * @return null if id is null.
+	 */
 	public DbObject get(final String id) {
+		if (id == null)
+			return null;
 		return get(Integer.parseInt(id));
 	}
 
