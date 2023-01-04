@@ -237,7 +237,6 @@ public abstract class FormDbo extends Form {
 				if (o.getClass().equals(r.rel.getFromClass())) {
 					r.save(o);
 				}
-				continue;
 			}
 		}
 	}
