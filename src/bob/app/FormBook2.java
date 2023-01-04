@@ -23,7 +23,7 @@ public final class FormBook2 extends FormDbo {
 	}
 
 	public FormBook2(final String objectId, final String initStr) {
-		super(null, objectId, BIT_SAVE_CLOSE | BIT_SAVE | BIT_CLOSE);
+		super(null, objectId);
 		this.initStr = initStr;
 	}
 
@@ -65,7 +65,7 @@ public final class FormBook2 extends FormDbo {
 		final StringBuilder authorsSb = new StringBuilder(128);
 		// note authors relation updated by FormDbo
 		for (final DbObject ao : o.getAuthors().toList()) {
-			Author a = (Author) ao;
+			final Author a = (Author) ao;
 			authorsSb.append(a.getName()).append(';');
 		}
 		if (authorsSb.length() > 1) {
@@ -83,7 +83,7 @@ public final class FormBook2 extends FormDbo {
 		final StringBuilder categoriesSb = new StringBuilder(128);
 		// note categories relation updated by FormDbo
 		for (final DbObject co : o.getCategories().toList()) {
-			Category c = (Category) co;
+			final Category c = (Category) co;
 			categoriesSb.append(c.getName()).append(';');
 		}
 		if (categoriesSb.length() > 1) {

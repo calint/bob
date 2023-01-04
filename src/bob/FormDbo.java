@@ -23,6 +23,10 @@ public abstract class FormDbo extends Form {
 		super(parentId, objectId, enabledFormBits);
 	}
 
+	public FormDbo(final String parentId, final String objectId) {
+		this(parentId, objectId, BIT_SAVE_CLOSE | BIT_SAVE | BIT_CLOSE);
+	}
+
 	final protected void beginForm(final xwriter x) {
 		x.table("f").nl();
 	}
@@ -246,6 +250,7 @@ public abstract class FormDbo extends Form {
 				if (o.getClass().equals(r.rel.getFromClass())) {
 					r.save(o);
 				}
+				continue;
 			}
 		}
 		writeToObject(o);

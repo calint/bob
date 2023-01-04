@@ -15,7 +15,7 @@ public final class FormCategory extends FormDbo {
 	}
 
 	public FormCategory(final String objectId, final String initStr) {
-		super(null, objectId, BIT_SAVE_CLOSE | BIT_SAVE | BIT_CLOSE);
+		super(null, objectId);
 		this.initStr = initStr;
 	}
 
