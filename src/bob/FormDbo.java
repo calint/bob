@@ -195,7 +195,7 @@ public abstract class FormDbo extends Form {
 
 	final protected String getStr(final String field) {
 		final a e = fields.get(field);
-		return e.str();
+		return e.str().trim();
 	}
 
 	final protected String getStr(final DbField f) {

@@ -25,15 +25,6 @@ public final class FormAuthor extends FormDbo {
 	}
 
 	@Override
-	protected void render(final xwriter x) throws Throwable {
-		final Author o = (Author) getObject();
-		beginForm(x);
-		inputText(x, "Name", Author.name, "medium", o == null ? initStr : o.getName());
-		focus(x, Author.name);
-		endForm(x);
-	}
-
-	@Override
 	protected DbObject createObject() {
 		return Db.currentTransaction().create(Author.class);
 	}
@@ -41,6 +32,15 @@ public final class FormAuthor extends FormDbo {
 	@Override
 	protected DbObject getObject() {
 		return Db.currentTransaction().get(Author.class, getObjectId());
+	}
+
+	@Override
+	protected void render(final xwriter x) throws Throwable {
+		final Author o = (Author) getObject();
+		beginForm(x);
+		inputText(x, "Name", Author.name, "medium", o == null ? initStr : o.getName());
+		focus(x, Author.name);
+		endForm(x);
 	}
 
 	@Override

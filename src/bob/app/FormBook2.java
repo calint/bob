@@ -33,6 +33,16 @@ public final class FormBook2 extends FormDbo {
 	}
 
 	@Override
+	protected DbObject createObject() {
+		return Db.currentTransaction().create(Book.class);
+	}
+
+	@Override
+	protected DbObject getObject() {
+		return Db.currentTransaction().get(Book.class, getObjectId());
+	}
+
+	@Override
 	protected void render(final xwriter x) throws Throwable {
 		final Book o = (Book) getObject();
 		beginForm(x);
@@ -45,16 +55,6 @@ public final class FormBook2 extends FormDbo {
 		inputTextArea(x, "Description", DataText.data, "large", o == null ? "" : o.getData(true).getData());
 		endForm(x);
 		x.ax(this, "test", "test").nl();
-	}
-
-	@Override
-	protected DbObject createObject() {
-		return Db.currentTransaction().create(Book.class);
-	}
-
-	@Override
-	protected DbObject getObject() {
-		return Db.currentTransaction().get(Book.class, getObjectId());
 	}
 
 	@Override

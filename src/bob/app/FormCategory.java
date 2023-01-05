@@ -25,15 +25,6 @@ public final class FormCategory extends FormDbo {
 	}
 
 	@Override
-	protected void render(final xwriter x) throws Throwable {
-		final Category o = (Category) getObject();
-		beginForm(x);
-		inputText(x, "Name", Category.name, "medium", o == null ? initStr : o.getName());
-		focus(x, Category.name);
-		endForm(x);
-	}
-
-	@Override
 	protected DbObject getObject() {
 		return Db.currentTransaction().get(Category.class, getObjectId());
 	}
@@ -41,6 +32,15 @@ public final class FormCategory extends FormDbo {
 	@Override
 	protected DbObject createObject() {
 		return Db.currentTransaction().create(Category.class);
+	}
+
+	@Override
+	protected void render(final xwriter x) throws Throwable {
+		final Category o = (Category) getObject();
+		beginForm(x);
+		inputText(x, "Name", Category.name, "medium", o == null ? initStr : o.getName());
+		focus(x, Category.name);
+		endForm(x);
 	}
 
 	@Override
