@@ -19,6 +19,7 @@ public class test1 extends TestCase {
 		doRun1();
 		doRun2();
 		doRun3();
+		doRun4();
 	}
 
 	private void doRun0() throws Throwable {
@@ -470,4 +471,16 @@ public class test1 extends TestCase {
 		tn.delete(f3);
 	}
 
+	public void doRun4() throws Throwable {
+		final DbTransaction tn = Db.currentTransaction();
+		final User u = (User) tn.create(User.class);
+		final String s = "' \" \0 \n \r \\ \032";
+		u.setName(s);
+		tn.commit();
+		final User u2 = (User) tn.get(User.class, u.id());
+		if (u != u2 && !u2.getName().equals(s))
+			throw new RuntimeException();
+
+		tn.delete(u);
+	}
 }
