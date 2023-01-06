@@ -6,6 +6,7 @@ import bob.Titled;
 import db.DbObject;
 import db.DbObjects;
 import db.FldDateTime;
+import db.FldInt;
 import db.FldStr;
 import db.IndexRel;
 import db.RelAgg;
@@ -24,6 +25,7 @@ public final class Book extends DbObject implements Titled {
 	public final static RelAgg data = new RelAgg(DataText.class);
 	public final static FldStr categoriesStr = new FldStr(800);
 	public final static RelRefN categories = new RelRefN(Category.class);
+	public final static FldInt inStock = new FldInt();
 
 	// optimizes Book join with DataText when doing full text query
 	public final static IndexRel ixRelData = new IndexRel(data);
@@ -77,6 +79,15 @@ public final class Book extends DbObject implements Titled {
 		set(categoriesStr, v);
 	}
 
+	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
+	public int getInStock(){
+		return getInt(inStock);
+	}
+
+	public void setInStock(final int v){
+		set(inStock,v);
+	}
+	
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
 	public void addAuthor(final int id) {
 		authors.add(this, id);

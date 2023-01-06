@@ -52,6 +52,7 @@ public final class FormBook2 extends FormDbo {
 		inputRef(x, "Publisher", o, Book.publisher, TablePublishers.class, FormPublisher.class);
 		inputDate(x, "Published date", Book.publishedDate, "short", o == null ? null : o.getPublishedDate());
 		inputRefN(x, "Categories", o, Book.categories, TableCategories.class, FormCategory.class);
+		inputInt(x, "In stock", Book.inStock, "nbr", o == null ? 0 : o.getInStock());
 		inputTextArea(x, "Description", DataText.data, "large", o == null ? "" : o.getData(true).getData());
 		endForm(x);
 		x.ax(this, "test", "test").nl();

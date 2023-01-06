@@ -1,6 +1,7 @@
 package bob;
 
 import java.sql.Timestamp;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.LinkedHashMap;
@@ -12,6 +13,7 @@ import b.xwriter;
 import db.DbField;
 import db.DbObject;
 import db.FldDateTime;
+import db.FldInt;
 import db.FldStr;
 import db.RelRef;
 import db.RelRefN;
@@ -23,6 +25,7 @@ public abstract class FormDbo extends Form {
 	final private LinkedHashMap<String, DbField> dbfields = new LinkedHashMap<String, DbField>();
 	private transient SimpleDateFormat fmtDate;
 	private transient SimpleDateFormat fmtDateTime;
+	private transient NumberFormat fmtNbr;
 
 	public FormDbo(final String parentId, final String objectId, final int enabledFormBits) {
 		super(parentId, objectId, enabledFormBits);
@@ -114,6 +117,20 @@ public abstract class FormDbo extends Form {
 		return new Timestamp(fmtDateTime.parse(s).getTime());
 	}
 
+	final protected String formatInt(final int i) {
+		if (fmtNbr == null) {
+			fmtNbr = NumberFormat.getNumberInstance();
+		}
+		return fmtNbr.format(i);
+	}
+
+	final protected int parseInt(final String s) throws ParseException {
+		if (fmtNbr == null) {
+			fmtNbr = NumberFormat.getNumberInstance();
+		}
+		return fmtNbr.parse(s).intValue();
+	}
+
 	final protected void inputDate(final xwriter x, final String label, final String field, final String styleClass,
 			final Timestamp value) {
 		x.tr().td("lbl").p(label).p(":").td("val");
@@ -139,6 +156,20 @@ public abstract class FormDbo extends Form {
 	final protected void inputDateTime(final xwriter x, final String label, final DbField f, final String styleClass,
 			final Timestamp value) {
 		inputDateTime(x, label, f.getName(), styleClass, value);
+		dbfields.put(f.getName(), f);
+	}
+
+	final protected void inputInt(final xwriter x, final String label, final String field, final String styleClass,
+			final int value) {
+		x.tr().td("lbl").p(label).p(":").td("val");
+		final a e = elemFor(field, formatInt(value));
+		x.inp(e, null, styleClass, null, null, this, "sc", null, null);
+		x.nl();
+	}
+
+	final protected void inputInt(final xwriter x, final String label, final DbField f, final String styleClass,
+			final int value) {
+		inputInt(x, label, f.getName(), styleClass, value);
 		dbfields.put(f.getName(), f);
 	}
 
@@ -260,6 +291,15 @@ public abstract class FormDbo extends Form {
 		return getDateTime(field.getName());
 	}
 
+	final protected int getInt(final String field) throws ParseException {
+		final a e = fields.get(field);
+		return parseInt(e.str());
+	}
+
+	final protected int getInt(final DbField field) throws ParseException {
+		return getInt(field.getName());
+	}
+
 	final protected a getElem(final String field) {
 		return fields.get(field);
 	}
@@ -304,6 +344,10 @@ public abstract class FormDbo extends Form {
 					ts = getDate(key);
 				}
 				DbObject.setFieldValue(o, dbf, ts);
+				continue;
+			}
+			if (dbf instanceof FldInt) {
+				DbObject.setFieldValue(o, dbf, getInt(key));
 				continue;
 			}
 		}
