@@ -50,7 +50,7 @@ public final class FormBook2 extends FormDbo {
 		focus(x, Book.name);
 		inputRefN(x, "Authors", o, Book.authors, TableAuthors.class, FormAuthor.class);
 		inputRef(x, "Publisher", o, Book.publisher, TablePublishers.class, FormPublisher.class);
-		inputDate(x, "Published date", Book.publishedDate, "short", o == null ? null : o.getPublishedDate());
+		inputDate(x, "Published date", Book.publishedDate, null, o == null ? null : o.getPublishedDate());
 		inputRefN(x, "Categories", o, Book.categories, TableCategories.class, FormCategory.class);
 		inputInt(x, "In stock", Book.inStock, "nbr", o == null ? 0 : o.getInStock());
 		inputBool(x, "Show in store", Book.showInStore, null, o == null ? false : o.isShowInStore());
