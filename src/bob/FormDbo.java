@@ -83,7 +83,7 @@ public abstract class FormDbo extends Form {
 		if (ts == null)
 			return "";
 		if (fmtDateTime == null) {
-			fmtDateTime = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm"); // formatted for input type datetime-local
+			fmtDateTime = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm"); // format of input type datetime-local
 		}
 		return fmtDateTime.format(ts);
 	}
@@ -422,7 +422,7 @@ public abstract class FormDbo extends Form {
 		if (Util.isEmpty(s))
 			return null;
 		if (fmtDateTime == null) {
-			fmtDateTime = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm");
+			fmtDateTime = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm"); // format of input type datetime-local
 		}
 		return new Timestamp(fmtDateTime.parse(s).getTime());
 	}
