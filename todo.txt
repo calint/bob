@@ -13,6 +13,7 @@ b
 [ ]   https://stackoverflow.com/questions/28477422/checkbox-click-overriding-table-row-click
 [ ] bob: Form: include view
 [ ] bob: Form: upload file
+[ ] bob: Form: handling of exceptions, focus and highlighting field
 [x] review x.css using bob.css
 [ ] x.js and bob.js common script extracted
 [x] xwriter: select renderer
