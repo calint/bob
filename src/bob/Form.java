@@ -12,10 +12,9 @@ public abstract class Form extends a implements Titled {
 	public final static int BIT_SAVE_CLOSE = 1;
 	public final static int BIT_SAVE = 2;
 	public final static int BIT_CLOSE = 4;
-	/** The actions that are enabled on the form. */
-	final protected int enabledFormBits;
+	protected final int enabledFormBits;
 	public Container ans; // actions container
-	public Container scc; // save and close, save, close actions container
+	public Container scc; // "save and close", "save", "close" actions container
 	protected String objectId;
 	private SelectReceiverSingle selectReceiverSingle;
 
@@ -109,7 +108,9 @@ public abstract class Form extends a implements Titled {
 		saveAndClose(x);
 	}
 
-	/** Triggers a write to the interface when an object has been created. */
+	/**
+	 * Form calls onSelect on interface at save after object has been created.
+	 */
 	public final void setSelectMode(final SelectReceiverSingle srs) {
 		selectReceiverSingle = srs;
 	}

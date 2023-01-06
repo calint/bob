@@ -61,25 +61,4 @@ public final class FormBook extends Form {
 		final DataText d = o.getData(true);
 		d.setMeta(o.getName() + " " + o.getAuthorsStr() + " " + o.getPublisher());
 	}
-
-//	@Override
-//	protected List<action> getActionsList() {
-//		final List<action> ls = new ArrayList<action>();
-//		ls.add(new action("alert me", "alert"));
-//		return ls;
-//	}
-//
-//	@Override
-//	protected void onAction(final xwriter x, final action act) {
-//		if ("alert".equals(act.code())) {
-//			x.xalert("alert");
-//			return;
-//		}
-//		super.onAction(x, act);
-//	}
-
-//	@Override
-//	public final void x_sc(final xwriter x, final String param) throws Throwable {
-//		saveAndClose(x);
-//	}
 }
