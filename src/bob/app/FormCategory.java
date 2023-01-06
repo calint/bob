@@ -15,7 +15,7 @@ public final class FormCategory extends FormDbo {
 	}
 
 	public FormCategory(final String objectId, final String initStr) {
-		super(null, objectId);
+		super(objectId);
 		this.initStr = initStr;
 	}
 

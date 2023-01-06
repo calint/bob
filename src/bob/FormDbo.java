@@ -36,12 +36,12 @@ public abstract class FormDbo extends Form {
 	private transient SimpleDateFormat fmtDateTime;
 	private transient NumberFormat fmtNbr;
 
-	public FormDbo(final String parentId, final String objectId) {
-		this(parentId, objectId, BIT_SAVE_CLOSE | BIT_SAVE | BIT_CLOSE);
+	public FormDbo(final String objectId) {
+		this(objectId, BIT_SAVE_CLOSE | BIT_SAVE | BIT_CLOSE);
 	}
 
-	public FormDbo(final String parentId, final String objectId, final int enabledFormBits) {
-		super(parentId, objectId, enabledFormBits);
+	public FormDbo(final String objectId, final int enabledFormBits) {
+		super(objectId, enabledFormBits);
 	}
 
 	@Override

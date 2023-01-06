@@ -14,18 +14,12 @@ public abstract class Form extends a implements Titled {
 	public final static int BIT_CLOSE = 4;
 	/** The actions that are enabled on the form. */
 	final protected int enabledFormBits;
-
 	public Container ans; // actions container
 	public Container scc; // save and close, save, close actions container
-	/** Parent object id. */
-	protected String parentId;
-	/** Object id. */
 	protected String objectId;
-
 	private SelectReceiverSingle selectReceiverSingle;
 
-	public Form(final String parentId, final String objectId, final int enabledFormBits) {
-		this.parentId = parentId;
+	public Form(final String objectId, final int enabledFormBits) {
 		this.objectId = objectId;
 		this.enabledFormBits = enabledFormBits;
 		if ((enabledFormBits & BIT_SAVE_CLOSE) != 0) {
@@ -45,23 +39,20 @@ public abstract class Form extends a implements Titled {
 		}
 	}
 
-	public final String getParentId() {
-		return parentId;
-	}
-
 	public final String getObjectId() {
 		return objectId;
 	}
 
 	@Override
 	public final void to(final xwriter x) throws Throwable {
-		x.script().p("window.onscroll=null;").script_(); // disable infinite scroll event
-		x.nl();
+		x.script().p("window.onscroll=null;").script_().nl(); // disable infinite scroll event
 		if (!ans.elements().isEmpty()) {
 			x.divh(ans, "ac").nl();
 		}
 		render(x);
-		x.divh(scc, "sc").nl();
+		if (!scc.elements().isEmpty()) {
+			x.divh(scc, "sc").nl();
+		}
 	}
 
 	@Override

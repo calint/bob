@@ -23,7 +23,7 @@ public final class FormBook2 extends FormDbo {
 	}
 
 	public FormBook2(final String objectId, final String initStr) {
-		super(null, objectId);
+		super(objectId);
 		this.initStr = initStr;
 	}
 

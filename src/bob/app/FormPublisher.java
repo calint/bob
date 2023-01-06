@@ -15,7 +15,7 @@ public final class FormPublisher extends FormDbo {
 	}
 
 	public FormPublisher(final String objectId, final String initStr) {
-		super(null, objectId);
+		super(objectId);
 		this.initStr = initStr;
 	}
 

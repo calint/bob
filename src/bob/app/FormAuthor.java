@@ -15,7 +15,7 @@ public final class FormAuthor extends FormDbo {
 	}
 
 	public FormAuthor(final String objectId, final String initStr) {
-		super(null, objectId);
+		super(objectId);
 		this.initStr = initStr;
 	}
 
