@@ -12,6 +12,7 @@ import b.a;
 import b.xwriter;
 import db.DbField;
 import db.DbObject;
+import db.FldBool;
 import db.FldDateTime;
 import db.FldInt;
 import db.FldLng;
@@ -203,6 +204,20 @@ public abstract class FormDbo extends Form {
 		dbfields.put(f.getName(), f);
 	}
 
+	final protected void inputBool(final xwriter x, final String label, final String field, final String styleClass,
+			final boolean value) {
+		x.tr().td("lbl").p(label).p(":").td("val");
+		final a e = elemFor(field, value ? "1" : "0");
+		x.inp(e, "checkbox", styleClass, null, null, this, "sc", null, null);
+		x.nl();
+	}
+
+	final protected void inputBool(final xwriter x, final String label, final DbField f, final String styleClass,
+			final boolean value) {
+		inputBool(x, label, f.getName(), styleClass, value);
+		dbfields.put(f.getName(), f);
+	}
+
 	final protected void inputRefN(final xwriter x, final String label, final String field, final DbObject o,
 			final RelRefN rel, final Class<? extends ViewTable> viewTableSelectClass,
 			final Class<? extends Form> createFormCls) {
@@ -339,6 +354,15 @@ public abstract class FormDbo extends Form {
 		return getLng(field.getName());
 	}
 
+	final protected boolean getBool(final String field) throws ParseException {
+		final a e = fields.get(field);
+		return "1".equals(e.str());
+	}
+
+	final protected boolean getBool(final DbField field) throws ParseException {
+		return getBool(field.getName());
+	}
+
 	final protected a getElem(final String field) {
 		return fields.get(field);
 	}
@@ -402,6 +426,10 @@ public abstract class FormDbo extends Form {
 			}
 			if (dbf instanceof FldLng) {
 				DbObject.setFieldValue(o, dbf, getLng(key));
+				continue;
+			}
+			if (dbf instanceof FldBool) {
+				DbObject.setFieldValue(o, dbf, getBool(key));
 				continue;
 			}
 		}
