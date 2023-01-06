@@ -73,8 +73,8 @@ public abstract class DbObject implements Serializable {
 	}
 
 	/**
-	 * Puts object in the field value map without marking field dirty triggering an
-	 * update. Used by user defined DbFields to optimize get/set data
+	 * Puts object in the field value map without marking field dirty and triggering
+	 * an update. Used by user defined DbFields to optimize get/set data
 	 * transformations.
 	 */
 	final protected void put(final DbField field, final Object value) {
