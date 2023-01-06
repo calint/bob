@@ -83,7 +83,7 @@ public abstract class FormDbo extends Form {
 		if (ts == null)
 			return "";
 		if (fmtDateTime == null) {
-			fmtDateTime = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+			fmtDateTime = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm"); // formatted for input type datetime-local
 		}
 		return fmtDateTime.format(ts);
 	}
@@ -121,8 +121,7 @@ public abstract class FormDbo extends Form {
 	}
 
 	final protected boolean getBool(final String field) throws ParseException {
-		final a e = fields.get(field);
-		return "1".equals(e.str());
+		return "1".equals(getStr(field));
 	}
 
 	final protected Timestamp getDate(final FldDateTime field) throws ParseException {
@@ -130,8 +129,7 @@ public abstract class FormDbo extends Form {
 	}
 
 	final protected Timestamp getDate(final String field) throws ParseException {
-		final a e = fields.get(field);
-		return parseDate(e.str());
+		return parseDate(getStr(field));
 	}
 
 	final protected Timestamp getDateTime(final FldDateTime field) throws ParseException {
@@ -139,8 +137,7 @@ public abstract class FormDbo extends Form {
 	}
 
 	final protected Timestamp getDateTime(final String field) throws ParseException {
-		final a e = fields.get(field);
-		return parseDateTime(e.str());
+		return parseDateTime(getStr(field));
 	}
 
 	final protected double getDbl(final FldDbl field) throws ParseException {
@@ -148,8 +145,7 @@ public abstract class FormDbo extends Form {
 	}
 
 	final protected double getDbl(final String field) throws ParseException {
-		final a e = fields.get(field);
-		return parseDbl(e.str());
+		return parseDbl(getStr(field));
 	}
 
 	final protected a getElem(final DbField f) {
@@ -165,8 +161,7 @@ public abstract class FormDbo extends Form {
 	}
 
 	final protected float getFlt(final String field) throws ParseException {
-		final a e = fields.get(field);
-		return parseFlt(e.str());
+		return parseFlt(getStr(field));
 	}
 
 	final protected int getInt(final FldInt field) throws ParseException {
@@ -174,8 +169,7 @@ public abstract class FormDbo extends Form {
 	}
 
 	final protected int getInt(final String field) throws ParseException {
-		final a e = fields.get(field);
-		return parseInt(e.str());
+		return parseInt(getStr(field));
 	}
 
 	final protected long getLng(final FldLng field) throws ParseException {
@@ -183,8 +177,7 @@ public abstract class FormDbo extends Form {
 	}
 
 	final protected long getLng(final String field) throws ParseException {
-		final a e = fields.get(field);
-		return parseLng(e.str());
+		return parseLng(getStr(field));
 	}
 
 	protected abstract DbObject getObject();
