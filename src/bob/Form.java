@@ -22,7 +22,7 @@ public abstract class Form extends a implements Titled {
 	/** Object id. */
 	protected String objectId;
 
-	private SelectReceiverSingle objectIdReceiver;
+	private SelectReceiverSingle selectReceiverSingle;
 
 	public Form(final String parentId, final String objectId, final int enabledFormBits) {
 		this.parentId = parentId;
@@ -76,8 +76,8 @@ public abstract class Form extends a implements Titled {
 			}
 			if ("s".equals(code) && (enabledFormBits & BIT_SAVE) != 0) {
 				save(x);
-				if (objectIdReceiver != null) {
-					objectIdReceiver.onSelect(objectId);
+				if (selectReceiverSingle != null) {
+					selectReceiverSingle.onSelect(objectId);
 				}
 				super.bubble_event(x, this, "updated");
 				return;
@@ -102,8 +102,8 @@ public abstract class Form extends a implements Titled {
 
 	protected final void saveAndClose(final xwriter x) throws Throwable {
 		save(x);
-		if (objectIdReceiver != null) {
-			objectIdReceiver.onSelect(objectId);
+		if (selectReceiverSingle != null) {
+			selectReceiverSingle.onSelect(objectId);
 		}
 		super.bubble_event(x, this, "close");
 	}
@@ -119,7 +119,7 @@ public abstract class Form extends a implements Titled {
 	}
 
 	/** Triggers a write to the interface when an object has been created. */
-	public final void setSelectMode(final SelectReceiverSingle receiver) {
-		objectIdReceiver = receiver;
+	public final void setSelectMode(final SelectReceiverSingle srs) {
+		selectReceiverSingle = srs;
 	}
 }
