@@ -80,14 +80,14 @@ public final class Book extends DbObject implements Titled {
 	}
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
-	public int getInStock(){
+	public int getInStock() {
 		return getInt(inStock);
 	}
 
-	public void setInStock(final int v){
-		set(inStock,v);
+	public void setInStock(final int v) {
+		set(inStock, v);
 	}
-	
+
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
 	public void addAuthor(final int id) {
 		authors.add(this, id);

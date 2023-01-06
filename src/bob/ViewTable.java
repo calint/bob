@@ -336,7 +336,7 @@ public abstract class ViewTable extends View {
 			if (npages > 1) {
 				x.p("Page ");
 				// ! pg may be more than npages when deleting, adjust
-				x.inp(pg, null, "small-nbr center", null, null, this, "p", null, null);
+				x.inp(pg, null, "nbr-small center", null, null, this, "p", null, null);
 				x.p(" of ").p(npages).p(". ");
 				if (currentPage != 0) {
 					x.ax(this, "pg prv", "Previous");

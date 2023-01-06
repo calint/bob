@@ -36,7 +36,6 @@ public abstract class DbField implements Serializable {
 		this.isStringType = isStringType;
 	}
 
-
 	public Class<? extends DbObject> getDeclaringClass() {
 		return cls;
 	}

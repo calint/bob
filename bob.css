@@ -103,8 +103,11 @@ input.center{
 input.nbr{
 	width:6ch;
 }
-input.small-nbr{
+input.nbr-small{
 	width:3ch;
+}
+input.nbr-large{
+	width:10ch;
 }
 /** bob.Form, bob.ViewTable more search */
 input.long{

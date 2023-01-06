@@ -14,7 +14,9 @@ import db.DbField;
 import db.DbObject;
 import db.FldDateTime;
 import db.FldInt;
+import db.FldLng;
 import db.FldStr;
+import db.FldTs;
 import db.RelRef;
 import db.RelRefN;
 
@@ -131,6 +133,20 @@ public abstract class FormDbo extends Form {
 		return fmtNbr.parse(s).intValue();
 	}
 
+	final protected String formatLng(final long i) {
+		if (fmtNbr == null) {
+			fmtNbr = NumberFormat.getNumberInstance();
+		}
+		return fmtNbr.format(i);
+	}
+
+	final protected long parseLng(final String s) throws ParseException {
+		if (fmtNbr == null) {
+			fmtNbr = NumberFormat.getNumberInstance();
+		}
+		return fmtNbr.parse(s).longValue();
+	}
+
 	final protected void inputDate(final xwriter x, final String label, final String field, final String styleClass,
 			final Timestamp value) {
 		x.tr().td("lbl").p(label).p(":").td("val");
@@ -170,6 +186,20 @@ public abstract class FormDbo extends Form {
 	final protected void inputInt(final xwriter x, final String label, final DbField f, final String styleClass,
 			final int value) {
 		inputInt(x, label, f.getName(), styleClass, value);
+		dbfields.put(f.getName(), f);
+	}
+
+	final protected void inputLng(final xwriter x, final String label, final String field, final String styleClass,
+			final long value) {
+		x.tr().td("lbl").p(label).p(":").td("val");
+		final a e = elemFor(field, formatLng(value));
+		x.inp(e, null, styleClass, null, null, this, "sc", null, null);
+		x.nl();
+	}
+
+	final protected void inputLng(final xwriter x, final String label, final DbField f, final String styleClass,
+			final long value) {
+		inputLng(x, label, f.getName(), styleClass, value);
 		dbfields.put(f.getName(), f);
 	}
 
@@ -300,6 +330,15 @@ public abstract class FormDbo extends Form {
 		return getInt(field.getName());
 	}
 
+	final protected long getLng(final String field) throws ParseException {
+		final a e = fields.get(field);
+		return parseLng(e.str());
+	}
+
+	final protected long getLng(final DbField field) throws ParseException {
+		return getLng(field.getName());
+	}
+
 	final protected a getElem(final String field) {
 		return fields.get(field);
 	}
@@ -329,8 +368,9 @@ public abstract class FormDbo extends Form {
 		// elements that know how to write to objects
 		for (final Map.Entry<String, DbField> me : dbfields.entrySet()) {
 			final DbField dbf = me.getValue();
-			if (!o.getClass().equals(dbf.getDeclaringClass()))
+			if (!o.getClass().equals(dbf.getDeclaringClass())) {
 				continue;
+			}
 			final String key = me.getKey();
 			if (dbf instanceof FldStr) {
 				DbObject.setFieldValue(o, dbf, getStr(key));
@@ -340,7 +380,17 @@ public abstract class FormDbo extends Form {
 				Timestamp ts;
 				try {
 					ts = getDateTime(key);
-				} catch (ParseException ok) {
+				} catch (final ParseException ok) {
+					ts = getDate(key);
+				}
+				DbObject.setFieldValue(o, dbf, ts);
+				continue;
+			}
+			if (dbf instanceof FldTs) {
+				Timestamp ts;
+				try {
+					ts = getDateTime(key);
+				} catch (final ParseException ok) {
 					ts = getDate(key);
 				}
 				DbObject.setFieldValue(o, dbf, ts);
@@ -348,6 +398,10 @@ public abstract class FormDbo extends Form {
 			}
 			if (dbf instanceof FldInt) {
 				DbObject.setFieldValue(o, dbf, getInt(key));
+				continue;
+			}
+			if (dbf instanceof FldLng) {
+				DbObject.setFieldValue(o, dbf, getLng(key));
 				continue;
 			}
 		}
