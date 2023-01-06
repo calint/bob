@@ -212,6 +212,12 @@ public abstract class FormDbo extends Form {
 		return e.str().trim();
 	}
 
+	final protected void inputBool(final xwriter x, final String label, final DbObject o, final FldBool f,
+			final boolean defaultValue) {
+		final boolean value = o == null ? defaultValue : ((Boolean) DbObject.getFieldValue(o, f)).booleanValue();
+		inputBool(x, label, f, null, value);
+	}
+
 	final protected void inputBool(final xwriter x, final String label, final FldBool f, final String styleClass,
 			final boolean value) {
 		inputBool(x, label, f.getName(), styleClass, value);
@@ -224,6 +230,12 @@ public abstract class FormDbo extends Form {
 		final a e = elemFor(field, value ? "1" : "0");
 		x.inp(e, "checkbox", styleClass, null, null, this, "sc", null, null);
 		x.nl();
+	}
+
+	final protected void inputDate(final xwriter x, final String label, final DbObject o, final FldDateTime f,
+			final Timestamp defaultValue) {
+		final Timestamp value = o == null ? defaultValue : (Timestamp) DbObject.getFieldValue(o, f);
+		inputDate(x, label, f, null, value);
 	}
 
 	final protected void inputDate(final xwriter x, final String label, final FldDateTime f, final String styleClass,
@@ -240,6 +252,12 @@ public abstract class FormDbo extends Form {
 		x.nl();
 	}
 
+	final protected void inputDateTime(final xwriter x, final String label, final DbObject o, final FldDateTime f,
+			final Timestamp defaultValue) {
+		final Timestamp value = o == null ? defaultValue : (Timestamp) DbObject.getFieldValue(o, f);
+		inputDateTime(x, label, f, null, value);
+	}
+
 	final protected void inputDateTime(final xwriter x, final String label, final FldDateTime f,
 			final String styleClass, final Timestamp value) {
 		inputDateTime(x, label, f.getName(), styleClass, value);
@@ -252,6 +270,12 @@ public abstract class FormDbo extends Form {
 		final a e = elemFor(field, formatDateTime(value));
 		x.inp(e, "datetime-local", styleClass, null, null, this, "sc", null, null);
 		x.nl();
+	}
+
+	final protected void inputDbl(final xwriter x, final String label, final DbObject o, final FldDbl f,
+			final String styleClass, final double defaultValue) {
+		final double value = o == null ? defaultValue : ((Number) DbObject.getFieldValue(o, f)).doubleValue();
+		inputDbl(x, label, f, styleClass, value);
 	}
 
 	final protected void inputDbl(final xwriter x, final String label, final FldDbl f, final String styleClass,
@@ -289,6 +313,12 @@ public abstract class FormDbo extends Form {
 		}
 	}
 
+	final protected void inputFlt(final xwriter x, final String label, final DbObject o, final FldFlt f,
+			final String styleClass, final float defaultValue) {
+		final float value = o == null ? defaultValue : ((Number) DbObject.getFieldValue(o, f)).floatValue();
+		inputFlt(x, label, f, styleClass, value);
+	}
+
 	final protected void inputFlt(final xwriter x, final String label, final FldFlt f, final String styleClass,
 			final float value) {
 		inputFlt(x, label, f.getName(), styleClass, value);
@@ -301,6 +331,13 @@ public abstract class FormDbo extends Form {
 		final a e = elemFor(field, formatFlt(value));
 		x.inp(e, null, styleClass, null, null, this, "sc", null, null);
 		x.nl();
+	}
+
+	final protected void inputInt(final xwriter x, final String label, final DbObject o, final FldInt f,
+			final String styleClass, final int defaultValue) {
+		final int value = o == null ? defaultValue : ((Number) DbObject.getFieldValue(o, f)).intValue();
+		inputInt(x, label, f.getName(), styleClass, value);
+		dbfields.put(f.getName(), f);
 	}
 
 	final protected void inputInt(final xwriter x, final String label, final FldInt f, final String styleClass,
@@ -373,6 +410,13 @@ public abstract class FormDbo extends Form {
 		}
 		x.tr().td("lbl").p(label).p(":").td("val");
 		x.divh(e);
+	}
+
+	final protected void inputText(final xwriter x, final String label, final DbObject o, final FldStr f,
+			final String styleClass, final String defaultValue) {
+		final String value = o == null ? defaultValue : (String) DbObject.getFieldValue(o, f);
+		inputText(x, label, f.getName(), styleClass, value);
+		dbfields.put(f.getName(), f);
 	}
 
 	final protected void inputText(final xwriter x, final String label, final FldStr f, final String styleClass,

@@ -46,17 +46,17 @@ public final class FormBook2 extends FormDbo {
 	protected void render(final xwriter x) throws Throwable {
 		final Book o = (Book) getObject();
 		beginForm(x);
-		inputText(x, "Title", Book.name, "long", o == null ? initStr : o.getName());
+		inputText(x, "Title", o, Book.name, "long", initStr);
 		focus(x, Book.name);
 		inputRefN(x, "Authors", o, Book.authors, TableAuthors.class, FormAuthor.class);
 		inputRef(x, "Publisher", o, Book.publisher, TablePublishers.class, FormPublisher.class);
-		inputDate(x, "Published date", Book.publishedDate, null, o == null ? null : o.getPublishedDate());
+		inputDate(x, "Published date", o, Book.publishedDate, null);
 		inputRefN(x, "Categories", o, Book.categories, TableCategories.class, FormCategory.class);
-		inputInt(x, "In stock", Book.inStock, "nbr", o == null ? 0 : o.getInStock());
-		inputBool(x, "Show in store", Book.showInStore, null, o == null ? false : o.isShowInStore());
-		inputFlt(x, "Rating", Book.rating, "nbr", o == null ? 0 : o.getRating());
-		inputDbl(x, "Double", Book.dbl, "nbr",
-				o == null ? 0 : ((Number) DbObject.getFieldValue(o, Book.dbl)).doubleValue());
+		inputInt(x, "In stock", o, Book.inStock, "nbr", 0);
+		inputBool(x, "Show in store", o, Book.showInStore, true);
+		inputFlt(x, "Rating", o, Book.rating, "nbr", 0);
+		inputDbl(x, "Double", o, Book.dbl, "nbr", 0);
+		// aggregated object
 		inputTextArea(x, "Description", "description", "large", o == null ? "" : o.getData(true).getData());
 		endForm(x);
 		x.ax(this, "test", "test").nl();
@@ -99,6 +99,7 @@ public final class FormBook2 extends FormDbo {
 		}
 		o.setCategoriesStr(categoriesSb.toString());
 
+		// aggregated object
 		final DataText d = o.getData(true);
 		d.setMeta(o.getName() + " " + o.getAuthorsStr() + " " + o.getPublisherStr() + " " + o.getCategoriesStr());
 		d.setData(getStr("description"));

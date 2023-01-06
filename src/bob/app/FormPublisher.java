@@ -38,7 +38,7 @@ public final class FormPublisher extends FormDbo {
 	protected void render(final xwriter x) throws Throwable {
 		final Publisher o = (Publisher) getObject();
 		beginForm(x);
-		inputText(x, "Name", Publisher.name, "medium", o == null ? initStr : o.getName());
+		inputText(x, "Name", o, Publisher.name, "medium", initStr);
 		focus(x, Publisher.name);
 		endForm(x);
 	}
