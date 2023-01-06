@@ -14,6 +14,8 @@ import db.DbField;
 import db.DbObject;
 import db.FldBool;
 import db.FldDateTime;
+import db.FldDbl;
+import db.FldFlt;
 import db.FldInt;
 import db.FldLng;
 import db.FldStr;
@@ -24,64 +26,44 @@ import db.RelRefN;
 public abstract class FormDbo extends Form {
 	private static final long serialVersionUID = 1L;
 
-	final private LinkedHashMap<String, a> fields = new LinkedHashMap<String, a>();
 	final private LinkedHashMap<String, DbField> dbfields = new LinkedHashMap<String, DbField>();
+	final private LinkedHashMap<String, a> fields = new LinkedHashMap<String, a>();
 	private transient SimpleDateFormat fmtDate;
 	private transient SimpleDateFormat fmtDateTime;
 	private transient NumberFormat fmtNbr;
+
+	public FormDbo(final String parentId, final String objectId) {
+		this(parentId, objectId, BIT_SAVE_CLOSE | BIT_SAVE | BIT_CLOSE);
+	}
 
 	public FormDbo(final String parentId, final String objectId, final int enabledFormBits) {
 		super(parentId, objectId, enabledFormBits);
 	}
 
-	public FormDbo(final String parentId, final String objectId) {
-		this(parentId, objectId, BIT_SAVE_CLOSE | BIT_SAVE | BIT_CLOSE);
+	@Override
+	public a child(final String id) {
+		final a e = super.child(id);
+		if (e != null)
+			return e;
+		return fields.get(id);
 	}
 
 	final protected void beginForm(final xwriter x) {
 		x.table("f").nl();
 	}
 
+	protected abstract DbObject createObject();
+
 	final protected void endForm(final xwriter x) {
 		x.table_().nl();
 	}
 
-	private a elemFor(final String nm, final Object value) {
-		a e = fields.get(nm);
-		if (e == null) {
-			e = new a(this, nm);
-			e.set(Util.toStr(value, null));
-			fields.put(nm, e);
-		}
-		return e;
+	final protected void focus(final xwriter x, final DbField f) {
+		focus(x, f.getName());
 	}
 
-	final protected void inputText(final xwriter x, final String label, final String field, final String styleClass,
-			final String value) {
-//		x.tr().td("lbl").p(label).p(": ").td_().td("val").inptxt(e, styleClass, null, this, "sc").td_().tr_().nl();
-		x.tr().td("lbl").p(label).p(":").td("val");
-		x.inp(elemFor(field, value), null, styleClass, null, null, this, "sc", null, null).nl();
-//		x.tr().td("lbl").p(label).p(": ").td("val").inptxt(e, null, null, this, "sc").nl();
-//		x.inptxt(e, null, null, this, "sc");
-//		x.inptxt(e, styleClass, null, this, "sc");
-	}
-
-	final protected void inputText(final xwriter x, final String label, final DbField f, final String styleClass,
-			final String value) {
-		inputText(x, label, f.getName(), styleClass, value);
-		dbfields.put(f.getName(), f);
-	}
-
-	final protected void inputTextArea(final xwriter x, final String label, final String field, final String styleClass,
-			final String value) {
-		x.tr().td("lbl").p(label).p(":").td("val");
-		x.inptxtarea(elemFor(field, value), styleClass).nl();
-	}
-
-	final protected void inputTextArea(final xwriter x, final String label, final DbField f, final String styleClass,
-			final String value) {
-		inputTextArea(x, label, f.getName(), styleClass, value);
-		dbfields.put(f.getName(), f);
+	final protected void focus(final xwriter x, final String field) {
+		x.script().xfocus(getElem(field)).script_();
 	}
 
 	final protected String formatDate(final Timestamp ts) {
@@ -93,15 +75,6 @@ public abstract class FormDbo extends Form {
 		return fmtDate.format(ts);
 	}
 
-	final protected Timestamp parseDate(final String s) throws ParseException {
-		if (Util.isEmpty(s))
-			return null;
-		if (fmtDate == null) {
-			fmtDate = new SimpleDateFormat("yyyy-MM-dd"); // ISO 8601
-		}
-		return new Timestamp(fmtDate.parse(s).getTime());
-	}
-
 	final protected String formatDateTime(final Timestamp ts) {
 		if (ts == null)
 			return "";
@@ -111,13 +84,18 @@ public abstract class FormDbo extends Form {
 		return fmtDateTime.format(ts);
 	}
 
-	final protected Timestamp parseDateTime(final String s) throws ParseException {
-		if (Util.isEmpty(s))
-			return null;
-		if (fmtDateTime == null) {
-			fmtDateTime = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm");
+	final protected String formatDbl(final double i) {
+		if (fmtNbr == null) {
+			fmtNbr = NumberFormat.getNumberInstance();
 		}
-		return new Timestamp(fmtDateTime.parse(s).getTime());
+		return fmtNbr.format(i);
+	}
+
+	final protected String formatFlt(final float i) {
+		if (fmtNbr == null) {
+			fmtNbr = NumberFormat.getNumberInstance();
+		}
+		return fmtNbr.format(i);
 	}
 
 	final protected String formatInt(final int i) {
@@ -127,13 +105,6 @@ public abstract class FormDbo extends Form {
 		return fmtNbr.format(i);
 	}
 
-	final protected int parseInt(final String s) throws ParseException {
-		if (fmtNbr == null) {
-			fmtNbr = NumberFormat.getNumberInstance();
-		}
-		return fmtNbr.parse(s).intValue();
-	}
-
 	final protected String formatLng(final long i) {
 		if (fmtNbr == null) {
 			fmtNbr = NumberFormat.getNumberInstance();
@@ -141,66 +112,109 @@ public abstract class FormDbo extends Form {
 		return fmtNbr.format(i);
 	}
 
-	final protected long parseLng(final String s) throws ParseException {
-		if (fmtNbr == null) {
-			fmtNbr = NumberFormat.getNumberInstance();
-		}
-		return fmtNbr.parse(s).longValue();
+	final protected boolean getBool(final DbField field) throws ParseException {
+		return getBool(field.getName());
 	}
 
-	final protected void inputDate(final xwriter x, final String label, final String field, final String styleClass,
-			final Timestamp value) {
-		x.tr().td("lbl").p(label).p(":").td("val");
-		final a e = elemFor(field, formatDate(value));
-		x.inp(e, "date", styleClass, null, null, this, "sc", null, null);
-		x.nl();
+	final protected boolean getBool(final String field) throws ParseException {
+		final a e = fields.get(field);
+		return "1".equals(e.str());
 	}
 
-	final protected void inputDate(final xwriter x, final String label, final DbField f, final String styleClass,
-			final Timestamp value) {
-		inputDate(x, label, f.getName(), styleClass, value);
-		dbfields.put(f.getName(), f);
+	final protected Timestamp getDate(final FldDateTime field) throws ParseException {
+		return getDate(field.getName());
 	}
 
-	final protected void inputDateTime(final xwriter x, final String label, final String field, final String styleClass,
-			final Timestamp value) {
-		x.tr().td("lbl").p(label).p(":").td("val");
-		final a e = elemFor(field, formatDateTime(value));
-		x.inp(e, "datetime-local", styleClass, null, null, this, "sc", null, null);
-		x.nl();
+	final protected Timestamp getDate(final String field) throws ParseException {
+		final a e = fields.get(field);
+		return parseDate(e.str());
 	}
 
-	final protected void inputDateTime(final xwriter x, final String label, final DbField f, final String styleClass,
-			final Timestamp value) {
-		inputDateTime(x, label, f.getName(), styleClass, value);
-		dbfields.put(f.getName(), f);
+	final protected Timestamp getDateTime(final FldDateTime field) throws ParseException {
+		return getDateTime(field.getName());
 	}
 
-	final protected void inputInt(final xwriter x, final String label, final String field, final String styleClass,
-			final int value) {
-		x.tr().td("lbl").p(label).p(":").td("val");
-		final a e = elemFor(field, formatInt(value));
-		x.inp(e, null, styleClass, null, null, this, "sc", null, null);
-		x.nl();
+	final protected Timestamp getDateTime(final String field) throws ParseException {
+		final a e = fields.get(field);
+		return parseDateTime(e.str());
 	}
 
-	final protected void inputInt(final xwriter x, final String label, final DbField f, final String styleClass,
-			final int value) {
-		inputInt(x, label, f.getName(), styleClass, value);
-		dbfields.put(f.getName(), f);
+	final protected double getDbl(final FldDbl field) throws ParseException {
+		return getDbl(field.getName());
 	}
 
-	final protected void inputLng(final xwriter x, final String label, final String field, final String styleClass,
-			final long value) {
-		x.tr().td("lbl").p(label).p(":").td("val");
-		final a e = elemFor(field, formatLng(value));
-		x.inp(e, null, styleClass, null, null, this, "sc", null, null);
-		x.nl();
+	final protected double getDbl(final String field) throws ParseException {
+		final a e = fields.get(field);
+		return parseDbl(e.str());
 	}
 
-	final protected void inputLng(final xwriter x, final String label, final DbField f, final String styleClass,
-			final long value) {
-		inputLng(x, label, f.getName(), styleClass, value);
+	final protected a getElem(final DbField f) {
+		return getElem(f.getName());
+	}
+
+	final protected a getElem(final String field) {
+		return fields.get(field);
+	}
+
+	final protected float getFlt(final FldFlt field) throws ParseException {
+		return getFlt(field.getName());
+	}
+
+	final protected float getFlt(final String field) throws ParseException {
+		final a e = fields.get(field);
+		return parseFlt(e.str());
+	}
+
+	final protected int getInt(final FldInt field) throws ParseException {
+		return getInt(field.getName());
+	}
+
+	final protected int getInt(final String field) throws ParseException {
+		final a e = fields.get(field);
+		return parseInt(e.str());
+	}
+
+	final protected long getLng(final FldLng field) throws ParseException {
+		return getLng(field.getName());
+	}
+
+	final protected long getLng(final String field) throws ParseException {
+		final a e = fields.get(field);
+		return parseLng(e.str());
+	}
+
+	protected abstract DbObject getObject();
+
+	final protected int getSelectedId(final RelRef rel) {
+		return getSelectedId(rel.getName());
+	}
+
+	final protected int getSelectedId(final String field) {
+		final InputRef e = (InputRef) fields.get(field);
+		return e.getSelectedId();
+	}
+
+	final protected Set<String> getSelectedIds(final RelRefN rel) {
+		return getSelectedIds(rel.getName());
+	}
+
+	final protected Set<String> getSelectedIds(final String field) {
+		final InputRefN e = (InputRefN) fields.get(field);
+		return e.getSelectedIds();
+	}
+
+	final protected String getStr(final FldStr f) {
+		return getStr(f.getName());
+	}
+
+	final protected String getStr(final String field) {
+		final a e = fields.get(field);
+		return e.str().trim();
+	}
+
+	final protected void inputBool(final xwriter x, final String label, final FldBool f, final String styleClass,
+			final boolean value) {
+		inputBool(x, label, f.getName(), styleClass, value);
 		dbfields.put(f.getName(), f);
 	}
 
@@ -212,41 +226,114 @@ public abstract class FormDbo extends Form {
 		x.nl();
 	}
 
-	final protected void inputBool(final xwriter x, final String label, final DbField f, final String styleClass,
-			final boolean value) {
-		inputBool(x, label, f.getName(), styleClass, value);
+	final protected void inputDate(final xwriter x, final String label, final FldDateTime f, final String styleClass,
+			final Timestamp value) {
+		inputDate(x, label, f.getName(), styleClass, value);
 		dbfields.put(f.getName(), f);
 	}
 
-	final protected void inputRefN(final xwriter x, final String label, final String field, final DbObject o,
-			final RelRefN rel, final Class<? extends ViewTable> viewTableSelectClass,
-			final Class<? extends Form> createFormCls) {
-		InputRefN e = (InputRefN) fields.get(field);
-		if (e == null) {
-			e = new InputRefN(rel, viewTableSelectClass, createFormCls, "<br>");
-			e.parent(this);
-			e.name(field);
-			fields.put(field, e);
-		}
-		if (o != null) {
-			e.refreshInitialIds(o);
-		}
+	final protected void inputDate(final xwriter x, final String label, final String field, final String styleClass,
+			final Timestamp value) {
 		x.tr().td("lbl").p(label).p(":").td("val");
-		x.divh(e);
+		final a e = elemFor(field, formatDate(value));
+		x.inp(e, "date", styleClass, null, null, this, "sc", null, null);
+		x.nl();
 	}
 
-	final protected void inputRefN(final xwriter x, final String label, final DbObject o, final RelRefN rel,
+	final protected void inputDateTime(final xwriter x, final String label, final FldDateTime f,
+			final String styleClass, final Timestamp value) {
+		inputDateTime(x, label, f.getName(), styleClass, value);
+		dbfields.put(f.getName(), f);
+	}
+
+	final protected void inputDateTime(final xwriter x, final String label, final String field, final String styleClass,
+			final Timestamp value) {
+		x.tr().td("lbl").p(label).p(":").td("val");
+		final a e = elemFor(field, formatDateTime(value));
+		x.inp(e, "datetime-local", styleClass, null, null, this, "sc", null, null);
+		x.nl();
+	}
+
+	final protected void inputDbl(final xwriter x, final String label, final FldDbl f, final String styleClass,
+			final double value) {
+		inputDbl(x, label, f.getName(), styleClass, value);
+		dbfields.put(f.getName(), f);
+	}
+
+	final protected void inputDbl(final xwriter x, final String label, final String field, final String styleClass,
+			final double value) {
+		x.tr().td("lbl").p(label).p(":").td("val");
+		final a e = elemFor(field, formatDbl(value));
+		x.inp(e, null, styleClass, null, null, this, "sc", null, null);
+		x.nl();
+	}
+
+	final protected void inputElem(final xwriter x, final String label, final DbField f, final a elem)
+			throws Throwable {
+		inputElem(x, label, f.getName(), elem);
+	}
+
+	final protected void inputElem(final xwriter x, final String label, final String field, final a elem)
+			throws Throwable {
+		final a e = fields.get(field);
+		x.tr().td("lbl").p(label).p(":").td("val");
+		if (e == null) {
+			elem.parent(this);
+			elem.name(field);
+			fields.put(field, elem);
+			elem.to(x);
+		} else {
+			if (elem != e)
+				throw new RuntimeException("expected same element");
+			e.to(x);
+		}
+	}
+
+	final protected void inputFlt(final xwriter x, final String label, final FldFlt f, final String styleClass,
+			final float value) {
+		inputFlt(x, label, f.getName(), styleClass, value);
+		dbfields.put(f.getName(), f);
+	}
+
+	final protected void inputFlt(final xwriter x, final String label, final String field, final String styleClass,
+			final float value) {
+		x.tr().td("lbl").p(label).p(":").td("val");
+		final a e = elemFor(field, formatFlt(value));
+		x.inp(e, null, styleClass, null, null, this, "sc", null, null);
+		x.nl();
+	}
+
+	final protected void inputInt(final xwriter x, final String label, final FldInt f, final String styleClass,
+			final int value) {
+		inputInt(x, label, f.getName(), styleClass, value);
+		dbfields.put(f.getName(), f);
+	}
+
+	final protected void inputInt(final xwriter x, final String label, final String field, final String styleClass,
+			final int value) {
+		x.tr().td("lbl").p(label).p(":").td("val");
+		final a e = elemFor(field, formatInt(value));
+		x.inp(e, null, styleClass, null, null, this, "sc", null, null);
+		x.nl();
+	}
+
+	final protected void inputLng(final xwriter x, final String label, final FldLng f, final String styleClass,
+			final long value) {
+		inputLng(x, label, f.getName(), styleClass, value);
+		dbfields.put(f.getName(), f);
+	}
+
+	final protected void inputLng(final xwriter x, final String label, final String field, final String styleClass,
+			final long value) {
+		x.tr().td("lbl").p(label).p(":").td("val");
+		final a e = elemFor(field, formatLng(value));
+		x.inp(e, null, styleClass, null, null, this, "sc", null, null);
+		x.nl();
+	}
+
+	final protected void inputRef(final xwriter x, final String label, final DbObject o, final RelRef rel,
 			final Class<? extends ViewTable> viewTableSelectClass, final Class<? extends Form> createFormCls) {
-		inputRefN(x, label, rel.getName(), o, rel, viewTableSelectClass, createFormCls);
-	}
-
-	final protected Set<String> getSelectedIds(final String field) {
-		final InputRefN e = (InputRefN) fields.get(field);
-		return e.getSelectedIds();
-	}
-
-	final protected Set<String> getSelectedIds(final RelRefN rel) {
-		return getSelectedIds(rel.getName());
+		inputRef(x, label, rel.getName(), o, rel, viewTableSelectClass, createFormCls);
 	}
 
 	final protected void inputRef(final xwriter x, final String label, final String field, final DbObject o,
@@ -266,117 +353,100 @@ public abstract class FormDbo extends Form {
 		x.divh(e);
 	}
 
-	final protected void inputRef(final xwriter x, final String label, final DbObject o, final RelRef rel,
+	final protected void inputRefN(final xwriter x, final String label, final DbObject o, final RelRefN rel,
 			final Class<? extends ViewTable> viewTableSelectClass, final Class<? extends Form> createFormCls) {
-		inputRef(x, label, rel.getName(), o, rel, viewTableSelectClass, createFormCls);
+		inputRefN(x, label, rel.getName(), o, rel, viewTableSelectClass, createFormCls);
 	}
 
-	final protected int getSelectedId(final String field) {
-		final InputRef e = (InputRef) fields.get(field);
-		return e.getSelectedId();
-	}
-
-	final protected int getSelectedId(final RelRef rel) {
-		return getSelectedId(rel.getName());
-	}
-
-	final protected void inputElem(final xwriter x, final String label, final String field, final a elem)
-			throws Throwable {
-		final a e = fields.get(field);
-		x.tr().td("lbl").p(label).p(":").td("val");
+	final protected void inputRefN(final xwriter x, final String label, final String field, final DbObject o,
+			final RelRefN rel, final Class<? extends ViewTable> viewTableSelectClass,
+			final Class<? extends Form> createFormCls) {
+		InputRefN e = (InputRefN) fields.get(field);
 		if (e == null) {
-			elem.parent(this);
-			elem.name(field);
-			fields.put(field, elem);
-			elem.to(x);
-		} else {
-			if (elem != e)
-				throw new RuntimeException("expected same element");
-			e.to(x);
+			e = new InputRefN(rel, viewTableSelectClass, createFormCls, "<br>");
+			e.parent(this);
+			e.name(field);
+			fields.put(field, e);
 		}
+		if (o != null) {
+			e.refreshInitialIds(o);
+		}
+		x.tr().td("lbl").p(label).p(":").td("val");
+		x.divh(e);
 	}
 
-	final protected void inputElem(final xwriter x, final String label, final DbField f, final a elem)
-			throws Throwable {
-		inputElem(x, label, f.getName(), elem);
+	final protected void inputText(final xwriter x, final String label, final FldStr f, final String styleClass,
+			final String value) {
+		inputText(x, label, f.getName(), styleClass, value);
+		dbfields.put(f.getName(), f);
 	}
 
-	final protected void focus(final xwriter x, final String field) {
-		x.script().xfocus(getElem(field)).script_();
+	final protected void inputText(final xwriter x, final String label, final String field, final String styleClass,
+			final String value) {
+//		x.tr().td("lbl").p(label).p(": ").td_().td("val").inptxt(e, styleClass, null, this, "sc").td_().tr_().nl();
+		x.tr().td("lbl").p(label).p(":").td("val");
+		x.inp(elemFor(field, value), null, styleClass, null, null, this, "sc", null, null).nl();
+//		x.tr().td("lbl").p(label).p(": ").td("val").inptxt(e, null, null, this, "sc").nl();
+//		x.inptxt(e, null, null, this, "sc");
+//		x.inptxt(e, styleClass, null, this, "sc");
 	}
 
-	final protected void focus(final xwriter x, final DbField f) {
-		focus(x, f.getName());
+	final protected void inputTextArea(final xwriter x, final String label, final FldStr f, final String styleClass,
+			final String value) {
+		inputTextArea(x, label, f.getName(), styleClass, value);
+		dbfields.put(f.getName(), f);
 	}
 
-	final protected String getStr(final String field) {
-		final a e = fields.get(field);
-		return e.str().trim();
+	final protected void inputTextArea(final xwriter x, final String label, final String field, final String styleClass,
+			final String value) {
+		x.tr().td("lbl").p(label).p(":").td("val");
+		x.inptxtarea(elemFor(field, value), styleClass).nl();
 	}
 
-	final protected String getStr(final DbField f) {
-		return getStr(f.getName());
+	final protected Timestamp parseDate(final String s) throws ParseException {
+		if (Util.isEmpty(s))
+			return null;
+		if (fmtDate == null) {
+			fmtDate = new SimpleDateFormat("yyyy-MM-dd"); // ISO 8601
+		}
+		return new Timestamp(fmtDate.parse(s).getTime());
 	}
 
-	final protected Timestamp getDate(final String field) throws ParseException {
-		final a e = fields.get(field);
-		return parseDate(e.str());
+	final protected Timestamp parseDateTime(final String s) throws ParseException {
+		if (Util.isEmpty(s))
+			return null;
+		if (fmtDateTime == null) {
+			fmtDateTime = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm");
+		}
+		return new Timestamp(fmtDateTime.parse(s).getTime());
 	}
 
-	final protected Timestamp getDate(final DbField field) throws ParseException {
-		return getDate(field.getName());
+	final protected double parseDbl(final String s) throws ParseException {
+		if (fmtNbr == null) {
+			fmtNbr = NumberFormat.getNumberInstance();
+		}
+		return fmtNbr.parse(s).doubleValue();
 	}
 
-	final protected Timestamp getDateTime(final String field) throws ParseException {
-		final a e = fields.get(field);
-		return parseDateTime(e.str());
+	final protected float parseFlt(final String s) throws ParseException {
+		if (fmtNbr == null) {
+			fmtNbr = NumberFormat.getNumberInstance();
+		}
+		return fmtNbr.parse(s).floatValue();
 	}
 
-	final protected Timestamp getDateTime(final DbField field) throws ParseException {
-		return getDateTime(field.getName());
+	final protected int parseInt(final String s) throws ParseException {
+		if (fmtNbr == null) {
+			fmtNbr = NumberFormat.getNumberInstance();
+		}
+		return fmtNbr.parse(s).intValue();
 	}
 
-	final protected int getInt(final String field) throws ParseException {
-		final a e = fields.get(field);
-		return parseInt(e.str());
-	}
-
-	final protected int getInt(final DbField field) throws ParseException {
-		return getInt(field.getName());
-	}
-
-	final protected long getLng(final String field) throws ParseException {
-		final a e = fields.get(field);
-		return parseLng(e.str());
-	}
-
-	final protected long getLng(final DbField field) throws ParseException {
-		return getLng(field.getName());
-	}
-
-	final protected boolean getBool(final String field) throws ParseException {
-		final a e = fields.get(field);
-		return "1".equals(e.str());
-	}
-
-	final protected boolean getBool(final DbField field) throws ParseException {
-		return getBool(field.getName());
-	}
-
-	final protected a getElem(final String field) {
-		return fields.get(field);
-	}
-
-	final protected a getElem(final DbField f) {
-		return getElem(f.getName());
-	}
-
-	@Override
-	public a child(final String id) {
-		final a e = super.child(id);
-		if (e != null)
-			return e;
-		return fields.get(id);
+	final protected long parseLng(final String s) throws ParseException {
+		if (fmtNbr == null) {
+			fmtNbr = NumberFormat.getNumberInstance();
+		}
+		return fmtNbr.parse(s).longValue();
 	}
 
 	@Override
@@ -432,6 +502,14 @@ public abstract class FormDbo extends Form {
 				DbObject.setFieldValue(o, dbf, getBool(key));
 				continue;
 			}
+			if (dbf instanceof FldFlt) {
+				DbObject.setFieldValue(o, dbf, getFlt(key));
+				continue;
+			}
+			if (dbf instanceof FldDbl) {
+				DbObject.setFieldValue(o, dbf, getDbl(key));
+				continue;
+			}
 		}
 		// relations
 		for (final a e : fields.values()) {
@@ -453,9 +531,15 @@ public abstract class FormDbo extends Form {
 		writeToObject(o);
 	}
 
-	protected abstract DbObject createObject();
-
-	protected abstract DbObject getObject();
-
 	protected abstract void writeToObject(final DbObject obj) throws Throwable;
+
+	private a elemFor(final String nm, final Object value) {
+		a e = fields.get(nm);
+		if (e == null) {
+			e = new a(this, nm);
+			e.set(Util.toStr(value, null));
+			fields.put(nm, e);
+		}
+		return e;
+	}
 }

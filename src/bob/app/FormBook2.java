@@ -54,7 +54,10 @@ public final class FormBook2 extends FormDbo {
 		inputRefN(x, "Categories", o, Book.categories, TableCategories.class, FormCategory.class);
 		inputInt(x, "In stock", Book.inStock, "nbr", o == null ? 0 : o.getInStock());
 		inputBool(x, "Show in store", Book.showInStore, null, o == null ? false : o.isShowInStore());
-		inputTextArea(x, "Description", DataText.data, "large", o == null ? "" : o.getData(true).getData());
+		inputFlt(x, "Rating", Book.rating, "nbr", o == null ? 0 : o.getRating());
+		inputDbl(x, "Double", Book.dbl, "nbr",
+				o == null ? 0 : ((Number) DbObject.getFieldValue(o, Book.dbl)).doubleValue());
+		inputTextArea(x, "Description", "description", "large", o == null ? "" : o.getData(true).getData());
 		endForm(x);
 		x.ax(this, "test", "test").nl();
 	}
@@ -63,6 +66,10 @@ public final class FormBook2 extends FormDbo {
 	protected void writeToObject(final DbObject obj) throws Throwable {
 		final Book o = (Book) obj;
 //		o.setName(getStr(Book.name));
+		System.out.println(getFlt(Book.rating));
+		System.out.println(getInt(Book.inStock));
+		System.out.println(getBool(Book.showInStore));
+		System.out.println(getDbl(Book.dbl));
 
 		final StringBuilder authorsSb = new StringBuilder(128);
 		// note authors relation updated by FormDbo
@@ -96,7 +103,7 @@ public final class FormBook2 extends FormDbo {
 
 		final DataText d = o.getData(true);
 		d.setMeta(o.getName() + " " + o.getAuthorsStr() + " " + o.getPublisherStr() + " " + o.getCategoriesStr());
-		d.setData(getStr(DataText.data));
+		d.setData(getStr("description"));
 	}
 
 	@Override

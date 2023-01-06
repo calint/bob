@@ -7,6 +7,8 @@ import db.DbObject;
 import db.DbObjects;
 import db.FldBool;
 import db.FldDateTime;
+import db.FldDbl;
+import db.FldFlt;
 import db.FldInt;
 import db.FldStr;
 import db.IndexRel;
@@ -28,6 +30,8 @@ public final class Book extends DbObject implements Titled {
 	public final static RelRefN categories = new RelRefN(Category.class);
 	public final static FldInt inStock = new FldInt();
 	public final static FldBool showInStore = new FldBool();
+	public final static FldFlt rating = new FldFlt();
+	public final static FldDbl dbl = new FldDbl();
 
 	// optimizes Book join with DataText when doing full text query
 	public final static IndexRel ixRelData = new IndexRel(data);
@@ -97,6 +101,15 @@ public final class Book extends DbObject implements Titled {
 
 	public void setShowInStore(final boolean v) {
 		set(showInStore, v);
+	}
+
+	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
+	public float getRating() {
+		return getFlt(rating);
+	}
+
+	public void setRating(final float v) {
+		set(rating, v);
 	}
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
