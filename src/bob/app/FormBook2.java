@@ -65,7 +65,6 @@ public final class FormBook2 extends FormDbo {
 	@Override
 	protected void writeToObject(final DbObject obj) throws Throwable {
 		final Book o = (Book) obj;
-//		o.setName(getStr(Book.name));
 		System.out.println(getFlt(Book.rating));
 		System.out.println(getInt(Book.inStock));
 		System.out.println(getBool(Book.showInStore));
@@ -73,6 +72,7 @@ public final class FormBook2 extends FormDbo {
 
 		final StringBuilder authorsSb = new StringBuilder(128);
 		// note authors relation updated by FormDbo
+		// denormalize for better performance
 		for (final DbObject ao : o.getAuthors().toList()) {
 			final Author a = (Author) ao;
 			authorsSb.append(a.getName()).append(';');
@@ -80,17 +80,16 @@ public final class FormBook2 extends FormDbo {
 		if (authorsSb.length() > 1) {
 			authorsSb.setLength(authorsSb.length() - 1);
 		}
-		// denormalize for better performance
 		o.setAuthorsStr(authorsSb.toString());
 
 		// note publisher relation updated by FormDbo
+		// denormalize for better performance
 		final Publisher publisher = o.getPublisher();
 		o.setPublisherStr(publisher == null ? "" : publisher.getName());
 
-//		o.setPublishedDate(getDate(Book.publishedDate));
-
 		final StringBuilder categoriesSb = new StringBuilder(128);
 		// note categories relation updated by FormDbo
+		// denormalize for better performance
 		for (final DbObject co : o.getCategories().toList()) {
 			final Category c = (Category) co;
 			categoriesSb.append(c.getName()).append(';');
@@ -98,7 +97,6 @@ public final class FormBook2 extends FormDbo {
 		if (categoriesSb.length() > 1) {
 			categoriesSb.setLength(categoriesSb.length() - 1);
 		}
-		// denormalize for better performance
 		o.setCategoriesStr(categoriesSb.toString());
 
 		final DataText d = o.getData(true);
