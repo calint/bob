@@ -113,6 +113,8 @@ dbo
 [ ]   IN NATURAL LANGUAGE MODE
 [ ]   IN NATURAL LANGUAGE MODE WITH QUERY EXPANSION
 [ ]   WITH QUERY EXPANSION
+[ ] ponder on replacing getStr, getInt etc with getObj
+[ ] dbfield.set(DbObject ths, Object v) vs dbobject.set(DbField f, Object v)?
 [ ] class OID instead of integer
 [ ] FldString check string length vs field length at set? DbField.getSize()?
 [ ] FldFloat max from Float.MAX_VALUE can not be committed
