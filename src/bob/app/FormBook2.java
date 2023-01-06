@@ -65,14 +65,10 @@ public final class FormBook2 extends FormDbo {
 	@Override
 	protected void writeToObject(final DbObject obj) throws Throwable {
 		final Book o = (Book) obj;
-		System.out.println(getFlt(Book.rating));
-		System.out.println(getInt(Book.inStock));
-		System.out.println(getBool(Book.showInStore));
-		System.out.println(getDbl(Book.dbl));
 
-		final StringBuilder authorsSb = new StringBuilder(128);
 		// note authors relation updated by FormDbo
 		// denormalize for better performance
+		final StringBuilder authorsSb = new StringBuilder(128);
 		for (final DbObject ao : o.getAuthors().toList()) {
 			final Author a = (Author) ao;
 			authorsSb.append(a.getName()).append(';');
@@ -87,9 +83,9 @@ public final class FormBook2 extends FormDbo {
 		final Publisher publisher = o.getPublisher();
 		o.setPublisherStr(publisher == null ? "" : publisher.getName());
 
-		final StringBuilder categoriesSb = new StringBuilder(128);
 		// note categories relation updated by FormDbo
 		// denormalize for better performance
+		final StringBuilder categoriesSb = new StringBuilder(128);
 		for (final DbObject co : o.getCategories().toList()) {
 			final Category c = (Category) co;
 			categoriesSb.append(c.getName()).append(';');
