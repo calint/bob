@@ -45,7 +45,7 @@ public final class FormPublisher extends FormDbo {
 
 	@Override
 	protected void writeToObject(final DbObject obj) throws Throwable {
-		final Publisher o = (Publisher) obj;
-		o.setName(getStr(Publisher.name));
+//		final Publisher o = (Publisher) obj;
+//		o.setName(getStr(Publisher.name));
 	}
 }

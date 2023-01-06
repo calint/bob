@@ -74,7 +74,7 @@ public abstract class Form extends a implements Titled {
 //				super.bubble_event(x, this, "close");
 				return;
 			}
-			if ("s".endsWith(code) && (enabledFormBits & BIT_SAVE) != 0) {
+			if ("s".equals(code) && (enabledFormBits & BIT_SAVE) != 0) {
 				save(x);
 				if (objectIdReceiver != null) {
 					objectIdReceiver.onSelect(objectId);

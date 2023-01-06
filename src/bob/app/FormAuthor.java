@@ -45,7 +45,7 @@ public final class FormAuthor extends FormDbo {
 
 	@Override
 	protected void writeToObject(final DbObject obj) throws Throwable {
-		final Author o = (Author) obj;
-		o.setName(getStr(Author.name));
+//		final Author o = (Author) obj;
+//		o.setName(getStr(Author.name));
 	}
 }

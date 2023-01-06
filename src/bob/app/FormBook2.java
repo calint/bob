@@ -60,7 +60,7 @@ public final class FormBook2 extends FormDbo {
 	@Override
 	protected void writeToObject(final DbObject obj) throws Throwable {
 		final Book o = (Book) obj;
-		o.setName(getStr(Book.name));
+//		o.setName(getStr(Book.name));
 
 		final StringBuilder authorsSb = new StringBuilder(128);
 		// note authors relation updated by FormDbo
@@ -78,7 +78,7 @@ public final class FormBook2 extends FormDbo {
 		final Publisher publisher = o.getPublisher();
 		o.setPublisherStr(publisher == null ? "" : publisher.getName());
 
-		o.setPublishedDate(getDate(Book.publishedDate));
+//		o.setPublishedDate(getDate(Book.publishedDate));
 
 		final StringBuilder categoriesSb = new StringBuilder(128);
 		// note categories relation updated by FormDbo

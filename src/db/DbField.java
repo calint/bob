@@ -36,6 +36,11 @@ public abstract class DbField implements Serializable {
 		this.isStringType = isStringType;
 	}
 
+
+	public Class<? extends DbObject> getDeclaringClass() {
+		return cls;
+	}
+
 	/**
 	 * Called by {@link DbClass} when asserting that column type matches
 	 * {@link DbField} type.
@@ -144,7 +149,7 @@ public abstract class DbField implements Serializable {
 		for (int i = 0; i < len; ++i) {
 			final char ch = s.charAt(i);
 			switch (ch) {
-			case 0: // Must be escaped for 'mysql'
+			case 0: // Must be escaped for mysql
 				sb.append('\\');
 				sb.append('0');
 				break;

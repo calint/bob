@@ -4,12 +4,15 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 
 import b.a;
 import b.xwriter;
 import db.DbField;
 import db.DbObject;
+import db.FldDateTime;
+import db.FldStr;
 import db.RelRef;
 import db.RelRefN;
 
@@ -17,7 +20,9 @@ public abstract class FormDbo extends Form {
 	private static final long serialVersionUID = 1L;
 
 	final private LinkedHashMap<String, a> fields = new LinkedHashMap<String, a>();
+	final private LinkedHashMap<String, DbField> dbfields = new LinkedHashMap<String, DbField>();
 	private transient SimpleDateFormat fmtDate;
+	private transient SimpleDateFormat fmtDateTime;
 
 	public FormDbo(final String parentId, final String objectId, final int enabledFormBits) {
 		super(parentId, objectId, enabledFormBits);
@@ -58,6 +63,7 @@ public abstract class FormDbo extends Form {
 	final protected void inputText(final xwriter x, final String label, final DbField f, final String styleClass,
 			final String value) {
 		inputText(x, label, f.getName(), styleClass, value);
+		dbfields.put(f.getName(), f);
 	}
 
 	final protected void inputTextArea(final xwriter x, final String label, final String field, final String styleClass,
@@ -69,6 +75,7 @@ public abstract class FormDbo extends Form {
 	final protected void inputTextArea(final xwriter x, final String label, final DbField f, final String styleClass,
 			final String value) {
 		inputTextArea(x, label, f.getName(), styleClass, value);
+		dbfields.put(f.getName(), f);
 	}
 
 	final protected String formatDate(final Timestamp ts) {
@@ -89,6 +96,24 @@ public abstract class FormDbo extends Form {
 		return new Timestamp(fmtDate.parse(s).getTime());
 	}
 
+	final protected String formatDateTime(final Timestamp ts) {
+		if (ts == null)
+			return "";
+		if (fmtDateTime == null) {
+			fmtDateTime = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+		}
+		return fmtDateTime.format(ts);
+	}
+
+	final protected Timestamp parseDateTime(final String s) throws ParseException {
+		if (Util.isEmpty(s))
+			return null;
+		if (fmtDateTime == null) {
+			fmtDateTime = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm");
+		}
+		return new Timestamp(fmtDateTime.parse(s).getTime());
+	}
+
 	final protected void inputDate(final xwriter x, final String label, final String field, final String styleClass,
 			final Timestamp value) {
 		x.tr().td("lbl").p(label).p(":").td("val");
@@ -100,6 +125,21 @@ public abstract class FormDbo extends Form {
 	final protected void inputDate(final xwriter x, final String label, final DbField f, final String styleClass,
 			final Timestamp value) {
 		inputDate(x, label, f.getName(), styleClass, value);
+		dbfields.put(f.getName(), f);
+	}
+
+	final protected void inputDateTime(final xwriter x, final String label, final String field, final String styleClass,
+			final Timestamp value) {
+		x.tr().td("lbl").p(label).p(":").td("val");
+		final a e = elemFor(field, formatDateTime(value));
+		x.inp(e, "datetime-local", styleClass, null, null, this, "sc", null, null);
+		x.nl();
+	}
+
+	final protected void inputDateTime(final xwriter x, final String label, final DbField f, final String styleClass,
+			final Timestamp value) {
+		inputDateTime(x, label, f.getName(), styleClass, value);
+		dbfields.put(f.getName(), f);
 	}
 
 	final protected void inputRefN(final xwriter x, final String label, final String field, final DbObject o,
@@ -211,6 +251,15 @@ public abstract class FormDbo extends Form {
 		return getDate(field.getName());
 	}
 
+	final protected Timestamp getDateTime(final String field) throws ParseException {
+		final a e = fields.get(field);
+		return parseDateTime(e.str());
+	}
+
+	final protected Timestamp getDateTime(final DbField field) throws ParseException {
+		return getDateTime(field.getName());
+	}
+
 	final protected a getElem(final String field) {
 		return fields.get(field);
 	}
@@ -236,16 +285,38 @@ public abstract class FormDbo extends Form {
 		} else {
 			o = getObject();
 		}
+		// ? ugly instanceof chain. separation of concerns ok.
 		// elements that know how to write to objects
+		for (final Map.Entry<String, DbField> me : dbfields.entrySet()) {
+			final DbField dbf = me.getValue();
+			if (!o.getClass().equals(dbf.getDeclaringClass()))
+				continue;
+			final String key = me.getKey();
+			if (dbf instanceof FldStr) {
+				DbObject.setFieldValue(o, dbf, getStr(key));
+				continue;
+			}
+			if (dbf instanceof FldDateTime) {
+				Timestamp ts;
+				try {
+					ts = getDateTime(key);
+				} catch (ParseException ok) {
+					ts = getDate(key);
+				}
+				DbObject.setFieldValue(o, dbf, ts);
+				continue;
+			}
+		}
+		// relations
 		for (final a e : fields.values()) {
-			if (e instanceof InputRefN) { // ? ugly instanceof
+			if (e instanceof InputRefN) {
 				final InputRefN r = (InputRefN) e;
 				if (o.getClass().equals(r.rel.getFromClass())) {
 					r.save(o);
 				}
 				continue;
 			}
-			if (e instanceof InputRef) { // ? ugly instanceof
+			if (e instanceof InputRef) {
 				final InputRef r = (InputRef) e;
 				if (o.getClass().equals(r.rel.getFromClass())) {
 					r.save(o);
