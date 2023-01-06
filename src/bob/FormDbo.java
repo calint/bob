@@ -24,8 +24,8 @@ import db.RelRef;
 import db.RelRefN;
 
 /**
- * Abstracts editing of DbObject with convenience methods for input and write to
- * object.
+ * Abstracts editing of DbObject with convenience methods for input fields and
+ * write to object.
  */
 public abstract class FormDbo extends Form {
 	private static final long serialVersionUID = 1L;
