@@ -31,7 +31,9 @@ b
 [o] FormDbo with convenience for editing dbobjects
 [x]   find/select/create
 [x]     RelRefN
+[ ]       default values
 [x]     RelRef
+[ ]       default value
 [ ]     RelAgg. object must first be saved.
 [ ]       create object with state "editing" when form is opened. when saved state "published"
 [ ]     RelAggN. object must first be saved.
@@ -76,6 +78,7 @@ dbo
 [x]   update jem
 [x] DbObjects: select when multiple classes vs one class inconsistency. reviewed and ok.
 [ ] Db.engine from config
+[ ] DbObject.duplicate()
 [ ] Index: specify key length
 [ ] Db.driver with engine specific limitations, differences, etc
 [ ] cluster client connect to database through DriverManager is slow at first connect
