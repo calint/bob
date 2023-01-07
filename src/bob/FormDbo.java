@@ -128,11 +128,11 @@ public abstract class FormDbo extends Form {
 		return fmtNbr.format(i);
 	}
 
-	final protected boolean getBool(final DbField field) throws ParseException {
+	final protected boolean getBool(final DbField field) {
 		return getBool(field.getName());
 	}
 
-	final protected boolean getBool(final String field) throws ParseException {
+	final protected boolean getBool(final String field) {
 		return "1".equals(getStr(field));
 	}
 
@@ -503,29 +503,34 @@ public abstract class FormDbo extends Form {
 				DbObject.setFieldValue(o, dbf, getStr(key));
 				continue;
 			}
-			if (dbf instanceof FldDateTime) {
-				Timestamp ts;
-				try {
-					ts = getDateTime(key);
-				} catch (final ParseException ok) {
-					ts = getDate(key);
-				}
-				DbObject.setFieldValue(o, dbf, ts);
-				continue;
-			}
-			if (dbf instanceof FldTs) {
-				Timestamp ts;
-				try {
-					ts = getDateTime(key);
-				} catch (final ParseException ok) {
-					ts = getDate(key);
-				}
-				DbObject.setFieldValue(o, dbf, ts);
-				continue;
-			}
 			if (dbf instanceof FldBool) {
 				DbObject.setFieldValue(o, dbf, getBool(key));
 				continue;
+			}
+			try {
+				if (dbf instanceof FldDateTime) {
+					Timestamp ts;
+					try {
+						ts = getDateTime(key);
+					} catch (final ParseException ok) {
+						ts = getDate(key);
+					}
+					DbObject.setFieldValue(o, dbf, ts);
+					continue;
+				}
+				if (dbf instanceof FldTs) {
+					Timestamp ts;
+					try {
+						ts = getDateTime(key);
+					} catch (final ParseException ok) {
+						ts = getDate(key);
+					}
+					DbObject.setFieldValue(o, dbf, ts);
+					continue;
+				}
+			} catch (final ParseException e) {
+				x.xfocus(getElem(key));
+				throw new Exception("Time cannot be parsed.");
 			}
 			try {
 				if (dbf instanceof FldInt) {
@@ -546,7 +551,7 @@ public abstract class FormDbo extends Form {
 				}
 			} catch (final ParseException e) {
 				x.xfocus(getElem(key));
-				throw new Exception("Number can not be parsed.");
+				throw new Exception("Number cannot be parsed.");
 			}
 		}
 		// relations
