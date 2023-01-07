@@ -26,6 +26,6 @@ public final class Util {
 	}
 
 	public static boolean isEmpty(final String s) {
-		return s == null || s.isEmpty();
+		return s == null || s.length()==0;
 	}
 }

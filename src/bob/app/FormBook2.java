@@ -6,6 +6,7 @@ import java.util.List;
 import b.xwriter;
 import bob.Action;
 import bob.FormDbo;
+import bob.Util;
 import db.Db;
 import db.DbObject;
 import db.test.Author;
@@ -72,7 +73,7 @@ public final class FormBook2 extends FormDbo {
 	protected void writeToObject(final xwriter x, final DbObject obj) throws Throwable {
 		final Book o = (Book) obj;
 
-		if (o.getName().isEmpty()) {
+		if (Util.isEmpty(o.getName())) {
 			xfocus(x, User.name);
 			throw new Exception("Title may not be empty.");
 		}
