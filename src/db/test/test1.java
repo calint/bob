@@ -20,6 +20,8 @@ public class test1 extends TestCase {
 		doRun2();
 		doRun3();
 		doRun4();
+		doRun5();
+		doRun6();
 	}
 
 	private void doRun0() throws Throwable {
@@ -466,7 +468,6 @@ public class test1 extends TestCase {
 			if (row[0].id() != u.id() || row[1].id() != f2.id())
 				throw new RuntimeException();
 		}
-
 		tn.delete(u);
 		tn.delete(f3);
 	}
@@ -480,7 +481,39 @@ public class test1 extends TestCase {
 		final User u2 = (User) tn.get(User.class, u.id());
 		if (u != u2 && !u2.getName().equals(s))
 			throw new RuntimeException();
+		tn.delete(u);
+	}
+
+	public void doRun5() throws Throwable {
+		final DbTransaction tn = Db.currentTransaction();
+		final User u = (User) tn.create(User.class);
+		final File f1 = (File) tn.create(File.class);
+		final File f2 = (File) tn.create(File.class);
+		u.addRefFile(f1);
+		u.addRefFile(f2);
+		tn.commit();
+
+		u.removeAllRefFiles();
+		if (u.getRefFiles().getCount() != 0)
+			throw new RuntimeException();
+
+		tn.delete(u);
+		tn.delete(f1);
+		tn.delete(f2);
+	}
+
+	public void doRun6() throws Throwable {
+		final DbTransaction tn = Db.currentTransaction();
+		final User u = (User) tn.create(User.class);
+		u.createFile();
+		u.createFile();
+		tn.commit();
+
+		u.deleteAllFiles();
+		if (u.getFiles().getCount() != 0)
+			throw new RuntimeException();
 
 		tn.delete(u);
 	}
+
 }

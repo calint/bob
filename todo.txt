@@ -70,9 +70,9 @@ b
 [ ] howto for google cloud
 -------------------------------------------------------------------------------
 dbo
-[ ] RelRefN: removeAll
-[ ] RelAggN: deleteAll
-[ ] DbObjects: select when multiple classes vs one class inconsistency 
+[x] RelRefN: removeAll
+[x] RelAggN: deleteAll
+[x] DbObjects: select when multiple classes vs one class inconsistency. reviewed and ok.
 [ ] Db.engine from config
 [ ] Index: specify key length
 [ ] Db.driver with engine specific limitations, differences, etc

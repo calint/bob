@@ -70,5 +70,14 @@ public class JemRelAggN extends JemRel {
 		out.println("}");
 		out.println();
 
+		out.print("public void deleteAll");
+		out.print(acc);
+		out.println("(){");
+		out.print("\t");
+		out.print(rel.getName());
+		out.println(".deleteAll(this);");
+		out.println("}");
+		out.println();
+
 	}
 }

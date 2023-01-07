@@ -61,6 +61,10 @@ final class RelRefNMeta implements Serializable {
 
 	}
 
+	void sql_deleteFromTable(final StringBuilder sb, final int fromId) {
+		sb.append("delete from ").append(tableName).append(" where ").append(fromColName).append('=').append(fromId);
+	}
+
 	void sql_deleteAllFromTable(final StringBuilder sb, final int fromId) {
 		sb.append("delete from ").append(tableName).append(" where ").append(fromColName).append('=').append(fromId);
 	}

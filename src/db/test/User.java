@@ -50,6 +50,15 @@ public final class User extends DbObject {
 	}
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
+	public String getDescription() {
+		return getStr(description);
+	}
+
+	public void setDescription(final String v) {
+		set(description, v);
+	}
+
+	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
 	public String getPasshash() {
 		return getStr(passhash);
 	}
@@ -113,23 +122,6 @@ public final class User extends DbObject {
 	}
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
-	public File createFile() {
-		return (File) files.create(this);
-	}
-
-	public DbObjects getFiles() {
-		return files.get(this);
-	}
-
-	public void deleteFile(final int id) {
-		files.delete(this, id);
-	}
-
-	public void deleteFile(final File o) {
-		files.delete(this, o.id());
-	}
-
-	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
 	public int getProfilePicId() {
 		return profilePic.getId(this);
 	}
@@ -156,7 +148,28 @@ public final class User extends DbObject {
 	}
 
 	public void setGroupPic(final File o) {
-		groupPic.set(this, o.id());
+		groupPic.set(this, o == null ? 0 : o.id());
+	}
+
+	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
+	public File createFile() {
+		return (File) files.create(this);
+	}
+
+	public DbObjects getFiles() {
+		return files.get(this);
+	}
+
+	public void deleteFile(final int id) {
+		files.delete(this, id);
+	}
+
+	public void deleteFile(final File o) {
+		files.delete(this, o.id());
+	}
+
+	public void deleteAllFiles() {
+		files.deleteAll(this);
 	}
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
@@ -180,6 +193,10 @@ public final class User extends DbObject {
 		refFiles.remove(this, o.id());
 	}
 
+	public void removeAllRefFiles() {
+		refFiles.removeAll(this);
+	}
+
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
 	public Game createGame() {
 		return (Game) games.create(this);
@@ -195,5 +212,9 @@ public final class User extends DbObject {
 
 	public void deleteGame(final Game o) {
 		games.delete(this, o.id());
+	}
+
+	public void deleteAllGames() {
+		games.deleteAll(this);
 	}
 }

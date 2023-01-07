@@ -54,6 +54,16 @@ public final class RelRefN extends DbRelation {
 		}
 	}
 
+	public void removeAll(final DbObject from) {
+		final StringBuilder sb = new StringBuilder(256);
+		rrm.sql_deleteFromTable(sb, from.id());
+		if (!Db.cluster_on) {
+			Db.currentTransaction().execSql(sb);
+		} else {
+			Db.execClusterSql(sb.toString());
+		}
+	}
+
 	void removeAll(final int id) {
 		final StringBuilder sb = new StringBuilder(256);
 		rrm.sql_deleteAllFromTable(sb, id);
