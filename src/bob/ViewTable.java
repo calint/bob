@@ -288,7 +288,7 @@ public abstract class ViewTable extends View {
 	protected void renderHeaders(final xwriter x) {
 	}
 
-	protected void renderRowCells(final xwriter x, final Object o) {
+	protected void renderRowCells(final xwriter x, final Object obj) {
 	}
 
 	/**

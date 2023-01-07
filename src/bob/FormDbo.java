@@ -254,6 +254,21 @@ public abstract class FormDbo extends Form {
 		x.nl();
 	}
 
+	final protected void inputTimestamp(final xwriter x, final String label, final DbObject o, final FldTs f,
+			final Timestamp defaultValue) {
+		final Timestamp value = o == null ? defaultValue : (Timestamp) DbObject.getFieldValue(o, f);
+		inputTimestamp(x, label, f.getName(), null, value);
+		dbfields.put(f.getName(), f);
+	}
+
+	final protected void inputTimestamp(final xwriter x, final String label, final String field,
+			final String styleClass, final Timestamp value) {
+		x.tr().td("lbl").p(label).p(":").td("val");
+		final a e = elemFor(field, formatDateTime(value));
+		x.inp(e, "datetime-local", styleClass, null, null, this, "sc", null, null);
+		x.nl();
+	}
+
 	final protected void inputDbl(final xwriter x, final String label, final DbObject o, final FldDbl f,
 			final String styleClass, final double defaultValue) {
 		final double value = o == null ? defaultValue : ((Number) DbObject.getFieldValue(o, f)).doubleValue();

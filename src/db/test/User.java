@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import db.DbObject;
 import db.DbObjects;
 import db.FldBool;
+import db.FldDateTime;
 import db.FldDbl;
 import db.FldFlt;
 import db.FldInt;
@@ -30,6 +31,8 @@ public final class User extends DbObject {
 	public final static FldBool bool = new FldBool(true);
 
 	public final static FldTs birthTime = new FldTs();
+	public final static FldDateTime date = new FldDateTime();
+	public final static FldDateTime dateTime = new FldDateTime();
 
 	public final static RelAgg profilePic = new RelAgg(File.class);
 	public final static RelRef groupPic = new RelRef(File.class);
