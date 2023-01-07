@@ -136,31 +136,29 @@ public abstract class ViewTable extends View {
 					return;
 				}
 				onActionDelete(x);
-				x.xu(t); // update table
-				if (p.isEnabled() && !isInifiniteScroll()) {
-					x.xu(p); // update paging
-				}
-				x.xfocus(q);
+				refresh(x);
 				return;
 
 			}
 			onAction(x, (Action) from);
-			x.xu(t); // update table
-			if (p.isEnabled() && !isInifiniteScroll()) {
-				x.xu(p); // update paging
-			}
-			x.xfocus(q);
+			refresh(x);
 			return;
 		}
 		if (from == p) { // event from pager
-			x.xu(t); // update table
-			x.xu(p); // update paging
-			x.xfocus(q); // focus on query field
-			x.xscrollToTop(); // scroll to top of page
+			refresh(x);
 			return;
 		}
 		// event unknown by this element
 		super.bubble_event(x, from, o);
+	}
+
+	private void refresh(final xwriter x) throws Throwable {
+		x.xu(t); // update table
+		if (p.isEnabled() && !isInifiniteScroll()) {
+			x.xu(p); // update paging
+		}
+		x.xfocus(q);
+		x.xscrollToTop(); // scroll to top of page
 	}
 
 	/** Callback for change in query field. */
