@@ -1,12 +1,15 @@
 package bob.app;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import b.xwriter;
+import bob.Action;
 import bob.View;
 import bob.ViewTable;
 import db.Db;
+import db.DbObject;
 import db.DbObjects;
 import db.DbTransaction;
 import db.Order;
@@ -109,4 +112,24 @@ public final class TableUsers extends ViewTable {
 		}
 		sel.clear();
 	}
+
+	@Override
+	protected List<Action> getActionsList() {
+		final ArrayList<Action> ls = new ArrayList<Action>();
+		ls.add(new Action("delete all", "da"));
+		return ls;
+	}
+
+	@Override
+	protected void onAction(xwriter x, Action act) throws Throwable {
+		if ("da".equals(act.code())) {
+			final DbTransaction tn = Db.currentTransaction();
+			for (final DbObject o : tn.get(User.class, null, null, null)) {
+				tn.delete(o);
+			}
+			return;
+		}
+		super.onAction(x, act);
+	}
+
 }

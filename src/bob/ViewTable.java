@@ -145,6 +145,11 @@ public abstract class ViewTable extends View {
 
 			}
 			onAction(x, (Action) from);
+			x.xu(t); // update table
+			if (p.isEnabled() && !isInifiniteScroll()) {
+				x.xu(p); // update paging
+			}
+			x.xfocus(q);
 			return;
 		}
 		if (from == p) { // event from pager

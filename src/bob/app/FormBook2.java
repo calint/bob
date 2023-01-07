@@ -114,7 +114,7 @@ public final class FormBook2 extends FormDbo {
 	}
 
 	@Override
-	protected void onAction(final xwriter x, final Action act) {
+	protected void onAction(final xwriter x, final Action act) throws Throwable {
 		if ("alert".equals(act.code())) {
 			x.xalert("alert");
 			return;

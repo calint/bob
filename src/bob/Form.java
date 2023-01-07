@@ -87,7 +87,7 @@ public abstract class Form extends a implements Titled {
 		return null;
 	}
 
-	protected void onAction(final xwriter x, final Action act) {
+	protected void onAction(final xwriter x, final Action act) throws Throwable {
 	}
 
 	protected final void saveAndClose(final xwriter x) throws Throwable {

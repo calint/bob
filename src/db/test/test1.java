@@ -67,11 +67,11 @@ public class test1 extends TestCase {
 		int n;
 		n = tn.getCount(User.class, new Query(User.name, Query.EQ, "user name"));
 		if (n != 1)
-			throw new RuntimeException("expected 1. got " + n);
+			throw new RuntimeException();
 
 		n = tn.getCount(User.class, null);
 		if (n != 3)
-			throw new RuntimeException("expected 3" + " got " + n);
+			throw new RuntimeException();
 
 		final File f1 = u1.createFile();
 		final File f2 = u1.createFile();
