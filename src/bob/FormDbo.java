@@ -61,13 +61,25 @@ public abstract class FormDbo extends Form {
 	final protected void endForm(final xwriter x) {
 		x.table_().nl();
 	}
-
+	
+	/** Focuses on field from "render". */
 	final protected void focus(final xwriter x, final DbField f) {
 		focus(x, f.getName());
 	}
 
+	/** Focuses on field from "render". */
 	final protected void focus(final xwriter x, final String field) {
 		x.script().xfocus(getElem(field)).script_();
+	}
+
+	/** Focuses on field from "save" when for example validation failed. */
+	final protected void xfocus(final xwriter x, final DbField f) {
+		xfocus(x, f.getName());
+	}
+
+	/** Focuses on field from "save" when for example validation failed. */
+	final protected void xfocus(final xwriter x, final String field) {
+		x.xfocus(getElem(field));
 	}
 
 	final protected String formatDate(final Timestamp ts) {
@@ -549,10 +561,10 @@ public abstract class FormDbo extends Form {
 				continue;
 			}
 		}
-		writeToObject(o);
+		writeToObject(x, o);
 	}
 
-	protected abstract void writeToObject(final DbObject obj) throws Throwable;
+	protected abstract void writeToObject(final xwriter x, final DbObject obj) throws Throwable;
 
 	private a elemFor(final String nm, final Object value) {
 		a e = fields.get(nm);

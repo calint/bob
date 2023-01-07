@@ -13,6 +13,7 @@ import db.test.Book;
 import db.test.Category;
 import db.test.DataText;
 import db.test.Publisher;
+import db.test.User;
 
 public final class FormBook2 extends FormDbo {
 	private static final long serialVersionUID = 1L;
@@ -68,8 +69,13 @@ public final class FormBook2 extends FormDbo {
 	}
 
 	@Override
-	protected void writeToObject(final DbObject obj) throws Throwable {
+	protected void writeToObject(final xwriter x, final DbObject obj) throws Throwable {
 		final Book o = (Book) obj;
+
+		if (o.getName().isEmpty()) {
+			xfocus(x, User.name);
+			throw new RuntimeException("Title may not be empty.");
+		}
 
 		// note authors relation updated by FormDbo
 		// denormalize for better performance

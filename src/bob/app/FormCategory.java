@@ -44,7 +44,7 @@ public final class FormCategory extends FormDbo {
 	}
 
 	@Override
-	protected void writeToObject(final DbObject obj) throws Throwable {
+	protected void writeToObject(final xwriter x, final DbObject obj) throws Throwable {
 //		final Category o = (Category) obj;
 //		o.setName(getStr(Category.name));
 	}

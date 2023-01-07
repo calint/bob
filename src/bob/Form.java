@@ -65,7 +65,12 @@ public abstract class Form extends a implements Titled {
 				return;
 			}
 			if ("s".equals(code) && (enabledFormBits & BIT_SAVE) != 0) {
-				save(x);
+				try {
+					save(x);
+				} catch (final Throwable t) {
+					x.xalert(t.getMessage());
+					return;
+				}
 				if (selectReceiverSingle != null) {
 					selectReceiverSingle.onSelect(objectId);
 				}
@@ -91,7 +96,12 @@ public abstract class Form extends a implements Titled {
 	}
 
 	protected final void saveAndClose(final xwriter x) throws Throwable {
-		save(x);
+		try {
+			save(x);
+		} catch (final Throwable t) {
+			x.xalert(t.getMessage());
+			return;
+		}
 		if (selectReceiverSingle != null) {
 			selectReceiverSingle.onSelect(objectId);
 		}
