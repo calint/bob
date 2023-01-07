@@ -479,7 +479,9 @@ public class test1 extends TestCase {
 		u.setName(s);
 		tn.commit();
 		final User u2 = (User) tn.get(User.class, u.id());
-		if (u != u2 && !u2.getName().equals(s))
+		if (u == u2)
+			throw new RuntimeException();
+		if (!u2.getName().equals(s))
 			throw new RuntimeException();
 		tn.delete(u);
 	}
@@ -492,7 +494,6 @@ public class test1 extends TestCase {
 		u.addRefFile(f1);
 		u.addRefFile(f2);
 		tn.commit();
-
 		u.removeAllRefFiles();
 		if (u.getRefFiles().getCount() != 0)
 			throw new RuntimeException();
@@ -505,7 +506,7 @@ public class test1 extends TestCase {
 	public void doRun6() throws Throwable {
 		final DbTransaction tn = Db.currentTransaction();
 		final User u = (User) tn.create(User.class);
-		
+
 		// cascading delete
 		u.createFile();
 		u.createFile();

@@ -77,7 +77,7 @@ public class JemRelRefN extends JemRel {
 		out.println(".remove(this,o.id());");
 		out.println("}");
 		out.println();
-		
+
 		out.print("public void removeAll");
 		out.print(acc);
 		out.println("(){");

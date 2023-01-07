@@ -211,7 +211,7 @@ public abstract class FormDbo extends Form {
 
 	final protected void inputBool(final xwriter x, final String label, final DbObject o, final FldBool f,
 			final boolean defaultValue) {
-		final boolean value = o == null ? defaultValue : ((Boolean) DbObject.getFieldValue(o, f)).booleanValue();
+		final boolean value = o == null ? defaultValue : ((Boolean) DbObject.getFieldValue(o, f));
 		inputBool(x, label, f.getName(), null, value);
 		dbfields.put(f.getName(), f);
 	}
