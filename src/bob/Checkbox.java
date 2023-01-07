@@ -25,6 +25,6 @@ public final class Checkbox extends a {
 
 	public void x_(final xwriter x, final String param) throws Throwable {
 		bubble_event(x, this, on.equals(str()) ? "checked" : "unchecked"); // bubble event
-		x.xucb(this); // update checkbox
+//		x.xucb(this); // update checkbox
 	}
 }

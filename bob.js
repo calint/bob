@@ -172,9 +172,10 @@ ui.ws.onopen=function(e){
 }
 ui.ws.onmessage=function(e){
 	$d('response: '+e.data.length+' B');
-	$d(e.data);
-	if(e.data.length>0)
+	if(e.data.length>0){
+		$d(e.data);
 		eval(e.data);
+	}
 	ui.is_busy=false;
 	$d('~~~~~~~ ~~~~~~~ ~~~~~~~ ~~~~~~~ ')
 };
