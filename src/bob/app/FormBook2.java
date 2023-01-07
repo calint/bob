@@ -74,7 +74,7 @@ public final class FormBook2 extends FormDbo {
 
 		if (o.getName().isEmpty()) {
 			xfocus(x, User.name);
-			throw new RuntimeException("Title may not be empty.");
+			throw new Exception("Title may not be empty.");
 		}
 
 		// note authors relation updated by FormDbo
