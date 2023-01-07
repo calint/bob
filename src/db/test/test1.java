@@ -505,12 +505,21 @@ public class test1 extends TestCase {
 	public void doRun6() throws Throwable {
 		final DbTransaction tn = Db.currentTransaction();
 		final User u = (User) tn.create(User.class);
+		
+		// cascading delete
 		u.createFile();
 		u.createFile();
 		tn.commit();
-
 		u.deleteAllFiles();
 		if (u.getFiles().getCount() != 0)
+			throw new RuntimeException();
+
+		// non-cascading delete
+		u.createGame();
+		u.createGame();
+		tn.commit();
+		u.deleteAllGames();
+		if (u.getGames().getCount() != 0)
 			throw new RuntimeException();
 
 		tn.delete(u);
