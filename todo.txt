@@ -2,6 +2,7 @@ b
 [x] ViewTable: Query: throttle queries to one every nth milliseconds
 [x] bob.js: server is busy message box when typing fast
 [ ]   server busy ui element
+[ ] bob: FormDbo: save: check string lengths, min max values for numbers, timestamp
 [ ] bob: Menu: better ui
 [ ] xwriter: button tag
 [ ] xwriter: <elem> tag instead of duplicate code for span and div
