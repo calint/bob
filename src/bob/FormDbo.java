@@ -61,7 +61,7 @@ public abstract class FormDbo extends Form {
 	final protected void endForm(final xwriter x) {
 		x.table_().nl();
 	}
-	
+
 	/** Focuses on field from "render". */
 	final protected void focus(final xwriter x, final DbField f) {
 		focus(x, f.getName());
@@ -523,25 +523,30 @@ public abstract class FormDbo extends Form {
 				DbObject.setFieldValue(o, dbf, ts);
 				continue;
 			}
-			if (dbf instanceof FldInt) {
-				DbObject.setFieldValue(o, dbf, getInt(key));
-				continue;
-			}
-			if (dbf instanceof FldLng) {
-				DbObject.setFieldValue(o, dbf, getLng(key));
-				continue;
-			}
 			if (dbf instanceof FldBool) {
 				DbObject.setFieldValue(o, dbf, getBool(key));
 				continue;
 			}
-			if (dbf instanceof FldFlt) {
-				DbObject.setFieldValue(o, dbf, getFlt(key));
-				continue;
-			}
-			if (dbf instanceof FldDbl) {
-				DbObject.setFieldValue(o, dbf, getDbl(key));
-				continue;
+			try {
+				if (dbf instanceof FldInt) {
+					DbObject.setFieldValue(o, dbf, getInt(key));
+					continue;
+				}
+				if (dbf instanceof FldLng) {
+					DbObject.setFieldValue(o, dbf, getLng(key));
+					continue;
+				}
+				if (dbf instanceof FldFlt) {
+					DbObject.setFieldValue(o, dbf, getFlt(key));
+					continue;
+				}
+				if (dbf instanceof FldDbl) {
+					DbObject.setFieldValue(o, dbf, getDbl(key));
+					continue;
+				}
+			} catch (final ParseException e) {
+				x.xfocus(getElem(key));
+				throw new Exception("Number can not be parsed.");
 			}
 		}
 		// relations
