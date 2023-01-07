@@ -100,7 +100,7 @@ public abstract class ViewTable extends View {
 				x.spc();
 				x.ax(this, "more");
 				x.spc();
-				x.tago("div").default_attrs_for_element(ms);
+				x.tago("div").default_attrs_for_element(ms, "more-search", null);
 				if (!ms_display) {
 					x.attr("hidden");
 				}

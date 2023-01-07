@@ -14,7 +14,7 @@ import db.DbObjects;
 import db.DbTransaction;
 import db.RelRefN;
 
-public final class InputRefN extends a {
+public final class InputRelRefN extends a {
 	private static final long serialVersionUID = 1L;
 	final RelRefN rel;
 	final private Class<? extends ViewTable> viewTableSelectClass; // the view to use when selecting
@@ -25,7 +25,7 @@ public final class InputRefN extends a {
 //	private int objId;
 	private boolean selectedIdsInitiated;
 
-	public InputRefN(final RelRefN rel, final Class<? extends ViewTable> viewTableSelectClass,
+	public InputRelRefN(final RelRefN rel, final Class<? extends ViewTable> viewTableSelectClass,
 			final Class<? extends Form> createFormCls, final String itemSeparator) {
 		this.rel = rel;
 		this.viewTableSelectClass = viewTableSelectClass;

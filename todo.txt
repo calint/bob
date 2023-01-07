@@ -14,6 +14,7 @@ b
 [ ] bob: Form: include view
 [ ] bob: Form: upload file
 [ ] bob: Form: handling of exceptions, focus and highlighting field
+[ ] bob: version with query strings and pages
 [x] review x.css using bob.css
 [ ] x.js and bob.js common script extracted
 [x] xwriter: select renderer
@@ -69,6 +70,8 @@ b
 [ ] howto for google cloud
 -------------------------------------------------------------------------------
 dbo
+[ ] RelRefN: removeAll
+[ ] RelAggN: deleteAll
 [ ] DbObjects: select when multiple classes vs one class inconsistency 
 [ ] Db.engine from config
 [ ] Index: specify key length
@@ -120,6 +123,7 @@ dbo
 [ ] class OID instead of integer
 [ ] FldString check string length vs field length at set? DbField.getSize()?
 [ ] FldFloat max from Float.MAX_VALUE can not be committed
+[ ] reference count on associations
 [ ] inheritance
 [ ]   example: select t1.* from File where t1.clspth like 'aaabbb%'; selects all objects that are File or inherits from File given File clspth=aaabbb
 [ ] components

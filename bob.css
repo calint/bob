@@ -1,3 +1,4 @@
+:root{--attention:#ffd}
 *{padding:0;margin:0;border:0;outline:0;font-family:inherit;font-size:inherit;background:inherit;color:inherit;line-height:1.5rem;transition:all .3s ease-in-out}
 html{font-family:monospace}
 table{border-collapse:collapse;empty-cells:show}
@@ -7,11 +8,12 @@ a,a:visited{text-decoration:none;color:#00a}
 a:focus,a:hover,a:active{color:green;text-shadow:0 0 1rem rgba(0,0,0,.7)}
 em{font-weight:bold}
 input,select,textarea{padding:.5rem;border:1px dotted green;border-radius:.3rem}
-input:focus,select:focus,textarea:focus{background-color:#ffd}
-input[type="checkbox"]:focus{background-color:#ffd;outline:1px dotted green}
+input:focus,select:focus,textarea:focus{background-color:var(--attention)}
+input[type="checkbox"]:focus{background-color:var(--attention);outline:1px dotted green}
 
 /** index.html */
 .disp{text-align:center}
+
 /** bob.Controller */
 .menu{
 	margin:.5rem;
@@ -23,6 +25,7 @@ input[type="checkbox"]:focus{background-color:#ffd;outline:1px dotted green}
 .ser{ /* serialized size and server info */
 	margin:1rem;
 }
+
 /** bob.ViewTable */
 .ac{ /* actions */
 	margin:.5rem;
@@ -37,11 +40,16 @@ input.query {
 	margin:.5rem;
 	padding:.5rem;
 }
-.attention{
-	background-color:#ffd;
+.attention{ /* select object(s) description */
+	background-color:var(--attention);
 	padding:1rem;
 	margin:1rem;
 }
+.more-search{
+	background-color:var(--attention);
+	padding:1rem;
+}
+
 /** bob.ViewTable.Table */	
 table.t{
 	margin-top:.5rem;
@@ -51,7 +59,7 @@ table.t{
 	text-align:left;
 }
 table.t tr:hover{
-	background-color:#ffe;
+	background-color:var(--attention);
 }
 table.t tr:first-child{
 	border:0;

@@ -25,6 +25,11 @@ public final class FormBook2 extends FormDbo {
 	public FormBook2(final String objectId, final String initStr) {
 		super(objectId);
 		this.initStr = initStr;
+//		if (objectId == null) {
+//			final Book o = (Book) createObject();
+//			o.setName(initStr);
+//			this.objectId = Integer.toString(o.id());
+//		}
 	}
 
 	public String getTitle() {

@@ -187,7 +187,7 @@ public abstract class FormDbo extends Form {
 	}
 
 	final protected int getSelectedId(final String field) {
-		final InputRef e = (InputRef) fields.get(field);
+		final InputRelRef e = (InputRelRef) fields.get(field);
 		return e.getSelectedId();
 	}
 
@@ -196,7 +196,7 @@ public abstract class FormDbo extends Form {
 	}
 
 	final protected Set<String> getSelectedIds(final String field) {
-		final InputRefN e = (InputRefN) fields.get(field);
+		final InputRelRefN e = (InputRelRefN) fields.get(field);
 		return e.getSelectedIds();
 	}
 
@@ -343,9 +343,9 @@ public abstract class FormDbo extends Form {
 	final protected void inputRef(final xwriter x, final String label, final String field, final DbObject o,
 			final RelRef rel, final Class<? extends ViewTable> viewTableSelectClass,
 			final Class<? extends Form> createFormCls) {
-		InputRef e = (InputRef) fields.get(field);
+		InputRelRef e = (InputRelRef) fields.get(field);
 		if (e == null) {
-			e = new InputRef(rel, viewTableSelectClass, createFormCls);
+			e = new InputRelRef(rel, viewTableSelectClass, createFormCls);
 			e.parent(this);
 			e.name(field);
 			fields.put(field, e);
@@ -365,9 +365,9 @@ public abstract class FormDbo extends Form {
 	final protected void inputRefN(final xwriter x, final String label, final String field, final DbObject o,
 			final RelRefN rel, final Class<? extends ViewTable> viewTableSelectClass,
 			final Class<? extends Form> createFormCls) {
-		InputRefN e = (InputRefN) fields.get(field);
+		InputRelRefN e = (InputRelRefN) fields.get(field);
 		if (e == null) {
-			e = new InputRefN(rel, viewTableSelectClass, createFormCls, "<br>");
+			e = new InputRelRefN(rel, viewTableSelectClass, createFormCls, "<br>");
 			e.parent(this);
 			e.name(field);
 			fields.put(field, e);
@@ -519,15 +519,15 @@ public abstract class FormDbo extends Form {
 		}
 		// relations
 		for (final a e : fields.values()) {
-			if (e instanceof InputRefN) {
-				final InputRefN r = (InputRefN) e;
+			if (e instanceof InputRelRefN) {
+				final InputRelRefN r = (InputRelRefN) e;
 				if (o.getClass().equals(r.rel.getFromClass())) {
 					r.save(o);
 				}
 				continue;
 			}
-			if (e instanceof InputRef) {
-				final InputRef r = (InputRef) e;
+			if (e instanceof InputRelRef) {
+				final InputRelRef r = (InputRelRef) e;
 				if (o.getClass().equals(r.rel.getFromClass())) {
 					r.save(o);
 				}
