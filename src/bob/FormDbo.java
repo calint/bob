@@ -223,7 +223,7 @@ public abstract class FormDbo extends Form {
 
 	final protected void inputBool(final xwriter x, final String label, final DbObject o, final FldBool f,
 			final boolean defaultValue) {
-		final boolean value = o == null ? defaultValue : ((Boolean) DbObject.getFieldValue(o, f));
+		final boolean value = o == null ? defaultValue : (Boolean) DbObject.getFieldValue(o, f);
 		inputBool(x, label, f.getName(), null, value);
 		dbfields.put(f.getName(), f);
 	}
@@ -363,16 +363,15 @@ public abstract class FormDbo extends Form {
 	}
 
 	final protected void inputRef(final xwriter x, final String label, final DbObject o, final RelRef rel,
-			final Class<? extends ViewTable> viewTableSelectClass, final Class<? extends Form> createFormCls) {
-		inputRef(x, label, rel.getName(), o, rel, viewTableSelectClass, createFormCls);
+			final Class<? extends View> selectViewClass, final Class<? extends Form> createFormCls) {
+		inputRef(x, label, rel.getName(), o, rel, selectViewClass, createFormCls);
 	}
 
 	final protected void inputRef(final xwriter x, final String label, final String field, final DbObject o,
-			final RelRef rel, final Class<? extends ViewTable> viewTableSelectClass,
-			final Class<? extends Form> createFormCls) {
+			final RelRef rel, final Class<? extends View> selectViewClass, final Class<? extends Form> createFormCls) {
 		InputRelRef e = (InputRelRef) fields.get(field);
 		if (e == null) {
-			e = new InputRelRef(rel, viewTableSelectClass, createFormCls);
+			e = new InputRelRef(rel, selectViewClass, createFormCls);
 			e.parent(this);
 			e.name(field);
 			fields.put(field, e);
@@ -385,16 +384,15 @@ public abstract class FormDbo extends Form {
 	}
 
 	final protected void inputRefN(final xwriter x, final String label, final DbObject o, final RelRefN rel,
-			final Class<? extends ViewTable> viewTableSelectClass, final Class<? extends Form> createFormCls) {
-		inputRefN(x, label, rel.getName(), o, rel, viewTableSelectClass, createFormCls);
+			final Class<? extends View> selectViewClass, final Class<? extends Form> createFormCls) {
+		inputRefN(x, label, rel.getName(), o, rel, selectViewClass, createFormCls);
 	}
 
 	final protected void inputRefN(final xwriter x, final String label, final String field, final DbObject o,
-			final RelRefN rel, final Class<? extends ViewTable> viewTableSelectClass,
-			final Class<? extends Form> createFormCls) {
+			final RelRefN rel, final Class<? extends View> selectViewClass, final Class<? extends Form> createFormCls) {
 		InputRelRefN e = (InputRelRefN) fields.get(field);
 		if (e == null) {
-			e = new InputRelRefN(rel, viewTableSelectClass, createFormCls, "<br>");
+			e = new InputRelRefN(rel, selectViewClass, createFormCls, "<br>");
 			e.parent(this);
 			e.name(field);
 			fields.put(field, e);

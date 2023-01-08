@@ -6,8 +6,8 @@ import java.util.Set;
 
 import b.a;
 import b.xwriter;
-import bob.ViewTable.SelectReceiverMulti;
-import bob.ViewTable.SelectReceiverSingle;
+import bob.View.SelectReceiverMulti;
+import bob.View.SelectReceiverSingle;
 import db.Db;
 import db.DbObject;
 import db.DbObjects;
@@ -17,18 +17,18 @@ import db.RelRefN;
 public final class InputRelRefN extends a {
 	private static final long serialVersionUID = 1L;
 	final RelRefN rel;
-	final private Class<? extends ViewTable> viewTableSelectClass; // the view to use when selecting
-	final private Class<? extends Form> createFormCls;
+	final private Class<? extends View> selectViewClass; // the view to use when selecting
+	final private Class<? extends Form> createFormCls; // the form used to create object
 	final private LinkedHashSet<String> initialSelectedIds;
 	final private LinkedHashSet<String> selectedIds;
 	final private String itemSeparator;
 //	private int objId;
 	private boolean selectedIdsInitiated;
 
-	public InputRelRefN(final RelRefN rel, final Class<? extends ViewTable> viewTableSelectClass,
+	public InputRelRefN(final RelRefN rel, final Class<? extends View> selectViewClass,
 			final Class<? extends Form> createFormCls, final String itemSeparator) {
 		this.rel = rel;
-		this.viewTableSelectClass = viewTableSelectClass;
+		this.selectViewClass = selectViewClass;
 		this.createFormCls = createFormCls;
 		initialSelectedIds = new LinkedHashSet<String>();
 		selectedIds = new LinkedHashSet<String>();
@@ -51,7 +51,7 @@ public final class InputRelRefN extends a {
 	@Override
 	public void to(final xwriter x) throws Throwable {
 		final DbTransaction tn = Db.currentTransaction();
-		if (viewTableSelectClass != null) {
+		if (selectViewClass != null) {
 			x.ax(this, "s", "select");
 			if (createFormCls != null) {
 				x.p(" • ");
@@ -60,7 +60,7 @@ public final class InputRelRefN extends a {
 		if (createFormCls != null) {
 			x.ax(this, "c", "create");
 		}
-		if (viewTableSelectClass != null || createFormCls != null) {
+		if (selectViewClass != null || createFormCls != null) {
 			x.br();
 		}
 		for (final String s : selectedIds) {
@@ -82,7 +82,7 @@ public final class InputRelRefN extends a {
 
 	/** Callback "select". */
 	public void x_s(final xwriter x, final String param) throws Throwable {
-		final ViewTable t = viewTableSelectClass.getConstructor().newInstance();
+		final View t = selectViewClass.getConstructor().newInstance();
 		t.setSelectMode(selectedIds, new SelectReceiverMulti() {
 			private static final long serialVersionUID = 1L;
 

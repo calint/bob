@@ -6,7 +6,6 @@ import java.util.Set;
 
 import b.xwriter;
 import bob.Action;
-import bob.View;
 import bob.ViewTable;
 import db.Db;
 import db.DbObject;
@@ -20,16 +19,11 @@ public final class TableUsers extends ViewTable {
 	static final long serialVersionUID = 1;
 
 	public TableUsers() {
-		super(BIT_SEARCH | BIT_CREATE | BIT_DELETE | BIT_SELECT, BIT_CLICK_ITEM);
+		super(BIT_SEARCH | BIT_CREATE | BIT_DELETE | BIT_SELECT, BIT_CLICK_ITEM, new TypeInfo("user", "users"));
 	}
 
 	public String getTitle() {
 		return "Users";
-	}
-
-	@Override
-	protected View.TypeInfo getTypeInfo() {
-		return new View.TypeInfo("user", "users");
 	}
 
 	@Override
@@ -121,7 +115,7 @@ public final class TableUsers extends ViewTable {
 	}
 
 	@Override
-	protected void onAction(xwriter x, Action act) throws Throwable {
+	protected void onAction(final xwriter x, final Action act) throws Throwable {
 		if ("da".equals(act.code())) {
 			final DbTransaction tn = Db.currentTransaction();
 			for (final DbObject o : tn.get(User.class, null, null, null)) {

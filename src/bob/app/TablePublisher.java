@@ -7,7 +7,6 @@ import b.a;
 import b.xwriter;
 import bob.Action;
 import bob.Util;
-import bob.View;
 import bob.ViewTable;
 import db.Db;
 import db.DbObjects;
@@ -26,18 +25,13 @@ public final class TablePublisher extends ViewTable {
 	private final int publisherId;
 
 	public TablePublisher(final int publisherId) {
-		super(BIT_SEARCH | BIT_SELECT | BIT_CREATE | BIT_DELETE, BIT_CLICK_ITEM);
+		super(BIT_SEARCH | BIT_SELECT | BIT_CREATE | BIT_DELETE, BIT_CLICK_ITEM, new TypeInfo("book", "books"));
 		this.publisherId = publisherId;
 	}
 
 	public String getTitle() {
 		final Publisher bc = (Publisher) Db.currentTransaction().get(Publisher.class, publisherId);
 		return bc.getName();
-	}
-
-	@Override
-	protected View.TypeInfo getTypeInfo() {
-		return new View.TypeInfo("book", "books");
 	}
 
 	@Override

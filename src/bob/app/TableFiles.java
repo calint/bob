@@ -34,7 +34,7 @@ public final class TableFiles extends ViewTable {
 	}
 
 	public TableFiles(final path pth) {
-		super(BIT_SEARCH, BIT_CLICK_ITEM);
+		super(BIT_SEARCH, BIT_CLICK_ITEM, new TypeInfo("file", "files"));
 		this.pth = pth;
 	}
 

@@ -2,7 +2,7 @@ package bob;
 
 import b.a;
 import b.xwriter;
-import bob.ViewTable.SelectReceiverSingle;
+import bob.View.SelectReceiverSingle;
 import db.Db;
 import db.DbObject;
 import db.DbTransaction;
@@ -11,16 +11,16 @@ import db.RelRef;
 public final class InputRelRef extends a {
 	private static final long serialVersionUID = 1L;
 	final RelRef rel;
-	final private Class<? extends ViewTable> viewTableSelectClass; // the view to use when selecting
+	final private Class<? extends View> selectViewClass; // the view to use when selecting
 	final private Class<? extends Form> createFormCls;
 	private int selectedId;
 	private int objId;
 	private boolean selectedIdInitiated;
 
-	public InputRelRef(final RelRef rel, final Class<? extends ViewTable> viewTableSelectClass,
+	public InputRelRef(final RelRef rel, final Class<? extends View> selectViewClass,
 			final Class<? extends Form> createFormCls) {
 		this.rel = rel;
-		this.viewTableSelectClass = viewTableSelectClass;
+		this.selectViewClass = selectViewClass;
 		this.createFormCls = createFormCls;
 	}
 
@@ -50,7 +50,7 @@ public final class InputRelRef extends a {
 				}
 			}
 		}
-		if (viewTableSelectClass != null) {
+		if (selectViewClass != null) {
 			x.spc();
 			x.ax(this, "s", "select");
 			if (createFormCls != null) {
@@ -70,15 +70,15 @@ public final class InputRelRef extends a {
 	 * @throws InstantiationException
 	 */
 	public void x_s(final xwriter x, final String param) throws Throwable {
-		final ViewTable t = viewTableSelectClass.getConstructor().newInstance();
-		t.setSelectMode(Integer.toString(selectedId), new SelectReceiverSingle() {
+		final View v = selectViewClass.getConstructor().newInstance();
+		v.setSelectMode(Integer.toString(selectedId), new SelectReceiverSingle() {
 			private static final long serialVersionUID = 1L;
 
 			public void onSelect(final String selected) {
 				selectedId = Integer.parseInt(selected);
 			}
 		});
-		super.bubble_event(x, this, t); // display t
+		super.bubble_event(x, this, v); // display view
 	}
 
 	/** Callback "create". */

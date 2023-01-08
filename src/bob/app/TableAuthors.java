@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Set;
 
 import b.xwriter;
-import bob.View;
 import bob.ViewTable;
 import db.Db;
 import db.DbObjects;
@@ -17,16 +16,11 @@ public final class TableAuthors extends ViewTable {
 	static final long serialVersionUID = 2;
 
 	public TableAuthors() {
-		super(BIT_SEARCH | BIT_CREATE | BIT_DELETE | BIT_SELECT, BIT_CLICK_ITEM);
+		super(BIT_SEARCH | BIT_CREATE | BIT_DELETE | BIT_SELECT, BIT_CLICK_ITEM, new TypeInfo("author", "authors"));
 	}
 
 	public String getTitle() {
 		return "Authors";
-	}
-
-	@Override
-	protected View.TypeInfo getTypeInfo() {
-		return new View.TypeInfo("author", "authors");
 	}
 
 	@Override

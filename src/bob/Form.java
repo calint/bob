@@ -4,7 +4,7 @@ import java.util.List;
 
 import b.a;
 import b.xwriter;
-import bob.ViewTable.SelectReceiverSingle;
+import bob.View.SelectReceiverSingle;
 
 public abstract class Form extends a implements Titled {
 	static final long serialVersionUID = 1;
@@ -16,7 +16,8 @@ public abstract class Form extends a implements Titled {
 	public Container ans; // actions container
 	public Container scc; // "save and close", "save", "close" actions container
 	protected String objectId;
-	private SelectReceiverSingle selectReceiverSingle;
+	private SelectReceiverSingle selectReceiverSingle; // when select mode this interface will receive the created
+														// object id
 
 	public Form(final String objectId, final int enabledFormBits) {
 		this.objectId = objectId;

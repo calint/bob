@@ -17,9 +17,21 @@ public abstract class View extends a implements Titled {
 	/** The actions that are enabled in the view. */
 	final protected int enabledViewBits;
 
-	public View(final int enabledBits) {
+	protected boolean isSelectMode; // if true view renders to select item(s)
+	protected boolean isSelectModeMulti; // if true view renders to select multiple items
+	protected SelectReceiverMulti selectReceiverMulti;
+	protected SelectReceiverSingle selectReceiverSingle;
+	final private View.TypeInfo typeInfo; // the name and plural of the object type
+
+	public View(final int enabledBits, final TypeInfo ti) {
 		enabledViewBits = enabledBits;
+		typeInfo = ti;
 	}
+
+	final public View.TypeInfo getTypeInfo() {
+		return typeInfo;
+	}
+
 //
 //	protected final void enable(int bit) {
 //		enabled_bits |= bit;
@@ -36,8 +48,6 @@ public abstract class View extends a implements Titled {
 	protected List<Action> getActionsList() {
 		return null;
 	}
-
-	protected abstract View.TypeInfo getTypeInfo();
 
 	/**
 	 * Returns the object count per page.
@@ -82,5 +92,28 @@ public abstract class View extends a implements Titled {
 		public String getNamePlural() {
 			return namePlural;
 		}
+	}
+
+	interface SelectReceiverMulti extends Serializable {
+		void onSelect(Set<String> selectedIds);
+	}
+
+	interface SelectReceiverSingle extends Serializable {
+		void onSelect(String selectedId);
+	}
+
+	public final void setSelectMode(final Set<String> selectedIds, final SelectReceiverMulti sr) {
+		isSelectMode = true;
+		isSelectModeMulti = true;
+		selectReceiverMulti = sr;
+		final Set<String> selection = getSelectedIds();
+		selection.clear();
+		selection.addAll(selectedIds);
+	}
+
+	public final void setSelectMode(final String selectedId, final SelectReceiverSingle sr) {
+		isSelectMode = true;
+		isSelectModeMulti = false;
+		selectReceiverSingle = sr;
 	}
 }

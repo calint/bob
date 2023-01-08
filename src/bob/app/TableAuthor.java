@@ -7,7 +7,6 @@ import b.a;
 import b.xwriter;
 import bob.Action;
 import bob.Util;
-import bob.View;
 import bob.ViewTable;
 import db.Db;
 import db.DbObjects;
@@ -25,18 +24,13 @@ public final class TableAuthor extends ViewTable {
 	private final int authorId;
 
 	public TableAuthor(final int authorId) {
-		super(BIT_SEARCH | BIT_SELECT | BIT_CREATE | BIT_DELETE, BIT_CLICK_ITEM);
+		super(BIT_SEARCH | BIT_SELECT | BIT_CREATE | BIT_DELETE, BIT_CLICK_ITEM, new TypeInfo("book", "books"));
 		this.authorId = authorId;
 	}
 
 	public String getTitle() {
 		final Author bc = (Author) Db.currentTransaction().get(Author.class, authorId);
 		return bc.getName();
-	}
-
-	@Override
-	protected View.TypeInfo getTypeInfo() {
-		return new View.TypeInfo("book", "books");
 	}
 
 	@Override

@@ -1,6 +1,5 @@
 package bob;
 
-import java.io.Serializable;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -12,14 +11,6 @@ import db.Limit;
 public abstract class ViewTable extends View {
 	private static final long serialVersionUID = 3L;
 
-	interface SelectReceiverMulti extends Serializable {
-		void onSelect(Set<String> selected);
-	}
-
-	interface SelectReceiverSingle extends Serializable {
-		void onSelect(String selected);
-	}
-
 	public final static int BIT_CLICK_ITEM = 1;
 	public Container ac; // actions
 	public a q; // query field
@@ -27,20 +18,14 @@ public abstract class ViewTable extends View {
 	public Paging p;
 	public a ms; // more search section
 	private boolean ms_display; // true to display more search section
-	final private View.TypeInfo typeInfo; // the name and plural of the object type
 	/** The actions that are enabled in the table. */
 	final protected int enabledTableBits;
-	private boolean isSelectMode; // if true view renders to select item(s)
-	private boolean isSelectModeMulti; // if true view renders to select multiple items
-	private SelectReceiverMulti selectReceiverMulti;
-	private SelectReceiverSingle selectReceiverSingle;
 
-	public ViewTable(final int viewBits, final int tableBits) {
-		super(viewBits);
+	public ViewTable(final int viewBits, final int tableBits, final TypeInfo typeInfo) {
+		super(viewBits, typeInfo);
 		enabledTableBits = tableBits;
 		t.setTableView(this);
 		p.setTableView(this);
-		typeInfo = getTypeInfo();
 		if ((enabledViewBits & BIT_CREATE) != 0) {
 			ac.add(new Action("create " + typeInfo.name, "create"));
 		}
@@ -55,29 +40,15 @@ public abstract class ViewTable extends View {
 		}
 	}
 
-	public final void setSelectMode(final Set<String> initialSelection, final SelectReceiverMulti sr) {
-		isSelectMode = true;
-		isSelectModeMulti = true;
-		selectReceiverMulti = sr;
-		t.selectedIds.clear();
-		t.selectedIds.addAll(initialSelection);
-	}
-
-	public final void setSelectMode(final String selected, final SelectReceiverSingle sr) {
-		isSelectMode = true;
-		isSelectModeMulti = false;
-		selectReceiverSingle = sr;
-	}
-
 	@Override
 	public final void to(final xwriter x) throws Throwable {
 		if (isSelectMode) {
 			x.tago("div").attr("class", "attention").tagoe();
 			if (isSelectModeMulti) {
-				x.p("select " + typeInfo.namePlural + " then click ");
+				x.p("select " + getTypeInfo().namePlural + " then click ");
 				x.ax(this, "sm", "select");
 			} else {
-				x.p("select " + typeInfo.name);
+				x.p("select " + getTypeInfo().name);
 			}
 			x.tage("div");
 		}
@@ -132,7 +103,7 @@ public abstract class ViewTable extends View {
 			}
 			if ("delete".equals(code) && (enabledViewBits & BIT_DELETE) != 0) {
 				if (getSelectedIds().isEmpty()) {
-					x.xalert("No " + typeInfo.namePlural + " selected.");
+					x.xalert("No " + getTypeInfo().namePlural + " selected.");
 					return;
 				}
 				onActionDelete(x);
@@ -250,11 +221,6 @@ public abstract class ViewTable extends View {
 	// -----------------------------------------------------------------------------------
 	// override these in to specialize table
 
-	@Override
-	protected View.TypeInfo getTypeInfo() {
-		return new View.TypeInfo("object", "objects");
-	}
-
 	protected boolean hasMoreSearchSection() {
 		return false;
 	}
@@ -331,9 +297,9 @@ public abstract class ViewTable extends View {
 			x.p(objectsCount);
 			x.p(' ');
 			if (objectsCount == 1) {
-				x.p(tv.typeInfo.name);
+				x.p(tv.getTypeInfo().name);
 			} else {
-				x.p(tv.typeInfo.namePlural);
+				x.p(tv.getTypeInfo().namePlural);
 			}
 			x.p(". ");
 			if (npages > 1) {

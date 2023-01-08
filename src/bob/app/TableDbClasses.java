@@ -15,7 +15,7 @@ public final class TableDbClasses extends ViewTable {
 	static final long serialVersionUID = 1;
 
 	public TableDbClasses() {
-		super(BIT_SEARCH, BIT_CLICK_ITEM);
+		super(BIT_SEARCH, BIT_CLICK_ITEM, new TypeInfo("class", "classes"));
 	}
 
 	public String getTitle() {

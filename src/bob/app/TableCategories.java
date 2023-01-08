@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Set;
 
 import b.xwriter;
-import bob.View;
 import bob.ViewTable;
 import db.Db;
 import db.DbObjects;
@@ -17,16 +16,12 @@ public final class TableCategories extends ViewTable {
 	static final long serialVersionUID = 2;
 
 	public TableCategories() {
-		super(BIT_SEARCH | BIT_SELECT | BIT_CREATE | BIT_DELETE, BIT_CLICK_ITEM);
+		super(BIT_SEARCH | BIT_SELECT | BIT_CREATE | BIT_DELETE, BIT_CLICK_ITEM,
+				new TypeInfo("category", "categories"));
 	}
 
 	public String getTitle() {
 		return "Categories";
-	}
-
-	@Override
-	protected View.TypeInfo getTypeInfo() {
-		return new View.TypeInfo("category", "categories");
 	}
 
 	@Override
