@@ -271,9 +271,24 @@ public abstract class FormDbo extends Form {
 		x.nl();
 	}
 
-	final protected void inputElem(final xwriter x, final String label, final DbField f, final a elem)
-			throws Throwable {
-		inputElem(x, label, f.getName(), elem);
+//	final protected void inputElem(final xwriter x, final String label, final DbField f, final a elem)
+//			throws Throwable {
+//		inputElem(x, label, f.getName(), elem);
+//	}
+
+	final protected void inputElem(final xwriter x, final String field, final a elem) throws Throwable {
+		final a e = fields.get(field);
+		x.tr().td(2, "center");
+		if (e == null) {
+			elem.parent(this);
+			elem.name(field);
+			fields.put(field, elem);
+			elem.to(x);
+		} else {
+			if (elem != e)
+				throw new RuntimeException("expected same element");
+			e.to(x);
+		}
 	}
 
 	final protected void inputElem(final xwriter x, final String label, final String field, final a elem)

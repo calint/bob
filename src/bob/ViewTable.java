@@ -30,7 +30,7 @@ public abstract class ViewTable extends View {
 			ac.add(new Action("create " + typeInfo.name, "create"));
 		}
 		if ((enabledViewBits & BIT_DELETE) != 0) {
-			ac.add(new Action("delete " + typeInfo.namePlural, "delete"));
+			ac.add(new Action("delete selected " + typeInfo.namePlural, "delete"));
 		}
 		final List<Action> actions = getActionsList();
 		if (actions != null) {

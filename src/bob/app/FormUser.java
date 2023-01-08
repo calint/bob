@@ -34,6 +34,8 @@ public final class FormUser extends FormDbo {
 		return Db.currentTransaction().create(User.class);
 	}
 
+//	private View authors = new TableAuthors();
+
 	@Override
 	protected void render(final xwriter x) throws Throwable {
 		final User o = (User) getObject();
@@ -50,6 +52,7 @@ public final class FormUser extends FormDbo {
 		inputTimestamp(x, "Timestamp", o, User.birthTime, null);
 		inputDate(x, "Date", o, User.date, null);
 		inputDateTime(x, "Date time", o, User.dateTime, null);
+//		inputElem(x, "authors", authors);
 		endForm(x);
 	}
 

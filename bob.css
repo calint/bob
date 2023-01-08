@@ -94,6 +94,9 @@ table.t td.icn{
 }
 
 /** bob.Form */
+.center{
+	text-align:center;
+}
 .sc{ /* save, close actions */
 	margin:.5rem;
 }

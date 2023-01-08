@@ -738,7 +738,15 @@ public xwriter hr(){
 	}
 
 	public xwriter td(final int colspan){
-		return p("<td colspan=").p(colspan).p(">");
+		return td(colspan,null);
+	}
+
+	public xwriter td(final int colspan,final String cls){
+		tago("td").attr("colspan", colspan);
+		if(!isempty(cls)) {
+			attr("class", cls);
+		}
+		return tagoe();
 	}
 
 	public xwriter td(final String cls){
