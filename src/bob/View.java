@@ -28,7 +28,7 @@ public abstract class View extends a implements Titled {
 		typeInfo = ti;
 	}
 
-	final public View.TypeInfo getTypeInfo() {
+	final public TypeInfo getTypeInfo() {
 		return typeInfo;
 	}
 
