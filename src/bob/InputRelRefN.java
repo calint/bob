@@ -19,8 +19,8 @@ public final class InputRelRefN extends a {
 	final RelRefN rel;
 	final private Class<? extends View> selectViewClass; // the view to use when selecting
 	final private Class<? extends Form> createFormCls; // the form used to create object
-	final private LinkedHashSet<String> initialSelectedIds;
-	final private LinkedHashSet<String> selectedIds;
+	final private LinkedHashSet<String> initialSelectedIds; // the initial ids from object
+	final private LinkedHashSet<String> selectedIds; // current selected ids
 	final private String itemSeparator;
 
 	public InputRelRefN(final DbObject obj, final RelRefN rel, final Set<String> defaultValues,
