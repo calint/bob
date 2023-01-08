@@ -66,7 +66,6 @@ public final class FormBook2 extends FormDbo {
 		inputInt(x, "In stock", o, Book.inStock, 0, "nbr");
 		inputBool(x, "Show in store", o, Book.showInStore, true);
 		inputFlt(x, "Rating", o, Book.rating, 0, "nbr");
-		inputDbl(x, "Double", o, Book.dbl, 0, "nbr");
 		// aggregated object
 		inputTextArea(x, "Description", "description", o == null ? "" : o.getData(true).getData(), "large");
 		endForm(x);
