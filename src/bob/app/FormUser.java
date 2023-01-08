@@ -50,8 +50,8 @@ public final class FormUser extends FormDbo {
 		inputDbl(x, "Double", o, User.dbl, 0, "nbr");
 		inputBool(x, "Boolean", o, User.bool, false);
 		inputTimestamp(x, "Timestamp", o, User.birthTime, null);
-		inputDate(x, "Date", o, User.date, null);
 		inputDateTime(x, "Date time", o, User.dateTime, null);
+		inputDate(x, "Date", o, User.date, null);
 //		inputElem(x, "authors", authors);
 		endForm(x);
 	}
