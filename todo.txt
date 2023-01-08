@@ -32,9 +32,9 @@ b
 [o] FormDbo with convenience for editing dbobjects
 [x]   find/select/create
 [x]     RelRefN
-[ ]       default values
+[x]       default values
 [x]     RelRef
-[ ]       default value
+[x]       default value
 [ ]     RelAgg. object must first be saved.
 [ ]       create object with state "editing" when form is opened. when saved state "published"
 [ ]     RelAggN. object must first be saved.

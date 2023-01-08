@@ -338,42 +338,40 @@ public abstract class FormDbo extends Form {
 	}
 
 	final protected void inputRef(final xwriter x, final String label, final DbObject o, final RelRef rel,
-			final Class<? extends View> selectViewClass, final Class<? extends Form> createFormCls) {
-		inputRef(x, label, rel.getName(), o, rel, selectViewClass, createFormCls);
+			final int defaultValue, final Class<? extends View> selectViewClass,
+			final Class<? extends Form> createFormCls) {
+		inputRef(x, label, rel.getName(), o, rel, defaultValue, selectViewClass, createFormCls);
 	}
 
 	final protected void inputRef(final xwriter x, final String label, final String field, final DbObject o,
-			final RelRef rel, final Class<? extends View> selectViewClass, final Class<? extends Form> createFormCls) {
+			final RelRef rel, final int defaultValue, final Class<? extends View> selectViewClass,
+			final Class<? extends Form> createFormCls) {
 		InputRelRef e = (InputRelRef) fields.get(field);
 		if (e == null) {
-			e = new InputRelRef(rel, selectViewClass, createFormCls);
+			e = new InputRelRef(rel, o == null ? defaultValue : o.id(), selectViewClass, createFormCls);
 			e.parent(this);
 			e.name(field);
 			fields.put(field, e);
-		}
-		if (o != null) {
-			e.refreshCurrentId(o);
 		}
 		x.tr().td("lbl").p(label).p(":").td("val");
 		x.divh(e);
 	}
 
 	final protected void inputRefN(final xwriter x, final String label, final DbObject o, final RelRefN rel,
-			final Class<? extends View> selectViewClass, final Class<? extends Form> createFormCls) {
-		inputRefN(x, label, rel.getName(), o, rel, selectViewClass, createFormCls);
+			final Set<String> defaultValues, final Class<? extends View> selectViewClass,
+			final Class<? extends Form> createFormCls) {
+		inputRefN(x, label, rel.getName(), o, rel, defaultValues, selectViewClass, createFormCls);
 	}
 
 	final protected void inputRefN(final xwriter x, final String label, final String field, final DbObject o,
-			final RelRefN rel, final Class<? extends View> selectViewClass, final Class<? extends Form> createFormCls) {
+			final RelRefN rel, final Set<String> defaultValues, final Class<? extends View> selectViewClass,
+			final Class<? extends Form> createFormCls) {
 		InputRelRefN e = (InputRelRefN) fields.get(field);
 		if (e == null) {
-			e = new InputRelRefN(rel, selectViewClass, createFormCls, "<br>");
+			e = new InputRelRefN(o, rel, defaultValues, selectViewClass, createFormCls, "<br>");
 			e.parent(this);
 			e.name(field);
 			fields.put(field, e);
-		}
-		if (o != null) {
-			e.refreshInitialIds(o);
 		}
 		x.tr().td("lbl").p(label).p(":").td("val");
 		x.divh(e);
@@ -416,8 +414,8 @@ public abstract class FormDbo extends Form {
 		dbfields.put(f.getName(), f);
 	}
 
-	final protected void inputTimestamp(final xwriter x, final String label, final String field,
-			final Timestamp value, final String styleClass) {
+	final protected void inputTimestamp(final xwriter x, final String label, final String field, final Timestamp value,
+			final String styleClass) {
 		x.tr().td("lbl").p(label).p(":").td("val");
 		final a e = elemFor(field, formatDateTime(value));
 		x.inp(e, "datetime-local", styleClass, null, null, this, "sc", null, null);

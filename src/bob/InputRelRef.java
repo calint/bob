@@ -14,40 +14,28 @@ public final class InputRelRef extends a {
 	final private Class<? extends View> selectViewClass; // the view to use when selecting
 	final private Class<? extends Form> createFormCls;
 	private int selectedId;
-	private int objId;
-	private boolean selectedIdInitiated;
 
-	public InputRelRef(final RelRef rel, final Class<? extends View> selectViewClass,
+	public InputRelRef(final RelRef rel, final int defaultValue, final Class<? extends View> selectViewClass,
 			final Class<? extends Form> createFormCls) {
 		this.rel = rel;
+		selectedId = defaultValue;
 		this.selectViewClass = selectViewClass;
 		this.createFormCls = createFormCls;
-	}
-
-	public void refreshCurrentId(final DbObject obj) {
-		if (selectedIdInitiated) // do this only once
-			return;
-		objId = obj.id();
-		selectedId = rel.getId(obj);
-		selectedIdInitiated = true;
 	}
 
 	@Override
 	public void to(final xwriter x) throws Throwable {
 		final DbTransaction tn = Db.currentTransaction();
-		if (objId != 0) {
-			final DbObject o = tn.get(rel.getFromClass(), objId);
-			if (selectedId != 0) {
-				final DbObject ro = tn.get(rel.getToClass(), selectedId);
-				if (ro != null) {
-					if (ro instanceof Titled) {
-						final Titled t = (Titled) ro;
-						x.p(t.getTitle());
-					} else {
-						x.p(ro.id());
-					}
-					x.spc().ax(this, "r " + o.id(), "✖");
+		if (selectedId != 0) {
+			final DbObject ro = tn.get(rel.getToClass(), selectedId);
+			if (ro != null) {
+				if (ro instanceof Titled) {
+					final Titled t = (Titled) ro;
+					x.p(t.getTitle());
+				} else {
+					x.p(ro.id());
 				}
+				x.spc().ax(this, "r", "✖");
 			}
 		}
 		if (selectViewClass != null) {
@@ -82,8 +70,16 @@ public final class InputRelRef extends a {
 	}
 
 	/** Callback "create". */
-	public void x_c(final xwriter x, final String param) {
+	public void x_c(final xwriter x, final String param) throws Throwable {
+		final Form f = createFormCls.getConstructor().newInstance();
+		f.setSelectMode(new SelectReceiverSingle() {
+			private static final long serialVersionUID = 1L;
 
+			public void onSelect(final String selected) {
+				selectedId = Integer.parseInt(selected);
+			}
+		});
+		super.bubble_event(x, this, f); // display the form
 	}
 
 	/** Callback "remove". */
@@ -99,4 +95,5 @@ public final class InputRelRef extends a {
 	public int getSelectedId() {
 		return selectedId;
 	}
+
 }

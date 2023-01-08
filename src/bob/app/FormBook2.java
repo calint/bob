@@ -55,10 +55,14 @@ public final class FormBook2 extends FormDbo {
 		beginForm(x);
 		inputText(x, "Title", o, Book.name, initStr, "long");
 		focus(x, Book.name);
-		inputRefN(x, "Authors", o, Book.authors, TableAuthors.class, FormAuthor.class);
-		inputRef(x, "Publisher", o, Book.publisher, TablePublishers.class, FormPublisher.class);
+//		Set<String>init=new HashSet<String>();
+//		init.add("1");
+//		init.add("2");
+//		inputRefN(x, "Authors", o, Book.authors, init, TableAuthors.class, FormAuthor.class);
+		inputRefN(x, "Authors", o, Book.authors, null, TableAuthors.class, FormAuthor.class);
+		inputRef(x, "Publisher", o, Book.publisher, 0, TablePublishers.class, FormPublisher.class);
 		inputDate(x, "Published date", o, Book.publishedDate, null);
-		inputRefN(x, "Categories", o, Book.categories, TableCategories.class, FormCategory.class);
+		inputRefN(x, "Categories", o, Book.categories, null, TableCategories.class, FormCategory.class);
 		inputInt(x, "In stock", o, Book.inStock, 0, "nbr");
 		inputBool(x, "Show in store", o, Book.showInStore, true);
 		inputFlt(x, "Rating", o, Book.rating, 0, "nbr");

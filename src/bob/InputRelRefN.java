@@ -22,30 +22,28 @@ public final class InputRelRefN extends a {
 	final private LinkedHashSet<String> initialSelectedIds;
 	final private LinkedHashSet<String> selectedIds;
 	final private String itemSeparator;
-//	private int objId;
-	private boolean selectedIdsInitiated;
 
-	public InputRelRefN(final RelRefN rel, final Class<? extends View> selectViewClass,
-			final Class<? extends Form> createFormCls, final String itemSeparator) {
+	public InputRelRefN(final DbObject obj, final RelRefN rel, final Set<String> defaultValues,
+			final Class<? extends View> selectViewClass, final Class<? extends Form> createFormCls,
+			final String itemSeparator) {
 		this.rel = rel;
 		this.selectViewClass = selectViewClass;
 		this.createFormCls = createFormCls;
 		initialSelectedIds = new LinkedHashSet<String>();
 		selectedIds = new LinkedHashSet<String>();
 		this.itemSeparator = itemSeparator;
-	}
-
-	public void refreshInitialIds(final DbObject obj) {
-//		objId = obj.id();
-		final DbObjects dbos = rel.get(obj);
-		for (final DbObject o : dbos.toList()) {
-			final String idstr = Integer.toString(o.id());
-			initialSelectedIds.add(idstr);
+		if (obj != null) {
+			final DbObjects dbos = rel.get(obj);
+			for (final DbObject o : dbos.toList()) {
+				final String idstr = Integer.toString(o.id());
+				selectedIds.add(idstr);
+				initialSelectedIds.add(idstr);
+			}
+			return;
 		}
-		if (!selectedIdsInitiated) { // if first call
-			selectedIds.addAll(initialSelectedIds);
-			selectedIdsInitiated = true;
-		}
+		if (defaultValues == null)
+			return;
+		selectedIds.addAll(defaultValues);
 	}
 
 	@Override
@@ -141,4 +139,5 @@ public final class InputRelRefN extends a {
 	public Set<String> getSelectedIds() {
 		return selectedIds;
 	}
+
 }
