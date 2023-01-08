@@ -363,7 +363,7 @@ public abstract class FormDbo extends Form {
 			final Class<? extends Form> createFormCls) {
 		InputRelRef e = (InputRelRef) fields.get(field);
 		if (e == null) {
-			e = new InputRelRef(rel, o == null ? defaultValue : rel.getId(o), selectViewClass, createFormCls);
+			e = new InputRelRef(o, rel, defaultValue, selectViewClass, createFormCls);
 			e.parent(this);
 			e.name(field);
 			fields.put(field, e);

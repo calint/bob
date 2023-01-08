@@ -15,10 +15,10 @@ public final class InputRelRef extends a {
 	final private Class<? extends Form> createFormCls;
 	private int selectedId;
 
-	public InputRelRef(final RelRef rel, final int defaultValue, final Class<? extends View> selectViewClass,
-			final Class<? extends Form> createFormCls) {
+	public InputRelRef(final DbObject obj, final RelRef rel, final int defaultValue,
+			final Class<? extends View> selectViewClass, final Class<? extends Form> createFormCls) {
 		this.rel = rel;
-		selectedId = defaultValue;
+		selectedId = obj == null ? defaultValue : rel.getId(obj);
 		this.selectViewClass = selectViewClass;
 		this.createFormCls = createFormCls;
 	}
