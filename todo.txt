@@ -12,6 +12,7 @@ b
 [ ] ViewTable: click on row callback working with other links in the row
 [ ]   https://stackoverflow.com/questions/32404185/event-onclick-on-td-and-tr
 [ ]   https://stackoverflow.com/questions/28477422/checkbox-click-overriding-table-row-click
+[ ] ViewTable: Element.scrollIntoView() instead of scroll to top considering included views.
 [ ] bob: Form: include view
 [ ] bob: Form: upload file
 [ ] bob: Form: handling of exceptions, focus and highlighting field

@@ -25,7 +25,7 @@ public abstract class View extends a implements Titled {
 
 	public View(final int enabledBits, final TypeInfo ti) {
 		enabledViewBits = enabledBits;
-		typeInfo = ti;
+		typeInfo = ti == null ? new TypeInfo("object", "objects") : ti;
 	}
 
 	final public TypeInfo getTypeInfo() {
