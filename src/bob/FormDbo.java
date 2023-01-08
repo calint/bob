@@ -72,16 +72,6 @@ public abstract class FormDbo extends Form {
 		x.script().xfocus(getElem(field)).script_();
 	}
 
-	/** Focuses on field from "save" when for example validation failed. */
-	final protected void xfocus(final xwriter x, final DbField f) {
-		xfocus(x, f.getName());
-	}
-
-	/** Focuses on field from "save" when for example validation failed. */
-	final protected void xfocus(final xwriter x, final String field) {
-		x.xfocus(getElem(field));
-	}
-
 	final protected String formatDate(final Timestamp ts) {
 		if (ts == null)
 			return "";
@@ -266,21 +256,6 @@ public abstract class FormDbo extends Form {
 		x.nl();
 	}
 
-	final protected void inputTimestamp(final xwriter x, final String label, final DbObject o, final FldTs f,
-			final Timestamp defaultValue) {
-		final Timestamp value = o == null ? defaultValue : (Timestamp) DbObject.getFieldValue(o, f);
-		inputTimestamp(x, label, f.getName(), value, null);
-		dbfields.put(f.getName(), f);
-	}
-
-	final protected void inputTimestamp(final xwriter x, final String label, final String field,
-			final Timestamp value, final String styleClass) {
-		x.tr().td("lbl").p(label).p(":").td("val");
-		final a e = elemFor(field, formatDateTime(value));
-		x.inp(e, "datetime-local", styleClass, null, null, this, "sc", null, null);
-		x.nl();
-	}
-
 	final protected void inputDbl(final xwriter x, final String label, final DbObject o, final FldDbl f,
 			final double defaultValue, final String styleClass) {
 		final double value = o == null ? defaultValue : ((Number) DbObject.getFieldValue(o, f)).doubleValue();
@@ -434,6 +409,21 @@ public abstract class FormDbo extends Form {
 		x.inptxtarea(elemFor(field, value), styleClass).nl();
 	}
 
+	final protected void inputTimestamp(final xwriter x, final String label, final DbObject o, final FldTs f,
+			final Timestamp defaultValue) {
+		final Timestamp value = o == null ? defaultValue : (Timestamp) DbObject.getFieldValue(o, f);
+		inputTimestamp(x, label, f.getName(), value, null);
+		dbfields.put(f.getName(), f);
+	}
+
+	final protected void inputTimestamp(final xwriter x, final String label, final String field,
+			final Timestamp value, final String styleClass) {
+		x.tr().td("lbl").p(label).p(":").td("val");
+		final a e = elemFor(field, formatDateTime(value));
+		x.inp(e, "datetime-local", styleClass, null, null, this, "sc", null, null);
+		x.nl();
+	}
+
 	final protected Timestamp parseDate(final String s) throws ParseException {
 		if (Util.isEmpty(s))
 			return null;
@@ -573,6 +563,16 @@ public abstract class FormDbo extends Form {
 	}
 
 	protected abstract void writeToObject(final xwriter x, final DbObject obj) throws Throwable;
+
+	/** Focuses on field from "save" when for example validation failed. */
+	final protected void xfocus(final xwriter x, final DbField f) {
+		xfocus(x, f.getName());
+	}
+
+	/** Focuses on field from "save" when for example validation failed. */
+	final protected void xfocus(final xwriter x, final String field) {
+		x.xfocus(getElem(field));
+	}
 
 	private a elemFor(final String nm, final Object value) {
 		a e = fields.get(nm);
