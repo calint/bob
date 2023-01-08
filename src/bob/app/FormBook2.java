@@ -81,7 +81,6 @@ public final class FormBook2 extends FormDbo {
 			throw new Exception("Title may not be empty.");
 		}
 
-		// note authors relation updated by FormDbo
 		// denormalize for better performance
 		final StringBuilder authorsSb = new StringBuilder(128);
 		for (final DbObject ao : o.getAuthors().toList()) {
@@ -93,12 +92,10 @@ public final class FormBook2 extends FormDbo {
 		}
 		o.setAuthorsStr(authorsSb.toString());
 
-		// note publisher relation updated by FormDbo
 		// denormalize for better performance
 		final Publisher publisher = o.getPublisher();
 		o.setPublisherStr(publisher == null ? "" : publisher.getName());
 
-		// note categories relation updated by FormDbo
 		// denormalize for better performance
 		final StringBuilder categoriesSb = new StringBuilder(128);
 		for (final DbObject co : o.getCategories().toList()) {
