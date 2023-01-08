@@ -53,18 +53,18 @@ public final class FormBook2 extends FormDbo {
 	protected void render(final xwriter x) throws Throwable {
 		final Book o = (Book) getObject();
 		beginForm(x);
-		inputText(x, "Title", o, Book.name, "long", initStr);
+		inputText(x, "Title", o, Book.name, initStr, "long");
 		focus(x, Book.name);
 		inputRefN(x, "Authors", o, Book.authors, TableAuthors.class, FormAuthor.class);
 		inputRef(x, "Publisher", o, Book.publisher, TablePublishers.class, FormPublisher.class);
 		inputDate(x, "Published date", o, Book.publishedDate, null);
 		inputRefN(x, "Categories", o, Book.categories, TableCategories.class, FormCategory.class);
-		inputInt(x, "In stock", o, Book.inStock, "nbr", 0);
+		inputInt(x, "In stock", o, Book.inStock, 0, "nbr");
 		inputBool(x, "Show in store", o, Book.showInStore, true);
-		inputFlt(x, "Rating", o, Book.rating, "nbr", 0);
-		inputDbl(x, "Double", o, Book.dbl, "nbr", 0);
+		inputFlt(x, "Rating", o, Book.rating, 0, "nbr");
+		inputDbl(x, "Double", o, Book.dbl, 0, "nbr");
 		// aggregated object
-		inputTextArea(x, "Description", "description", "large", o == null ? "" : o.getData(true).getData());
+		inputTextArea(x, "Description", "description", o == null ? "" : o.getData(true).getData(), "large");
 		endForm(x);
 		x.ax(this, "test", "test").nl();
 	}

@@ -38,14 +38,14 @@ public final class FormUser extends FormDbo {
 	protected void render(final xwriter x) throws Throwable {
 		final User o = (User) getObject();
 		beginForm(x);
-		inputText(x, "Name", o, User.name, "medium", initStr);
+		inputText(x, "Name", o, User.name, initStr, "medium");
 		focus(x, User.name);
-		inputTextArea(x, "Description", o, User.description, "medium", "");
-		inputText(x, "Password hash", o, User.passhash, "medium", "");
-		inputInt(x, "Integer", o, User.nlogins, "nbr", 0);
-		inputLng(x, "Long", o, User.lng, "nbr", 0);
-		inputFlt(x, "Float", o, User.flt, "nbr", 0);
-		inputDbl(x, "Double", o, User.dbl, "nbr", 0);
+		inputTextArea(x, "Description", o, User.description, "", "medium");
+		inputText(x, "Password hash", o, User.passhash, "", "medium");
+		inputInt(x, "Integer", o, User.nlogins, 0, "nbr");
+		inputLng(x, "Long", o, User.lng, 0, "nbr");
+		inputFlt(x, "Float", o, User.flt, 0, "nbr");
+		inputDbl(x, "Double", o, User.dbl, 0, "nbr");
 		inputBool(x, "Boolean", o, User.bool, false);
 		inputTimestamp(x, "Timestamp", o, User.birthTime, null);
 		inputDate(x, "Date", o, User.date, null);

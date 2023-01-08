@@ -38,7 +38,7 @@ public final class FormCategory extends FormDbo {
 	protected void render(final xwriter x) throws Throwable {
 		final Category o = (Category) getObject();
 		beginForm(x);
-		inputText(x, "Name", o, Category.name, "medium", initStr);
+		inputText(x, "Name", o, Category.name, initStr, "medium");
 		focus(x, Category.name);
 		endForm(x);
 	}

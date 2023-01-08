@@ -38,7 +38,7 @@ public final class FormAuthor extends FormDbo {
 	protected void render(final xwriter x) throws Throwable {
 		final Author o = (Author) getObject();
 		beginForm(x);
-		inputText(x, "Name", o, Author.name, "medium", initStr);
+		inputText(x, "Name", o, Author.name, initStr, "medium");
 		focus(x, Author.name);
 		endForm(x);
 	}
