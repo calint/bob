@@ -42,9 +42,9 @@ public abstract class ViewTable extends View {
 
 	@Override
 	public final void to(final xwriter x) throws Throwable {
-		if (isSelectMode) {
+		if (isSelectMode()) {
 			x.tago("div").attr("class", "attention").tagoe();
-			if (isSelectModeMulti) {
+			if (isSelectModeMulti()) {
 				x.p("select " + getTypeInfo().namePlural + " then click ");
 				x.ax(this, "sm", "select");
 			} else {
@@ -167,7 +167,7 @@ public abstract class ViewTable extends View {
 	 * @param linkText
 	 */
 	protected final void renderLink(final xwriter x, final Object o, final String linkText) {
-		if (isSelectMode && !isSelectModeMulti) {
+		if (isSelectMode() && !isSelectModeMulti()) {
 			final String id = getIdFrom(o);
 			x.ax(this, "ss " + id, linkText);
 		} else if ((enabledTableBits & ViewTable.BIT_CLICK_ITEM) != 0) {
@@ -208,13 +208,13 @@ public abstract class ViewTable extends View {
 
 	/** Callback for click on "select" when in select multi mode. */
 	public final void x_sm(final xwriter x, final String s) throws Throwable {
-		selectReceiverMulti.onSelect(getSelectedIds());
+		getSelectReceiverMulti().onSelect(getSelectedIds());
 		super.bubble_event(x, this, "close");
 	}
 
 	/** Callback for click on row in select single mode. */
 	public final void x_ss(final xwriter x, final String s) throws Throwable {
-		selectReceiverSingle.onSelect(s);
+		getSelectReceiverSingle().onSelect(s);
 		super.bubble_event(x, this, "close");
 	}
 
@@ -412,7 +412,7 @@ public abstract class ViewTable extends View {
 			}
 			x.table("t").nl();
 			x.tr();
-			if ((tv.enabledViewBits & View.BIT_SELECT) != 0 || tv.isSelectModeMulti) { // header for the checkbox
+			if ((tv.enabledViewBits & View.BIT_SELECT) != 0 || tv.isSelectModeMulti()) { // header for the checkbox
 				x.th();
 			}
 			tv.renderHeaders(x);
@@ -450,7 +450,7 @@ public abstract class ViewTable extends View {
 //				} else {
 				x.tr();
 //				}
-				if ((tv.enabledViewBits & View.BIT_SELECT) != 0 || tv.isSelectModeMulti) { // render checkbox
+				if ((tv.enabledViewBits & View.BIT_SELECT) != 0 || tv.isSelectModeMulti()) { // render checkbox
 					final String id = tv.getIdFrom(o);
 					x.td();
 					final Checkbox cb = new Checkbox(id, selectedIds.contains(id));
@@ -471,7 +471,7 @@ public abstract class ViewTable extends View {
 		@Override
 		protected void bubble_event(final xwriter js, final a from, final Object o) throws Throwable {
 			// event bubbled from child
-			if (from instanceof Checkbox && ((tv.enabledViewBits & View.BIT_SELECT) != 0 || tv.isSelectModeMulti)) {
+			if (from instanceof Checkbox && ((tv.enabledViewBits & View.BIT_SELECT) != 0 || tv.isSelectModeMulti())) {
 				final String id = ((Checkbox) from).getId();
 				if ("checked".equals(o)) {
 					selectedIds.add(id);

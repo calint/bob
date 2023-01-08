@@ -17,10 +17,10 @@ public abstract class View extends a implements Titled {
 	/** The actions that are enabled in the view. */
 	final protected int enabledViewBits;
 
-	protected boolean isSelectMode; // if true view renders to select item(s)
-	protected boolean isSelectModeMulti; // if true view renders to select multiple items
-	protected SelectReceiverMulti selectReceiverMulti;
-	protected SelectReceiverSingle selectReceiverSingle;
+	private boolean isSelectMode; // if true view renders to select item(s)
+	private boolean isSelectModeMulti; // if true view renders to select multiple items
+	private SelectReceiverMulti selectReceiverMulti;
+	private SelectReceiverSingle selectReceiverSingle;
 	final private View.TypeInfo typeInfo; // the name and plural of the object type
 
 	public View(final int enabledBits, final TypeInfo ti) {
@@ -30,6 +30,22 @@ public abstract class View extends a implements Titled {
 
 	final public TypeInfo getTypeInfo() {
 		return typeInfo;
+	}
+
+	final public boolean isSelectMode() {
+		return isSelectMode;
+	}
+
+	final public boolean isSelectModeMulti() {
+		return isSelectModeMulti;
+	}
+
+	final public SelectReceiverMulti getSelectReceiverMulti() {
+		return selectReceiverMulti;
+	}
+
+	final public SelectReceiverSingle getSelectReceiverSingle() {
+		return selectReceiverSingle;
 	}
 
 //
