@@ -36,7 +36,7 @@ public class Controller extends a {
 		active_elem.replace(this, ae);
 		x.divh(ae).nl();
 		x.tago("div").attr("class", "ser").tagoe();
-		x.p("serialized: ").span(s).p(" B  gziped: ").span(sg).p(" B ").p(" server: ").span(si).spc().ax(this, "s",
+		x.p("serialized: ").span(s).p(" B,  gziped: ").span(sg).p(" B, server: ").span(si).spc().ax(this, "s",
 				"refresh");
 		x.div_().nl();
 	}
