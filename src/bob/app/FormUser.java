@@ -58,7 +58,6 @@ public final class FormUser extends FormDbo {
 
 	@Override
 	protected void writeToObject(final xwriter x, final DbObject obj) throws Throwable {
-//		final Category o = (Category) obj;
-//		o.setName(getStr(Category.name));
+		// fields written to object by FormDbo
 	}
 }
