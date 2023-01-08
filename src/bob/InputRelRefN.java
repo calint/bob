@@ -112,8 +112,6 @@ public final class InputRelRefN extends a {
 	}
 
 	public void save(final DbObject o) {
-//		final DbTransaction tn = Db.currentTransaction();
-//		final DbObject o = tn.get(rel.getFromClass(), objId);
 		for (final String s : selectedIds) {
 			if (initialSelectedIds.contains(s)) {
 				continue;
@@ -131,8 +129,8 @@ public final class InputRelRefN extends a {
 			rel.remove(o, id);
 			removedIds.add(s);
 		}
-		for (final String s : removedIds) {
-			initialSelectedIds.remove(s);
+		for (final String id : removedIds) {
+			initialSelectedIds.remove(id);
 		}
 	}
 
