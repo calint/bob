@@ -1,34 +1,34 @@
 package bob.app;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import b.xwriter;
-import bob.Action;
 import bob.ViewTable;
 import db.Db;
-import db.DbObject;
 import db.DbObjects;
 import db.DbTransaction;
-import db.Order;
 import db.Query;
+import db.test.File;
 import db.test.User;
 
-public final class TableUsers extends ViewTable {
-	static final long serialVersionUID = 1;
+public final class TableUserFiles extends ViewTable {
+	static final long serialVersionUID = 2;
+	private final int userId;
 
-	public TableUsers() {
-		super(BIT_SEARCH | BIT_CREATE | BIT_DELETE | BIT_SELECT, BIT_CLICK_ITEM, new TypeInfo("user", "users"));
+	public TableUserFiles(final int userId) {
+		super(BIT_SEARCH | BIT_SELECT | BIT_CREATE | BIT_DELETE, BIT_CLICK_ITEM,
+				new TypeInfo("user file", "user files"));
+		this.userId = userId;
 	}
 
 	public String getTitle() {
-		return "Users";
+		return "User files";
 	}
 
 	@Override
 	protected int getObjectsPerPageCount() {
-		return 50;
+		return 20;
 	}
 
 	@Override
@@ -48,51 +48,47 @@ public final class TableUsers extends ViewTable {
 	protected DbObjects getResults() {
 		final Query qry = new Query();
 		if (!q.is_empty()) {
-			qry.and(User.name, Query.LIKE, "%" + q.str() + "%");
+			qry.and(File.name, Query.LIKE, "%" + q.str() + "%");
 		}
-		return new DbObjects(null, User.class, qry, new Order(User.name));
+		final DbTransaction tn = Db.currentTransaction();
+		final User u = (User) tn.get(User.class, userId);
+		return u.getFiles().get(qry);
 	}
 
 	@Override
 	protected String getIdFrom(final Object obj) {
-		final User o = (User) obj;
+		final File o = (File) obj;
 		return Integer.toString(o.id());
 	}
 
 	@Override
 	protected void renderHeaders(final xwriter x) {
 		x.th().p("Name");
-		x.th().p("Files");
-		x.th().p("Games");
 	}
 
 	@Override
 	protected void renderRowCells(final xwriter x, final Object obj) {
-		final User o = (User) obj;
+		final File o = (File) obj;
 		x.td();
 		renderLink(x, o, o.getName());
-		x.td("icn");
-		renderLink(x, Integer.toString(o.id()), "f", "<img src=/bob/link.png>");
-		x.td("icn");
-		renderLink(x, Integer.toString(o.id()), "g", "<img src=/bob/link.png>");
 	}
 
 	@Override
 	protected void onRowClick(final xwriter x, final String id, final String cmd) throws Throwable {
 		if (cmd == null) {
-			final FormUser f = new FormUser(id, null);
+			final FormFile f = new FormFile(id, null);
 			super.bubble_event(x, this, f);
 			return;
-		}
-		if ("f".equals(cmd)) {
-			final TableUserFiles t = new TableUserFiles(Integer.parseInt(id));
-			super.bubble_event(x, this, t);
 		}
 	}
 
 	@Override
 	protected void onActionCreate(final xwriter x, final String initStr) throws Throwable {
-		final FormUser f = new FormUser(null, initStr);
+		final DbTransaction tn = Db.currentTransaction();
+		final User u = (User) tn.get(User.class, userId);
+		final File o = u.createFile();
+		o.setName(initStr);
+		final FormFile f = new FormFile(Integer.toString(o.id()), initStr);
 		super.bubble_event(x, this, f);
 	}
 
@@ -100,30 +96,11 @@ public final class TableUsers extends ViewTable {
 	protected void onActionDelete(final xwriter x) throws Throwable {
 		final Set<String> sel = getSelectedIds();
 		final DbTransaction tn = Db.currentTransaction();
+		final User u = (User) tn.get(User.class, userId);
 		for (final String id : sel) {
-			final User o = (User) tn.get(User.class, id);
-			tn.delete(o);
+			u.deleteFile(Integer.parseInt(id));
 		}
 		sel.clear();
-	}
-
-	@Override
-	protected List<Action> getActionsList() {
-		final ArrayList<Action> ls = new ArrayList<Action>();
-		ls.add(new Action("delete all", "da"));
-		return ls;
-	}
-
-	@Override
-	protected void onAction(final xwriter x, final Action act) throws Throwable {
-		if ("da".equals(act.code())) {
-			final DbTransaction tn = Db.currentTransaction();
-			for (final DbObject o : tn.get(User.class, null, null, null)) {
-				tn.delete(o);
-			}
-			return;
-		}
-		super.onAction(x, act);
 	}
 
 }

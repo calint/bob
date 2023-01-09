@@ -9,6 +9,7 @@ import db.test.User;
 
 public final class FormUser extends FormDbo {
 	private static final long serialVersionUID = 1L;
+//	private final View userFiles;
 
 	public FormUser() {
 		this(null, null);
@@ -16,13 +17,16 @@ public final class FormUser extends FormDbo {
 
 	public FormUser(final String id, final String initStr) {
 		super(id);
-		if (id != null)
-			return;
-		// create at init pattern
-		final User o = (User) Db.currentTransaction().create(User.class);
-		o.setName(initStr);
-		// set FormDbo objectId. this will omit createObject() call by FormDbo
-		objectId = Integer.toString(o.id());
+		if (id == null) {
+			// create at init pattern
+			final User o = (User) Db.currentTransaction().create(User.class);
+			o.setName(initStr);
+			// set FormDbo objectId. this will omit createObject() call by FormDbo
+			objectId = Integer.toString(o.id());
+//			userFiles = new TableUserFiles(o.id());
+//		} else {
+//			userFiles = new TableUserFiles(Integer.parseInt(objectId));
+		}
 	}
 
 	public String getTitle() {
@@ -42,7 +46,6 @@ public final class FormUser extends FormDbo {
 	}
 
 //	private View authors = new TableAuthors();
-
 	@Override
 	protected void render(final xwriter x) throws Throwable {
 		final User o = (User) getObject();
@@ -62,6 +65,7 @@ public final class FormUser extends FormDbo {
 //		inputElem(x, "authors", authors);
 		inputAgg(x, "Profile picture", o, User.profilePic, FormFile.class);
 		inputAggN(x, "Files", o, User.files, FormFile.class);
+//		inputElem(x, "Files in an included view", "userFiles", userFiles);
 		endForm(x);
 	}
 
