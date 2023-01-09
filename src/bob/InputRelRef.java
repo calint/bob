@@ -28,7 +28,7 @@ public final class InputRelRef extends a {
 		final DbTransaction tn = Db.currentTransaction();
 		if (selectedId != 0) {
 			final DbObject ro = tn.get(rel.getToClass(), selectedId);
-			if (ro != null) {
+			if (ro != null) { // ? dangling reference
 				if (ro instanceof Titled) {
 					final Titled t = (Titled) ro;
 					x.p(t.getTitle());

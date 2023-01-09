@@ -10,8 +10,8 @@ public final class Ctrl extends Controller {
 	private static final long serialVersionUID = 2L;
 
 	public Ctrl() {
-		m.addItem(TableFiles.class, "Files browser");
-		bc.add(new TableFiles());
+		m.addItem(TableFsFiles.class, "Files browser");
+		bc.add(new TableFsFiles());
 		m.addItem(TableBooks.class, "Books");
 		m.addItem(TableCategories.class, "Categories");
 		m.addItem(TableAuthors.class, "Authors");

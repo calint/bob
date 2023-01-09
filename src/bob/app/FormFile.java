@@ -1,28 +1,51 @@
 package bob.app;
 
-import b.osltgt;
-import b.path;
 import b.xwriter;
-import bob.Form;
+import bob.FormDbo;
+import db.Db;
+import db.DbObject;
+import db.test.File;
 
-public final class FormFile extends Form {
+public final class FormFile extends FormDbo {
 	private static final long serialVersionUID = 1L;
+	private final String initStr;
 
-	private final path pth;
+	public FormFile() {
+		this(null, null);
+	}
 
-	public FormFile(final path pth) {
-		super(pth.name(), BIT_CLOSE);
-		this.pth = pth;
+	public FormFile(final String objectId, final String initStr) {
+		super(objectId);
+		this.initStr = initStr;
 	}
 
 	public String getTitle() {
-		return pth.name();
+		final File o = (File) getObject();
+		return o == null ? "New file" : o.getName();
+	}
+
+	@Override
+	protected DbObject createObject() {
+		// created at init pattern
+		return null;
+	}
+
+	@Override
+	protected DbObject getObject() {
+		return Db.currentTransaction().get(File.class, getObjectId());
 	}
 
 	@Override
 	protected void render(final xwriter x) throws Throwable {
-		x.tago("div").attr("class", "output").tagoe();
-		pth.to(new osltgt(x.outputstream()));
-		x.div_();
+		final File o = (File) getObject();
+		beginForm(x);
+		inputText(x, "Name", o, File.name, initStr, "medium");
+		focus(x, File.name);
+		endForm(x);
+	}
+
+	@Override
+	protected void writeToObject(final xwriter x, final DbObject obj) throws Throwable {
+		// FormDbo writes the input fields to the DbObject
 	}
 }

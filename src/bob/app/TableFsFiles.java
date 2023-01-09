@@ -13,7 +13,7 @@ import bob.Action;
 import bob.Util;
 import bob.ViewTable;
 
-public final class TableFiles extends ViewTable {
+public final class TableFsFiles extends ViewTable {
 	static final long serialVersionUID = 1;
 
 	public static String icon_file_uri = "/bob/file.png";
@@ -29,11 +29,11 @@ public final class TableFiles extends ViewTable {
 		return sdf.format(ms);
 	}
 
-	public TableFiles() {
+	public TableFsFiles() {
 		this(b.b.path());
 	}
 
-	public TableFiles(final path pth) {
+	public TableFsFiles(final path pth) {
 		super(BIT_SEARCH, BIT_CLICK_ITEM, new TypeInfo("file", "files"));
 		this.pth = pth;
 	}
@@ -142,11 +142,11 @@ public final class TableFiles extends ViewTable {
 	protected void onRowClick(final xwriter x, final String id, final String cmd) throws Throwable {
 		final path p = pth.get(id);
 		if (p.isdir()) {
-			final TableFiles f = new TableFiles(p);
+			final TableFsFiles f = new TableFsFiles(p);
 			super.bubble_event(x, this, f);
 			return;
 		}
-		final FormFile f = new FormFile(p);
+		final FormFsFile f = new FormFsFile(p);
 		super.bubble_event(x, this, f);
 	}
 }

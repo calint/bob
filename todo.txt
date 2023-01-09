@@ -36,8 +36,8 @@ b
 [x]       default values
 [x]     RelRef
 [x]       default value
-[ ]     RelAgg. object must first be saved.
-[ ]       create object with state "editing" when form is opened. when saved state "published"
+[x]     RelAgg. object must first be saved.
+[x]       create object with state "editing" when form is opened. when saved state "published"
 [ ]     RelAggN. object must first be saved.
 [ ]       include ViewTable in form
 [ ]   support for "create object at init" pattern

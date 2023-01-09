@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.sql.Timestamp;
 
+import bob.Titled;
 import db.DbObject;
 import db.FldLng;
 import db.FldStr;
@@ -11,7 +12,7 @@ import db.FldTs;
 import db.Index;
 import db.RelAgg;
 
-public final class File extends DbObject {
+public final class File extends DbObject implements Titled {
 	private static final long serialVersionUID = 1L;
 
 	public final static FldStr name = new FldStr(250);
@@ -45,6 +46,10 @@ public final class File extends DbObject {
 		final FileOutputStream fos = new FileOutputStream(f);
 		fos.write(ba);
 		fos.close();
+	}
+
+	public String getTitle() {
+		return getName();
 	}
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -

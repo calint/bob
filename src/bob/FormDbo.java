@@ -20,6 +20,7 @@ import db.FldInt;
 import db.FldLng;
 import db.FldStr;
 import db.FldTs;
+import db.RelAgg;
 import db.RelRef;
 import db.RelRefN;
 
@@ -364,6 +365,24 @@ public abstract class FormDbo extends Form {
 		InputRelRef e = (InputRelRef) fields.get(field);
 		if (e == null) {
 			e = new InputRelRef(o, rel, defaultValue, selectViewClass, createFormCls);
+			e.parent(this);
+			e.name(field);
+			fields.put(field, e);
+		}
+		x.tr().td("lbl").p(label).p(":").td("val");
+		x.divh(e);
+	}
+
+	final protected void inputAgg(final xwriter x, final String label, final DbObject o, final RelAgg rel,
+			final Class<? extends Form> createFormCls) {
+		inputAgg(x, label, rel.getName(), o, rel, createFormCls);
+	}
+
+	final protected void inputAgg(final xwriter x, final String label, final String field, final DbObject o,
+			final RelAgg rel, final Class<? extends Form> createFormCls) {
+		InputRelAgg e = (InputRelAgg) fields.get(field);
+		if (e == null) {
+			e = new InputRelAgg(o, rel, createFormCls);
 			e.parent(this);
 			e.name(field);
 			fields.put(field, e);

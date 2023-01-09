@@ -8,15 +8,20 @@ import db.test.User;
 
 public final class FormUser extends FormDbo {
 	private static final long serialVersionUID = 1L;
-	private final String initStr;
 
 	public FormUser() {
 		this(null, null);
 	}
 
-	public FormUser(final String objectId, final String initStr) {
-		super(objectId);
-		this.initStr = initStr;
+	public FormUser(final String id, final String initStr) {
+		super(id);
+		if (id != null)
+			return;
+		// create at init pattern
+		final User o = (User) Db.currentTransaction().create(User.class);
+		o.setName(initStr);
+		// set FormDbo objectId. this will ommit createObject() call
+		objectId = Integer.toString(o.id());
 	}
 
 	public String getTitle() {
@@ -31,7 +36,8 @@ public final class FormUser extends FormDbo {
 
 	@Override
 	protected DbObject createObject() {
-		return Db.currentTransaction().create(User.class);
+		// create at init pattern
+		return null;
 	}
 
 //	private View authors = new TableAuthors();
@@ -40,7 +46,7 @@ public final class FormUser extends FormDbo {
 	protected void render(final xwriter x) throws Throwable {
 		final User o = (User) getObject();
 		beginForm(x);
-		inputText(x, "Name", o, User.name, initStr, "medium");
+		inputText(x, "Name", o, User.name, "", "medium");
 		focus(x, User.name);
 		inputTextArea(x, "Description", o, User.description, "", "medium");
 		inputText(x, "Password hash", o, User.passhash, "", "medium");
@@ -53,6 +59,7 @@ public final class FormUser extends FormDbo {
 		inputDateTime(x, "Date time", o, User.dateTime, null);
 		inputDate(x, "Date", o, User.date, null);
 //		inputElem(x, "authors", authors);
+		inputAgg(x, "Profile pic", o, User.profilePic, FormFile.class);
 		endForm(x);
 	}
 
