@@ -39,7 +39,8 @@ b
 [x]     RelAgg. object must first be saved.
 [x]       create object with state "editing" when form is opened. when saved state "published"
 [x]     RelAggN. object must first be saved.
-[ ]       include ViewTable in form
+[x]       include ViewTable in form
+[ ]         fix css for better rendering
 [ ]       FormDbo: getViews(): for tabbed views of aggregated objects
 [ ]   support for "create object at init" pattern
 [ ]     annotation interface CreateObjectAtInit?
