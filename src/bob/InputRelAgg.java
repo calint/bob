@@ -36,7 +36,7 @@ public final class InputRelAgg extends a {
 				txt = Integer.toString(ro.id());
 			}
 			x.ax(this, "e", txt);
-			x.spc().ax(this, "r", "✖");
+			x.spc().ax(this, "d", "✖");
 		} else {
 			x.ax(this, "c", "create");
 		}
@@ -54,7 +54,7 @@ public final class InputRelAgg extends a {
 	}
 
 	/** Callback "remove". */
-	public void x_r(final xwriter x, final String param) throws Throwable {
+	public void x_d(final xwriter x, final String param) throws Throwable {
 		final DbTransaction tn = Db.currentTransaction();
 		final DbObject o = tn.get(rel.getFromClass(), objId);
 		rel.delete(o);
