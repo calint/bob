@@ -38,7 +38,7 @@ b
 [x]       default value
 [x]     RelAgg. object must first be saved.
 [x]       create object with state "editing" when form is opened. when saved state "published"
-[ ]     RelAggN. object must first be saved.
+[x]     RelAggN. object must first be saved.
 [ ]       include ViewTable in form
 [ ]   support for "create object at init" pattern
 [ ]     annotation interface CreateObjectAtInit?

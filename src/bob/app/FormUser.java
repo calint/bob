@@ -60,7 +60,8 @@ public final class FormUser extends FormDbo {
 		inputDateTime(x, "Date time", o, User.dateTime, null);
 		inputDate(x, "Date", o, User.date, null);
 //		inputElem(x, "authors", authors);
-		inputAgg(x, "Profile pic", o, User.profilePic, FormFile.class);
+		inputAgg(x, "Profile picture", o, User.profilePic, FormFile.class);
+		inputAggN(x, "Files", o, User.files, FormFile.class);
 		endForm(x);
 	}
 

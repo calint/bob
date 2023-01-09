@@ -4,16 +4,17 @@ import b.a;
 import b.xwriter;
 import db.Db;
 import db.DbObject;
+import db.DbObjects;
 import db.DbTransaction;
-import db.RelAgg;
+import db.RelAggN;
 
-public final class InputRelAgg extends a {
+public final class InputRelAggN extends a {
 	private static final long serialVersionUID = 1L;
-	final RelAgg rel;
+	final RelAggN rel;
 	final private Class<? extends Form> createFormCls;
 	final int objId;
 
-	public InputRelAgg(final DbObject obj, final RelAgg rel, final Class<? extends Form> createFormCls) {
+	public InputRelAggN(final DbObject obj, final RelAggN rel, final Class<? extends Form> createFormCls) {
 		if (obj == null)
 			throw new RuntimeException(
 					"Element cannot be created with object being null. Try 'create at init' pattern to initiate the object before creating this element.");
@@ -26,8 +27,9 @@ public final class InputRelAgg extends a {
 	public void to(final xwriter x) throws Throwable {
 		final DbTransaction tn = Db.currentTransaction();
 		final DbObject o = tn.get(rel.getFromClass(), objId);
-		final DbObject ro = rel.get(o, false);
-		if (ro != null) {
+		final DbObjects dbos = rel.get(o);
+		x.ax(this, "c", "create").br().nl();
+		for (final DbObject ro : dbos.toList()) {
 			final String txt;
 			if (ro instanceof Titled) {
 				final Titled t = (Titled) ro;
@@ -35,29 +37,26 @@ public final class InputRelAgg extends a {
 			} else {
 				txt = Integer.toString(ro.id());
 			}
-			x.ax(this, "e", txt);
-			x.spc().ax(this, "r", "✖");
-		} else {
-			x.ax(this, "c", "create");
+			x.ax(this, "e " + ro.id(), txt);
+			x.spc().ax(this, "d " + ro.id(), "✖").br().nl();
 		}
-		x.nl();
 	}
 
 	/** Callback "create". */
 	public void x_c(final xwriter x, final String param) throws Throwable {
 		final DbTransaction tn = Db.currentTransaction();
 		final DbObject o = tn.get(rel.getFromClass(), objId);
-		final DbObject ro = rel.get(o, true);
+		final DbObject ro = rel.create(o);
 		final Form f = createFormCls.getConstructor(String.class, String.class).newInstance(Integer.toString(ro.id()),
 				null);
 		super.bubble_event(x, this, f); // display the form
 	}
 
-	/** Callback "remove". */
-	public void x_r(final xwriter x, final String param) throws Throwable {
+	/** Callback "delete". */
+	public void x_d(final xwriter x, final String param) throws Throwable {
 		final DbTransaction tn = Db.currentTransaction();
 		final DbObject o = tn.get(rel.getFromClass(), objId);
-		rel.delete(o);
+		rel.delete(o, Integer.parseInt(param));
 		x.xu(this);
 	}
 
@@ -65,7 +64,7 @@ public final class InputRelAgg extends a {
 	public void x_e(final xwriter x, final String param) throws Throwable {
 		final DbTransaction tn = Db.currentTransaction();
 		final DbObject o = tn.get(rel.getFromClass(), objId);
-		final DbObject ro = rel.get(o, false);
+		final DbObject ro = rel.get(o).get(param);
 		final Form f = createFormCls.getConstructor(String.class, String.class).newInstance(Integer.toString(ro.id()),
 				null);
 		super.bubble_event(x, this, f); // display the form
