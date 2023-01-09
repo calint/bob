@@ -41,6 +41,7 @@ b
 [ ]     RelAggN. object must first be saved.
 [ ]       include ViewTable in form
 [ ]   support for "create object at init" pattern
+[ ]     annotation interface CreateObjectAtInit?
 [ ]   make it right. DboField, DboRel, save etc
 [ ]   FormRenderer wrapping xwriter and "this"? cookie.eat() or eat(cookie)
 [ ] createObject() default implementation because not called when 'create at init' pattern?

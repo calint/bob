@@ -2,6 +2,7 @@ package bob.app;
 
 import b.xwriter;
 import bob.FormDbo;
+import bob.Util;
 import db.Db;
 import db.DbObject;
 import db.test.User;
@@ -66,5 +67,10 @@ public final class FormUser extends FormDbo {
 	@Override
 	protected void writeToObject(final xwriter x, final DbObject obj) throws Throwable {
 		// fields written to object by FormDbo
+		final User o = (User) obj;
+		if (Util.isEmpty(o.getName())) {
+			xfocus(x, User.name);
+			throw new Exception("User name may not be empty.");
+		}
 	}
 }
