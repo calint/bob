@@ -43,6 +43,7 @@ b
 [ ]   support for "create object at init" pattern
 [ ]   make it right. DboField, DboRel, save etc
 [ ]   FormRenderer wrapping xwriter and "this"? cookie.eat() or eat(cookie)
+[ ] createObject() default implementation because not called when 'create at init' pattern?
 [ ] ViewTable sort options
 [ ] ViewTable rendered by javascript backed by json?
 [ ] b.user: email, password hash, security bits. b.session: ref user
