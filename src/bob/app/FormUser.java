@@ -21,7 +21,7 @@ public final class FormUser extends FormDbo {
 		// create at init pattern
 		final User o = (User) Db.currentTransaction().create(User.class);
 		o.setName(initStr);
-		// set FormDbo objectId. this will ommit createObject() call
+		// set FormDbo objectId. this will omit createObject() call by FormDbo
 		objectId = Integer.toString(o.id());
 	}
 
