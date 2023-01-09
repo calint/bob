@@ -35,11 +35,7 @@ public final class InputRelAgg extends a {
 				x.p(ro.id());
 			}
 			x.spc().ax(this, "r", "✖");
-			if (createFormCls != null) {
-				x.spc();
-			}
-		}
-		if (createFormCls != null && ro == null) {
+		} else {
 			x.ax(this, "c", "create");
 		}
 		x.nl();
