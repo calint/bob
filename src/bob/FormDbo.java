@@ -654,10 +654,10 @@ public abstract class FormDbo extends Form {
 //	protected void preRender(final xwriter x) {
 //		if(!(this instanceof CreateObjectPriorRenderPattern))
 //			return;
-//		
+//
 //	}
 //
-//	
+//
 //	/** Marker interface to trigger creation of object prior to rendering. */
 //	public interface CreateObjectPriorRenderPattern {
 //	}
