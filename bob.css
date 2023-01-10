@@ -156,6 +156,11 @@ table.f{
 	margin-right:auto;
 	text-align:left;
 }
+table.f tr{
+/*	border-style:dotted;
+	border-color:green;
+	border-width:1px 0 1px 0;*/
+}
 table.f td{
 	padding:.5rem;
 }

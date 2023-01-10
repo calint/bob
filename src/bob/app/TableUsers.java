@@ -48,7 +48,7 @@ public final class TableUsers extends ViewTable {
 	protected DbObjects getResults() {
 		final Query qry = new Query();
 		if (!q.is_empty()) {
-			qry.and(User.name, Query.LIKE, "%" + q.str() + "%");
+			qry.and(User.ixFt, q.str());
 		}
 		return new DbObjects(null, User.class, qry, new Order(User.name));
 	}

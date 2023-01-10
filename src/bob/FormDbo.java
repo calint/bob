@@ -213,6 +213,21 @@ public abstract class FormDbo extends Form {
 		return e.str().trim();
 	}
 
+	final protected void includeView(final xwriter x, final String field, final View view) throws Throwable {
+		final a e = fields.get(field);
+		x.tr().td(2, "center");
+		if (e == null) {
+			view.parent(this);
+			view.name(field);
+			fields.put(field, view);
+			view.to(x);
+		} else {
+			if (view != e)
+				throw new RuntimeException("expected same element");
+			e.to(x);
+		}
+	}
+
 	final protected void inputBool(final xwriter x, final String label, final DbObject o, final FldBool f,
 			final boolean defaultValue) {
 		final boolean value = o == null ? defaultValue : (Boolean) DbObject.getFieldValue(o, f);
@@ -280,7 +295,7 @@ public abstract class FormDbo extends Form {
 
 	final protected void inputElem(final xwriter x, final String field, final a elem) throws Throwable {
 		final a e = fields.get(field);
-		x.tr().td(2, "center");
+		x.tr().td(2, "val");
 		if (e == null) {
 			elem.parent(this);
 			elem.name(field);
@@ -634,4 +649,16 @@ public abstract class FormDbo extends Form {
 		}
 		return e;
 	}
+
+//	@Override
+//	protected void preRender(final xwriter x) {
+//		if(!(this instanceof CreateObjectPriorRenderPattern))
+//			return;
+//		
+//	}
+//
+//	
+//	/** Marker interface to trigger creation of object prior to rendering. */
+//	public interface CreateObjectPriorRenderPattern {
+//	}
 }

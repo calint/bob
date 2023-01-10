@@ -66,7 +66,7 @@ public final class FormUser extends FormDbo {
 //		inputElem(x, "authors", authors);
 		inputAgg(x, "Profile picture", o, User.profilePic, FormFile.class);
 		inputAggN(x, "Files", o, User.files, FormFile.class);
-		inputElem(x, "Files in an included view", "userFiles", userFiles);
+		includeView(x, "userFiles", userFiles);
 		endForm(x);
 	}
 

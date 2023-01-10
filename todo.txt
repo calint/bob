@@ -46,6 +46,7 @@ b
 [ ]       FormDbo: getViews(): for tabbed views of aggregated objects
 [ ]   support for "create object at init" pattern
 [ ]     annotation interface CreateObjectAtInit?
+[ ]     delete object at close in case no save has happened
 [ ]   include a form as a field for aggregation 1 to 1?
 [ ]   make it right. DboField, DboRel, save etc
 [ ]   FormRenderer wrapping xwriter and "this"? cookie.eat() or eat(cookie)
