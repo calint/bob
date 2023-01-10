@@ -3,13 +3,14 @@ package bob.app;
 import b.xwriter;
 import bob.FormDbo;
 import bob.Util;
+import bob.View;
 import db.Db;
 import db.DbObject;
 import db.test.User;
 
 public final class FormUser extends FormDbo {
 	private static final long serialVersionUID = 1L;
-//	private final View userFiles;
+	private final View userFiles;
 
 	public FormUser() {
 		this(null, null);
@@ -23,9 +24,9 @@ public final class FormUser extends FormDbo {
 			o.setName(initStr);
 			// set FormDbo objectId. this will omit createObject() call by FormDbo
 			objectId = Integer.toString(o.id());
-//			userFiles = new TableUserFiles(o.id());
-//		} else {
-//			userFiles = new TableUserFiles(Integer.parseInt(objectId));
+			userFiles = new TableUserFiles(o.id());
+		} else {
+			userFiles = new TableUserFiles(Integer.parseInt(objectId));
 		}
 	}
 
@@ -65,7 +66,7 @@ public final class FormUser extends FormDbo {
 //		inputElem(x, "authors", authors);
 		inputAgg(x, "Profile picture", o, User.profilePic, FormFile.class);
 		inputAggN(x, "Files", o, User.files, FormFile.class);
-//		inputElem(x, "Files in an included view", "userFiles", userFiles);
+		inputElem(x, "Files in an included view", "userFiles", userFiles);
 		endForm(x);
 	}
 

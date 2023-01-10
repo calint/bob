@@ -22,6 +22,8 @@ input[type="checkbox"]:focus{background-color:var(--attention);outline:1px dotte
 	margin:.5rem;
 	margin-bottom:1rem;
 }
+.ae{ /* active element */
+}
 .ser{ /* serialized size and server info */
 	margin:1rem;
 }
