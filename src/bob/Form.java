@@ -15,7 +15,7 @@ public abstract class Form extends a implements Titled {
 	protected final int enabledFormBits;
 	public Container ans; // actions container
 	public Container scc; // "save and close", "save", "close" actions container
-	protected String objectId;
+	protected String objectId; // an id that represents the resource this form is rendering
 	private SelectReceiverSingle selectReceiverSingle; // when select mode this interface will receive the created
 														// object id
 
@@ -93,10 +93,17 @@ public abstract class Form extends a implements Titled {
 		super.bubble_event(x, from, o);
 	}
 
+	/** @return user actions for this form. */
 	protected List<Action> getActionsList() {
 		return null;
 	}
 
+	/** @return list of views of aggregated objects. */
+	protected List<View> getViewsList() {
+		return null;
+	}
+
+	/** Called when action is activated. */
 	protected void onAction(final xwriter x, final Action act) throws Throwable {
 	}
 
@@ -113,8 +120,10 @@ public abstract class Form extends a implements Titled {
 		super.bubble_event(x, this, "close");
 	}
 
+	/** Called to render form content. */
 	protected abstract void render(xwriter x) throws Throwable;
 
+	/** Called when object is saved. */
 	protected void save(final xwriter x) throws Throwable {
 	}
 
