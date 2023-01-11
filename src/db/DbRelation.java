@@ -71,6 +71,7 @@ public abstract class DbRelation implements Serializable {
 		return true;
 	}
 
+	/** Called when source object is deleted and cascade delete needed. */
 	void cascadeDelete(final DbObject ths) {
 	}
 

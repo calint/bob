@@ -63,8 +63,8 @@ public final class RelAggN extends DbRelation {
 			return;
 		}
 		final StringBuilder sb = new StringBuilder(128);
-		sb.append("delete from ").append(dbClsTo.tableName).append(" where id=").append(toId).append(" and ")
-				.append(relFld.name).append("=").append(thsId);
+		sb.append("delete from ").append(dbClsTo.tableName).append(" where ").append(DbObject.id.name).append("=")
+				.append(toId).append(" and ").append(relFld.name).append("=").append(thsId);
 
 		if (!Db.cluster_on) {
 			Db.currentTransaction().execSql(sb);
@@ -77,6 +77,7 @@ public final class RelAggN extends DbRelation {
 		delete(ths.id(), o);
 	}
 
+	/** @param thsId source object id. */
 	public void delete(final int thsId, final DbObject o) {
 		if (!o.fieldValues.containsKey(relFld) || o.getInt(relFld) != thsId)
 			throw new RuntimeException(cls.getName() + "[" + thsId + "] does not contain " + toCls.getName() + "["
@@ -86,14 +87,23 @@ public final class RelAggN extends DbRelation {
 	}
 
 	public void deleteAll(final DbObject ths) {
-		cascadeDelete(ths);
+		deleteAll(ths.id());
+	}
+
+	/** @param thsId source object id. */
+	public void deleteAll(final int thsId) {
+		cascadeDelete(thsId);
 	}
 
 	@Override
 	void cascadeDelete(final DbObject ths) {
+		cascadeDelete(ths.id());
+	}
+
+	private void cascadeDelete(final int thsId) {
 		final DbClass dbClsTo = Db.dbClassForJavaClass(toCls);
 		if (dbClsTo.cascadeDelete) {
-			final List<DbObject> ls = get(ths).toList();
+			final List<DbObject> ls = get(thsId).toList();
 			for (final DbObject o : ls) {
 				Db.currentTransaction().delete(o);
 			}
@@ -102,7 +112,7 @@ public final class RelAggN extends DbRelation {
 
 		final StringBuilder sb = new StringBuilder(128);
 		sb.append("delete from ").append(dbClsTo.tableName).append(" where ").append(relFld.name).append("=")
-				.append(ths.id());
+				.append(thsId);
 
 		if (!Db.cluster_on) {
 			Db.currentTransaction().execSql(sb);

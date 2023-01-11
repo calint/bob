@@ -377,14 +377,18 @@ public final class Db {
 	static BufferedOutputStream clusterSocketOs;
 	private static byte[] ba_nl = "\n".getBytes();
 
-	public static synchronized int execClusterSqlInsert(final String sql) throws Throwable {
-		clusterSocketOs.write(sql.getBytes());
-		clusterSocketOs.write(ba_nl);
-		clusterSocketOs.flush();
-		final String idStr = clusterSocketReader.readLine();
-		if (idStr == null)
-			throw new RuntimeException("lost connection to cluster");
-		return Integer.parseInt(idStr);
+	public static synchronized int execClusterSqlInsert(final String sql) {
+		try {
+			clusterSocketOs.write(sql.getBytes());
+			clusterSocketOs.write(ba_nl);
+			clusterSocketOs.flush();
+			final String idStr = clusterSocketReader.readLine();
+			if (idStr == null)
+				throw new RuntimeException("lost connection to cluster");
+			return Integer.parseInt(idStr);
+		} catch (final Throwable t) {
+			throw new RuntimeException(t);
+		}
 	}
 
 	public static synchronized void execClusterSql(final String sql) {
