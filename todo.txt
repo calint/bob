@@ -5,7 +5,7 @@ b
 [x] bob.js: server is busy message box when typing fast
 [ ]   server busy ui element
 [ ] bob: FormDbo: save: check string lengths, min max values for numbers, timestamp
-[ ] bob: DboRef(Class,int) with transient DbObject to make a single call to db for object in context.
+[ ] bob: DboRef(Class,int) or DboRef(DbObject) with transient DbObject field intending to reduce calls to to db for object in context.
 [ ] bob: Menu: better ui
 [ ] xwriter: button tag
 [ ] xwriter: <elem> tag instead of duplicate code for span and div
