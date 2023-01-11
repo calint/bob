@@ -35,10 +35,10 @@ public final class InputRelAggN extends a {
 
 	@Override
 	public void to(final xwriter x) throws Throwable {
-		final DbTransaction tn = Db.currentTransaction();
-		final DbObject o = tn.get(rel.getFromClass(), objId);
+//		final DbTransaction tn = Db.currentTransaction();
+//		final DbObject o = tn.get(rel.getFromClass(), objId);
 //		final DbObject o = getObject();
-		final DbObjects dbos = rel.get(o);
+		final DbObjects dbos = rel.get(objId);
 		x.ax(this, "c", "create").br().nl();
 		for (final DbObject ro : dbos.toList()) {
 			final String txt;
@@ -55,10 +55,10 @@ public final class InputRelAggN extends a {
 
 	/** Callback "create". */
 	public void x_c(final xwriter x, final String param) throws Throwable {
-		final DbTransaction tn = Db.currentTransaction();
-		final DbObject o = tn.get(rel.getFromClass(), objId);
+//		final DbTransaction tn = Db.currentTransaction();
+//		final DbObject o = tn.get(rel.getFromClass(), objId);
 //		final DbObject o = getObject();
-		final DbObject ro = rel.create(o);
+		final DbObject ro = rel.create(objId);
 		final Form f = createFormCls.getConstructor(String.class, String.class).newInstance(Integer.toString(ro.id()),
 				null);
 		super.bubble_event(x, this, f); // display the form

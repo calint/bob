@@ -29,18 +29,29 @@ public final class RelAggN extends DbRelation {
 		dbc.allIndexes.add(ix);
 	}
 
-	public DbObject create(final DbObject ths) {
+	/** @param thsId source object id. */
+	public DbObject create(final int thsId) {
 		final DbObject o = Db.currentTransaction().create(toCls);
-		o.set(relFld, ths.id());
+		o.set(relFld, thsId);
 		return o;
 	}
 
-	public DbObjects get(final DbObject ths) {
-		final Query q = new Query(ths.getClass(), ths.id()).and(this);
+	public DbObject create(final DbObject ths) {
+		return create(ths.id());
+	}
+
+	/** @param thsId source object id. */
+	public DbObjects get(final int thsId) {
+		final Query q = new Query(cls, thsId).and(this);
 		return new DbObjects(null, toCls, q, null);
 	}
 
+	public DbObjects get(final DbObject ths) {
+		return get(ths.id());
+	}
+
 	public void delete(final DbObject ths, final int toId) {
+		// ? if target class does not need cascade do "delete from ... where ..."
 		final DbObject o = Db.currentTransaction().get(toCls, new Query(toCls, toId), null, null).get(0);
 		delete(ths, o);
 	}

@@ -7,8 +7,8 @@ b
 [ ] bob: FormDbo: save: check string lengths, min max values for numbers, timestamp
 [ ] bob: DboRef(Class,int) or DboRef(DbObject) with transient DbObject field intending to reduce calls to to db for object in context.
 [ ]   websocket version will not serialize. ok to have object cached outliving the transaction?
-[ ] db: RelAggN use id for context instead of ths?
-[ ] db: RelRefN use id for context instead of ths?
+[x] db: RelAggN use id for context instead of ths? also.
+[x] db: RelRefN use id for context instead of ths? also.
 [ ] db: select unique
 [ ] bob: Menu: better ui
 [ ] xwriter: button tag
