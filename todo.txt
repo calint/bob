@@ -11,9 +11,9 @@ b
 [x] db: RelRefN use id for context instead of ths? also.
 [x] db: RelAggN.delete(thsId,trgId) if target class does not need cascade do "delete from ... where ..."
 [o] db: DbRelation.ensureIndexes
-[ ]   RelAggN
 [ ]   RelRef
 [x]   RelRefN
+[ ]   RelAggN
 [ ] db: select unique
 [ ] bob: Menu: better ui
 [ ] xwriter: button tag
