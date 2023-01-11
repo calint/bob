@@ -8,14 +8,29 @@ import java.util.Map;
 public abstract class DbField implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	String name;
-	Class<? extends DbObject> cls;
-	String tableName;
-	final String type;
-	final int size;
-	final String defVal;
-	final boolean allowsNull;
-	final boolean isStringType;
+	/** The field name where this field was created. */
+	protected String name;
+	/** The class where this field was created. */
+	protected Class<? extends DbObject> cls;
+	protected String tableName;
+	/**
+	 * the SQL type as returned by TYPE_NAME
+	 * {@link DatabaseMetaData}.getColumns(...).
+	 */
+	final protected String type;
+	/** The size of the SQL column where applicable (varchar, char) otherwise 0. */
+	final protected int size;
+	/**
+	 * Default value as returned by COLUMN_DEF from
+	 * {@link DatabaseMetaData}.getColumns(...).
+	 */
+	final protected String defVal;
+	final protected boolean allowsNull;
+	/**
+	 * true if default value is to be enclosed by quotes and escaped at column
+	 * definition and update.
+	 */
+	final protected boolean isStringType;
 
 	/**
 	 * @param sqlType      the SQL type as returned by TYPE_NAME
@@ -149,28 +164,22 @@ public abstract class DbField implements Serializable {
 			final char ch = s.charAt(i);
 			switch (ch) {
 			case 0: // Must be escaped for mysql
-				sb.append('\\');
-				sb.append('0');
+				sb.append("\\0");
 				break;
 			case '\n': // Must be escaped for logs
-				sb.append('\\');
-				sb.append('n');
+				sb.append("\\n");
 				break;
 			case '\r':
-				sb.append('\\');
-				sb.append('r');
+				sb.append("\\r");
 				break;
 			case '\\':
-				sb.append('\\');
-				sb.append('\\');
+				sb.append("\\\\");
 				break;
 			case '\'':
-				sb.append('\\');
-				sb.append('\'');
+				sb.append("\\'");
 				break;
 			case '\032': // This gives problems on Win32
-				sb.append('\\');
-				sb.append('Z');
+				sb.append("\\Z");
 				break;
 			case '\u00a5':
 			case '\u20a9':
