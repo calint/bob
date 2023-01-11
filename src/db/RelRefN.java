@@ -91,7 +91,7 @@ public final class RelRefN extends DbRelation {
 	}
 
 	@Override
-	void ensureIndexes(final Statement stmt, final DatabaseMetaData dbm) throws Throwable {
+	protected void ensureIndexes(final Statement stmt, final DatabaseMetaData dbm) throws Throwable {
 		final String fromIxName = rrm.getFromIxName();
 		final String toIxName = rrm.getToIxName();
 
@@ -127,7 +127,7 @@ public final class RelRefN extends DbRelation {
 	}
 
 	@Override
-	void cascadeDelete(final DbObject ths) {
+	protected void cascadeDelete(final DbObject ths) {
 		removeAll(ths.id());
 	}
 }

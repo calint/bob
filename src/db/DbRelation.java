@@ -33,7 +33,7 @@ public abstract class DbRelation implements Serializable {
 	 * case relation does not use column. Example {@link RelRefN}. The field may
 	 * return null or 0.
 	 */
-	FldRel relFld;
+	protected FldRel relFld;
 
 	public DbRelation(final Class<? extends DbObject> toCls) {
 		this.toCls = toCls;
@@ -51,7 +51,7 @@ public abstract class DbRelation implements Serializable {
 	 * Called after all tables have been created. Relation ensures necessary indexes
 	 * exist and match the expected specification.
 	 */
-	void ensureIndexes(final Statement stmt, final DatabaseMetaData dbm) throws Throwable {
+	protected void ensureIndexes(final Statement stmt, final DatabaseMetaData dbm) throws Throwable {
 	}
 
 	public final String getName() {
@@ -67,12 +67,12 @@ public abstract class DbRelation implements Serializable {
 	}
 
 	/** @return true if cascadeDelete is to be called when an object is deleted. */
-	boolean cascadeDeleteNeeded() {
+	protected boolean cascadeDeleteNeeded() {
 		return true;
 	}
 
 	/** Called when source object is deleted and cascade delete needed. */
-	void cascadeDelete(final DbObject ths) {
+	protected void cascadeDelete(final DbObject ths) {
 	}
 
 	@Override

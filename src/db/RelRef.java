@@ -63,7 +63,7 @@ public final class RelRef extends DbRelation {
 	}
 
 	@Override
-	boolean cascadeDeleteNeeded() {
+	protected boolean cascadeDeleteNeeded() {
 		return false;
 	}
 

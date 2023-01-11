@@ -96,7 +96,7 @@ public final class RelAggN extends DbRelation {
 	}
 
 	@Override
-	void cascadeDelete(final DbObject ths) {
+	protected void cascadeDelete(final DbObject ths) {
 		cascadeDelete(ths.id());
 	}
 

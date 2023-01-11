@@ -48,7 +48,7 @@ public final class RelAgg extends DbRelation {
 	}
 
 	@Override
-	void cascadeDelete(final DbObject ths) {
+	protected void cascadeDelete(final DbObject ths) {
 		final int toId = getId(ths);
 		if (toId == 0)
 			return;
