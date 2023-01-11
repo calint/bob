@@ -11,22 +11,22 @@ public abstract class DbRelation implements Serializable {
 	 * the class where the relation was declared. initiated by db after all classes
 	 * have been loaded
 	 */
-	Class<? extends DbObject> cls;
+	protected Class<? extends DbObject> cls;
 
 	/** the table name of cls. initiated by db after all classes have been loaded */
-	String tableName;
+	protected String tableName;
 
 	/**
 	 * the name of the field that declared it. initiated by db after all classes
 	 * have been loaded
 	 */
-	String name;
+	protected String name;
 
 	/** the class that the relations refers to */
-	final Class<? extends DbObject> toCls;
+	final protected Class<? extends DbObject> toCls;
 
 	/** the table name of toCls */
-	final String toTableName;
+	final protected String toTableName;
 
 	/**
 	 * Field used by relations {@link RelAgg} and {@link RelRef}. May be null in
