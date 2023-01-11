@@ -6,6 +6,9 @@ b
 [ ]   server busy ui element
 [ ] bob: FormDbo: save: check string lengths, min max values for numbers, timestamp
 [ ] bob: DboRef(Class,int) or DboRef(DbObject) with transient DbObject field intending to reduce calls to to db for object in context.
+[ ]   websocket version will not serialize. ok to have object cached outliving the transaction?
+[ ] db: RelAggN use id for context instead of ths?
+[ ] db: RelRefN use id for context instead of ths?
 [ ] bob: Menu: better ui
 [ ] xwriter: button tag
 [ ] xwriter: <elem> tag instead of duplicate code for span and div
