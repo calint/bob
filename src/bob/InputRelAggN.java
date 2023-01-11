@@ -13,31 +13,31 @@ public final class InputRelAggN extends a {
 	final RelAggN rel;
 	final private Class<? extends Form> createFormCls;
 	final int objId;
-	transient private DbObject obj;
+//	transient private DbObject obj;
 
 	public InputRelAggN(final DbObject obj, final RelAggN rel, final Class<? extends Form> createFormCls) {
 		if (obj == null)
 			throw new RuntimeException(
 					"Element cannot be created with object being null. Try 'create at init' pattern to initiate the object before creating this element.");
-		this.obj = obj;
+//		this.obj = obj;
 		objId = obj.id();
 		this.rel = rel;
 		this.createFormCls = createFormCls;
 	}
 
-	private DbObject getObject() {
-		if (obj != null)
-			return obj;
-		final DbTransaction tn = Db.currentTransaction();
-		obj = tn.get(rel.getFromClass(), objId);
-		return obj;
-	}
+//	private DbObject getObject() {
+//		if (obj != null)
+//			return obj;
+//		final DbTransaction tn = Db.currentTransaction();
+//		obj = tn.get(rel.getFromClass(), objId);
+//		return obj;
+//	}
 
 	@Override
 	public void to(final xwriter x) throws Throwable {
-//		final DbTransaction tn = Db.currentTransaction();
-//		final DbObject o = tn.get(rel.getFromClass(), objId);
-		final DbObject o = getObject();
+		final DbTransaction tn = Db.currentTransaction();
+		final DbObject o = tn.get(rel.getFromClass(), objId);
+//		final DbObject o = getObject();
 		final DbObjects dbos = rel.get(o);
 		x.ax(this, "c", "create").br().nl();
 		for (final DbObject ro : dbos.toList()) {
@@ -55,9 +55,9 @@ public final class InputRelAggN extends a {
 
 	/** Callback "create". */
 	public void x_c(final xwriter x, final String param) throws Throwable {
-//		final DbTransaction tn = Db.currentTransaction();
-//		final DbObject o = tn.get(rel.getFromClass(), objId);
-		final DbObject o = getObject();
+		final DbTransaction tn = Db.currentTransaction();
+		final DbObject o = tn.get(rel.getFromClass(), objId);
+//		final DbObject o = getObject();
 		final DbObject ro = rel.create(o);
 		final Form f = createFormCls.getConstructor(String.class, String.class).newInstance(Integer.toString(ro.id()),
 				null);
@@ -66,18 +66,18 @@ public final class InputRelAggN extends a {
 
 	/** Callback "delete". */
 	public void x_d(final xwriter x, final String param) throws Throwable {
-//		final DbTransaction tn = Db.currentTransaction();
-//		final DbObject o = tn.get(rel.getFromClass(), objId);
-		final DbObject o = getObject();
+		final DbTransaction tn = Db.currentTransaction();
+		final DbObject o = tn.get(rel.getFromClass(), objId);
+//		final DbObject o = getObject();
 		rel.delete(o, Integer.parseInt(param));
 		x.xu(this);
 	}
 
 	/** Callback "edit". */
 	public void x_e(final xwriter x, final String param) throws Throwable {
-//		final DbTransaction tn = Db.currentTransaction();
-//		final DbObject o = tn.get(rel.getFromClass(), objId);
-		final DbObject o = getObject();
+		final DbTransaction tn = Db.currentTransaction();
+		final DbObject o = tn.get(rel.getFromClass(), objId);
+//		final DbObject o = getObject();
 		final DbObject ro = rel.get(o).get(param);
 		final Form f = createFormCls.getConstructor(String.class, String.class).newInstance(Integer.toString(ro.id()),
 				null);
