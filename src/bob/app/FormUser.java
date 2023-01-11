@@ -31,8 +31,9 @@ public final class FormUser extends FormDbo {
 	}
 
 	public String getTitle() {
-		final User o = (User) getObject();
-		return o == null ? "New user" : o.getName();
+		return Util.toStr(getStr(User.name), "New user");
+//		final User o = (User) getObject();
+//		return o == null ? "New user" : o.getName();
 	}
 
 	@Override
@@ -42,7 +43,8 @@ public final class FormUser extends FormDbo {
 
 	@Override
 	protected DbObject createObject() {
-		// create at init pattern
+		// create at init pattern, since objectId is set in the constructor,FormDbo
+		// will not call this method
 		return null;
 	}
 

@@ -12,20 +12,31 @@ public final class InputRelAgg extends a {
 	final RelAgg rel;
 	final private Class<? extends Form> createFormCls;
 	final int objId;
+	transient private DbObject obj;
 
 	public InputRelAgg(final DbObject obj, final RelAgg rel, final Class<? extends Form> createFormCls) {
 		if (obj == null)
 			throw new RuntimeException(
 					"Element cannot be created with object being null. Try 'create at init' pattern to initiate the object before creating this element.");
+		this.obj = obj;
 		objId = obj.id();
 		this.rel = rel;
 		this.createFormCls = createFormCls;
 	}
 
+	private DbObject getObject() {
+		if (obj != null)
+			return obj;
+		final DbTransaction tn = Db.currentTransaction();
+		obj = tn.get(rel.getFromClass(), objId);
+		return obj;
+	}
+
 	@Override
 	public void to(final xwriter x) throws Throwable {
-		final DbTransaction tn = Db.currentTransaction();
-		final DbObject o = tn.get(rel.getFromClass(), objId);
+//		final DbTransaction tn = Db.currentTransaction();
+//		final DbObject o = tn.get(rel.getFromClass(), objId);
+		final DbObject o = getObject();
 		final DbObject ro = rel.get(o, false);
 		if (ro != null) {
 			final String txt;
