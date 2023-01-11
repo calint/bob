@@ -11,7 +11,7 @@ public class IndexRel extends Index {
 	}
 
 	@Override
-	void init(final DbClass c) {
+	protected void init(final DbClass c) {
 		if (rel.relFld == null)
 			throw new RuntimeException("Relation " + rel.name + " in class " + cls.getName()
 					+ " can not be indexed. Is relation type RefN?");

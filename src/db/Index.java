@@ -13,20 +13,20 @@ public class Index implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/** The class that declared the index. */
-	Class<? extends DbObject> cls;
+	protected Class<? extends DbObject> cls;
 	/** The name of the field that declared the index. */
-	String name;
+	protected String name;
 	/** The table name for the declaring class. */
-	String tableName;
+	protected String tableName;
 	/** The fields in this index. */
-	final ArrayList<DbField> fields = new ArrayList<DbField>();
+	final protected ArrayList<DbField> fields = new ArrayList<DbField>();
 
 	public Index(final DbField... flds) {
 		Collections.addAll(fields, flds);
 	}
 
 	/** Called after DbClasses and DbRelations have been initialized. */
-	void init(final DbClass c) {
+	protected void init(final DbClass c) {
 	}
 
 	protected void ensureIndex(final Statement stmt, final DatabaseMetaData dbm) throws Throwable {

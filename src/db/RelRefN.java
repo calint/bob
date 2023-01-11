@@ -21,7 +21,8 @@ public final class RelRefN extends DbRelation {
 		Db.relRefNMeta.add(rrm);
 		final DbClass todbcls = Db.dbClassForJavaClass(toCls);
 		if (todbcls == null)
-			throw new RuntimeException("class " + toCls + " not found in Db. Db.register(...)?");
+			throw new RuntimeException(
+					"class " + toCls + " not found. Has Db.register(" + toCls.getName() + ".class) been called?");
 		todbcls.referingRefN.add(this);
 	}
 
