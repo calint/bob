@@ -22,6 +22,7 @@ public class test1 extends TestCase {
 		doRun4();
 		doRun5();
 		doRun6();
+		doRun7();
 	}
 
 	private void doRun0() throws Throwable {
@@ -520,6 +521,31 @@ public class test1 extends TestCase {
 		u.createGame();
 		tn.commit();
 		u.deleteAllGames();
+		if (u.getGames().getCount() != 0)
+			throw new RuntimeException();
+
+		tn.delete(u);
+	}
+
+	public void doRun7() throws Throwable {
+		final DbTransaction tn = Db.currentTransaction();
+		final User u = (User) tn.create(User.class);
+
+		// cascading delete
+		final File f1 = u.createFile();
+		final File f2 = u.createFile();
+		tn.commit();
+		u.deleteFile(f1);
+		u.deleteFile(f2.id());
+		if (u.getFiles().getCount() != 0)
+			throw new RuntimeException();
+
+		// non-cascading delete
+		final Game g1 = u.createGame();
+		final Game g2 = u.createGame();
+		tn.commit();
+		u.deleteGame(g1);
+		u.deleteGame(g2.id());
 		if (u.getGames().getCount() != 0)
 			throw new RuntimeException();
 

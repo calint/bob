@@ -2,10 +2,8 @@ package bob;
 
 import b.a;
 import b.xwriter;
-import db.Db;
 import db.DbObject;
 import db.DbObjects;
-import db.DbTransaction;
 import db.RelAggN;
 
 public final class InputRelAggN extends a {
@@ -50,17 +48,13 @@ public final class InputRelAggN extends a {
 
 	/** Callback "delete". */
 	public void x_d(final xwriter x, final String param) throws Throwable {
-		final DbTransaction tn = Db.currentTransaction();
-		final DbObject o = tn.get(rel.getFromClass(), objId);
-		rel.delete(o, Integer.parseInt(param));
+		rel.delete(objId, Integer.parseInt(param));
 		x.xu(this);
 	}
 
 	/** Callback "edit". */
 	public void x_e(final xwriter x, final String param) throws Throwable {
-		final DbTransaction tn = Db.currentTransaction();
-		final DbObject o = tn.get(rel.getFromClass(), objId);
-		final DbObject ro = rel.get(o).get(param);
+		final DbObject ro = rel.get(objId).get(param);
 		final Form f = createFormCls.getConstructor(String.class, String.class).newInstance(Integer.toString(ro.id()),
 				null);
 		super.bubble_event(x, this, f); // display the form

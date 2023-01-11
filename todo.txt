@@ -9,7 +9,7 @@ b
 [ ]   websocket version will not serialize. ok to have object cached outliving the transaction?
 [x] db: RelAggN use id for context instead of ths? also.
 [x] db: RelRefN use id for context instead of ths? also.
-[ ] db: RelAggN.delete(thsId,trgId) if target class does not need cascade do "delete from ... where ..."
+[x] db: RelAggN.delete(thsId,trgId) if target class does not need cascade do "delete from ... where ..."
 [ ] db: select unique
 [ ] bob: Menu: better ui
 [ ] xwriter: button tag

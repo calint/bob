@@ -51,15 +51,36 @@ public final class RelAggN extends DbRelation {
 	}
 
 	public void delete(final DbObject ths, final int toId) {
-		// ? if target class does not need cascade do "delete from ... where ..."
-		final DbObject o = Db.currentTransaction().get(toCls, new Query(toCls, toId), null, null).get(0);
-		delete(ths, o);
+		delete(ths.id(), toId);
+	}
+
+	/** @param thsId source object id. */
+	public void delete(final int thsId, final int toId) {
+		final DbClass dbClsTo = Db.dbClassForJavaClass(toCls);
+		if (dbClsTo.cascadeDelete) {
+			final DbObject o = Db.currentTransaction().get(toCls, new Query(toCls, toId), null, null).get(0);
+			delete(thsId, o);
+			return;
+		}
+		final StringBuilder sb = new StringBuilder(128);
+		sb.append("delete from ").append(dbClsTo.tableName).append(" where id=").append(toId).append(" and ")
+				.append(relFld.name).append("=").append(thsId);
+
+		if (!Db.cluster_on) {
+			Db.currentTransaction().execSql(sb);
+		} else {
+			Db.execClusterSql(sb.toString());
+		}
 	}
 
 	public void delete(final DbObject ths, final DbObject o) {
-		if (!o.fieldValues.containsKey(relFld) || o.getInt(relFld) != ths.id())
-			throw new RuntimeException(ths.getClass().getName() + "[" + ths.id() + "] does not contain "
-					+ toCls.getName() + "[" + o.id() + "] in relation '" + name + "'");
+		delete(ths.id(), o);
+	}
+
+	public void delete(final int thsId, final DbObject o) {
+		if (!o.fieldValues.containsKey(relFld) || o.getInt(relFld) != thsId)
+			throw new RuntimeException(cls.getName() + "[" + thsId + "] does not contain " + toCls.getName() + "["
+					+ o.id() + "] in relation '" + name + "'");
 
 		Db.currentTransaction().delete(o);
 	}
