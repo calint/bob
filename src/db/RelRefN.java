@@ -29,9 +29,10 @@ public final class RelRefN extends DbRelation {
 		add(ths.id(), toId);
 	}
 
-	public void add(final int fromId, final int toId) {
+	/** @param thsId source object id. */
+	public void add(final int thsId, final int toId) {
 		final StringBuilder sb = new StringBuilder(256);
-		rrm.sql_addToTable(sb, fromId, toId);
+		rrm.sql_addToTable(sb, thsId, toId);
 		if (!Db.cluster_on) {
 			Db.currentTransaction().execSql(sb);
 		} else {
@@ -43,6 +44,7 @@ public final class RelRefN extends DbRelation {
 		}
 	}
 
+	/** @param thsId source object id. */
 	public DbObjects get(final int thsId) {
 		final Query q = new Query(cls, thsId).and(this);
 		return new DbObjects(null, toCls, q, null);
@@ -56,9 +58,10 @@ public final class RelRefN extends DbRelation {
 		remove(ths.id(), toId);
 	}
 
-	public void remove(final int fromId, final int toId) {
+	/** @param thsId source object id. */
+	public void remove(final int thsId, final int toId) {
 		final StringBuilder sb = new StringBuilder(256);
-		rrm.sql_deleteFromTable(sb, fromId, toId);
+		rrm.sql_deleteFromTable(sb, thsId, toId);
 		if (!Db.cluster_on) {
 			Db.currentTransaction().execSql(sb);
 		} else {
@@ -70,9 +73,10 @@ public final class RelRefN extends DbRelation {
 		removeAll(ths.id());
 	}
 
-	public void removeAll(final int id) {
+	/** @param thsId source object id. */
+	public void removeAll(final int thsId) {
 		final StringBuilder sb = new StringBuilder(256);
-		rrm.sql_deleteAllFromTable(sb, id);
+		rrm.sql_deleteAllFromTable(sb, thsId);
 		if (!Db.cluster_on) {
 			Db.currentTransaction().execSql(sb);
 		} else {
