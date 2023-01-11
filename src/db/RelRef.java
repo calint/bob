@@ -55,8 +55,7 @@ public final class RelRef extends DbRelation {
 			return null;
 		final List<? extends DbObject> ls = Db.currentTransaction().get(toCls, new Query(toCls, id), null, null);
 		if (ls.isEmpty())
-			// null
-			return null;
+			return null; // ? dangling reference
 		return ls.get(0);
 	}
 
