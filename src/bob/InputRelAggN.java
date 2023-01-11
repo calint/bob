@@ -55,8 +55,9 @@ public final class InputRelAggN extends a {
 
 	/** Callback "create". */
 	public void x_c(final xwriter x, final String param) throws Throwable {
-		final DbTransaction tn = Db.currentTransaction();
-		final DbObject o = tn.get(rel.getFromClass(), objId);
+//		final DbTransaction tn = Db.currentTransaction();
+//		final DbObject o = tn.get(rel.getFromClass(), objId);
+		final DbObject o = getObject();
 		final DbObject ro = rel.create(o);
 		final Form f = createFormCls.getConstructor(String.class, String.class).newInstance(Integer.toString(ro.id()),
 				null);
@@ -65,16 +66,18 @@ public final class InputRelAggN extends a {
 
 	/** Callback "delete". */
 	public void x_d(final xwriter x, final String param) throws Throwable {
-		final DbTransaction tn = Db.currentTransaction();
-		final DbObject o = tn.get(rel.getFromClass(), objId);
+//		final DbTransaction tn = Db.currentTransaction();
+//		final DbObject o = tn.get(rel.getFromClass(), objId);
+		final DbObject o = getObject();
 		rel.delete(o, Integer.parseInt(param));
 		x.xu(this);
 	}
 
 	/** Callback "edit". */
 	public void x_e(final xwriter x, final String param) throws Throwable {
-		final DbTransaction tn = Db.currentTransaction();
-		final DbObject o = tn.get(rel.getFromClass(), objId);
+//		final DbTransaction tn = Db.currentTransaction();
+//		final DbObject o = tn.get(rel.getFromClass(), objId);
+		final DbObject o = getObject();
 		final DbObject ro = rel.get(o).get(param);
 		final Form f = createFormCls.getConstructor(String.class, String.class).newInstance(Integer.toString(ro.id()),
 				null);
