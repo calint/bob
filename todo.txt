@@ -48,7 +48,7 @@ b
 [x]     RelAggN. object must first be saved.
 [x]       include ViewTable in form
 [ ]         fix css for better rendering
-[ ]       FormDbo: getViews(): for tabbed views of aggregated objects
+[ ]       FormDbo: getViewsList(): for tabbed views of aggregated objects
 [ ]   support for "create object at init" pattern
 [ ]     annotation interface CreateObjectAtInit?
 [ ]     delete object at close in case no save has happened
