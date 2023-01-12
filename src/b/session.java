@@ -8,8 +8,6 @@ import db.RelAggN;
 import db.test.FldChars;
 
 public final class session extends DbObject{
-	private static final long serialVersionUID=1L;
-
 	public final static FldChars sessionId=new FldChars(32,"");
 	public final static RelAggN objects=new RelAggN(sessionobj.class);
 	public final static Index ixSessionId=new Index(sessionId);

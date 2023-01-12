@@ -9,8 +9,6 @@ import db.FldStr;
 import db.Index;
 
 public final class sessionobj extends DbObject{
-	private static final long serialVersionUID=1L;
-
 	public final static FldStr path=new FldStr(250,"");
 	public final static FldSerializable object=new FldSerializable();
 	public final static Index ixPath=new Index(path);

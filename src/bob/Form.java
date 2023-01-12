@@ -75,24 +75,19 @@ public abstract class Form extends a implements Titled {
 
 	@Override
 	public final void to(final xwriter x) throws Throwable {
-//		preRender(x);
 		x.script().p("window.onscroll=null;").script_().nl(); // disable infinite scroll event
-		if (!ans.elements().isEmpty()) {
+		if (!ans.isEmpty()) {
 			x.divh(ans, "ac").nl();
 		}
 		render(x);
-		if (!scc.elements().isEmpty()) {
+		if (!scc.isEmpty()) {
 			x.divh(scc, "sc").nl();
 		}
 		if (!t.isEmpty()) {
 			x.divh(t, "tabs").nl();
 		}
-		// ! render tabbed views from getViewsList()
 	}
 
-//	protected void preRender(final xwriter x) {
-//	}
-//
 	@Override
 	protected void bubble_event(final xwriter x, final a from, final Object o) throws Throwable {
 		if (from instanceof Action) {

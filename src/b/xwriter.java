@@ -242,11 +242,11 @@ public final class xwriter{
 		return script().p("$f('").p(e.id()).p("')").script_();
 	}
 
-public xwriter hr(){
+	public xwriter hr(){
 		return tag("hr");
 	}
 
-	//	/** Closes inline script tag. */
+	// /** Closes inline script tag. */
 //	public xwriter inline_js_close(){
 //		return tage("is");
 //	}
@@ -374,7 +374,7 @@ public xwriter hr(){
 		return inptxtarea(e,cls,null);
 	}
 
-/** Input text area. */
+	/** Input text area. */
 	public xwriter inptxtarea(final a e,final String cls,final String style){
 //		tago("textarea").default_attrs_for_element(e,cls,style).attr("onchange","$b(this)").attr("onkeydown","$b(this)");
 		tago("textarea").default_attrs_for_element(e,cls,style).attr("oninput","$b(this)");
@@ -389,7 +389,7 @@ public xwriter hr(){
 		return tage("textarea");
 	}
 
-	//	/** Alias for inline_js_close() */
+	// /** Alias for inline_js_close() */
 //	public xwriter is_(){
 //		return inline_js_close();
 //	}
@@ -742,9 +742,9 @@ public xwriter hr(){
 	}
 
 	public xwriter td(final int colspan,final String cls){
-		tago("td").attr("colspan", colspan);
-		if(!isempty(cls)) {
-			attr("class", cls);
+		tago("td").attr("colspan",colspan);
+		if(!isempty(cls)){
+			attr("class",cls);
 		}
 		return tagoe();
 	}

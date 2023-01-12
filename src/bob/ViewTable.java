@@ -52,7 +52,7 @@ public abstract class ViewTable extends View {
 			}
 			x.tage("div");
 		}
-		if (!ac.elements().isEmpty()) {
+		if (!ac.isEmpty()) {
 			x.divh(ac, "ac").nl();
 		}
 		if ((enabledViewBits & BIT_SEARCH) != 0) {
@@ -418,7 +418,7 @@ public abstract class ViewTable extends View {
 			tv.renderHeaders(x);
 			x.nl();
 
-			cbs.elements().clear();
+			cbs.clear();
 			renderRows(x);
 			x.table_();
 			x.script();

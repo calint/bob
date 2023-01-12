@@ -1,7 +1,6 @@
 package bob;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import b.a;
 import b.xwriter;
@@ -33,9 +32,12 @@ public final class Container extends a {
 		elements.add(e);
 	}
 
-	/** @return read-only list of elements. To add element use add(...). */
-	public List<a> elements() {
-		return elements;
+	public boolean isEmpty() {
+		return elements.isEmpty();
+	}
+
+	public void clear() {
+		elements.clear();
 	}
 
 	@Override
