@@ -1,11 +1,7 @@
 package db;
 
-import java.io.Serializable;
-
 /** Parameter to get(...) limiting the result list. */
-public final class Limit implements Serializable {
-	private static final long serialVersionUID = 1L;
-
+public final class Limit {
 	final private int offset;
 	final private int rowCount;
 

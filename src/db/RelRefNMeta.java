@@ -1,14 +1,11 @@
 package db;
 
-import java.io.Serializable;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
 /** Represents the relation table for RelRefN. */
-final class RelRefNMeta implements Serializable {
-	private static final long serialVersionUID = 1L;
-
+final class RelRefNMeta {
 	final String tableName; // the table name for this association NN table
 	final String fromTableName; // the table name of the source class
 	final String fromColName; // column name referencing to source id

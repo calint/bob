@@ -1,16 +1,12 @@
 package db;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import db.Query.TableAliasMap;
 
 /** Parameter to get(...) sorting the result list. */
-public final class Order implements Serializable {
-	private static final long serialVersionUID = 1L;
-
-	final private static class Elem implements Serializable {
-		private static final long serialVersionUID = 1L;
+public final class Order {
+	final private static class Elem {
 		String tableName;
 		String columnName;
 		String dir;

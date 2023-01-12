@@ -1,6 +1,5 @@
 package db;
 
-import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,9 +9,7 @@ import java.util.Map;
  * Parameter to get(...) and getCount(...) for filtering and joining on
  * relations.
  */
-public final class Query implements Serializable {
-	private static final long serialVersionUID = 1L;
-
+public final class Query {
 	public final static int EQ = 1;
 	public final static int NEQ = 2;
 	public final static int GT = 3;

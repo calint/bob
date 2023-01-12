@@ -84,7 +84,9 @@ public abstract class Form extends a implements Titled {
 		if (!scc.elements().isEmpty()) {
 			x.divh(scc, "sc").nl();
 		}
-		x.divh(t, "tabs").nl();
+		if (!t.isEmpty()) {
+			x.divh(t, "tabs").nl();
+		}
 		// ! render tabbed views from getViewsList()
 	}
 

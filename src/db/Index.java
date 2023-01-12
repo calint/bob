@@ -1,6 +1,5 @@
 package db;
 
-import java.io.Serializable;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,9 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /** Index of column(s). */
-public class Index implements Serializable {
-	private static final long serialVersionUID = 1L;
-
+public class Index {
 	/** The class that declared the index. */
 	protected Class<? extends DbObject> cls;
 	/** The name of the field that declared the index. */
