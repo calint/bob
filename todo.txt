@@ -147,7 +147,7 @@ dbo
 [ ] class OID instead of integer
 [ ] FldString check string length vs field length at set? DbField.getSize()?
 [ ] FldFloat max from Float.MAX_VALUE can not be committed
-[ ] reference count on associations
+[ ] reference count on associations?
 [ ] inheritance
 [ ]   example: select t1.* from File where t1.clspth like 'aaabbb%'; selects all objects that are File or inherits from File given File clspth=aaabbb
 [ ] components
@@ -164,7 +164,7 @@ dbo
 [x] pager rendering if there is only 1 page
 [x] ViewTable: onRowClick(xwriter,code,id) to have other click types from row
 [x]   onRowClickTyped(xwriter,code,id)
-[-]   onRowClickTyped(xwriter,code,pid,id). use case not yet encountered.
+[x]   onRowClickTyped(xwriter,code,pid,id). use case not yet encountered.
 [x]   refactor onRowClickTyped to onRowClick() with parameter which may be null
 [x] xwriter.xucb(e): update checkbox value by setting attribute "checked"
 [x] websock: implement ping/pong. not implemented by browsers
