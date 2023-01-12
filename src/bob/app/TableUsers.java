@@ -89,6 +89,10 @@ public final class TableUsers extends ViewTable {
 			final TableUserFiles t = new TableUserFiles(Integer.parseInt(id));
 			super.bubble_event(x, this, t);
 		}
+		if ("g".equals(cmd)) {
+			final TableUserGames t = new TableUserGames(Integer.parseInt(id));
+			super.bubble_event(x, this, t);
+		}
 	}
 
 	@Override
