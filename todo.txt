@@ -1,5 +1,4 @@
-b
-[ ] fix for client that makes many threaded requests and then stalls them to starve server of threads or create too many. ddos.
+[ ] b: fix for client that makes many threaded requests and then stalls them to starve server of threads or create too many. ddos.
 [ ]   slowhttptest
 [x] Form: two-step-constructions to implement
 [x]   aggregated objects views in tabs
@@ -16,6 +15,7 @@ b
 [x]       include ViewTable in form
 [ ]         fix css for better rendering
 [x]       FormDbo: getViewsList(): for tabbed views of aggregated objects
+[x]         tabbed view query field grabs focus
 [x]   support for "create object at init" pattern
 [x]     annotation interface CreateObjectAtInit? ok.
 [ ]     delete object at close in case no save has happened

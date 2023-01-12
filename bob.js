@@ -73,11 +73,13 @@ $p=function(eid,txt){
 $a=function(eid,a,v){$(eid).setAttribute(a,v);}
 $r=function(ev,ths,axpb){if(event.keyCode!=13)return true;$x(axpb);return false;}
 $f=function(eid){
+	if(ui.focusDone)return;
 	const e=$(eid);
 	if(!e)return;
 	if(e.focus)e.focus();
 	if(e.setSelectionRange)e.setSelectionRange(e.value.length,e.value.length);
 	/*if(e.select)e.select();*/
+	ui.focusDone=true;
 }
 $t=function(s){document.title=s;}
 ui.alert=function(msg){alert(msg);}
@@ -162,6 +164,7 @@ $x=function(pb){
 	$d(post.replace('\r','\n'));
 	$d('~~~~~~~ ~~~~~~~ ~~~~~~~ ~~~~~~~ ');
 	ui.is_busy=true;
+	ui.focusDone=false;
 	ui.ws.send(post);
 }
 
