@@ -6,6 +6,7 @@ import java.util.Set;
 import b.a;
 import b.xwriter;
 import bob.Action;
+import bob.Form;
 import bob.Util;
 import bob.ViewTable;
 import db.Db;
@@ -92,8 +93,8 @@ public final class TableCategory extends ViewTable {
 
 	@Override
 	protected void onActionCreate(final xwriter x, final String initStr) throws Throwable {
-		final FormBook2 fm = new FormBook2(null, initStr);
-		super.bubble_event(x, this, fm);
+		final Form f = new FormBook2(null, initStr).init();
+		super.bubble_event(x, this, f);
 	}
 
 	@Override
@@ -143,7 +144,7 @@ public final class TableCategory extends ViewTable {
 	protected void onRowClick(final xwriter x, final String id, final String cmd) throws Throwable {
 		if (cmd == null) {
 //			final FormBook f = new FormBook(id, q.str());
-			final FormBook2 f = new FormBook2(id, q.str());
+			final Form f = new FormBook2(id, q.str()).init();
 			super.bubble_event(x, this, f);
 			return;
 		}

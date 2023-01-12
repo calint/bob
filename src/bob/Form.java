@@ -15,6 +15,7 @@ public abstract class Form extends a implements Titled {
 	protected final int enabledFormBits;
 	public Container ans; // actions container
 	public Container scc; // "save and close", "save", "close" actions container
+	public Tabs t; // the attached views of aggregated objects
 	protected String objectId; // an id that represents the resource this form is rendering
 	private SelectReceiverSingle selectReceiverSingle; // when select mode this interface will receive the created
 														// object id
@@ -31,12 +32,24 @@ public abstract class Form extends a implements Titled {
 		if ((enabledFormBits & BIT_CLOSE) != 0) {
 			scc.add(new Action("close", "c"));
 		}
+	}
+
+	/** Must be called after the form has been constructed to complete the initialization.
+	 * @return this form. */
+	public Form init() {
 		final List<Action> actions = getActionsList();
-		if (actions == null)
-			return;
-		for (final Action a : actions) {
-			ans.add(a);
+		if (actions != null) {
+			for (final Action a : actions) {
+				ans.add(a);
+			}
 		}
+		final List<View> views = getViewsList();
+		if (views != null) {
+			for (final View v : views) {
+				t.add(new Tabs.Tab(v.getTitle(), v));
+			}
+		}
+		return this;
 	}
 
 	public final String getObjectId() {
@@ -54,6 +67,7 @@ public abstract class Form extends a implements Titled {
 		if (!scc.elements().isEmpty()) {
 			x.divh(scc, "sc").nl();
 		}
+		x.divh(t, "tabs").nl();
 		// ! render tabbed views from getViewsList()
 	}
 

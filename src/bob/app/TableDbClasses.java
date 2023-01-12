@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import b.xwriter;
+import bob.Form;
 import bob.ViewTable;
 import db.Db;
 import db.DbClass;
@@ -64,7 +65,7 @@ public final class TableDbClasses extends ViewTable {
 		@SuppressWarnings("unchecked")
 		final Class<? extends DbObject> jc = (Class<? extends DbObject>) Class.forName(id);
 		final DbClass dbc = Db.getDbClassForJavaClass(jc);
-		final FormDbClass f = new FormDbClass(dbc);
+		final Form f = new FormDbClass(dbc).init();
 		super.bubble_event(x, this, f);
 	}
 }

@@ -61,7 +61,7 @@ public final class InputRelAgg extends a {
 //		final DbObject o = getObject();
 		final DbObject ro = rel.get(o, true);
 		final Form f = createFormCls.getConstructor(String.class, String.class).newInstance(Integer.toString(ro.id()),
-				null);
+				null).init();
 		super.bubble_event(x, this, f); // display the form
 	}
 
@@ -81,7 +81,7 @@ public final class InputRelAgg extends a {
 //		final DbObject o = getObject();
 		final DbObject ro = rel.get(o, false);
 		final Form f = createFormCls.getConstructor(String.class, String.class).newInstance(Integer.toString(ro.id()),
-				null);
+				null).init();
 		super.bubble_event(x, this, f); // display the form
 	}
 }

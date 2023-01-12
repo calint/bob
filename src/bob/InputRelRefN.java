@@ -94,7 +94,7 @@ public final class InputRelRefN extends a {
 
 	/** Callback "create". */
 	public void x_c(final xwriter x, final String param) throws Throwable {
-		final Form f = createFormCls.getConstructor().newInstance();
+		final Form f = createFormCls.getConstructor().newInstance().init();
 		f.setSelectMode(new SelectReceiverSingle() {
 			private static final long serialVersionUID = 1L;
 

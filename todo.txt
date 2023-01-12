@@ -1,6 +1,27 @@
 b
 [ ] fix for client that makes many threaded requests and then stalls them to starve server of threads or create too many. ddos.
 [ ]   slowhttptest
+[x] Form: two-step-constructions to implement
+[ ]   aggregated objects views in tabs
+[o] FormDbo with convenience for editing dbobjects
+[x]   find/select/create
+[x]     RelRefN
+[x]       default values
+[x]     RelRef
+[x]       default value
+[x]     RelAgg. object must first be saved.
+[x]       create object with state "editing" when form is opened. when saved state "published"
+[x]     RelAggN. object must first be saved.
+[x]       include ViewTable in form
+[ ]         fix css for better rendering
+[ ]       FormDbo: getViewsList(): for tabbed views of aggregated objects
+[ ]   support for "create object at init" pattern
+[ ]     annotation interface CreateObjectAtInit?
+[ ]     delete object at close in case no save has happened
+[ ]   include a form as a field for aggregation 1 to 1?
+[ ]   make it right. DboField, DboRel, save etc
+[ ]   FormRenderer wrapping xwriter and "this"? cookie.eat() or eat(cookie)
+[ ] createObject() default implementation because not called when 'create at init' pattern?
 [x] ViewTable: Query: throttle queries to one every nth milliseconds
 [x] bob.js: server is busy message box when typing fast
 [ ]   server busy ui element
@@ -42,25 +63,6 @@ b
 [x]   indexes on author, category and publisher name to speed up lookup
 [ ]     category has one case with exceptionally long name, truncate?
 [x]   trim values
-[o] FormDbo with convenience for editing dbobjects
-[x]   find/select/create
-[x]     RelRefN
-[x]       default values
-[x]     RelRef
-[x]       default value
-[x]     RelAgg. object must first be saved.
-[x]       create object with state "editing" when form is opened. when saved state "published"
-[x]     RelAggN. object must first be saved.
-[x]       include ViewTable in form
-[ ]         fix css for better rendering
-[ ]       FormDbo: getViewsList(): for tabbed views of aggregated objects
-[ ]   support for "create object at init" pattern
-[ ]     annotation interface CreateObjectAtInit?
-[ ]     delete object at close in case no save has happened
-[ ]   include a form as a field for aggregation 1 to 1?
-[ ]   make it right. DboField, DboRel, save etc
-[ ]   FormRenderer wrapping xwriter and "this"? cookie.eat() or eat(cookie)
-[ ] createObject() default implementation because not called when 'create at init' pattern?
 [ ] ViewTable sort options
 [ ] ViewTable rendered by javascript backed by json?
 [ ] b.user: email, password hash, security bits. b.session: ref user

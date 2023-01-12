@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import b.xwriter;
+import bob.Form;
 import bob.ViewTable;
 import db.Db;
 import db.DbObjects;
@@ -74,7 +75,7 @@ public final class TableAuthors extends ViewTable {
 	@Override
 	protected void onRowClick(final xwriter x, final String id, final String cmd) throws Throwable {
 		if (cmd == null) {
-			final FormAuthor f = new FormAuthor(id, null);
+			final Form f = new FormAuthor(id, null).init();
 			super.bubble_event(x, this, f);
 			return;
 		}
@@ -86,7 +87,7 @@ public final class TableAuthors extends ViewTable {
 
 	@Override
 	protected void onActionCreate(final xwriter x, final String initStr) throws Throwable {
-		final FormAuthor f = new FormAuthor(null, initStr);
+		final Form f = new FormAuthor(null, initStr).init();
 		super.bubble_event(x, this, f);
 	}
 

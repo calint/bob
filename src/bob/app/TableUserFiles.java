@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import b.xwriter;
+import bob.Form;
 import bob.ViewTable;
 import db.Db;
 import db.DbObjects;
@@ -76,7 +77,7 @@ public final class TableUserFiles extends ViewTable {
 	@Override
 	protected void onRowClick(final xwriter x, final String id, final String cmd) throws Throwable {
 		if (cmd == null) {
-			final FormFile f = new FormFile(id, null);
+			final Form f = new FormFile(id, null).init();
 			super.bubble_event(x, this, f);
 			return;
 		}
@@ -88,7 +89,7 @@ public final class TableUserFiles extends ViewTable {
 		final User u = (User) tn.get(User.class, userId);
 		final File o = u.createFile();
 		o.setName(initStr);
-		final FormFile f = new FormFile(Integer.toString(o.id()), initStr);
+		final Form f = new FormFile(Integer.toString(o.id()), initStr).init();
 		super.bubble_event(x, this, f);
 	}
 

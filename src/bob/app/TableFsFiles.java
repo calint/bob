@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 import b.path;
 import b.xwriter;
 import bob.Action;
+import bob.Form;
 import bob.Util;
 import bob.ViewTable;
 
@@ -146,7 +147,7 @@ public final class TableFsFiles extends ViewTable {
 			super.bubble_event(x, this, f);
 			return;
 		}
-		final FormFsFile f = new FormFsFile(p);
+		final Form f = new FormFsFile(p).init();
 		super.bubble_event(x, this, f);
 	}
 }

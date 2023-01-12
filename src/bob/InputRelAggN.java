@@ -42,7 +42,7 @@ public final class InputRelAggN extends a {
 	public void x_c(final xwriter x, final String param) throws Throwable {
 		final DbObject ro = rel.create(objId);
 		final Form f = createFormCls.getConstructor(String.class, String.class).newInstance(Integer.toString(ro.id()),
-				null);
+				null).init();
 		super.bubble_event(x, this, f); // display the form
 	}
 
@@ -56,7 +56,7 @@ public final class InputRelAggN extends a {
 	public void x_e(final xwriter x, final String param) throws Throwable {
 		final DbObject ro = rel.get(objId).get(param);
 		final Form f = createFormCls.getConstructor(String.class, String.class).newInstance(Integer.toString(ro.id()),
-				null);
+				null).init();
 		super.bubble_event(x, this, f); // display the form
 	}
 }

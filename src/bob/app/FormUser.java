@@ -1,5 +1,8 @@
 package bob.app;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import b.xwriter;
 import bob.FormDbo;
 import bob.Util;
@@ -28,6 +31,13 @@ public final class FormUser extends FormDbo {
 		} else {
 			userFiles = new TableUserFiles(Integer.parseInt(objectId));
 		}
+	}
+
+	@Override
+	protected List<View> getViewsList() {
+		final ArrayList<View> ls = new ArrayList<View>();
+		ls.add(userFiles);
+		return ls;
 	}
 
 	public String getTitle() {
