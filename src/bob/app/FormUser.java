@@ -11,39 +11,31 @@ import db.Db;
 import db.DbObject;
 import db.test.User;
 
-public final class FormUser extends FormDbo {
+public final class FormUser extends FormDbo implements FormDbo.CreateObjectAtInit {
 	private static final long serialVersionUID = 1L;
-	private final View userFiles;
 
 	public FormUser() {
 		this(null, null);
 	}
 
 	public FormUser(final String id, final String initStr) {
-		super(id);
-		if (id == null) {
-			// create at init pattern
-			final User o = (User) Db.currentTransaction().create(User.class);
-			o.setName(initStr);
-			// set FormDbo objectId. this will omit createObject() call by FormDbo
-			objectId = Integer.toString(o.id());
-			userFiles = new TableUserFiles(o.id());
-		} else {
-			userFiles = new TableUserFiles(Integer.parseInt(objectId));
-		}
+		super(User.class, id, initStr);
+	}
+
+	@Override
+	protected DbObject createObject() {
+		final User o = (User) Db.currentTransaction().create(User.class);
+		o.setName(getInitStr());
+		return o;
 	}
 
 	@Override
 	protected List<View> getViewsList() {
+		final int oid = Integer.parseInt(getObjectId());
 		final ArrayList<View> ls = new ArrayList<View>();
-		ls.add(userFiles);
+		ls.add(new TableUserFiles(oid));
+		ls.add(new TableUserGames(oid));
 		return ls;
-	}
-
-	public String getTitle() {
-		return Util.toStr(getStr(User.name), "New user");
-//		final User o = (User) getObject();
-//		return o == null ? "New user" : o.getName();
 	}
 
 	@Override
@@ -51,14 +43,6 @@ public final class FormUser extends FormDbo {
 		return Db.currentTransaction().get(User.class, getObjectId());
 	}
 
-	@Override
-	protected DbObject createObject() {
-		// create at init pattern, since objectId is set in the constructor,FormDbo
-		// will not call this method
-		return null;
-	}
-
-//	private View authors = new TableAuthors();
 	@Override
 	protected void render(final xwriter x) throws Throwable {
 		final User o = (User) getObject();
@@ -75,11 +59,13 @@ public final class FormUser extends FormDbo {
 		inputTimestamp(x, "Timestamp", o, User.birthTime, null);
 		inputDateTime(x, "Date time", o, User.dateTime, null);
 		inputDate(x, "Date", o, User.date, null);
-//		inputElem(x, "authors", authors);
 		inputAgg(x, "Profile picture", o, User.profilePic, FormFile.class);
 		inputAggN(x, "Files", o, User.files, FormFile.class);
-		includeView(x, "userFiles", userFiles);
 		endForm(x);
+	}
+
+	public String getTitle() {
+		return Util.toStr(getStr(User.name), "New user");
 	}
 
 	@Override

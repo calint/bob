@@ -4,8 +4,8 @@ import java.sql.Timestamp;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Set;
 
 import b.a;
@@ -32,18 +32,34 @@ import db.RelRefN;
 public abstract class FormDbo extends Form {
 	private static final long serialVersionUID = 1L;
 
-	final private LinkedHashMap<String, DbField> dbfields = new LinkedHashMap<String, DbField>();
+	/** Marker interface to trigger creation of object prior to rendering. */
+	public interface CreateObjectAtInit {
+	}
+
+	final private Class<? extends DbObject> objCls;
+	final private ArrayList<String> dbfields = new ArrayList<String>();
 	final private LinkedHashMap<String, a> fields = new LinkedHashMap<String, a>();
 	private transient SimpleDateFormat fmtDate;
 	private transient SimpleDateFormat fmtDateTime;
 	private transient NumberFormat fmtNbr;
 
-	public FormDbo(final String objectId) {
-		this(objectId, BIT_SAVE_CLOSE | BIT_SAVE | BIT_CLOSE);
+	public FormDbo(final Class<? extends DbObject> objCls, final String objectId, final String initStr) {
+		this(objCls, objectId, initStr, BIT_SAVE_CLOSE | BIT_SAVE | BIT_CLOSE);
 	}
 
-	public FormDbo(final String objectId, final int enabledFormBits) {
-		super(objectId, enabledFormBits);
+	public FormDbo(final Class<? extends DbObject> objCls, final String objectId, final String initStr,
+			final int enabledFormBits) {
+		super(objectId, initStr, enabledFormBits);
+		this.objCls = objCls;
+	}
+
+	@Override
+	public Form init() {
+		if (objectId == null && this instanceof CreateObjectAtInit) {
+			final DbObject o = createObject();
+			objectId = Integer.toString(o.id());
+		}
+		return super.init();
 	}
 
 	@Override
@@ -232,7 +248,7 @@ public abstract class FormDbo extends Form {
 			final boolean defaultValue) {
 		final boolean value = o == null ? defaultValue : (Boolean) DbObject.getFieldValue(o, f);
 		inputBool(x, label, f.getName(), value, null);
-		dbfields.put(f.getName(), f);
+		dbfields.add(f.getName());
 	}
 
 	final protected void inputBool(final xwriter x, final String label, final String field, final boolean value,
@@ -247,7 +263,7 @@ public abstract class FormDbo extends Form {
 			final Timestamp defaultValue) {
 		final Timestamp value = o == null ? defaultValue : (Timestamp) DbObject.getFieldValue(o, f);
 		inputDate(x, label, f.getName(), value, null);
-		dbfields.put(f.getName(), f);
+		dbfields.add(f.getName());
 	}
 
 	final protected void inputDate(final xwriter x, final String label, final String field, final Timestamp value,
@@ -262,7 +278,7 @@ public abstract class FormDbo extends Form {
 			final Timestamp defaultValue) {
 		final Timestamp value = o == null ? defaultValue : (Timestamp) DbObject.getFieldValue(o, f);
 		inputDateTime(x, label, f.getName(), value, null);
-		dbfields.put(f.getName(), f);
+		dbfields.add(f.getName());
 	}
 
 	final protected void inputDateTime(final xwriter x, final String label, final String field, final Timestamp value,
@@ -277,7 +293,7 @@ public abstract class FormDbo extends Form {
 			final double defaultValue, final String styleClass) {
 		final double value = o == null ? defaultValue : ((Number) DbObject.getFieldValue(o, f)).doubleValue();
 		inputDbl(x, label, f.getName(), value, styleClass);
-		dbfields.put(f.getName(), f);
+		dbfields.add(f.getName());
 	}
 
 	final protected void inputDbl(final xwriter x, final String label, final String field, final double value,
@@ -328,7 +344,7 @@ public abstract class FormDbo extends Form {
 			final float defaultValue, final String styleClass) {
 		final float value = o == null ? defaultValue : ((Number) DbObject.getFieldValue(o, f)).floatValue();
 		inputFlt(x, label, f.getName(), value, styleClass);
-		dbfields.put(f.getName(), f);
+		dbfields.add(f.getName());
 	}
 
 	final protected void inputFlt(final xwriter x, final String label, final String field, final float value,
@@ -343,7 +359,7 @@ public abstract class FormDbo extends Form {
 			final int defaultValue, final String styleClass) {
 		final int value = o == null ? defaultValue : ((Number) DbObject.getFieldValue(o, f)).intValue();
 		inputInt(x, label, f.getName(), value, styleClass);
-		dbfields.put(f.getName(), f);
+		dbfields.add(f.getName());
 	}
 
 	final protected void inputInt(final xwriter x, final String label, final String field, final int value,
@@ -358,7 +374,7 @@ public abstract class FormDbo extends Form {
 			final long defaultValue, final String styleClass) {
 		final long value = o == null ? defaultValue : ((Number) DbObject.getFieldValue(o, f)).longValue();
 		inputLng(x, label, f.getName(), value, styleClass);
-		dbfields.put(f.getName(), f);
+		dbfields.add(f.getName());
 	}
 
 	final protected void inputLng(final xwriter x, final String label, final String field, final long value,
@@ -449,7 +465,7 @@ public abstract class FormDbo extends Form {
 			final String defaultValue, final String styleClass) {
 		final String value = o == null ? defaultValue : (String) DbObject.getFieldValue(o, f);
 		inputText(x, label, f.getName(), value, styleClass);
-		dbfields.put(f.getName(), f);
+		dbfields.add(f.getName());
 	}
 
 	final protected void inputText(final xwriter x, final String label, final String field, final String value,
@@ -466,7 +482,7 @@ public abstract class FormDbo extends Form {
 			final String defaultValue, final String styleClass) {
 		final String value = o == null ? defaultValue : (String) DbObject.getFieldValue(o, f);
 		inputTextArea(x, label, f.getName(), value, styleClass);
-		dbfields.put(f.getName(), f);
+		dbfields.add(f.getName());
 	}
 
 	final protected void inputTextArea(final xwriter x, final String label, final String field, final String value,
@@ -479,7 +495,7 @@ public abstract class FormDbo extends Form {
 			final Timestamp defaultValue) {
 		final Timestamp value = o == null ? defaultValue : (Timestamp) DbObject.getFieldValue(o, f);
 		inputTimestamp(x, label, f.getName(), value, null);
-		dbfields.put(f.getName(), f);
+		dbfields.add(f.getName());
 	}
 
 	final protected void inputTimestamp(final xwriter x, final String label, final String field, final Timestamp value,
@@ -536,6 +552,14 @@ public abstract class FormDbo extends Form {
 		return fmtNbr.parse(s).longValue();
 	}
 
+	private DbField getDbFieldFromClass(final String name) {
+		try {
+			return (DbField) objCls.getField(name).get(null);
+		} catch (final Throwable t) {
+			throw new RuntimeException(t);
+		}
+	}
+
 	@Override
 	protected final void save(final xwriter x) throws Throwable {
 		final DbObject o;
@@ -547,27 +571,26 @@ public abstract class FormDbo extends Form {
 		}
 		// ? ugly instanceof chain. separation of concerns ok.
 		// elements that know how to write to objects
-		for (final Map.Entry<String, DbField> me : dbfields.entrySet()) {
-			final DbField dbf = me.getValue();
+		for (final String fieldName : dbfields) {
+			final DbField dbf = getDbFieldFromClass(fieldName);
 			if (!o.getClass().equals(dbf.getDeclaringClass())) {
 				continue;
 			}
-			final String key = me.getKey();
 			if (dbf instanceof FldStr) {
-				DbObject.setFieldValue(o, dbf, getStr(key));
+				DbObject.setFieldValue(o, dbf, getStr(fieldName));
 				continue;
 			}
 			if (dbf instanceof FldBool) {
-				DbObject.setFieldValue(o, dbf, getBool(key));
+				DbObject.setFieldValue(o, dbf, getBool(fieldName));
 				continue;
 			}
 			try {
 				if (dbf instanceof FldDateTime) {
 					Timestamp ts;
 					try {
-						ts = getDateTime(key);
+						ts = getDateTime(fieldName);
 					} catch (final ParseException ok) {
-						ts = getDate(key);
+						ts = getDate(fieldName);
 					}
 					DbObject.setFieldValue(o, dbf, ts);
 					continue;
@@ -575,51 +598,51 @@ public abstract class FormDbo extends Form {
 				if (dbf instanceof FldTs) {
 					Timestamp ts;
 					try {
-						ts = getDateTime(key);
+						ts = getDateTime(fieldName);
 					} catch (final ParseException ok) {
-						ts = getDate(key);
+						ts = getDate(fieldName);
 					}
 					DbObject.setFieldValue(o, dbf, ts);
 					continue;
 				}
 			} catch (final ParseException e) {
-				x.xfocus(getElem(key));
+				x.xfocus(getElem(fieldName));
 				throw new Exception("Time cannot be parsed.");
 			}
 			try {
 				if (dbf instanceof FldInt) {
-					DbObject.setFieldValue(o, dbf, getInt(key));
+					DbObject.setFieldValue(o, dbf, getInt(fieldName));
 					continue;
 				}
 				if (dbf instanceof FldLng) {
-					DbObject.setFieldValue(o, dbf, getLng(key));
+					DbObject.setFieldValue(o, dbf, getLng(fieldName));
 					continue;
 				}
 				if (dbf instanceof FldFlt) {
-					DbObject.setFieldValue(o, dbf, getFlt(key));
+					DbObject.setFieldValue(o, dbf, getFlt(fieldName));
 					continue;
 				}
 				if (dbf instanceof FldDbl) {
-					DbObject.setFieldValue(o, dbf, getDbl(key));
+					DbObject.setFieldValue(o, dbf, getDbl(fieldName));
 					continue;
 				}
 			} catch (final ParseException e) {
-				x.xfocus(getElem(key));
+				x.xfocus(getElem(fieldName));
 				throw new Exception("Number cannot be parsed.");
 			}
 		}
 		// relations
 		for (final a e : fields.values()) {
 			if (e instanceof InputRelRefN) {
-				final InputRelRefN r = (InputRelRefN) e;
-				if (o.getClass().equals(r.rel.getFromClass())) {
-					r.save(o);
+				final InputRelRefN ir = (InputRelRefN) e;
+				if (o.getClass().equals(ir.objCls)) {
+					ir.save(o);
 				}
 				continue;
 			}
 			if (e instanceof InputRelRef) {
 				final InputRelRef r = (InputRelRef) e;
-				if (o.getClass().equals(r.rel.getFromClass())) {
+				if (o.getClass().equals(r.objCls)) {
 					r.save(o);
 				}
 				continue;
@@ -649,16 +672,4 @@ public abstract class FormDbo extends Form {
 		}
 		return e;
 	}
-
-//	@Override
-//	protected void preRender(final xwriter x) {
-//		if(!(this instanceof CreateObjectPriorRenderPattern))
-//			return;
-//
-//	}
-//
-//
-//	/** Marker interface to trigger creation of object prior to rendering. */
-//	public interface CreateObjectPriorRenderPattern {
-//	}
 }

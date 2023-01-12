@@ -10,7 +10,7 @@ public final class Tabs extends a {
 
 	public final static class Tab extends a {
 		private static final long serialVersionUID = 1L;
-		private a elem;
+		private final a elem;
 
 		public Tab(final String title, final a elem) {
 			this.elem = elem;
@@ -29,15 +29,19 @@ public final class Tabs extends a {
 			return null;
 		}
 
-		public void to(xwriter x, boolean isActive) throws Throwable {
+		public void to(final xwriter x, final boolean isActive) throws Throwable {
 			if (isActive) {
-				x.p(str()).spc();
+				x.divo(this, "at", null).tagoe();
+				x.p(str());
+				x.div_();
 				return;
 			}
-			x.ax(this, "c", str()).spc();
+			x.divo(this, "iat", null).tagoe();
+			x.ax(this, "c", str());
+			x.div_();
 		}
 
-		public void x_c(xwriter x, String param) throws Throwable {
+		public void x_c(final xwriter x, final String param) throws Throwable {
 			super.bubble_event(x);
 		}
 	}
@@ -45,8 +49,21 @@ public final class Tabs extends a {
 	final ArrayList<Tab> tabs = new ArrayList<Tab>();
 	public a ae; // active element
 
-	public void add(Tab t) {
+	public void add(final Tab t) {
+		t.parent(this);
+		t.name(Integer.toString(tabs.size()));
+		if (tabs.isEmpty()) { // if first element replace active element with the element in the tab
+			t.elem.replace(this, ae);
+		}
 		tabs.add(t);
+	}
+
+	@Override
+	public a child(final String id) {
+		final a e = super.child(id);
+		if (e != null)
+			return e;
+		return tabs.get(Integer.parseInt(id));
 	}
 
 	public boolean isEmpty() {
@@ -54,18 +71,19 @@ public final class Tabs extends a {
 	}
 
 	@Override
-	public void to(xwriter x) throws Throwable {
+	public void to(final xwriter x) throws Throwable {
 		for (final Tab t : tabs) {
 			t.to(x, t.elem == ae);
 		}
-		ae.to(x);
+		x.divh(ae, "ae");
 	}
 
 	@Override
-	protected void bubble_event(xwriter x, a from, Object o) throws Throwable {
+	protected void bubble_event(final xwriter x, final a from, final Object o) throws Throwable {
 		if (from instanceof Tab) { // activated tab
 			final Tab t = (Tab) from;
 			t.elem.replace(this, ae);
+			x.xu(this);
 			return;
 		}
 		super.bubble_event(x, from, o);

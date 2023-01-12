@@ -19,9 +19,18 @@ public abstract class Form extends a implements Titled {
 	protected String objectId; // an id that represents the resource this form is rendering
 	private SelectReceiverSingle selectReceiverSingle; // when select mode this interface will receive the created
 														// object id
+	final private String initStr;
 
-	public Form(final String objectId, final int enabledFormBits) {
+	/**
+	 * @param objectId        string representing the object.
+	 * @param initStr         the initial string for constructor to use. ViewTable
+	 *                        passes the query field as initial string.
+	 * @param enabledFormBits rendering of "save and close", "save" and "close"
+	 *                        actions.
+	 */
+	public Form(final String objectId, final String initStr, final int enabledFormBits) {
 		this.objectId = objectId;
+		this.initStr = initStr;
 		this.enabledFormBits = enabledFormBits;
 		if ((enabledFormBits & BIT_SAVE_CLOSE) != 0) {
 			scc.add(new Action("save and close", "sc"));
@@ -34,8 +43,12 @@ public abstract class Form extends a implements Titled {
 		}
 	}
 
-	/** Must be called after the form has been constructed to complete the initialization.
-	 * @return this form. */
+	/**
+	 * Must be called after the form has been constructed to complete the
+	 * initialization.
+	 *
+	 * @return this form.
+	 */
 	public Form init() {
 		final List<Action> actions = getActionsList();
 		if (actions != null) {
@@ -54,6 +67,10 @@ public abstract class Form extends a implements Titled {
 
 	public final String getObjectId() {
 		return objectId;
+	}
+
+	public final String getInitStr() {
+		return initStr;
 	}
 
 	@Override

@@ -4,8 +4,6 @@ import java.util.Map;
 
 /** Double field. */
 public final class FldDbl extends DbField {
-	private static final long serialVersionUID = 1L;
-
 	final private double defval;
 
 	public FldDbl(final double def) {

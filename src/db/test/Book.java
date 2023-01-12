@@ -16,8 +16,6 @@ import db.RelRef;
 import db.RelRefN;
 
 public final class Book extends DbObject implements Titled {
-	private static final long serialVersionUID = 1L;
-
 	public final static FldStr name = new FldStr(800);
 	public final static FldStr authorsStr = new FldStr(3000);
 	public final static RelRefN authors = new RelRefN(Author.class);

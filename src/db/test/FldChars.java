@@ -5,8 +5,6 @@ import java.util.Map;
 import db.DbField;
 
 public final class FldChars extends DbField {
-	private static final long serialVersionUID = 1L;
-
 	public FldChars(final int size, final String def) {
 		super("char", size, def == null ? null : def, true, true);
 	}

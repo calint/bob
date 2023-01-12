@@ -8,15 +8,13 @@ import db.test.Author;
 
 public final class FormAuthor extends FormDbo {
 	private static final long serialVersionUID = 1L;
-	private final String initStr;
 
 	public FormAuthor() {
 		this(null, null);
 	}
 
 	public FormAuthor(final String objectId, final String initStr) {
-		super(objectId);
-		this.initStr = initStr;
+		super(Author.class, objectId, initStr);
 	}
 
 	public String getTitle() {
@@ -38,7 +36,7 @@ public final class FormAuthor extends FormDbo {
 	protected void render(final xwriter x) throws Throwable {
 		final Author o = (Author) getObject();
 		beginForm(x);
-		inputText(x, "Name", o, Author.name, initStr, "medium");
+		inputText(x, "Name", o, Author.name, getInitStr(), "medium");
 		focus(x, Author.name);
 		endForm(x);
 	}

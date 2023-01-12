@@ -13,8 +13,6 @@ import db.Index;
 import db.RelAgg;
 
 public final class File extends DbObject implements Titled {
-	private static final long serialVersionUID = 1L;
-
 	public final static FldStr name = new FldStr(250);
 	public final static FldLng size_B = new FldLng();
 	public final static FldTs created_ts = new FldTs();

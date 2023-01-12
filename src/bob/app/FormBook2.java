@@ -18,20 +18,13 @@ import db.test.User;
 
 public final class FormBook2 extends FormDbo {
 	private static final long serialVersionUID = 1L;
-	private final String initStr;
 
 	public FormBook2() {
 		this(null, null);
 	}
 
 	public FormBook2(final String objectId, final String initStr) {
-		super(objectId);
-		this.initStr = initStr;
-//		if (objectId == null) {
-//			final Book o = (Book) createObject();
-//			o.setName(initStr);
-//			this.objectId = Integer.toString(o.id());
-//		}
+		super(Book.class, objectId, initStr);
 	}
 
 	public String getTitle() {
@@ -53,7 +46,7 @@ public final class FormBook2 extends FormDbo {
 	protected void render(final xwriter x) throws Throwable {
 		final Book o = (Book) getObject();
 		beginForm(x);
-		inputText(x, "Title", o, Book.name, initStr, "long");
+		inputText(x, "Title", o, Book.name, getInitStr(), "long");
 		focus(x, Book.name);
 //		Set<String>init=new HashSet<String>();
 //		init.add("1");

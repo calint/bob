@@ -10,24 +10,34 @@ import db.RelRef;
 
 public final class InputRelRef extends a {
 	private static final long serialVersionUID = 1L;
-	final RelRef rel;
+	final Class<? extends DbObject> objCls;
+	final String relationName;
 	final private Class<? extends View> selectViewClass; // the view to use when selecting
 	final private Class<? extends Form> createFormCls;
 	private int selectedId;
 
 	public InputRelRef(final DbObject obj, final RelRef rel, final int defaultValue,
 			final Class<? extends View> selectViewClass, final Class<? extends Form> createFormCls) {
-		this.rel = rel;
+		objCls = rel.getFromClass();
+		relationName = rel.getName();
 		selectedId = obj == null ? defaultValue : rel.getId(obj);
 		this.selectViewClass = selectViewClass;
 		this.createFormCls = createFormCls;
+	}
+
+	private RelRef getRelation() {
+		try {
+			return (RelRef) objCls.getField(relationName).get(null);
+		} catch (final Throwable t) {
+			throw new RuntimeException(t);
+		}
 	}
 
 	@Override
 	public void to(final xwriter x) throws Throwable {
 		final DbTransaction tn = Db.currentTransaction();
 		if (selectedId != 0) {
-			final DbObject ro = tn.get(rel.getToClass(), selectedId);
+			final DbObject ro = tn.get(getRelation().getToClass(), selectedId);
 			if (ro != null) { // ? dangling reference
 				if (ro instanceof Titled) {
 					final Titled t = (Titled) ro;
@@ -89,7 +99,7 @@ public final class InputRelRef extends a {
 	}
 
 	public void save(final DbObject o) {
-		rel.set(o, selectedId);
+		getRelation().set(o, selectedId);
 	}
 
 	public int getSelectedId() {

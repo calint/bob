@@ -4,8 +4,6 @@ import java.util.List;
 
 /** Association One-to-One. */
 public final class RelRef extends DbRelation {
-	private static final long serialVersionUID = 1L;
-
 	public RelRef(final Class<? extends DbObject> toCls) {
 		super(toCls);
 	}

@@ -102,6 +102,23 @@ table.t td.icn{
 .sc{ /* save, close actions */
 	margin:.5rem;
 }
+.tabs{
+	margin-top:1rem;
+}
+.tabs .ae{ /* active element */
+	border-top:1px dotted green;
+}
+.tabs .at{ /* active tab */
+	display:inline-block;
+	padding:.5rem;
+	border-top:1px solid green;
+	border-left:1px dotted green;
+	border-right:1px dotted green;
+}
+.tabs .iat{ /* in-active tab */
+	display:inline-block;
+	padding:.5rem;
+}
 div.output{
 	text-align:left;
 	margin:.5rem 2rem .5rem 2rem;
@@ -169,7 +186,4 @@ table.f td.lbl{
 	font-weight:bold;
 }
 table.f td.val{
-}
-.tabs{
-	background:red;
 }

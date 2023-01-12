@@ -5,8 +5,6 @@ import java.util.Map;
 
 /** Date time field. */
 public class FldDateTime extends DbField {
-	private static final long serialVersionUID = 1L;
-
 	final private Timestamp defval;
 
 	public FldDateTime() {

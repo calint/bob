@@ -1,12 +1,10 @@
 package db;
 
-import java.io.Serializable;
 import java.sql.DatabaseMetaData;
 import java.sql.Statement;
 
 /** Abstract relation. */
-public abstract class DbRelation implements Serializable {
-	private static final long serialVersionUID = 1L;
+public abstract class DbRelation {
 	/**
 	 * the class where the relation was declared. initiated by db after all classes
 	 * have been loaded

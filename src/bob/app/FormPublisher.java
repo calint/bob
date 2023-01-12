@@ -8,15 +8,13 @@ import db.test.Publisher;
 
 public final class FormPublisher extends FormDbo {
 	private static final long serialVersionUID = 1L;
-	private final String initStr;
 
 	public FormPublisher() {
 		this(null, null);
 	}
 
 	public FormPublisher(final String objectId, final String initStr) {
-		super(objectId);
-		this.initStr = initStr;
+		super(Publisher.class, objectId, initStr);
 	}
 
 	public String getTitle() {
@@ -38,7 +36,7 @@ public final class FormPublisher extends FormDbo {
 	protected void render(final xwriter x) throws Throwable {
 		final Publisher o = (Publisher) getObject();
 		beginForm(x);
-		inputText(x, "Name", o, Publisher.name, initStr, "medium");
+		inputText(x, "Name", o, Publisher.name, getInitStr(), "medium");
 		focus(x, Publisher.name);
 		endForm(x);
 	}

@@ -9,9 +9,10 @@ import db.RelAgg;
 
 public final class InputRelAgg extends a {
 	private static final long serialVersionUID = 1L;
-	final RelAgg rel;
 	final private Class<? extends Form> createFormCls;
+	final Class<? extends DbObject> objCls;
 	final int objId;
+	final String relationName;
 //	transient private DbObject obj;
 
 	public InputRelAgg(final DbObject obj, final RelAgg rel, final Class<? extends Form> createFormCls) {
@@ -19,9 +20,18 @@ public final class InputRelAgg extends a {
 			throw new RuntimeException(
 					"Element cannot be created with object being null. Try 'create at init' pattern to initiate the object before creating this element.");
 //		this.obj = obj;
+		objCls = obj.getClass();
 		objId = obj.id();
-		this.rel = rel;
+		relationName = rel.getName();
 		this.createFormCls = createFormCls;
+	}
+
+	private RelAgg getRelation() {
+		try {
+			return (RelAgg) objCls.getField(relationName).get(null);
+		} catch (final Throwable t) {
+			throw new RuntimeException(t);
+		}
 	}
 
 //	private DbObject getObject() {
@@ -35,9 +45,9 @@ public final class InputRelAgg extends a {
 	@Override
 	public void to(final xwriter x) throws Throwable {
 		final DbTransaction tn = Db.currentTransaction();
-		final DbObject o = tn.get(rel.getFromClass(), objId);
+		final DbObject o = tn.get(objCls, objId);
 //		final DbObject o = getObject();
-		final DbObject ro = rel.get(o, false);
+		final DbObject ro = getRelation().get(o, false);
 		if (ro != null) {
 			final String txt;
 			if (ro instanceof Titled) {
@@ -57,31 +67,31 @@ public final class InputRelAgg extends a {
 	/** Callback "create". */
 	public void x_c(final xwriter x, final String param) throws Throwable {
 		final DbTransaction tn = Db.currentTransaction();
-		final DbObject o = tn.get(rel.getFromClass(), objId);
+		final DbObject o = tn.get(objCls, objId);
 //		final DbObject o = getObject();
-		final DbObject ro = rel.get(o, true);
-		final Form f = createFormCls.getConstructor(String.class, String.class).newInstance(Integer.toString(ro.id()),
-				null).init();
+		final DbObject ro = getRelation().get(o, true);
+		final Form f = createFormCls.getConstructor(String.class, String.class)
+				.newInstance(Integer.toString(ro.id()), null).init();
 		super.bubble_event(x, this, f); // display the form
 	}
 
 	/** Callback "remove". */
 	public void x_d(final xwriter x, final String param) throws Throwable {
 		final DbTransaction tn = Db.currentTransaction();
-		final DbObject o = tn.get(rel.getFromClass(), objId);
+		final DbObject o = tn.get(objCls, objId);
 //		final DbObject o = getObject();
-		rel.delete(o);
+		getRelation().delete(o);
 		x.xu(this);
 	}
 
 	/** Callback "edit". */
 	public void x_e(final xwriter x, final String param) throws Throwable {
 		final DbTransaction tn = Db.currentTransaction();
-		final DbObject o = tn.get(rel.getFromClass(), objId);
+		final DbObject o = tn.get(objCls, objId);
 //		final DbObject o = getObject();
-		final DbObject ro = rel.get(o, false);
-		final Form f = createFormCls.getConstructor(String.class, String.class).newInstance(Integer.toString(ro.id()),
-				null).init();
+		final DbObject ro = getRelation().get(o, false);
+		final Form f = createFormCls.getConstructor(String.class, String.class)
+				.newInstance(Integer.toString(ro.id()), null).init();
 		super.bubble_event(x, this, f); // display the form
 	}
 }

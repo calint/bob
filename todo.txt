@@ -3,6 +3,7 @@ b
 [ ]   slowhttptest
 [x] Form: two-step-constructions to implement
 [ ]   aggregated objects views in tabs
+[ ] Form: clear search
 [o] FormDbo with convenience for editing dbobjects
 [x]   find/select/create
 [x]     RelRefN

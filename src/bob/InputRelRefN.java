@@ -16,7 +16,8 @@ import db.RelRefN;
 
 public final class InputRelRefN extends a {
 	private static final long serialVersionUID = 1L;
-	final RelRefN rel;
+	final Class<? extends DbObject> objCls;
+	final String relationName;
 	final private Class<? extends View> selectViewClass; // the view to use when selecting
 	final private Class<? extends Form> createFormCls; // the form used to create object
 	final private LinkedHashSet<String> initialSelectedIds; // the initial ids from object
@@ -26,7 +27,8 @@ public final class InputRelRefN extends a {
 	public InputRelRefN(final DbObject obj, final RelRefN rel, final Set<String> defaultValues,
 			final Class<? extends View> selectViewClass, final Class<? extends Form> createFormCls,
 			final String itemSeparator) {
-		this.rel = rel;
+		objCls = rel.getFromClass();
+		relationName = rel.getName();
 		this.selectViewClass = selectViewClass;
 		this.createFormCls = createFormCls;
 		initialSelectedIds = new LinkedHashSet<String>();
@@ -46,6 +48,14 @@ public final class InputRelRefN extends a {
 		selectedIds.addAll(defaultValues);
 	}
 
+	private RelRefN getRelation() {
+		try {
+			return (RelRefN) objCls.getField(relationName).get(null);
+		} catch (final Throwable t) {
+			throw new RuntimeException(t);
+		}
+	}
+
 	@Override
 	public void to(final xwriter x) throws Throwable {
 		final DbTransaction tn = Db.currentTransaction();
@@ -61,9 +71,10 @@ public final class InputRelRefN extends a {
 		if (selectViewClass != null || createFormCls != null) {
 			x.br();
 		}
+		final Class<? extends DbObject> toCls = getRelation().getToClass();
 		for (final String s : selectedIds) {
 			final int id = Integer.parseInt(s);
-			final DbObject o = tn.get(rel.getToClass(), id);
+			final DbObject o = tn.get(toCls, id);
 			if (o == null) {
 				continue;
 			}
@@ -117,7 +128,7 @@ public final class InputRelRefN extends a {
 				continue;
 			}
 			final int id = Integer.parseInt(s);
-			rel.add(o, id);
+			getRelation().add(o, id);
 			initialSelectedIds.add(s);
 		}
 		final ArrayList<String> removedIds = new ArrayList<String>();
@@ -126,7 +137,7 @@ public final class InputRelRefN extends a {
 				continue;
 			}
 			final int id = Integer.parseInt(s);
-			rel.remove(o, id);
+			getRelation().remove(o, id);
 			removedIds.add(s);
 		}
 		for (final String id : removedIds) {

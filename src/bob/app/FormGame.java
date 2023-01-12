@@ -5,39 +5,39 @@ import bob.FormDbo;
 import bob.Util;
 import db.Db;
 import db.DbObject;
-import db.test.File;
+import db.test.Game;
 
-public final class FormFile extends FormDbo {
+public final class FormGame extends FormDbo {
 	private static final long serialVersionUID = 1L;
 
-	public FormFile() {
+	public FormGame() {
 		this(null, null);
 	}
 
-	public FormFile(final String objectId, final String initStr) {
-		super(File.class, objectId, initStr);
+	public FormGame(final String objectId, final String initStr) {
+		super(Game.class, objectId, initStr);
 	}
 
 	public String getTitle() {
-		return Util.toStr(getStr(File.name), "New file");
+		return Util.toStr(getStr(Game.name), "New game");
 	}
 
 	@Override
 	protected DbObject createObject() {
-		return Db.currentTransaction().create(File.class);
+		return Db.currentTransaction().create(Game.class);
 	}
 
 	@Override
 	protected DbObject getObject() {
-		return Db.currentTransaction().get(File.class, getObjectId());
+		return Db.currentTransaction().get(Game.class, getObjectId());
 	}
 
 	@Override
 	protected void render(final xwriter x) throws Throwable {
-		final File o = (File) getObject();
+		final Game o = (Game) getObject();
 		beginForm(x);
-		inputText(x, "Name", o, File.name, getInitStr(), "medium");
-		focus(x, File.name);
+		inputText(x, "Name", o, Game.name, getInitStr(), "medium");
+		focus(x, Game.name);
 		endForm(x);
 	}
 

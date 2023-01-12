@@ -11,7 +11,7 @@ public final class FormFsFile extends Form {
 	private final path pth;
 
 	public FormFsFile(final path pth) {
-		super(pth.name(), BIT_CLOSE);
+		super(pth.name(), null, BIT_CLOSE);
 		this.pth = pth;
 	}
 
