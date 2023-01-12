@@ -294,6 +294,8 @@ public abstract class ViewTable extends View {
 		@Override
 		public void to(final xwriter x) throws Throwable {
 			upd();
+			if (objectsCount == 0)
+				return;
 			x.p(objectsCount);
 			x.p(' ');
 			if (objectsCount == 1) {
@@ -410,46 +412,32 @@ public abstract class ViewTable extends View {
 			if (inifiniteScroll) {
 				tv.p.setPage(1);
 			}
-			x.table("t").nl();
-			x.tr();
-			if ((tv.enabledViewBits & View.BIT_SELECT) != 0 || tv.isSelectModeMulti()) { // header for the checkbox
-				x.th();
+			final List<?> ls = tv.getObjectsList();
+			if (!ls.isEmpty()) {
+				x.table("t").nl();
+				x.tr();
+				if ((tv.enabledViewBits & View.BIT_SELECT) != 0 || tv.isSelectModeMulti()) { // header for the checkbox
+					x.th();
+				}
+				tv.renderHeaders(x);
+				x.nl();
+				cbs.clear();
+				renderRows(x, ls);
+				x.table_();
+				x.script();
+				if (inifiniteScroll) {
+					x.p("window.onscroll=(e)=>{if((window.innerHeight+window.scrollY)>=document.body.offsetHeight){$x('"
+							+ id() + " is');}}");
+				} else {
+					x.p("window.onscroll=null;"); // disable infinite scroll event
+				}
+				x.script_();
 			}
-			tv.renderHeaders(x);
-			x.nl();
-
-			cbs.clear();
-			renderRows(x);
-			x.table_();
-			x.script();
-			if (inifiniteScroll) {
-//				x.script().p(
-//						"window.addEventListener('scroll',(e)=>{if((window.innerHeight+window.scrollY)>=document.body.offsetHeight){$x('"
-//								+ id() + " is');}})")
-//						.script_();
-				x.p("window.onscroll=(e)=>{if((window.innerHeight+window.scrollY)>=document.body.offsetHeight){$x('"
-						+ id() + " is');}}");
-			} else {
-				x.p("window.onscroll=null;"); // disable infinite scroll event
-			}
-			x.script_();
 		}
 
-		private void renderRows(final xwriter x) throws Throwable {
-			final List<?> ls = tv.getObjectsList();
+		private void renderRows(final xwriter x, final List<?> ls) throws Throwable {
 			for (final Object o : ls) {
-//				final String id = tv.getIdFrom(o);
-//				if ((tv.enabledViewBits & BIT_CLICK_ITEM) != 0) {
-//					x.tago("tr");
-//					x.attr("data-href", "url://localhost:8888");
-//					final xwriter js = new xwriter();
-//					js.js_x(tv, "clk " + id, false);
-//					x.attr("onclick", js.toString());
-////					x.attr("onclick", "$x('" + tv.id() + xwriter.enc_js_str(" clk " + id) + "')");
-//					x.tagoe();
-//				} else {
 				x.tr();
-//				}
 				if ((tv.enabledViewBits & View.BIT_SELECT) != 0 || tv.isSelectModeMulti()) { // render checkbox
 					final String id = tv.getIdFrom(o);
 					x.td();
@@ -492,7 +480,7 @@ public abstract class ViewTable extends View {
 				return;
 
 			final xwriter x = y.xub(is, false, false); // render more rows at the insertion tag
-			renderRows(x);
+			renderRows(x, tv.getObjectsList());
 			y.xube();
 		}
 

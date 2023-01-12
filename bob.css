@@ -104,12 +104,15 @@ table.t td.icn{
 }
 .tabs{
 	margin-top:1rem;
+	display: inline-block;
 }
 .tabs .ae{ /* active element */
-	border-top:1px dotted green;
+	border:1px dotted green;
+	padding:1rem;
 }
 .tabs .at{ /* active tab */
 	display:inline-block;
+	font-weight:bold;
 	padding:.5rem;
 	border-top:2px solid green;
 	border-left:1px dotted green;
