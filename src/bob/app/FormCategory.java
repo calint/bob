@@ -2,7 +2,6 @@ package bob.app;
 
 import b.xwriter;
 import bob.FormDbo;
-import db.Db;
 import db.DbObject;
 import db.test.Category;
 
@@ -20,16 +19,6 @@ public final class FormCategory extends FormDbo {
 	public String getTitle() {
 		final Category o = (Category) getObject();
 		return o == null ? "New category" : o.getName();
-	}
-
-	@Override
-	protected DbObject getObject() {
-		return Db.currentTransaction().get(Category.class, getObjectId());
-	}
-
-	@Override
-	protected DbObject createObject() {
-		return Db.currentTransaction().create(Category.class);
 	}
 
 	@Override

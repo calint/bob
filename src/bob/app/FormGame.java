@@ -3,7 +3,6 @@ package bob.app;
 import b.xwriter;
 import bob.FormDbo;
 import bob.Util;
-import db.Db;
 import db.DbObject;
 import db.test.Game;
 
@@ -20,16 +19,6 @@ public final class FormGame extends FormDbo {
 
 	public String getTitle() {
 		return Util.toStr(getStr(Game.name), "New game");
-	}
-
-	@Override
-	protected DbObject createObject() {
-		return Db.currentTransaction().create(Game.class);
-	}
-
-	@Override
-	protected DbObject getObject() {
-		return Db.currentTransaction().get(Game.class, getObjectId());
 	}
 
 	@Override

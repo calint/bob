@@ -7,7 +7,6 @@ import b.xwriter;
 import bob.Action;
 import bob.FormDbo;
 import bob.Util;
-import db.Db;
 import db.DbObject;
 import db.test.Author;
 import db.test.Book;
@@ -30,16 +29,6 @@ public final class FormBook2 extends FormDbo {
 	public String getTitle() {
 		final Book o = (Book) getObject();
 		return o == null ? "New book" : o.getName();
-	}
-
-	@Override
-	protected DbObject createObject() {
-		return Db.currentTransaction().create(Book.class);
-	}
-
-	@Override
-	protected DbObject getObject() {
-		return Db.currentTransaction().get(Book.class, getObjectId());
 	}
 
 	@Override

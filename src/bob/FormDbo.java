@@ -10,6 +10,7 @@ import java.util.Set;
 
 import b.a;
 import b.xwriter;
+import db.Db;
 import db.DbField;
 import db.DbObject;
 import db.FldBool;
@@ -74,7 +75,9 @@ public abstract class FormDbo extends Form {
 		x.table("f").nl();
 	}
 
-	protected abstract DbObject createObject();
+	protected DbObject createObject() {
+		return Db.currentTransaction().create(objCls);
+	}
 
 	final protected void endForm(final xwriter x) {
 		x.table_().nl();
@@ -200,7 +203,9 @@ public abstract class FormDbo extends Form {
 		return parseLng(getStr(field));
 	}
 
-	protected abstract DbObject getObject();
+	protected DbObject getObject() {
+		return Db.currentTransaction().get(objCls, getObjectId());
+	}
 
 	final protected int getSelectedId(final RelRef rel) {
 		return getSelectedId(rel.getName());

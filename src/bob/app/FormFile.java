@@ -3,7 +3,6 @@ package bob.app;
 import b.xwriter;
 import bob.FormDbo;
 import bob.Util;
-import db.Db;
 import db.DbObject;
 import db.test.File;
 
@@ -20,16 +19,6 @@ public final class FormFile extends FormDbo {
 
 	public String getTitle() {
 		return Util.toStr(getStr(File.name), "New file");
-	}
-
-	@Override
-	protected DbObject createObject() {
-		return Db.currentTransaction().create(File.class);
-	}
-
-	@Override
-	protected DbObject getObject() {
-		return Db.currentTransaction().get(File.class, getObjectId());
 	}
 
 	@Override

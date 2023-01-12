@@ -2,7 +2,6 @@ package bob.app;
 
 import b.xwriter;
 import bob.FormDbo;
-import db.Db;
 import db.DbObject;
 import db.test.Publisher;
 
@@ -20,16 +19,6 @@ public final class FormPublisher extends FormDbo {
 	public String getTitle() {
 		final Publisher o = (Publisher) getObject();
 		return o == null ? "New publisher" : o.getName();
-	}
-
-	@Override
-	protected DbObject createObject() {
-		return Db.currentTransaction().create(Publisher.class);
-	}
-
-	@Override
-	protected DbObject getObject() {
-		return Db.currentTransaction().get(Publisher.class, getObjectId());
 	}
 
 	@Override

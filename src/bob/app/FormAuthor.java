@@ -2,7 +2,6 @@ package bob.app;
 
 import b.xwriter;
 import bob.FormDbo;
-import db.Db;
 import db.DbObject;
 import db.test.Author;
 
@@ -20,16 +19,6 @@ public final class FormAuthor extends FormDbo {
 	public String getTitle() {
 		final Author o = (Author) getObject();
 		return o == null ? "New author" : o.getName();
-	}
-
-	@Override
-	protected DbObject createObject() {
-		return Db.currentTransaction().create(Author.class);
-	}
-
-	@Override
-	protected DbObject getObject() {
-		return Db.currentTransaction().get(Author.class, getObjectId());
 	}
 
 	@Override

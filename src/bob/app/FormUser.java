@@ -7,7 +7,6 @@ import b.xwriter;
 import bob.FormDbo;
 import bob.Util;
 import bob.View;
-import db.Db;
 import db.DbObject;
 import db.test.User;
 
@@ -24,7 +23,7 @@ public final class FormUser extends FormDbo implements FormDbo.CreateObjectAtIni
 
 	@Override
 	protected DbObject createObject() {
-		final User o = (User) Db.currentTransaction().create(User.class);
+		final User o = (User) super.createObject();
 		o.setName(getInitStr());
 		return o;
 	}
@@ -36,11 +35,6 @@ public final class FormUser extends FormDbo implements FormDbo.CreateObjectAtIni
 		ls.add(new TableUserFiles(oid));
 		ls.add(new TableUserGames(oid));
 		return ls;
-	}
-
-	@Override
-	protected DbObject getObject() {
-		return Db.currentTransaction().get(User.class, getObjectId());
 	}
 
 	@Override
