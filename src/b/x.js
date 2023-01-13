@@ -150,7 +150,6 @@ ui._onreadystatechange=function(){
 	}
 	switch(this.readyState){
 	case 1:{// Open
-		if(this._hasopened)break;this._hasopened=true;//? firefox quirkfix1
 		$d('req open');
 		if(ui.is_dbg_verbose)$d(new Date().getTime()-this._t0+" * sending");
 		$s('-ajaxsts','sending '+this._pd.length+' text');
@@ -188,7 +187,6 @@ ui._onreadystatechange=function(){
 	}
 	case 4:{// Loaded
 		$d('req loaded');
-		this._hasopened=null;//? firefox quirkfix1
 		this._pd=null;
 		ui._pbls=[];
 
@@ -203,6 +201,7 @@ ui._onreadystatechange=function(){
 		$s('-ajaxsts',this._dt+' ms '+ui.fmtsize(this.responseText.length)+' chars '+ui.fmt_data_per_second(this.responseText.length,this._dt));
 		$d("~~~~~~~ ~~~~~~~ ~~~~~~~ ~~~~~~~ ")
 //		$d("done in "+this._dt+" ms");
+		ui.focusDone=false;
 		break;
 	}
 	default:throw "unknown state";	
@@ -248,7 +247,6 @@ $x=function(pb){
 			}else{
 				$d("   * busy, cancelling");
 				ui.req.abort();
-//				ui.req._hasopened=null;//? firefox quirkfix1
 			}
 		}	
 	}

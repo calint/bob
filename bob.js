@@ -180,6 +180,7 @@ ui.ws.onmessage=function(e){
 		eval(e.data);
 	}
 	ui.is_busy=false;
+	ui.focusDone=false;
 	$d('~~~~~~~ ~~~~~~~ ~~~~~~~ ~~~~~~~ ')
 };
 ui.ws.onerror=function(e){
