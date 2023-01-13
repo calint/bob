@@ -3,9 +3,9 @@
 [x] Form: two-step-constructions to implement
 [x]   aggregated objects views in tabs
 [ ] View: clear search
-[ ] bob: view,form id path List<String>
 [o] FormDbo with convenience for editing dbobjects
 [ ]   parentId
+[ ]     id path List<String>
 [x]   find/select/create
 [x]     RelRefN
 [x]       default values
