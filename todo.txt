@@ -2,7 +2,7 @@
 [ ]   slowhttptest
 [x] Form: two-step-constructions to implement
 [x]   aggregated objects views in tabs
-[ ] Form: clear search
+[ ] View: clear search
 [o] FormDbo with convenience for editing dbobjects
 [x]   find/select/create
 [x]     RelRefN
@@ -12,13 +12,13 @@
 [x]     RelAgg. object must first be saved.
 [x]       create object with state "editing" when form is opened. when saved state "published"
 [x]     RelAggN. object must first be saved.
-[x]       include ViewTable in form
+[x]       include ViewTable in form. includeView
 [ ]         fix css for better rendering
 [x]       FormDbo: getViewsList(): for tabbed views of aggregated objects
 [x]         tabbed view query field grabs focus
 [x]   support for "create object at init" pattern
 [x]     annotation interface CreateObjectAtInit? ok.
-[ ]     delete object at close in case no save has happened
+[ ]     delete object at close in case no save has happened. action "cancel". onCancel(boolean saved)
 [ ]   include a form as a field for aggregation 1 to 1?
 [ ]   make it right. DboField, DboRel, save etc
 [ ]   FormRenderer wrapping xwriter and "this"? cookie.eat() or eat(cookie)
