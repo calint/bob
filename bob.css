@@ -105,10 +105,12 @@ table.t td.icn{
 .tabs{
 	margin-top:1rem;
 	display: inline-block;
+	border-radius:.3rem;
 }
 .tabs .ae{ /* active element */
 	border:1px dotted green;
 	padding:1rem;
+	border-radius:.3rem;
 }
 .tabs .at{ /* active tab */
 	display:inline-block;
@@ -117,10 +119,12 @@ table.t td.icn{
 	border-top:2px solid green;
 	border-left:1px dotted green;
 	border-right:1px dotted green;
+	border-radius:.3rem;
 }
 .tabs .iat{ /* in-active tab */
 	display:inline-block;
 	padding:.5rem;
+	border-radius:.3rem;
 }
 div.output{
 	text-align:left;
