@@ -5,7 +5,7 @@
 [ ] View: clear search
 [o] FormDbo with convenience for editing dbobjects
 [ ]   parentId
-[ ]     id path List<String>
+[ ]     id path List<String> to Form and View
 [x]   find/select/create
 [x]     RelRefN
 [x]       default values
