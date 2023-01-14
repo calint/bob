@@ -4,7 +4,7 @@
 [x]   aggregated objects views in tabs
 [ ] View: clear search
 [o] FormDbo with convenience for editing dbobjects
-[ ]   parentId
+[ ]   parentId? objectId x/y/z
 [ ]     id path List<String> to Form and View
 [x]   find/select/create
 [x]     RelRefN
