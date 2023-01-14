@@ -5,7 +5,8 @@
 [ ] View: clear search
 [o] FormDbo with convenience for editing dbobjects
 [ ]   parentId? objectId x/y/z
-[ ]     id path List<String> to Form and View
+[ ]     id path List<String> to Form and View?
+[ ]     path,objectId to Form,View where path encoded x/y/z?
 [x]   find/select/create
 [x]     RelRefN
 [x]       default values
