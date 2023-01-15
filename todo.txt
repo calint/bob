@@ -7,6 +7,7 @@
 [ ]   parentId? objectId x/y/z
 [ ]     id path List<String> to Form and View?
 [ ]     path,objectId to Form,View where path encoded x/y/z?
+[ ]     create object in View instead of Form?
 [x]   find/select/create
 [x]     RelRefN
 [x]       default values
