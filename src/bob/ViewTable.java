@@ -48,7 +48,7 @@ public abstract class ViewTable extends View {
 				x.p("select " + getTypeInfo().namePlural + " then click ");
 				x.ax(this, "sm", "select");
 			} else {
-				x.p("select " + getTypeInfo().name);
+				x.p("select " + getTypeInfo().name + " by clicking on the link");
 			}
 			x.tage("div");
 		}
