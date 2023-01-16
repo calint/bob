@@ -4,6 +4,7 @@
 [x]   aggregated objects views in tabs
 [ ] View: clear search
 [ ] db: tn.delete(Class,id) taking into account if a dbobject needs cascading delete
+[ ] db: DbObjects getFirst(q,s,l)
 [o] FormDbo with convenience for editing dbobjects
 [ ]   parentId? objectId x/y/z
 [ ]     id path List<String> to Form and View?
