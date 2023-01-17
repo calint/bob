@@ -1,6 +1,6 @@
 [ ] b: fix for client that makes many threaded requests and then stalls them to starve server of threads or create too many. ddos.
 [ ]   slowhttptest
-[ ] db: tn.delete(Class,id) taking into account if a dbobject needs cascading delete
+[ ] db: tn.delete(Class,id) taking into account if a dbobject needs cascading delete. needs instance of object thus convenience only.
 [ ] db: DbObjects getFirst(q,s,l)
 [x] Form: two-step-constructions to implement
 [x]   aggregated objects views in tabs
