@@ -67,5 +67,7 @@ public final class RelAgg extends DbRelation {
 		} else {
 			Db.execClusterSql(sb.toString());
 		}
+
+		tn.cache.remove(toCls, toId);
 	}
 }

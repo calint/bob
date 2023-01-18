@@ -74,6 +74,8 @@ public final class RelAggN extends DbRelation {
 		} else {
 			Db.execClusterSql(sb.toString());
 		}
+
+		tn.cache.remove(toCls, toId);
 	}
 
 	public void delete(final DbObject ths, final DbObject o) {
@@ -126,5 +128,7 @@ public final class RelAggN extends DbRelation {
 		} else {
 			Db.execClusterSql(sb.toString());
 		}
+
+		// ? objects are potentially in the cache but are not removed. not a problem.
 	}
 }

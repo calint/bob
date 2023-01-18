@@ -39,10 +39,14 @@ public final class DbTransaction {
 		}
 
 		void remove(final DbObject o) {
-			final HashMap<Integer, DbObject> idToObjMap = clsToIdObjMap.get(o.getClass());
+			remove(o.getClass(), o.id());
+		}
+
+		void remove(final Class<? extends DbObject> cls, final int id) {
+			final HashMap<Integer, DbObject> idToObjMap = clsToIdObjMap.get(cls);
 			if (idToObjMap == null)
 				return;
-			idToObjMap.remove(o.id());
+			idToObjMap.remove(id);
 		}
 
 		void clear() {
