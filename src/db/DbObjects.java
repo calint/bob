@@ -26,6 +26,13 @@ public final class DbObjects {
 		this(null, select, null, null);
 	}
 
+	public DbObject first() {
+		final List<DbObject> ls = toList(select, new Limit(0, 1));
+		if (ls.isEmpty())
+			return null;
+		return ls.get(0);
+	}
+
 	public List<DbObject> toList(final Class<?> cls, final Limit limit) {
 		final Query qry = new Query();
 		final Order ord = new Order();

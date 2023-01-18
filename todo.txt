@@ -2,7 +2,7 @@
 [ ]   slowhttptest
 [x] db: tn.delete(Class,id) taking into account if a dbobject needs cascading delete. needs instance of object thus convenience only.
 [x] db: RelAggN and RelAgg must delete through transaction to keep cache and dirty objects in sync.
-[ ] db: DbObjects getFirst(q,s,l)
+[x] db: DbObjects getFirst(q,s,l) => DbObjects.first()
 [x] Form: two-step-constructions to implement
 [x]   aggregated objects views in tabs
 [ ] View: clear search

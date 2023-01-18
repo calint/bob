@@ -23,6 +23,7 @@ public class test1 extends TestCase {
 		doRun5();
 		doRun6();
 		doRun7();
+		doRun8();
 	}
 
 	private void doRun0() throws Throwable {
@@ -549,6 +550,22 @@ public class test1 extends TestCase {
 		if (u.getGames().getCount() != 0)
 			throw new RuntimeException();
 
+		tn.delete(u);
+	}
+
+	public void doRun8() throws Throwable {
+		final DbTransaction tn = Db.currentTransaction();
+		final User u = (User) tn.create(User.class);
+
+		// cascading delete
+		final File f1 = u.createFile();
+		f1.setName("file1");
+		final File f2 = u.createFile();
+		f2.setName("file2");
+		tn.commit();
+		final DbObject f = u.getFiles().get(null, new Order(File.name)).first();
+		if (f.id() != f1.id())
+			throw new RuntimeException();
 		tn.delete(u);
 	}
 
