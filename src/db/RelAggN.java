@@ -54,8 +54,8 @@ public final class RelAggN extends DbRelation {
 
 	/** @param thsId source object id. */
 	public void delete(final int thsId, final int toId) {
-		final DbClass dbClsTo = Db.dbClassForJavaClass(toCls);
 		final DbTransaction tn = Db.currentTransaction();
+		final DbClass dbClsTo = Db.dbClassForJavaClass(toCls);
 		if (dbClsTo.cascadeDelete) {
 			final DbObject o = tn.get(toCls, toId);
 			delete(thsId, o);
@@ -64,7 +64,7 @@ public final class RelAggN extends DbRelation {
 
 		// no cascade delete
 		tn.flush();
-		tn.deleteReferencesToObject(dbClsTo, toId);
+		tn.removeReferencesToObject(dbClsTo, toId);
 
 		final StringBuilder sb = new StringBuilder(128);
 		sb.append("delete from ").append(dbClsTo.tableName).append(" where ").append(DbObject.id.name).append("=")
