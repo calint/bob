@@ -54,21 +54,8 @@ public final class RelAggN extends DbRelation {
 
 	/** @param thsId source object id. */
 	public void delete(final int thsId, final int toId) {
-		final DbClass dbClsTo = Db.dbClassForJavaClass(toCls);
-		if (dbClsTo.cascadeDelete) {
-			final DbObject o = Db.currentTransaction().get(toCls, new Query(toCls, toId), null, null).get(0);
-			delete(thsId, o);
-			return;
-		}
-		final StringBuilder sb = new StringBuilder(128);
-		sb.append("delete from ").append(dbClsTo.tableName).append(" where ").append(DbObject.id.name).append("=")
-				.append(toId).append(" and ").append(relFld.name).append("=").append(thsId);
-
-		if (!Db.cluster_on) {
-			Db.currentTransaction().execSql(sb);
-		} else {
-			Db.execClusterSql(sb.toString());
-		}
+		final DbObject o = Db.currentTransaction().get(toCls, new Query(toCls, toId), null, null).get(0);
+		delete(thsId, o);
 	}
 
 	public void delete(final DbObject ths, final DbObject o) {
@@ -99,23 +86,10 @@ public final class RelAggN extends DbRelation {
 	}
 
 	private void cascadeDelete(final int thsId) {
-		final DbClass dbClsTo = Db.dbClassForJavaClass(toCls);
-		if (dbClsTo.cascadeDelete) {
-			final List<DbObject> ls = get(thsId).toList();
-			for (final DbObject o : ls) {
-				Db.currentTransaction().delete(o);
-			}
-			return;
-		}
-
-		final StringBuilder sb = new StringBuilder(128);
-		sb.append("delete from ").append(dbClsTo.tableName).append(" where ").append(relFld.name).append("=")
-				.append(thsId);
-
-		if (!Db.cluster_on) {
-			Db.currentTransaction().execSql(sb);
-		} else {
-			Db.execClusterSql(sb.toString());
+		final DbTransaction tn = Db.currentTransaction();
+		final List<DbObject> ls = get(thsId).toList();
+		for (final DbObject o : ls) {
+			tn.delete(o);
 		}
 	}
 }

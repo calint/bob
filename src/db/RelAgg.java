@@ -50,23 +50,7 @@ public final class RelAgg extends DbRelation {
 		final int toId = getId(ths);
 		if (toId == 0)
 			return;
-		// need to delete
-		final DbClass dbClsTo = Db.dbClassForJavaClass(toCls);
-		if (dbClsTo.cascadeDelete) {
-			final DbObject o = get(ths, false);
-			if (o == null)
-				return;
-			Db.currentTransaction().delete(o);
-			return;
-		}
-		// cascade not necessary
-		final StringBuilder sb = new StringBuilder(128);
-		sb.append("delete from ").append(dbClsTo.tableName).append(" where ").append(DbObject.id.name).append("=")
-				.append(toId);
-		if (!Db.cluster_on) {
-			Db.currentTransaction().execSql(sb);
-		} else {
-			Db.execClusterSql(sb.toString());
-		}
+		final DbObject o = get(ths, false);
+		Db.currentTransaction().delete(o);
 	}
 }

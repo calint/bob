@@ -118,6 +118,23 @@ public final class DbTransaction {
 
 		final int id = o.id();
 
+		deleteReferencesToObject(dbcls, id);
+
+		// delete this
+		final StringBuilder sb = new StringBuilder(256);
+		sb.append("delete from ").append(dbcls.tableName).append(" where id=").append(id);
+		if (!Db.cluster_on) {
+			execSql(sb);
+		} else {
+			Db.execClusterSql(sb.toString());
+		}
+		dirtyObjects.remove(o);
+		if (cache_enabled) {
+			cache.remove(o);
+		}
+	}
+
+	void deleteReferencesToObject(final DbClass dbcls, final int id) {
 		// delete orphans
 		for (final RelRefN r : dbcls.referingRefN) {
 			r.deleteReferencesTo(id);
@@ -135,19 +152,6 @@ public final class DbTransaction {
 					Db.execClusterSql(sb.toString());
 				}
 			}
-		}
-
-		// delete this
-		final StringBuilder sb = new StringBuilder(256);
-		sb.append("delete from ").append(dbcls.tableName).append(" where id=").append(id);
-		if (!Db.cluster_on) {
-			execSql(sb);
-		} else {
-			Db.execClusterSql(sb.toString());
-		}
-		dirtyObjects.remove(o);
-		if (cache_enabled) {
-			cache.remove(o);
 		}
 	}
 
