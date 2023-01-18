@@ -126,11 +126,5 @@ public final class RelAggN extends DbRelation {
 		} else {
 			Db.execClusterSql(sb.toString());
 		}
-
-//		final DbTransaction tn = Db.currentTransaction();
-//		final List<DbObject> ls = get(thsId).toList();
-//		for (final DbObject o : ls) {
-//			tn.delete(o);
-//		}
 	}
 }
