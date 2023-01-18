@@ -65,7 +65,7 @@ public final class RelAgg extends DbRelation {
 		sb.append("delete from ").append(dbClsTo.tableName).append(" where ").append(DbObject.id.name).append("=")
 				.append(toId);
 		if (!Db.cluster_on) {
-			tn.execSql(sb);
+			tn.execSql(sb.toString());
 		} else {
 			Db.execClusterSql(sb.toString());
 		}

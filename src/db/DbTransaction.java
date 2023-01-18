@@ -124,7 +124,7 @@ public final class DbTransaction {
 		final StringBuilder sb = new StringBuilder(256);
 		sb.append("delete from ").append(dbcls.tableName).append(" where id=").append(id);
 		if (!Db.cluster_on) {
-			execSql(sb);
+			execSql(sb.toString());
 		} else {
 			Db.execClusterSql(sb.toString());
 		}
@@ -147,7 +147,7 @@ public final class DbTransaction {
 				sb.append("update ").append(r.tableName).append(" set ").append(r.name).append("=null")
 						.append(" where ").append(r.name).append('=').append(id);
 				if (!Db.cluster_on) {
-					execSql(sb);
+					execSql(sb.toString());
 				} else {
 					Db.execClusterSql(sb.toString());
 				}
@@ -442,15 +442,14 @@ public final class DbTransaction {
 		sb.setLength(sb.length() - 1);
 		sb.append(" where id=").append(o.id());
 		if (!Db.cluster_on) {
-			execSql(sb);
+			execSql(sb.toString());
 		} else {
 			Db.execClusterSql(sb.toString());
 		}
 		o.dirtyFields.clear();
 	}
 
-	void execSql(final StringBuilder sb) {
-		final String sql = sb.toString();
+	void execSql(final String sql) {
 		Db.log_sql(sql);
 		try {
 			stmt.execute(sql);

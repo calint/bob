@@ -71,7 +71,7 @@ public final class RelAggN extends DbRelation {
 				.append(toId).append(" and ").append(relFld.name).append("=").append(thsId);
 
 		if (!Db.cluster_on) {
-			tn.execSql(sb);
+			tn.execSql(sb.toString());
 		} else {
 			Db.execClusterSql(sb.toString());
 		}
@@ -124,7 +124,7 @@ public final class RelAggN extends DbRelation {
 				.append(thsId);
 
 		if (!Db.cluster_on) {
-			tn.execSql(sb);
+			tn.execSql(sb.toString());
 		} else {
 			Db.execClusterSql(sb.toString());
 		}

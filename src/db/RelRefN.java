@@ -33,7 +33,7 @@ public final class RelRefN extends DbRelation {
 		final StringBuilder sb = new StringBuilder(256);
 		rrm.sql_addToTable(sb, thsId, toId);
 		if (!Db.cluster_on) {
-			Db.currentTransaction().execSql(sb);
+			Db.currentTransaction().execSql(sb.toString());
 		} else {
 			Db.execClusterSqlInsert(sb.toString());
 		}
@@ -58,7 +58,7 @@ public final class RelRefN extends DbRelation {
 		final StringBuilder sb = new StringBuilder(256);
 		rrm.sql_deleteFromTable(sb, thsId, toId);
 		if (!Db.cluster_on) {
-			Db.currentTransaction().execSql(sb);
+			Db.currentTransaction().execSql(sb.toString());
 		} else {
 			Db.execClusterSql(sb.toString());
 		}
@@ -73,7 +73,7 @@ public final class RelRefN extends DbRelation {
 		final StringBuilder sb = new StringBuilder(256);
 		rrm.sql_deleteAllFromTable(sb, thsId);
 		if (!Db.cluster_on) {
-			Db.currentTransaction().execSql(sb);
+			Db.currentTransaction().execSql(sb.toString());
 		} else {
 			Db.execClusterSql(sb.toString());
 		}
@@ -83,7 +83,7 @@ public final class RelRefN extends DbRelation {
 		final StringBuilder sb = new StringBuilder(256);
 		rrm.sql_deleteReferencesTo(sb, id);
 		if (!Db.cluster_on) {
-			Db.currentTransaction().execSql(sb);
+			Db.currentTransaction().execSql(sb.toString());
 		} else {
 			Db.execClusterSql(sb.toString());
 		}
