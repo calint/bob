@@ -7,6 +7,7 @@ import b.xwriter;
 import bob.FormDbo;
 import bob.Util;
 import bob.View;
+import db.Db;
 import db.DbObject;
 import db.test.User;
 
@@ -18,7 +19,7 @@ public final class FormUser extends FormDbo implements FormDbo.CreateObjectAtIni
 	}
 
 	public FormUser(final String id, final String initStr) {
-		super(User.class, id, initStr);
+		super(User.class, id, initStr, BIT_SAVE_CLOSE | BIT_SAVE | BIT_CANCEL);
 	}
 
 	@Override
@@ -26,6 +27,13 @@ public final class FormUser extends FormDbo implements FormDbo.CreateObjectAtIni
 		final User o = (User) super.createObject();
 		o.setName(getInitStr());
 		return o;
+	}
+
+	@Override
+	protected void cancel(final xwriter x) throws Throwable {
+		if (hasBeenSaved())
+			return;
+		Db.currentTransaction().delete(getObject());
 	}
 
 	@Override

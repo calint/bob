@@ -12,6 +12,7 @@ public abstract class Form extends a implements Titled {
 	public final static int BIT_SAVE_CLOSE = 1;
 	public final static int BIT_SAVE = 2;
 	public final static int BIT_CLOSE = 4;
+	public final static int BIT_CANCEL = 8;
 	protected final int enabledFormBits;
 	public Container ans; // actions container
 	public Container scc; // "save and close", "save", "close" actions container
@@ -20,6 +21,7 @@ public abstract class Form extends a implements Titled {
 	private SelectReceiverSingle selectReceiverSingle; // when select mode this interface will receive the created
 														// object id
 	final private String initStr;
+	private boolean hasBeenSaved;
 
 	/**
 	 * @param objectId        string representing the object.
@@ -40,6 +42,9 @@ public abstract class Form extends a implements Titled {
 		}
 		if ((enabledFormBits & BIT_CLOSE) != 0) {
 			scc.add(new Action("close", "c"));
+		}
+		if ((enabledFormBits & BIT_CANCEL) != 0) {
+			scc.add(new Action("cancel", "cl"));
 		}
 	}
 
@@ -73,6 +78,10 @@ public abstract class Form extends a implements Titled {
 		return initStr;
 	}
 
+	protected final boolean hasBeenSaved() {
+		return hasBeenSaved;
+	}
+
 	@Override
 	public final void to(final xwriter x) throws Throwable {
 		x.script().p("window.onscroll=null;").script_().nl(); // disable infinite scroll event
@@ -101,6 +110,7 @@ public abstract class Form extends a implements Titled {
 			if ("s".equals(code) && (enabledFormBits & BIT_SAVE) != 0) {
 				try {
 					save(x);
+					hasBeenSaved = true;
 				} catch (final Throwable t) {
 					x.xalert(t.getMessage());
 					return;
@@ -112,6 +122,11 @@ public abstract class Form extends a implements Titled {
 				return;
 			}
 			if ("c".equals(code) && (enabledFormBits & BIT_CLOSE) != 0) {
+				super.bubble_event(x, this, "close");
+				return;
+			}
+			if ("cl".equals(code) && (enabledFormBits & BIT_CANCEL) != 0) {
+				cancel(x);
 				super.bubble_event(x, this, "close");
 				return;
 			}
@@ -132,6 +147,10 @@ public abstract class Form extends a implements Titled {
 		return null;
 	}
 
+	/** Called when "cancel" action has been clicked. */
+	protected void cancel(final xwriter x) throws Throwable {
+	}
+
 	/** Called when action is activated. */
 	protected void onAction(final xwriter x, final Action act) throws Throwable {
 	}
@@ -139,6 +158,7 @@ public abstract class Form extends a implements Titled {
 	protected final void saveAndClose(final xwriter x) throws Throwable {
 		try {
 			save(x);
+			hasBeenSaved = true;
 		} catch (final Throwable t) {
 			x.xalert(t.getMessage());
 			return;
