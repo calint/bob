@@ -52,7 +52,7 @@ public final class RelAgg extends DbRelation {
 		final DbClass dbClsTo = Db.dbClassForJavaClass(toCls);
 		final DbTransaction tn = Db.currentTransaction();
 		if (dbClsTo.cascadeDelete || !dbClsTo.referingRefN.isEmpty()
-				|| (Db.enable_update_referring_tables && !dbClsTo.referingRef.isEmpty())) {
+				|| Db.enable_update_referring_tables && !dbClsTo.referingRef.isEmpty()) {
 			final DbObject o = get(ths, false);
 			tn.delete(o);
 			return;
