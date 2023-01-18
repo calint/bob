@@ -48,18 +48,15 @@ public final class RelAgg extends DbRelation {
 		if (toId == 0)
 			return;
 
-		// need to delete
-		final DbClass dbClsTo = Db.dbClassForJavaClass(toCls);
 		final DbTransaction tn = Db.currentTransaction();
-		if (dbClsTo.cascadeDelete || !dbClsTo.referingRefN.isEmpty()
-				|| Db.enable_update_referring_tables && !dbClsTo.referingRef.isEmpty()) {
+		final DbClass dbClsTo = Db.dbClassForJavaClass(toCls);
+		if (dbClsTo.needsDeleteWithInstance()) {
 			final DbObject o = get(ths, false);
 			tn.delete(o);
 			return;
 		}
 
-		// cascade not necessary, no referring classes
-		tn.flush(); // flush dirty objects
+		tn.flush();
 
 		final StringBuilder sb = new StringBuilder(128);
 		sb.append("delete from ").append(dbClsTo.tableName).append(" where ").append(DbObject.id.name).append("=")

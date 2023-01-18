@@ -128,6 +128,7 @@ public final class DbTransaction {
 		} else {
 			Db.execClusterSql(sb.toString());
 		}
+
 		dirtyObjects.remove(o);
 		if (cache_enabled) {
 			cache.remove(o);
