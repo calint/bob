@@ -566,6 +566,11 @@ public class test1 extends TestCase {
 		final DbObject f = u.getFiles().get(null, new Order(File.name)).first();
 		if (f.id() != f1.id())
 			throw new RuntimeException();
+		
+		u.getProfilePic(true);
+		tn.commit();
+		u.deleteProfilePic();
+		
 		tn.delete(u);
 	}
 

@@ -57,11 +57,12 @@ public final class RelAggN extends DbRelation {
 		final DbClass dbClsTo = Db.dbClassForJavaClass(toCls);
 		final DbTransaction tn = Db.currentTransaction();
 		if (dbClsTo.cascadeDelete) {
-			final DbObject o = tn.get(toCls, new Query(toCls, toId), null, null).get(0);
+			final DbObject o = tn.get(toCls, toId);
 			delete(thsId, o);
 			return;
 		}
 
+		// no cascade delete
 		tn.flush();
 		tn.deleteReferencesToObject(dbClsTo, toId);
 
@@ -115,8 +116,7 @@ public final class RelAggN extends DbRelation {
 			return;
 		}
 
-		// cascade not needed
-		
+		// cascade not needed, nor referring classes
 		tn.flush(); // flush dirty objects
 
 		final StringBuilder sb = new StringBuilder(128);

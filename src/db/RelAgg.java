@@ -34,14 +34,11 @@ public final class RelAgg extends DbRelation {
 			}
 			return null;
 		}
-		return Db.currentTransaction().get(toCls, new Query(toCls, id), null, null).get(0);
+		return Db.currentTransaction().get(toCls, id);
 	}
 
 	public void delete(final DbObject ths) {
-		final DbObject o = get(ths, false);
-		if (o == null)
-			return;
-		Db.currentTransaction().delete(o);
+		cascadeDelete(ths);
 		ths.set(relFld, 0);
 	}
 
@@ -60,8 +57,8 @@ public final class RelAgg extends DbRelation {
 			tn.delete(o);
 			return;
 		}
-		
-		// cascade not necessary
+
+		// cascade not necessary, no referring classes
 		tn.flush(); // flush dirty objects
 
 		final StringBuilder sb = new StringBuilder(128);
