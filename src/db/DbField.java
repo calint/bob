@@ -143,11 +143,6 @@ public abstract class DbField {
 	}
 
 	@Override
-	public final int hashCode() {
-		return name.hashCode();
-	}
-
-	@Override
 	public String toString() {
 		return name;
 	}
