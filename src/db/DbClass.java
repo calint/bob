@@ -390,9 +390,4 @@ public final class DbClass {
 		}
 	}
 
-	/** @return true if object of this type needs to be deleted through transaction using instance. */
-	boolean needsDeleteWithInstance() {
-		return cascadeDelete || !referingRefN.isEmpty() || Db.enable_update_referring_tables && !referingRef.isEmpty();
-	}
-
 }

@@ -62,7 +62,6 @@ public final class RelAggN extends DbRelation {
 			return;
 		}
 
-		// no cascade delete
 		tn.flush();
 		tn.removeReferencesToObject(dbClsTo, toId);
 
@@ -107,7 +106,8 @@ public final class RelAggN extends DbRelation {
 	private void cascadeDelete(final int thsId) {
 		final DbTransaction tn = Db.currentTransaction();
 		final DbClass dbClsTo = Db.dbClassForJavaClass(toCls);
-		if (dbClsTo.needsDeleteWithInstance()) {
+		if (dbClsTo.cascadeDelete || !dbClsTo.referingRefN.isEmpty()
+				|| Db.enable_update_referring_tables && !dbClsTo.referingRef.isEmpty()) {
 			final List<DbObject> ls = get(thsId).toList();
 			for (final DbObject o : ls) {
 				tn.delete(o);

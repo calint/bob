@@ -50,13 +50,14 @@ public final class RelAgg extends DbRelation {
 
 		final DbTransaction tn = Db.currentTransaction();
 		final DbClass dbClsTo = Db.dbClassForJavaClass(toCls);
-		if (dbClsTo.needsDeleteWithInstance()) {
+		if (dbClsTo.cascadeDelete) {
 			final DbObject o = get(ths, false);
 			tn.delete(o);
 			return;
 		}
 
 		tn.flush();
+		tn.removeReferencesToObject(dbClsTo, toId);
 
 		final StringBuilder sb = new StringBuilder(128);
 		sb.append("delete from ").append(dbClsTo.tableName).append(" where ").append(DbObject.id.name).append("=")
