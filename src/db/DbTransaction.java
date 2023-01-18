@@ -134,7 +134,7 @@ public final class DbTransaction {
 		}
 	}
 
-	private void deleteReferencesToObject(final DbClass dbcls, final int id) {
+	void deleteReferencesToObject(final DbClass dbcls, final int id) {
 		// delete orphans
 		for (final RelRefN r : dbcls.referingRefN) {
 			r.deleteReferencesTo(id);

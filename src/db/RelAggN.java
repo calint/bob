@@ -54,8 +54,26 @@ public final class RelAggN extends DbRelation {
 
 	/** @param thsId source object id. */
 	public void delete(final int thsId, final int toId) {
-		final DbObject o = Db.currentTransaction().get(toCls, new Query(toCls, toId), null, null).get(0);
-		delete(thsId, o);
+		final DbClass dbClsTo = Db.dbClassForJavaClass(toCls);
+		final DbTransaction tn = Db.currentTransaction();
+		if (dbClsTo.cascadeDelete) {
+			final DbObject o = tn.get(toCls, new Query(toCls, toId), null, null).get(0);
+			delete(thsId, o);
+			return;
+		}
+
+		tn.flush();
+		tn.deleteReferencesToObject(dbClsTo, toId);
+
+		final StringBuilder sb = new StringBuilder(128);
+		sb.append("delete from ").append(dbClsTo.tableName).append(" where ").append(DbObject.id.name).append("=")
+				.append(toId).append(" and ").append(relFld.name).append("=").append(thsId);
+
+		if (!Db.cluster_on) {
+			tn.execSql(sb);
+		} else {
+			Db.execClusterSql(sb.toString());
+		}
 	}
 
 	public void delete(final DbObject ths, final DbObject o) {
@@ -86,10 +104,35 @@ public final class RelAggN extends DbRelation {
 	}
 
 	private void cascadeDelete(final int thsId) {
+		final DbClass dbClsTo = Db.dbClassForJavaClass(toCls);
 		final DbTransaction tn = Db.currentTransaction();
-		final List<DbObject> ls = get(thsId).toList();
-		for (final DbObject o : ls) {
-			tn.delete(o);
+		if (dbClsTo.cascadeDelete || !dbClsTo.referingRefN.isEmpty()
+				|| (Db.enable_update_referring_tables && !dbClsTo.referingRef.isEmpty())) {
+			final List<DbObject> ls = get(thsId).toList();
+			for (final DbObject o : ls) {
+				tn.delete(o);
+			}
+			return;
 		}
+
+		// cascade not needed
+		
+		tn.flush(); // flush dirty objects
+
+		final StringBuilder sb = new StringBuilder(128);
+		sb.append("delete from ").append(dbClsTo.tableName).append(" where ").append(relFld.name).append("=")
+				.append(thsId);
+
+		if (!Db.cluster_on) {
+			tn.execSql(sb);
+		} else {
+			Db.execClusterSql(sb.toString());
+		}
+
+//		final DbTransaction tn = Db.currentTransaction();
+//		final List<DbObject> ls = get(thsId).toList();
+//		for (final DbObject o : ls) {
+//			tn.delete(o);
+//		}
 	}
 }
