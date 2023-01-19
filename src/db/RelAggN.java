@@ -22,9 +22,7 @@ public final class RelAggN extends DbRelation {
 		ix.cls = toCls;
 		ix.name = relFld.name;
 		ix.tableName = relFld.tableName;
-
-		final DbClass dbc = Db.getDbClassForJavaClass(toCls);
-		dbc.allIndexes.add(ix);
+		toDbCls.allIndexes.add(ix);
 	}
 
 	/** @param thsId source object id. */
