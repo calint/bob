@@ -11,7 +11,7 @@ import java.util.List;
 
 /** Transaction used to create, get, count and delete objects. */
 public final class DbTransaction {
-	final PooledConnection pooledCon;
+	final PooledConnection pooledCon; // ? circular reference ok?
 	final Connection con;
 	final Statement stmt;
 	final HashSet<DbObject> dirtyObjects = new HashSet<DbObject>();
