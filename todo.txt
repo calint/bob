@@ -102,6 +102,7 @@
 [ ] howto for google cloud
 -------------------------------------------------------------------------------
 dbo
+[ ] DbObject fields in an list with DbField holding an index in the list instead of a map of values.
 [x] RelRefN: removeAll
 [x]   update jem
 [x] RelAggN: deleteAll
