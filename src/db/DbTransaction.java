@@ -399,8 +399,9 @@ public final class DbTransaction {
 	public void rollback() {
 //		Db.log("*** rollback transaction");
 		rollbacked = true;
-//		if (cache_enabled)
-//			cache.clear();
+		if (cache_enabled) {
+			cache.clear();
+		}
 		if (Db.cluster_on || Db.autocommit)
 			return;
 		try {

@@ -25,16 +25,17 @@ public final class RelAgg extends DbRelation {
 	}
 
 	public DbObject get(final DbObject ths, final boolean createIfNone) {
+		final DbTransaction tn = Db.currentTransaction();
 		final int id = getId(ths);
 		if (id == 0) {
 			if (createIfNone) {
-				final DbObject o = Db.currentTransaction().create(toCls);
+				final DbObject o = tn.create(toCls);
 				ths.set(relFld, o.id());
 				return o;
 			}
 			return null;
 		}
-		return Db.currentTransaction().get(toCls, id);
+		return tn.get(toCls, id);
 	}
 
 	public void delete(final DbObject ths) {
@@ -68,6 +69,8 @@ public final class RelAgg extends DbRelation {
 			Db.execClusterSql(sb.toString());
 		}
 
-		tn.cache.remove(toCls, toId);
+		if (tn.cache_enabled) {
+			tn.cache.remove(toCls, toId);
+		}
 	}
 }
