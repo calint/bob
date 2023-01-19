@@ -168,7 +168,6 @@ public final class Db {
 	 * returned to the pool.
 	 */
 	public static void deinitCurrentTransaction() { // ? so ugly
-//		Db.log("dbo: deinit transaction on "+Thread.currentThread());
 		final DbTransaction tx = tn.get();
 		if (tx == null) // ? return instead of exception?
 			throw new RuntimeException("transaction not initiated on this thread.");
@@ -181,24 +180,12 @@ public final class Db {
 				log(t);
 			}
 		}
-		try {
-			tx.stmt.close();
-		} catch (final Throwable t) {
-			connection_is_ok = false;
-			log(t);
-		}
-
-		// make sure statement is closed here. should be. // ? stmt.isClosed() is not in
-		// java 1.5
-//		final boolean stmtIsClosed;
 //		try {
-//			stmtIsClosed = t.stmt.isClosed();
-//		} catch (Throwable e) {
-//			throw new RuntimeException(e);
+//			tx.stmt.close(); // ? what happens when transaction is recycled?
+//		} catch (final Throwable t) {
+//			connection_is_ok = false;
+//			log(t);
 //		}
-//		if (!stmtIsClosed)
-//			throw new RuntimeException(
-//					"Statement should be closed here. DbTransaction.finishTransaction() not called?");
 		tn.remove();
 		if (connection_is_ok) {
 			synchronized (conpool) {

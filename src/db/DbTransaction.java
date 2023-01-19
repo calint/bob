@@ -397,7 +397,6 @@ public final class DbTransaction {
 	}
 
 	public void rollback() {
-//		Db.log("*** rollback transaction");
 		rollbacked = true;
 		if (cache_enabled) {
 			cache.clear();
@@ -406,25 +405,23 @@ public final class DbTransaction {
 			return;
 		try {
 			con.rollback();
-//			Db.log("*** rollback done");
 		} catch (final Throwable t) {
 			throw new RuntimeException(t);// ? this can be ignored?
 		}
 	}
 
-	/** called when done with the transaction */
-	public void finishTransaction() throws Throwable {
-		if (!rollbacked) {
-			commit();
-		}
-		stmt.close();
-	}
+//	/** called when done with the transaction */
+//	public void finishTransaction() throws Throwable {
+//		if (!rollbacked) {
+//			commit();
+//		}
+//		stmt.close();
+//	}
 
 	/** writes changed objects to database */
-	public void flush() { // ? public?
+	public void flush() {
 		if (dirtyObjects.isEmpty())
 			return;
-//		Db.log("*** flushing " + dirtyObjects.size() + " objects");
 		try {
 			for (final DbObject o : dirtyObjects) {
 				updateDbFromDbObject(o);
@@ -434,7 +431,6 @@ public final class DbTransaction {
 		}
 
 		dirtyObjects.clear();
-//		Db.log("*** done flushing");
 	}
 
 	private void updateDbFromDbObject(final DbObject o) throws Throwable {
