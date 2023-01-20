@@ -28,7 +28,7 @@ public abstract class DbField {
 	 */
 	final protected boolean isStringType;
 
-	/** Index in the data list of object. */
+	/** Index in the data array of object. */
 	protected int slotNbr;
 
 	/**
