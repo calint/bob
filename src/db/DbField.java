@@ -138,7 +138,7 @@ public abstract class DbField {
 	}
 
 	/**
-	 * The field puts default value in the map. Called by {@link DbTransaction} at
+	 * The field sets default value in the array. Called by {@link DbTransaction} at
 	 * object creation.
 	 */
 	protected void setDefaultValue(final Object[] values) {
