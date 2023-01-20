@@ -16,10 +16,8 @@ public class FldDateTime extends DbField {
 	}
 
 	@Override
-	protected void setDefaultValue(final Object[] values) {
-		if (defval == null)
-			return;
-		values[slotNbr] = defval;
+	protected Object getDefaultValue() {
+		return defval;
 	}
 
 }

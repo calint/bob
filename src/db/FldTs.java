@@ -16,10 +16,8 @@ public final class FldTs extends DbField {
 	}
 
 	@Override
-	protected void setDefaultValue(final Object[] values) {
-		if (defval == null)
-			return;
-		values[slotNbr] = defval;
+	protected Object getDefaultValue() {
+		return defval;
 	}
 
 	// java.sql.Timestamp adds .0 at the end. mysql default value does not.

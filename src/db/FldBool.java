@@ -19,7 +19,7 @@ public final class FldBool extends DbField {
 	}
 
 	@Override
-	protected void setDefaultValue(final Object[] values) {
-		values[slotNbr] = defval;
+	protected Object getDefaultValue() {
+		return defval ? Boolean.TRUE : Boolean.FALSE;
 	}
 }

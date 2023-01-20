@@ -2,7 +2,7 @@ package db;
 
 /** Integer field. */
 public final class FldInt extends DbField {
-	final private int defval;
+	final private Integer defval;
 
 	public FldInt(final int def) {
 		super("int", 0, Integer.toString(def), false, false);
@@ -14,7 +14,7 @@ public final class FldInt extends DbField {
 	}
 
 	@Override
-	protected void setDefaultValue(final Object[] values) {
-		values[slotNbr] = defval;
+	protected Object getDefaultValue() {
+		return defval;
 	}
 }

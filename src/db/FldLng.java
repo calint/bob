@@ -2,7 +2,7 @@ package db;
 
 /** Long field. */
 public final class FldLng extends DbField {
-	final private long defval;
+	final private Long defval;
 
 	public FldLng(final long def) {
 		super("bigint", 0, Long.toString(def), false, false);
@@ -14,7 +14,7 @@ public final class FldLng extends DbField {
 	}
 
 	@Override
-	protected void setDefaultValue(final Object[] values) {
-		values[slotNbr] = defval;
+	protected Object getDefaultValue() {
+		return defval;
 	}
 }

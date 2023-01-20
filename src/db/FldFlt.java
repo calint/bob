@@ -2,7 +2,7 @@ package db;
 
 /** Float field. */
 public final class FldFlt extends DbField {
-	private final float defval;
+	private final Float defval;
 
 	public FldFlt(final float def) {
 		super("float", 0, defValToStr(def), false, false);
@@ -14,8 +14,8 @@ public final class FldFlt extends DbField {
 	}
 
 	@Override
-	protected void setDefaultValue(final Object[] values) {
-		values[slotNbr] = defval;
+	protected Object getDefaultValue() {
+		return defval;
 	}
 
 	// mysql default values returns no decimals if none necessary

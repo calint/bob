@@ -1,7 +1,7 @@
 [ ] b: fix for client that makes many threaded requests and then stalls them to starve server of threads or create too many. ddos.
 [ ]   slowhttptest
 [x] DbObject fields in an list with DbField holding an index in the list instead of a map of values.
-[ ] DbField.getDefaultValue()->Object instead of .setDefaultValue(Object[])
+[x] DbField.getDefaultValue()->Object instead of .setDefaultValue(Object[])
 [x] db: tn.delete(Class,id) taking into account if a dbobject needs cascading delete. needs instance of object thus convenience only.
 [x] db: RelAggN and RelAgg must delete through transaction to keep cache and dirty objects in sync.
 [x]   flush transaction prior to delete and check referring classes.

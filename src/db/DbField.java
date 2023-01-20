@@ -35,7 +35,7 @@ public abstract class DbField {
 	 * @param sqlType      the SQL type as returned by TYPE_NAME
 	 *                     {@link DatabaseMetaData}.getColumns(...).
 	 * @param size         where applicable (varchar, char) otherwise 0.
-	 * @param sqlDefVal       default value as returned by COLUMN_DEF from
+	 * @param sqlDefVal    default value as returned by COLUMN_DEF from
 	 *                     {@link DatabaseMetaData}.getColumns(...).
 	 * @param allowsNull   true if null is allowed.
 	 * @param isStringType true if default value is to be enclosed by quotes and
@@ -142,10 +142,13 @@ public abstract class DbField {
 	}
 
 	/**
-	 * The field sets default value in the array. Called by {@link DbTransaction} at
-	 * object creation.
+	 * Called by {@link DbTransaction} at object creation.
+	 * 
+	 * @return default value as an object of type returned by {@link ResultSet}
+	 *         getObject(int).
 	 */
-	protected void setDefaultValue(final Object[] values) {
+	protected Object getDefaultValue() {
+		return null;
 	}
 
 	@Override

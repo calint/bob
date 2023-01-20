@@ -8,11 +8,8 @@ public final class FldChars extends DbField {
 	}
 
 	@Override
-	protected void setDefaultValue(final Object[] values) {
-		final String def = getSqlDefaultValue();
-		if (def == null)
-			return;
-		values[slotNbr] = def;
+	protected Object getDefaultValue() {
+		return sqlDefVal;
 	}
 
 }

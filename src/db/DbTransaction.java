@@ -75,6 +75,11 @@ public final class DbTransaction {
 			final DbObject o = cls.getConstructor().newInstance();
 			final DbClass dbcls = Db.dbClassForJavaClass(cls);
 			o.fieldValues = new Object[dbcls.allFields.size()];
+			
+			// set default values
+			for (final DbField f : dbcls.allFields) {
+				o.fieldValues[f.slotNbr] = f.getDefaultValue();
+			}
 
 			final StringBuilder sb = new StringBuilder(256);
 			sb.append("insert into ").append(Db.tableNameForJavaClass(cls)).append(" values()");
@@ -92,11 +97,6 @@ public final class DbTransaction {
 			} else {
 				final int id = Db.execClusterSqlInsert(sql);
 				o.fieldValues[DbObject.id.slotNbr] = id;
-			}
-
-			// init default values
-			for (final DbField f : dbcls.allFields) {
-				f.setDefaultValue(o.fieldValues);
 			}
 
 			if (cache_enabled) {

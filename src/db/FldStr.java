@@ -27,9 +27,7 @@ public final class FldStr extends DbField {
 	}
 
 	@Override
-	protected void setDefaultValue(final Object[] values) {
-		if (sqlDefVal == null)
-			return;
-		values[slotNbr] = sqlDefVal;
+	protected Object getDefaultValue() {
+		return sqlDefVal;
 	}
 }
