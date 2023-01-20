@@ -1,7 +1,6 @@
 package db;
 
 import java.sql.Timestamp;
-import java.util.Map;
 
 /** Date time field. */
 public class FldDateTime extends DbField {
@@ -17,11 +16,10 @@ public class FldDateTime extends DbField {
 	}
 
 	@Override
-	protected void putDefaultValue(final Map<DbField, Object> kvm) {
+	protected void setDefaultValue(final Object[] values) {
 		if (defval == null)
 			return;
-
-		kvm.put(this, defval);
+		values[slotNbr] = defval;
 	}
 
 }

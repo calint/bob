@@ -100,6 +100,15 @@ public final class DbClass {
 		lsix.addAll(dbcls.declaredIndexes);
 	}
 
+	void initDbFields() {
+		int i = 0;
+		for (final DbField f : allFields) {
+			f.slotNbr = i;
+			i++;
+		}
+
+	}
+
 	/** called by Db at init. check and create if necessary */
 	void ensureTable(final Statement stmt, final DatabaseMetaData dbm) throws Throwable {
 		final ResultSet rs = dbm.getTables(null, null, tableName, new String[] { "TABLE" });

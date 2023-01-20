@@ -18,7 +18,7 @@ public final class RelAgg extends DbRelation {
 
 	/** @returns 0 if id is null */
 	public int getId(final DbObject ths) {
-		final Object objId = ths.fieldValues.get(relFld);
+		final Object objId = ths.fieldValues[relFld.slotNbr];
 		if (objId == null)
 			return 0;
 		return (Integer) objId;

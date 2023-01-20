@@ -1,7 +1,6 @@
 package db;
 
 import java.sql.DatabaseMetaData;
-import java.util.Map;
 
 /** Abstract field. */
 public abstract class DbField {
@@ -28,6 +27,9 @@ public abstract class DbField {
 	 * definition and update.
 	 */
 	final protected boolean isStringType;
+
+	/** Index in the data list of object. */
+	protected int slotNbr;
 
 	/**
 	 * @param sqlType      the SQL type as returned by TYPE_NAME
@@ -139,7 +141,7 @@ public abstract class DbField {
 	 * The field puts default value in the map. Called by {@link DbTransaction} at
 	 * object creation.
 	 */
-	protected void putDefaultValue(final Map<DbField, Object> kvm) {
+	protected void setDefaultValue(final Object[] values) {
 	}
 
 	@Override

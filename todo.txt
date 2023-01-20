@@ -1,3 +1,4 @@
+[x] DbObject fields in an list with DbField holding an index in the list instead of a map of values.
 [ ] b: fix for client that makes many threaded requests and then stalls them to starve server of threads or create too many. ddos.
 [ ]   slowhttptest
 [x] db: tn.delete(Class,id) taking into account if a dbobject needs cascading delete. needs instance of object thus convenience only.
@@ -102,7 +103,6 @@
 [ ] howto for google cloud
 -------------------------------------------------------------------------------
 dbo
-[ ] DbObject fields in an list with DbField holding an index in the list instead of a map of values.
 [x] RelRefN: removeAll
 [x]   update jem
 [x] RelAggN: deleteAll

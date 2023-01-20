@@ -1,7 +1,5 @@
 package db;
 
-import java.util.Map;
-
 /** Float field. */
 public final class FldFlt extends DbField {
 	private final float defval;
@@ -16,8 +14,8 @@ public final class FldFlt extends DbField {
 	}
 
 	@Override
-	protected void putDefaultValue(final Map<DbField, Object> kvm) {
-		kvm.put(this, defval);
+	protected void setDefaultValue(final Object[] values) {
+		values[slotNbr] = defval;
 	}
 
 	// mysql default values returns no decimals if none necessary

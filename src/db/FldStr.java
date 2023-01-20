@@ -1,7 +1,5 @@
 package db;
 
-import java.util.Map;
-
 /** String field. */
 public final class FldStr extends DbField {
 	public final static int MAX_SIZE = 65535; // ? this is mysql specific
@@ -29,10 +27,9 @@ public final class FldStr extends DbField {
 	}
 
 	@Override
-	protected void putDefaultValue(final Map<DbField, Object> kvm) {
+	protected void setDefaultValue(final Object[] values) {
 		if (defVal == null)
 			return;
-
-		kvm.put(this, defVal);
+		values[slotNbr] = defVal;
 	}
 }

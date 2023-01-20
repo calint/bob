@@ -297,6 +297,11 @@ public final class Db {
 			}
 		}
 
+		// initiate DbField indexes in the data list
+		for (final DbClass c : dbclasses) {
+			c.initDbFields();
+		}
+
 		// allow indexes to initiate using fully initiated relations.
 		for (final DbClass c : dbclasses) {
 			for (final Index ix : c.allIndexes) {

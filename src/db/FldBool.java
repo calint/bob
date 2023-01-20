@@ -1,7 +1,5 @@
 package db;
 
-import java.util.Map;
-
 /** Boolean field. */
 public final class FldBool extends DbField {
 	final private boolean defval;
@@ -21,7 +19,7 @@ public final class FldBool extends DbField {
 	}
 
 	@Override
-	protected void putDefaultValue(final Map<DbField, Object> kvm) {
-		kvm.put(this, defval);
+	protected void setDefaultValue(final Object[] values) {
+		values[slotNbr] = defval;
 	}
 }

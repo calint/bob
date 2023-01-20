@@ -1,7 +1,6 @@
 package db;
 
 import java.sql.Timestamp;
-import java.util.Map;
 
 /** Timestamp field. */
 public final class FldTs extends DbField {
@@ -17,11 +16,10 @@ public final class FldTs extends DbField {
 	}
 
 	@Override
-	protected void putDefaultValue(final Map<DbField, Object> kvm) {
+	protected void setDefaultValue(final Object[] values) {
 		if (defval == null)
 			return;
-
-		kvm.put(this, defval);
+		values[slotNbr] = defval;
 	}
 
 	// java.sql.Timestamp adds .0 at the end. mysql default value does not.

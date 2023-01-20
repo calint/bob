@@ -1,14 +1,14 @@
 package db;
 
 import java.sql.Timestamp;
-import java.util.HashMap;
 import java.util.HashSet;
 
 /** Abstract database object. */
 public abstract class DbObject {
 	public final static FldId id = new FldId();
 
-	final HashMap<DbField, Object> fieldValues = new HashMap<DbField, Object>();
+	// final HashMap<DbField, Object> fieldValues = new HashMap<DbField, Object>();
+	Object[] fieldValues;
 	HashSet<DbField> dirtyFields;
 
 	private HashSet<DbField> getCreatedDirtyFields() {
@@ -28,43 +28,43 @@ public abstract class DbObject {
 	}
 
 	final protected String getStr(final DbField field) {
-		return (String) fieldValues.get(field);
+		return (String) fieldValues[field.slotNbr];
 	}
 
 	final protected int getInt(final DbField field) {
-		return (Integer) fieldValues.get(field);
+		return (Integer) fieldValues[field.slotNbr];
 	}
 
 	final protected long getLng(final DbField field) {
-		return (Long) fieldValues.get(field);
+		return (Long) fieldValues[field.slotNbr];
 	}
 
 	final protected float getFlt(final DbField field) {
-		return (Float) fieldValues.get(field);
+		return (Float) fieldValues[field.slotNbr];
 	}
 
 	final protected double getDbl(final DbField field) {
-		return (Double) fieldValues.get(field);
+		return (Double) fieldValues[field.slotNbr];
 	}
 
 	final protected boolean getBool(final DbField field) {
-		return (Boolean) fieldValues.get(field);
+		return (Boolean) fieldValues[field.slotNbr];
 	}
 
 	final protected Timestamp getTs(final DbField field) {
-		return (Timestamp) fieldValues.get(field);
+		return (Timestamp) fieldValues[field.slotNbr];
 	}
 
 	final protected byte[] getBytesArray(final DbField field) {
-		return (byte[]) fieldValues.get(field);
+		return (byte[]) fieldValues[field.slotNbr];
 	}
 
 	final protected Object get(final DbField field) {
-		return fieldValues.get(field);
+		return fieldValues[field.slotNbr];
 	}
 
 	final protected void set(final DbField field, final Object value) {
-		fieldValues.put(field, value);
+		fieldValues[field.slotNbr] = value;
 		getCreatedDirtyFields().add(field);
 		Db.currentTransaction().dirtyObjects.add(this);
 	}
@@ -75,53 +75,53 @@ public abstract class DbObject {
 	 * transformations.
 	 */
 	final protected void put(final DbField field, final Object value) {
-		fieldValues.put(field, value);
+		fieldValues[field.slotNbr] = value;
 	}
 
 	final protected void set(final DbField field, final String value) {
-		fieldValues.put(field, value);
+		fieldValues[field.slotNbr] = value;
 		getCreatedDirtyFields().add(field);
 		Db.currentTransaction().dirtyObjects.add(this);
 	}
 
 	final protected void set(final DbField field, final int value) {
-		fieldValues.put(field, value);
+		fieldValues[field.slotNbr] = value;
 		getCreatedDirtyFields().add(field);
 		Db.currentTransaction().dirtyObjects.add(this);
 	}
 
 	final protected void set(final DbField field, final long value) {
-		fieldValues.put(field, value);
+		fieldValues[field.slotNbr] = value;
 		getCreatedDirtyFields().add(field);
 		Db.currentTransaction().dirtyObjects.add(this);
 	}
 
 	final protected void set(final DbField field, final Timestamp value) {
-		fieldValues.put(field, value);
+		fieldValues[field.slotNbr] = value;
 		getCreatedDirtyFields().add(field);
 		Db.currentTransaction().dirtyObjects.add(this);
 	}
 
 	final protected void set(final DbField field, final byte[] value) {
-		fieldValues.put(field, value);
+		fieldValues[field.slotNbr] = value;
 		getCreatedDirtyFields().add(field);
 		Db.currentTransaction().dirtyObjects.add(this);
 	}
 
 	final protected void set(final DbField field, final float value) {
-		fieldValues.put(field, value);
+		fieldValues[field.slotNbr] = value;
 		getCreatedDirtyFields().add(field);
 		Db.currentTransaction().dirtyObjects.add(this);
 	}
 
 	final protected void set(final DbField field, final double value) {
-		fieldValues.put(field, value);
+		fieldValues[field.slotNbr] = value;
 		getCreatedDirtyFields().add(field);
 		Db.currentTransaction().dirtyObjects.add(this);
 	}
 
 	final protected void set(final DbField field, final boolean value) {
-		fieldValues.put(field, value);
+		fieldValues[field.slotNbr] = value;
 		getCreatedDirtyFields().add(field);
 		Db.currentTransaction().dirtyObjects.add(this);
 	}

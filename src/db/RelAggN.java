@@ -72,7 +72,7 @@ public final class RelAggN extends DbRelation {
 		} else {
 			Db.execClusterSql(sb.toString());
 		}
-		
+
 		if (tn.cache_enabled) {
 			tn.cache.remove(toCls, toId);
 		}
@@ -84,7 +84,7 @@ public final class RelAggN extends DbRelation {
 
 	/** @param thsId source object id. */
 	public void delete(final int thsId, final DbObject o) {
-		if (!o.fieldValues.containsKey(relFld) || o.getInt(relFld) != thsId)
+		if (o.getInt(relFld) != thsId)
 			throw new RuntimeException(cls.getName() + "[" + thsId + "] does not contain " + toCls.getName() + "["
 					+ o.id() + "] in relation '" + name + "'");
 

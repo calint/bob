@@ -1,7 +1,5 @@
 package db;
 
-import java.util.Map;
-
 /** Integer field. */
 public final class FldInt extends DbField {
 	final private int defval;
@@ -16,7 +14,7 @@ public final class FldInt extends DbField {
 	}
 
 	@Override
-	protected void putDefaultValue(final Map<DbField, Object> kvm) {
-		kvm.put(this, defval);
+	protected void setDefaultValue(final Object[] values) {
+		values[slotNbr] = defval;
 	}
 }

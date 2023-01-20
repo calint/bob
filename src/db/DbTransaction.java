@@ -73,6 +73,8 @@ public final class DbTransaction {
 	public DbObject create(final Class<? extends DbObject> cls) {
 		try {
 			final DbObject o = cls.getConstructor().newInstance();
+			final DbClass dbcls = Db.dbClassForJavaClass(cls);
+			o.fieldValues = new Object[dbcls.allFields.size()];
 
 			final StringBuilder sb = new StringBuilder(256);
 			sb.append("insert into ").append(Db.tableNameForJavaClass(cls)).append(" values()");
@@ -85,17 +87,16 @@ public final class DbTransaction {
 				if (!rs.next())
 					throw new RuntimeException("expected generated id");
 				final int id = rs.getInt(1);
-				o.fieldValues.put(DbObject.id, id);
+				o.fieldValues[DbObject.id.slotNbr] = id;
 				rs.close();
 			} else {
 				final int id = Db.execClusterSqlInsert(sql);
-				o.fieldValues.put(DbObject.id, id);
+				o.fieldValues[DbObject.id.slotNbr] = id;
 			}
 
 			// init default values
-			final DbClass dbcls = Db.dbClassForJavaClass(cls);
 			for (final DbField f : dbcls.allFields) {
-				f.putDefaultValue(o.fieldValues);
+				f.setDefaultValue(o.fieldValues);
 			}
 
 			if (cache_enabled) {
@@ -224,6 +225,7 @@ public final class DbTransaction {
 						continue;
 					}
 					final DbObject o = (DbObject) ctor.newInstance();
+					o.fieldValues = new Object[dbcls.allFields.size()];
 					readResultSetToDbObject(o, dbcls, rs, 1);
 					cache.put(o);
 					ls.add(o);
@@ -231,6 +233,7 @@ public final class DbTransaction {
 			} else {
 				while (rs.next()) {
 					final DbObject o = (DbObject) ctor.newInstance();
+					o.fieldValues = new Object[dbcls.allFields.size()];
 					readResultSetToDbObject(o, dbcls, rs, 1);
 					ls.add(o);
 				}
@@ -310,6 +313,7 @@ public final class DbTransaction {
 							continue;
 						}
 						final DbObject o = (DbObject) ctors[i].newInstance();
+						o.fieldValues = new Object[dbclasses[i].allFields.size()];
 						readResultSetToDbObject(o, dbclasses[i], rs, j);
 						objs[i] = o;
 						j += class_field_counts[i]; // jump to next object in result set
@@ -322,6 +326,7 @@ public final class DbTransaction {
 					final DbObject[] objs = new DbObject[n];
 					for (int i = 0, j = 1; i < n; i++) {
 						final DbObject o = (DbObject) ctors[i].newInstance();
+						o.fieldValues = new Object[dbclasses[i].allFields.size()];
 						readResultSetToDbObject(o, dbclasses[i], rs, j);
 						objs[i] = o;
 						j += class_field_counts[i]; // jump to next object in result set
@@ -340,7 +345,7 @@ public final class DbTransaction {
 		int i = offset;
 		for (final DbField f : cls.allFields) {
 			final Object v = rs.getObject(i);
-			o.fieldValues.put(f, v);
+			o.fieldValues[f.slotNbr] = v;
 			i++;
 		}
 	}
