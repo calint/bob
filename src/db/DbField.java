@@ -20,7 +20,7 @@ public abstract class DbField {
 	 * Default value as returned by COLUMN_DEF from
 	 * {@link DatabaseMetaData}.getColumns(...).
 	 */
-	final protected String defVal;
+	final protected String sqlDefVal;
 	final protected boolean allowsNull;
 	/**
 	 * true if default value is to be enclosed by quotes and escaped at column
@@ -35,7 +35,7 @@ public abstract class DbField {
 	 * @param sqlType      the SQL type as returned by TYPE_NAME
 	 *                     {@link DatabaseMetaData}.getColumns(...).
 	 * @param size         where applicable (varchar, char) otherwise 0.
-	 * @param defVal       default value as returned by COLUMN_DEF from
+	 * @param sqlDefVal       default value as returned by COLUMN_DEF from
 	 *                     {@link DatabaseMetaData}.getColumns(...).
 	 * @param allowsNull   true if null is allowed.
 	 * @param isStringType true if default value is to be enclosed by quotes and
@@ -45,7 +45,7 @@ public abstract class DbField {
 			final boolean isStringType) {
 		type = sqlType;
 		this.size = size;
-		defVal = sqlDefVal;
+		this.sqlDefVal = sqlDefVal;
 		this.allowsNull = allowsNull;
 		this.isStringType = isStringType;
 	}
@@ -74,8 +74,12 @@ public abstract class DbField {
 		return name;
 	}
 
-	public final String getDefaultValue() {
-		return defVal;
+	/**
+	 * Default value as returned by COLUMN_DEF from
+	 * {@link DatabaseMetaData}.getColumns(...).
+	 */
+	public final String getSqlDefaultValue() {
+		return sqlDefVal;
 	}
 
 	public final boolean isAllowsNull() {
@@ -99,14 +103,14 @@ public abstract class DbField {
 		if (size != 0) {
 			sb.append("(").append(getSize()).append(")");
 		}
-		if (defVal != null) {
+		if (sqlDefVal != null) {
 			sb.append(" default ");
 			if (isDefaultValueString()) {
 				sb.append('\'');
-				escapeSqlString(sb, defVal);
+				escapeSqlString(sb, sqlDefVal);
 				sb.append('\'');
 			} else {
-				sb.append(defVal);
+				sb.append(sqlDefVal);
 			}
 		}
 		if (!allowsNull) {

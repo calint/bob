@@ -182,10 +182,10 @@ public final class DbClass {
 				size_ok = f.getSize() == c.size;
 			}
 			final boolean defval_ok;
-			if (f.defVal == null && c.column_def == null) {
+			if (f.sqlDefVal == null && c.column_def == null) {
 				defval_ok = true;
 			} else {
-				final String fv = f.defVal;
+				final String fv = f.sqlDefVal;
 				final String cv = c.column_def;
 				defval_ok = fv != null && fv.equals(cv);
 //				if (!defval_ok)
