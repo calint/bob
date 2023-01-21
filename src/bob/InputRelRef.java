@@ -61,12 +61,7 @@ public final class InputRelRef extends a {
 		x.nl();
 	}
 
-	/**
-	 * Callback "select".
-	 *
-	 * @throws IllegalAccessException
-	 * @throws InstantiationException
-	 */
+	/** Callback "select". */
 	public void x_s(final xwriter x, final String param) throws Throwable {
 		final View v = selectViewClass.getConstructor().newInstance();
 		v.setSelectMode(Integer.toString(selectedId), new SelectReceiverSingle() {
