@@ -35,7 +35,11 @@ public final class RelAgg extends DbRelation {
 			}
 			return null;
 		}
-		return tn.get(toCls, id);
+		final DbObject o = tn.get(toCls, id);
+		if (o == null)
+			throw new RuntimeException(ths.getClass().getName() + "[" + ths.id() + "] relation [" + name + "] has id ["
+					+ id + "] but object cannot be found.");
+		return o;
 	}
 
 	public void delete(final DbObject ths) {
