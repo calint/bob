@@ -1,5 +1,6 @@
 [ ] b: fix for client that makes many threaded requests and then stalls them to starve server of threads or create too many. ddos.
 [ ]   slowhttptest
+[ ] db: RelAgg, RelRef how to handle dangling refs. Exception mode in Db settings?
 [x] DbObject fields in an list with DbField holding an index in the list instead of a map of values.
 [x] db: DbField.getValue(DbObject) FldInt.getInt(DbObject)->int etc
 [x]   update jem accessors generator
