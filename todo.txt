@@ -14,7 +14,7 @@
 [ ] BobElem implementing idPath logic from Form and View.
 [-] BobElem: implement Titled.   
 [o] FormDbo with convenience for editing dbobjects
-[ ]   parentId? objectId x/y/z
+[-]   parentId? objectId x/y/z
 [x]     id path List<String> to Form and View? implemented with code smell.
 [-]     path,objectId to Form,View where path encoded x/y/z?
 [ ]     create object in View instead of Form?
