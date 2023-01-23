@@ -1,5 +1,6 @@
 [ ] b: fix for client that makes many threaded requests and then stalls them to starve server of threads or create too many. ddos.
 [ ]   slowhttptest
+[ ] b.user: email, password hash, security bits. b.session: ref user
 [ ] db: RelAgg, RelRef how to handle dangling references. Exception mode in Db settings?
 [ ] bob: InputRelX: use reflection and jem naming conventions instead of accessing relation objects?
 [x] DbObject fields in an list with DbField holding an index in the list instead of a map of values.
@@ -83,7 +84,6 @@
 [x]   trim values
 [ ] ViewTable sort options
 [ ] ViewTable rendered by javascript backed by json?
-[ ] b.user: email, password hash, security bits. b.session: ref user
 [o] ViewTable:
 [x]   infinite scroll instead of paging (?)
 [ ]   when initial page fits the page
