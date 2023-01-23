@@ -16,12 +16,11 @@ public final class FldBlob extends DbField {
 	}
 
 	public void setBlob(final DbObject ths, final byte[] v) {
-		ths.fieldValues[slotNbr] = v;
-		ths.markDirty(this);
+		setObj(ths, v);
 	}
 
 	public byte[] getBlob(final DbObject ths) {
-		return (byte[]) ths.fieldValues[slotNbr];
+		return (byte[]) getObj(ths);
 	}
 
 	public static void appendHexedBytes(final StringBuilder sb, final byte[] bytes) {

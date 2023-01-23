@@ -17,11 +17,11 @@ public abstract class DbObject {
 	}
 
 	/** Alias for getId(). */
-	public int id() {
+	public final int id() {
 		return id.getId(this);
 	}
 
-	public int getId() {
+	public final int getId() {
 		return id.getId(this);
 	}
 
@@ -134,22 +134,22 @@ public abstract class DbObject {
 		return new StringBuilder(getClass().getName()).append(" ").append(fieldValues.toString()).toString();
 	}
 
-	/**
-	 * Puts value v in DbField f in DbObject o. The field is not marked dirty thus
-	 * update will not be triggered. Used for optimizing handling of transformed
-	 * data.
-	 */
-	public static void putFieldValue(final DbObject o, final DbField f, final Object v) {
-		f.putObj(o, v);
-	}
-
-	/** Sets the value v in DbField f in DbObject o. */
-	public static void setFieldValue(final DbObject o, final DbField f, final Object v) {
-		f.setObj(o, v);
-	}
-
-	/** @return the object for field f in DbObject o. */
-	public static Object getFieldValue(final DbObject o, final DbField f) {
-		return f.getObj(o);
-	}
+//	/**
+//	 * Puts value v in DbField f in DbObject o. The field is not marked dirty thus
+//	 * update will not be triggered. Used for optimizing handling of transformed
+//	 * data.
+//	 */
+//	public static void putFieldValue(final DbObject o, final DbField f, final Object v) {
+//		f.putObj(o, v);
+//	}
+//
+//	/** Sets the value v in DbField f in DbObject o. */
+//	public static void setFieldValue(final DbObject o, final DbField f, final Object v) {
+//		f.setObj(o, v);
+//	}
+//
+//	/** @return the object for field f in DbObject o. */
+//	public static Object getFieldValue(final DbObject o, final DbField f) {
+//		return f.getObj(o);
+//	}
 }

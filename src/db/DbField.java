@@ -51,7 +51,7 @@ public abstract class DbField {
 		this.isStringType = isStringType;
 	}
 
-	public Class<? extends DbObject> getDeclaringClass() {
+	public final Class<? extends DbObject> getDeclaringClass() {
 		return cls;
 	}
 
@@ -153,18 +153,18 @@ public abstract class DbField {
 	}
 
 	/** Sets value in object field values and marks field and object dirty. */
-	public void setObj(final DbObject ths, final Object v) {
+	public final void setObj(final DbObject ths, final Object v) {
 		ths.fieldValues[slotNbr] = v;
 		ths.markDirty(this);
 	}
 
 	/** Sets value in object field values withouth marking field or object dirty. */
-	public void putObj(final DbObject ths, final Object v) {
+	public final void putObj(final DbObject ths, final Object v) {
 		ths.fieldValues[slotNbr] = v;
 	}
 
 	/** Gets value from object field values. */
-	public Object getObj(final DbObject ths) {
+	public final Object getObj(final DbObject ths) {
 		return ths.fieldValues[slotNbr];
 	}
 
