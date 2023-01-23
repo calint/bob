@@ -1,5 +1,6 @@
 package bob.app;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,18 +54,18 @@ public final class FormUser extends FormDbo implements FormDbo.CreateObjectAtIni
 	protected void render(final xwriter x) throws Throwable {
 		final User o = (User) getObject();
 		beginForm(x);
-		inputText(x, "Name", o, User.name, "", "medium");
+		inputText(x, "Name", o, User.name, getInitStr(), "medium");
 		focus(x, User.name);
-		inputTextArea(x, "Description", o, User.description, "", "medium");
-		inputText(x, "Password hash", o, User.passhash, "", "medium");
+		inputTextArea(x, "Description", o, User.description, "b", "medium");
+		inputText(x, "Password hash", o, User.passhash, "c", "medium");
 		inputInt(x, "Integer", o, User.nlogins, 1, "nbr");
 		inputLng(x, "Long", o, User.lng, 2, "nbr");
 		inputFlt(x, "Float", o, User.flt, 3.3f, "nbr");
 		inputDbl(x, "Double", o, User.dbl, 4.4, "nbr");
 		inputBool(x, "Boolean", o, User.bool, true);
-		inputTimestamp(x, "Timestamp", o, User.birthTime, null);
-		inputDateTime(x, "Date time", o, User.dateTime, null);
-		inputDate(x, "Date", o, User.date, null);
+		inputTimestamp(x, "Timestamp", o, User.birthTime, Timestamp.valueOf("2023-01-23 20:36:00"));
+		inputDateTime(x, "Date time", o, User.dateTime, Timestamp.valueOf("2023-01-24 09:00:00"));
+		inputDate(x, "Date", o, User.date, Timestamp.valueOf("2023-01-25 00:00:00"));
 		inputAgg(x, "Profile picture", makeExtendedIdPath(o.id()), o, User.profilePic, FormUserProfilePic.class);
 		inputAggN(x, "Files", makeExtendedIdPath(o.id()), o, User.files, FormUserFile.class);
 		endForm(x);
