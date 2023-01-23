@@ -259,7 +259,7 @@ public abstract class FormDbo extends Form {
 
 	final protected void inputBool(final xwriter x, final String label, final DbObject o, final FldBool f,
 			final boolean defaultValue) {
-		final boolean value = o == null ? defaultValue : f.getBool(o);
+		final boolean value = isNewObject() ? defaultValue : f.getBool(o);
 		inputBool(x, label, f.getName(), value, null);
 		dbfields.add(f.getName());
 	}
@@ -274,7 +274,7 @@ public abstract class FormDbo extends Form {
 
 	final protected void inputDate(final xwriter x, final String label, final DbObject o, final FldDateTime f,
 			final Timestamp defaultValue) {
-		final Timestamp value = o == null ? defaultValue : f.getDateTime(o);
+		final Timestamp value = isNewObject() ? defaultValue : f.getDateTime(o);
 		inputDate(x, label, f.getName(), value, null);
 		dbfields.add(f.getName());
 	}
@@ -289,7 +289,7 @@ public abstract class FormDbo extends Form {
 
 	final protected void inputDateTime(final xwriter x, final String label, final DbObject o, final FldDateTime f,
 			final Timestamp defaultValue) {
-		final Timestamp value = o == null ? defaultValue : f.getDateTime(o);
+		final Timestamp value = isNewObject() ? defaultValue : f.getDateTime(o);
 		inputDateTime(x, label, f.getName(), value, null);
 		dbfields.add(f.getName());
 	}
@@ -304,7 +304,7 @@ public abstract class FormDbo extends Form {
 
 	final protected void inputDbl(final xwriter x, final String label, final DbObject o, final FldDbl f,
 			final double defaultValue, final String styleClass) {
-		final double value = o == null ? defaultValue : f.getDbl(o);
+		final double value = isNewObject() ? defaultValue : f.getDbl(o);
 		inputDbl(x, label, f.getName(), value, styleClass);
 		dbfields.add(f.getName());
 	}
@@ -355,7 +355,7 @@ public abstract class FormDbo extends Form {
 
 	final protected void inputFlt(final xwriter x, final String label, final DbObject o, final FldFlt f,
 			final float defaultValue, final String styleClass) {
-		final float value = o == null ? defaultValue : f.getFlt(o);
+		final float value = isNewObject() ? defaultValue : f.getFlt(o);
 		inputFlt(x, label, f.getName(), value, styleClass);
 		dbfields.add(f.getName());
 	}
@@ -370,7 +370,7 @@ public abstract class FormDbo extends Form {
 
 	final protected void inputInt(final xwriter x, final String label, final DbObject o, final FldInt f,
 			final int defaultValue, final String styleClass) {
-		final int value = o == null ? defaultValue : f.getInt(o);
+		final int value = isNewObject() ? defaultValue : f.getInt(o);
 		inputInt(x, label, f.getName(), value, styleClass);
 		dbfields.add(f.getName());
 	}
@@ -385,7 +385,7 @@ public abstract class FormDbo extends Form {
 
 	final protected void inputLng(final xwriter x, final String label, final DbObject o, final FldLng f,
 			final long defaultValue, final String styleClass) {
-		final long value = o == null ? defaultValue : f.getLng(o);
+		final long value = isNewObject() ? defaultValue : f.getLng(o);
 		inputLng(x, label, f.getName(), value, styleClass);
 		dbfields.add(f.getName());
 	}
@@ -476,7 +476,7 @@ public abstract class FormDbo extends Form {
 
 	final protected void inputText(final xwriter x, final String label, final DbObject o, final FldStr f,
 			final String defaultValue, final String styleClass) {
-		final String value = o == null ? defaultValue : f.getStr(o);
+		final String value = isNewObject() ? defaultValue : f.getStr(o);
 		inputText(x, label, f.getName(), value, styleClass);
 		dbfields.add(f.getName());
 	}
@@ -493,7 +493,7 @@ public abstract class FormDbo extends Form {
 
 	final protected void inputTextArea(final xwriter x, final String label, final DbObject o, final FldStr f,
 			final String defaultValue, final String styleClass) {
-		final String value = o == null ? defaultValue : f.getStr(o);
+		final String value = isNewObject() ? defaultValue : f.getStr(o);
 		inputTextArea(x, label, f.getName(), value, styleClass);
 		dbfields.add(f.getName());
 	}
@@ -506,7 +506,7 @@ public abstract class FormDbo extends Form {
 
 	final protected void inputTimestamp(final xwriter x, final String label, final DbObject o, final FldTs f,
 			final Timestamp defaultValue) {
-		final Timestamp value = o == null ? defaultValue : f.getTs(o);
+		final Timestamp value = isNewObject() ? defaultValue : f.getTs(o);
 		inputTimestamp(x, label, f.getName(), value, null);
 		dbfields.add(f.getName());
 	}

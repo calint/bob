@@ -57,11 +57,11 @@ public final class FormUser extends FormDbo implements FormDbo.CreateObjectAtIni
 		focus(x, User.name);
 		inputTextArea(x, "Description", o, User.description, "", "medium");
 		inputText(x, "Password hash", o, User.passhash, "", "medium");
-		inputInt(x, "Integer", o, User.nlogins, 0, "nbr");
-		inputLng(x, "Long", o, User.lng, 0, "nbr");
-		inputFlt(x, "Float", o, User.flt, 0, "nbr");
-		inputDbl(x, "Double", o, User.dbl, 0, "nbr");
-		inputBool(x, "Boolean", o, User.bool, false);
+		inputInt(x, "Integer", o, User.nlogins, 1, "nbr");
+		inputLng(x, "Long", o, User.lng, 2, "nbr");
+		inputFlt(x, "Float", o, User.flt, 3.3f, "nbr");
+		inputDbl(x, "Double", o, User.dbl, 4.4, "nbr");
+		inputBool(x, "Boolean", o, User.bool, true);
 		inputTimestamp(x, "Timestamp", o, User.birthTime, null);
 		inputDateTime(x, "Date time", o, User.dateTime, null);
 		inputDate(x, "Date", o, User.date, null);
