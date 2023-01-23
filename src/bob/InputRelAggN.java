@@ -48,8 +48,9 @@ public final class InputRelAggN extends a {
 			} else {
 				txt = Integer.toString(ro.id());
 			}
-			x.ax(this, "e " + ro.id(), txt);
-			x.spc().ax(this, "d " + ro.id(), "✖").br().nl();
+			final int oid = ro.id();
+			x.ax(this, "e " + oid, txt);
+			x.spc().ax(this, "d " + oid, "✖").br().nl();
 		}
 	}
 
