@@ -30,4 +30,13 @@ public final class FldStr extends DbField {
 	protected Object getDefaultValue() {
 		return sqlDefVal;
 	}
+
+	public void setStr(final DbObject ths, final String v) {
+		setObj(ths, v);
+	}
+
+	public String getStr(final DbObject ths) {
+		return (String) getObj(ths);
+	}
+
 }

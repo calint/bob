@@ -75,7 +75,7 @@ public final class DbTransaction {
 			final DbObject o = cls.getConstructor().newInstance();
 			final DbClass dbcls = Db.dbClassForJavaClass(cls);
 			o.fieldValues = new Object[dbcls.allFields.size()];
-			
+
 			// set default values
 			for (final DbField f : dbcls.allFields) {
 				o.fieldValues[f.slotNbr] = f.getDefaultValue();

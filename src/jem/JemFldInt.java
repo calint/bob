@@ -25,22 +25,12 @@ public final class JemFldInt extends JemFld {
 		final String acc = getAccessorName();
 
 		out.println(HR);
-		out.print("public int get");
-		out.print(acc);
-		out.println("(){");
-		out.print("\t");
-		out.print("return getInt(");
-		out.print(fldName);
-		out.println(");");
+		out.println("public int get" + acc + "(){");
+		out.println("\treturn " + fldName + ".getInt(this);");
 		out.println("}");
 		out.println();
-		out.print("public void set");
-		out.print(acc);
-		out.println("(final int v){");
-		out.print("\t");
-		out.print("set(");
-		out.print(fldName);
-		out.println(",v);");
+		out.println("public void set" + acc + "(final int v){");
+		out.println("\t" + fldName + ".setInt(this,v);");
 		out.println("}");
 		out.println();
 	}

@@ -26,4 +26,13 @@ public final class FldFlt extends DbField {
 		}
 		return s;
 	}
+
+	public void setFlt(final DbObject ths, final float v) {
+		setObj(ths, v);
+	}
+
+	public float getFlt(final DbObject ths) {
+		return (Float) getObj(ths);
+	}
+
 }

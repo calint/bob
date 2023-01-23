@@ -35,7 +35,7 @@ public final class RelRef extends DbRelation {
 	 * @param trgId id of referenced object or 0 to remove.
 	 */
 	public void set(final DbObject ths, final int trgId) {
-		ths.set(relFld, trgId);
+		relFld.setId(ths, trgId);
 	}
 
 //	public void remove(final DbObject ths) {

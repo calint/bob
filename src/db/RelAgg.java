@@ -30,7 +30,7 @@ public final class RelAgg extends DbRelation {
 		if (id == 0) {
 			if (createIfNone) {
 				final DbObject o = tn.create(toCls);
-				ths.set(relFld, o.id());
+				relFld.setId(ths, o.id());
 				return o;
 			}
 			return null;
@@ -40,7 +40,7 @@ public final class RelAgg extends DbRelation {
 
 	public void delete(final DbObject ths) {
 		cascadeDelete(ths);
-		ths.set(relFld, 0);
+		relFld.setId(ths, 0);
 	}
 
 	@Override

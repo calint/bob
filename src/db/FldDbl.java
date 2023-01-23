@@ -26,4 +26,13 @@ public final class FldDbl extends DbField {
 		}
 		return s;
 	}
+
+	public void setDbl(final DbObject ths, final double v) {
+		setObj(ths, v);
+	}
+
+	public double getDbl(final DbObject ths) {
+		return (Double) getObj(ths);
+	}
+
 }

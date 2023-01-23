@@ -13,11 +13,11 @@ public final class session extends DbObject{
 	public final static Index ixSessionId=new Index(sessionId);
 
 	public String session_id(){
-		return getStr(sessionId);
+		return sessionId.getChars(this);
 	}
 
 	public void session_id(final String v){
-		set(sessionId,v);
+		sessionId.setChars(this,v);
 	}
 
 	public sessionobj object(final String path){

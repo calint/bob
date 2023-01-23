@@ -43,83 +43,101 @@ public final class User extends DbObject {
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
 	public String getName() {
-		return getStr(name);
+		return name.getStr(this);
 	}
 
 	public void setName(final String v) {
-		set(name, v);
+		name.setStr(this, v);
 	}
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
 	public String getDescription() {
-		return getStr(description);
+		return description.getStr(this);
 	}
 
 	public void setDescription(final String v) {
-		set(description, v);
+		description.setStr(this, v);
 	}
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
 	public String getPasshash() {
-		return getStr(passhash);
+		return passhash.getStr(this);
 	}
 
 	public void setPasshash(final String v) {
-		set(passhash, v);
+		passhash.setStr(this, v);
 	}
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
 	public int getNlogins() {
-		return getInt(nlogins);
+		return nlogins.getInt(this);
 	}
 
 	public void setNlogins(final int v) {
-		set(nlogins, v);
+		nlogins.setInt(this, v);
 	}
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
 	public long getLng() {
-		return getLng(lng);
+		return lng.getLng(this);
 	}
 
 	public void setLng(final long v) {
-		set(lng, v);
+		lng.setLng(this, v);
 	}
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
 	public float getFlt() {
-		return getFlt(flt);
+		return flt.getFlt(this);
 	}
 
 	public void setFlt(final float v) {
-		set(flt, v);
+		flt.setFlt(this, v);
 	}
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
 	public double getDbl() {
-		return getDbl(dbl);
+		return dbl.getDbl(this);
 	}
 
 	public void setDbl(final double v) {
-		set(dbl, v);
+		dbl.setDbl(this, v);
 	}
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
 	public boolean isBool() {
-		return getBool(bool);
+		return bool.getBool(this);
 	}
 
 	public void setBool(final boolean v) {
-		set(bool, v);
+		bool.setBool(this, v);
 	}
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
 	public Timestamp getBirthTime() {
-		return getTs(birthTime);
+		return birthTime.getTs(this);
 	}
 
 	public void setBirthTime(final Timestamp v) {
-		set(birthTime, v);
+		birthTime.setTs(this, v);
+	}
+
+	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
+	public Timestamp getDate() {
+		return date.getDateTime(this);
+	}
+
+	public void setDate(final Timestamp v) {
+		date.setDateTime(this, v);
+	}
+
+	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
+	public Timestamp getDateTime() {
+		return dateTime.getDateTime(this);
+	}
+
+	public void setDateTime(final Timestamp v) {
+		dateTime.setDateTime(this, v);
 	}
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -

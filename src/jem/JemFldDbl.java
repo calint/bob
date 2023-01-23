@@ -25,22 +25,12 @@ public final class JemFldDbl extends JemFld {
 		final String acc = getAccessorName();
 
 		out.println(HR);
-		out.print("public double get");
-		out.print(acc);
-		out.println("(){");
-		out.print("\t");
-		out.print("return getDbl(");
-		out.print(fldName);
-		out.println(");");
+		out.println("public double get" + acc + "(){");
+		out.println("\treturn " + fldName + ".getDbl(this);");
 		out.println("}");
 		out.println();
-		out.print("public void set");
-		out.print(acc);
-		out.println("(final double v){");
-		out.print("\t");
-		out.print("set(");
-		out.print(fldName);
-		out.println(",v);");
+		out.println("public void set" + acc + "(final double v){");
+		out.println("\t" + fldName + ".setDbl(this,v);");
 		out.println("}");
 		out.println();
 	}

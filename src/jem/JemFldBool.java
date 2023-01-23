@@ -25,22 +25,12 @@ public final class JemFldBool extends JemFld {
 		final String acc = getAccessorName();
 
 		out.println(HR);
-		out.print("public boolean is"); // ? isBool()
-		out.print(acc);
-		out.println("(){");
-		out.print("\t");
-		out.print("return getBool(");
-		out.print(fldName);
-		out.println(");");
+		out.println("public boolean is" + acc + "(){");
+		out.println("\treturn " + fldName + ".getBool(this);");
 		out.println("}");
 		out.println();
-		out.print("public void set");
-		out.print(acc);
-		out.println("(final boolean v){");
-		out.print("\t");
-		out.print("set(");
-		out.print(fldName);
-		out.println(",v);");
+		out.println("public void set" + acc + "(final boolean v){");
+		out.println("\t" + fldName + ".setBool(this,v);");
 		out.println("}");
 		out.println();
 	}

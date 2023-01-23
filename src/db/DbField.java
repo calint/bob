@@ -1,6 +1,7 @@
 package db;
 
 import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
 
 /** Abstract field. */
 public abstract class DbField {
@@ -123,7 +124,7 @@ public abstract class DbField {
 	 * {@link DbTransaction} at update database from object.
 	 */
 	protected void sql_updateValue(final StringBuilder sb, final DbObject o) {
-		final Object v = o.get(this);
+		final Object v = getObj(o);
 		if (v == null) {
 			sb.append("null");
 			return;
@@ -143,12 +144,28 @@ public abstract class DbField {
 
 	/**
 	 * Called by {@link DbTransaction} at object creation.
-	 * 
+	 *
 	 * @return default value as an object of type returned by {@link ResultSet}
 	 *         getObject(int).
 	 */
 	protected Object getDefaultValue() {
 		return null;
+	}
+
+	/** Sets value in object field values and marks field and object dirty. */
+	public void setObj(final DbObject ths, final Object v) {
+		ths.fieldValues[slotNbr] = v;
+		ths.markDirty(this);
+	}
+
+	/** Sets value in object field values withouth marking field or object dirty. */
+	public void putObj(final DbObject ths, final Object v) {
+		ths.fieldValues[slotNbr] = v;
+	}
+
+	/** Gets value from object field values. */
+	public Object getObj(final DbObject ths) {
+		return ths.fieldValues[slotNbr];
 	}
 
 	@Override

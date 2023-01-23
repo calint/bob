@@ -24,22 +24,12 @@ public final class JemFldClob extends JemFld {
 		final String acc = getAccessorName();
 
 		out.println(HR);
-		out.print("public String get");
-		out.print(acc);
-		out.println("(){");
-		out.print("\t");
-		out.print("return getStr(");
-		out.print(fldName);
-		out.println(");");
+		out.println("public String get" + acc + "(){");
+		out.println("\treturn " + fldName + ".getClob(this);");
 		out.println("}");
 		out.println();
-		out.print("public void set");
-		out.print(acc);
-		out.println("(final String v){");
-		out.print("\t");
-		out.print("set(");
-		out.print(fldName);
-		out.println(",v);");
+		out.println("public void set" + acc + "(final String v){");
+		out.println("\t" + fldName + ".setClob(this,v);");
 		out.println("}");
 		out.println();
 	}

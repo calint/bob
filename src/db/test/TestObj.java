@@ -18,7 +18,7 @@ public final class TestObj extends DbObject {
 
 	@SuppressWarnings("unchecked")
 	public List<String> getList() {
-		final Object v = get(list);
+		final Object v = list.getObj(this);
 		if (v == null)
 			return null;
 
@@ -26,12 +26,12 @@ public final class TestObj extends DbObject {
 			return (List<String>) v;
 
 		// convert from sql representation
-		final byte[] ba = getBytesArray(list);
+		final byte[] ba = (byte[]) list.getObj(this);
 		try {
 			final ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(ba));
 			final List<String> ls = (List<String>) ois.readObject();
 			ois.close();
-			put(list, ls); // put without marking field dirty
+			list.putObj(this, ls); // put without marking field dirty
 			return ls;
 		} catch (final Throwable t) {
 			throw new RuntimeException(t);
@@ -39,32 +39,32 @@ public final class TestObj extends DbObject {
 	}
 
 	public void setList(final List<String> v) {
-		set(list, v);
+		list.setObj(this, v);
 	}
 
 	public String getMd5() {
-		return getStr(md5);
+		return md5.getChars(this);
 	}
 
 	public void setMd5(final String v) {
-		set(md5, v);
+		md5.setChars(this, v);
 	}
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
 	public String getSubject() {
-		return getStr(subject);
+		return subject.getStr(this);
 	}
 
 	public void setSubject(final String v) {
-		set(subject, v);
+		subject.setStr(this, v);
 	}
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
 	public Timestamp getDateTime() {
-		return getTs(dateTime);
+		return dateTime.getDateTime(this);
 	}
 
 	public void setDateTime(final Timestamp v) {
-		set(dateTime, v);
+		dateTime.setDateTime(this, v);
 	}
 }

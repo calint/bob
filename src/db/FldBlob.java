@@ -9,10 +9,19 @@ public final class FldBlob extends DbField {
 	@Override
 	protected void sql_updateValue(final StringBuilder sb, final DbObject o) {
 		sb.append("0x");
-		final byte[] data = o.getBytesArray(this);
+		final byte[] data = getBlob(o);
 		final int cap = sb.length() + data.length * 2;
 		sb.ensureCapacity(cap);
 		appendHexedBytes(sb, data);
+	}
+
+	public void setBlob(final DbObject ths, final byte[] v) {
+		ths.fieldValues[slotNbr] = v;
+		ths.markDirty(this);
+	}
+
+	public byte[] getBlob(final DbObject ths) {
+		return (byte[]) ths.fieldValues[slotNbr];
 	}
 
 	public static void appendHexedBytes(final StringBuilder sb, final byte[] bytes) {

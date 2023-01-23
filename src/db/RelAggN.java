@@ -28,7 +28,7 @@ public final class RelAggN extends DbRelation {
 	/** @param thsId source object id. */
 	public DbObject create(final int thsId) {
 		final DbObject o = Db.currentTransaction().create(toCls);
-		o.set(relFld, thsId);
+		relFld.setId(o, thsId);
 		return o;
 	}
 
@@ -84,7 +84,7 @@ public final class RelAggN extends DbRelation {
 
 	/** @param thsId source object id. */
 	public void delete(final int thsId, final DbObject o) {
-		if (o.getInt(relFld) != thsId)
+		if (relFld.getId(o) != thsId)
 			throw new RuntimeException(cls.getName() + "[" + thsId + "] does not contain " + toCls.getName() + "["
 					+ o.id() + "] in relation '" + name + "'");
 

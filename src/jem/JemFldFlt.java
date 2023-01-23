@@ -25,22 +25,12 @@ public final class JemFldFlt extends JemFld {
 		final String acc = getAccessorName();
 
 		out.println(HR);
-		out.print("public float get");
-		out.print(acc);
-		out.println("(){");
-		out.print("\t");
-		out.print("return getFlt(");
-		out.print(fldName);
-		out.println(");");
+		out.println("public float get" + acc + "(){");
+		out.println("\treturn " + fldName + ".getFlt(this);");
 		out.println("}");
 		out.println();
-		out.print("public void set");
-		out.print(acc);
-		out.println("(final float v){");
-		out.print("\t");
-		out.print("set(");
-		out.print(fldName);
-		out.println(",v);");
+		out.println("public void set" + acc + "(final float v){");
+		out.println("\t" + fldName + ".setFlt(this,v);");
 		out.println("}");
 		out.println();
 	}

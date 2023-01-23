@@ -8,10 +8,10 @@ public final class DataBinary extends DbObject {
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
 	public byte[] getData() {
-		return getBytesArray(data);
+		return data.getBlob(this);
 	}
 
 	public void setData(final byte[] v) {
-		set(data, v);
+		data.setBlob(this, v);
 	}
 }

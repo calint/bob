@@ -14,10 +14,10 @@ public final class Category extends DbObject implements Titled {
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
 	public String getName() {
-		return getStr(name);
+		return name.getStr(this);
 	}
 
 	public void setName(final String v) {
-		set(name, v);
+		name.setStr(this, v);
 	}
 }

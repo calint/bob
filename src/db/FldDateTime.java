@@ -20,4 +20,12 @@ public class FldDateTime extends DbField {
 		return defval;
 	}
 
+	public void setDateTime(final DbObject ths, final Timestamp v) {
+		setObj(ths, v);
+	}
+
+	public Timestamp getDateTime(final DbObject ths) {
+		return (Timestamp) getObj(ths);
+	}
+
 }

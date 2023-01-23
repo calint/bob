@@ -25,7 +25,7 @@ public final class File extends DbObject implements Titled {
 		if (!f.exists())
 			throw new RuntimeException("file '" + path + "' not found");
 		final long len = f.length();
-		setSizeB(len);
+		setSize_B(len);
 		// note does not handle files bigger than 4G
 		final byte[] ba = new byte[(int) len];
 		final FileInputStream fis = new FileInputStream(f);
@@ -52,32 +52,36 @@ public final class File extends DbObject implements Titled {
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
 	public String getName() {
-		return getStr(name);
+		return name.getStr(this);
 	}
 
 	public void setName(final String v) {
-		set(name, v);
+		name.setStr(this, v);
 	}
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
-	public long getSizeB() {
-		return getLng(size_B);
+	public long getSize_B() {
+		return size_B.getLng(this);
 	}
 
-	public void setSizeB(final long v) {
-		set(size_B, v);
-	}
-
-	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
-	public Timestamp getCreatedTs() {
-		return getTs(created_ts);
-	}
-
-	public void setCreatedTs(final Timestamp v) {
-		set(created_ts, v);
+	public void setSize_B(final long v) {
+		size_B.setLng(this, v);
 	}
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
+	public Timestamp getCreated_ts() {
+		return created_ts.getTs(this);
+	}
+
+	public void setCreated_ts(final Timestamp v) {
+		created_ts.setTs(this, v);
+	}
+
+	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
+	public int getDataId() {
+		return data.getId(this);
+	}
+
 	public DataBinary getData(final boolean createIfNone) {
 		return (DataBinary) data.get(this, createIfNone);
 	}
@@ -85,5 +89,4 @@ public final class File extends DbObject implements Titled {
 	public void deleteData() {
 		data.delete(this);
 	}
-
 }

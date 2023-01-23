@@ -38,74 +38,74 @@ public final class Book extends DbObject implements Titled {
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
 	public String getName() {
-		return getStr(name);
+		return name.getStr(this);
 	}
 
 	public void setName(final String v) {
-		set(name, v);
+		name.setStr(this, v);
 	}
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
 	public String getAuthorsStr() {
-		return getStr(authorsStr);
+		return authorsStr.getStr(this);
 	}
 
 	public void setAuthorsStr(final String v) {
-		set(authorsStr, v);
+		authorsStr.setStr(this, v);
 	}
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
 	public String getPublisherStr() {
-		return getStr(publisherStr);
+		return publisherStr.getStr(this);
 	}
 
 	public void setPublisherStr(final String v) {
-		set(publisherStr, v);
+		publisherStr.setStr(this, v);
 	}
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
 	public Timestamp getPublishedDate() {
-		return getTs(publishedDate);
+		return publishedDate.getDateTime(this);
 	}
 
 	public void setPublishedDate(final Timestamp v) {
-		set(publishedDate, v);
+		publishedDate.setDateTime(this, v);
 	}
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
 	public String getCategoriesStr() {
-		return getStr(categoriesStr);
+		return categoriesStr.getStr(this);
 	}
 
 	public void setCategoriesStr(final String v) {
-		set(categoriesStr, v);
+		categoriesStr.setStr(this, v);
 	}
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
 	public int getInStock() {
-		return getInt(inStock);
+		return inStock.getInt(this);
 	}
 
 	public void setInStock(final int v) {
-		set(inStock, v);
+		inStock.setInt(this, v);
 	}
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
 	public boolean isShowInStore() {
-		return getBool(showInStore);
+		return showInStore.getBool(this);
 	}
 
 	public void setShowInStore(final boolean v) {
-		set(showInStore, v);
+		showInStore.setBool(this, v);
 	}
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
 	public float getRating() {
-		return getFlt(rating);
+		return rating.getFlt(this);
 	}
 
 	public void setRating(final float v) {
-		set(rating, v);
+		rating.setFlt(this, v);
 	}
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
@@ -127,6 +127,10 @@ public final class Book extends DbObject implements Titled {
 
 	public void removeAuthor(final Author o) {
 		authors.remove(this, o.id());
+	}
+
+	public void removeAllAuthors() {
+		authors.removeAll(this);
 	}
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
@@ -178,5 +182,9 @@ public final class Book extends DbObject implements Titled {
 
 	public void removeCategory(final Category o) {
 		categories.remove(this, o.id());
+	}
+
+	public void removeAllCategories() {
+		categories.removeAll(this);
 	}
 }

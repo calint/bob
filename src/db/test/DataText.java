@@ -12,19 +12,19 @@ public final class DataText extends DbObject {
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
 	public String getMeta() {
-		return getStr(meta);
+		return meta.getClob(this);
 	}
 
 	public void setMeta(final String v) {
-		set(meta, v);
+		meta.setClob(this, v);
 	}
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
 	public String getData() {
-		return getStr(data);
+		return data.getClob(this);
 	}
 
 	public void setData(final String v) {
-		set(data, v);
+		data.setClob(this, v);
 	}
 }

@@ -25,22 +25,12 @@ public final class JemFldLng extends JemFld {
 		final String acc = getAccessorName();
 
 		out.println(HR);
-		out.print("public long get");
-		out.print(acc);
-		out.println("(){");
-		out.print("\t");
-		out.print("return getLng(");
-		out.print(fldName);
-		out.println(");");
+		out.println("public long get" + acc + "(){");
+		out.println("\treturn " + fldName + ".getLng(this);");
 		out.println("}");
 		out.println();
-		out.print("public void set");
-		out.print(acc);
-		out.println("(final long v){");
-		out.print("\t");
-		out.print("set(");
-		out.print(fldName);
-		out.println(",v);");
+		out.println("public void set" + acc + "(final long v){");
+		out.println("\t" + fldName + ".setLng(this,v);");
 		out.println("}");
 		out.println();
 	}

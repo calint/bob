@@ -24,22 +24,12 @@ public final class JemFldBlob extends JemFld {
 		final String acc = getAccessorName();
 
 		out.println(HR);
-		out.print("public byte[]get");
-		out.print(acc);
-		out.println("(){");
-		out.print("\t");
-		out.print("return getBytesArray(");
-		out.print(fldName);
-		out.println(");");
+		out.println("public byte[]get" + acc + "(){");
+		out.println("\treturn " + fldName + ".getBlob(this);");
 		out.println("}");
 		out.println();
-		out.print("public void set");
-		out.print(acc);
-		out.println("(final byte[]v){");
-		out.print("\t");
-		out.print("set(");
-		out.print(fldName);
-		out.println(",v);");
+		out.println("public void set" + acc + "(final byte[]v){");
+		out.println("\t" + fldName + ".setBlob(this,v);");
 		out.println("}");
 		out.println();
 	}

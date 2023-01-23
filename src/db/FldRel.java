@@ -8,11 +8,19 @@ final class FldRel extends DbField {
 
 	@Override
 	protected void sql_updateValue(final StringBuilder sb, final DbObject o) {
-		final int id = o.getInt(this);
+		final int id = getId(o);
 		if (id == 0) {
 			sb.append("null");
 			return;
 		}
 		sb.append(id);
+	}
+
+	public void setId(final DbObject ths, final int v) {
+		setObj(ths, v);
+	}
+
+	public int getId(final DbObject ths) {
+		return (Integer) getObj(ths);
 	}
 }

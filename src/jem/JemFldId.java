@@ -24,17 +24,14 @@ public final class JemFldId extends JemFld {
 		final String acc = getAccessorName();
 
 		out.println(HR);
-		out.print("public int id");
-		out.println("(){");
-		out.print("\treturn getInt(");
-		out.print(fldName);
-		out.println(");");
+		out.println("public int id(){");
+		out.println("\treturn " + fldName + ".getId(this);");
 		out.println("}");
 		out.println();
-		out.print("public int get");
-		out.print(acc);
-		out.println("(){");
-		out.println("\treturn id();");
+		out.println("public int get" + acc + "(){");
+		out.println("\treturn " + fldName + ".getId(this);");
 		out.println("}");
+		out.println();
+
 	}
 }

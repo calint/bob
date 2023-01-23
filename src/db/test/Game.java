@@ -9,20 +9,20 @@ public final class Game extends DbObject {
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
 	public String getName() {
-		return getStr(name);
+		return name.getStr(this);
 	}
 
 	public void setName(final String v) {
-		set(name, v);
+		name.setStr(this, v);
 	}
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
 	public String getDescription() {
-		return getStr(description);
+		return description.getStr(this);
 	}
 
 	public void setDescription(final String v) {
-		set(description, v);
+		description.setStr(this, v);
 	}
 
 }

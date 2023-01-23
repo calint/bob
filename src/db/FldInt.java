@@ -17,4 +17,12 @@ public final class FldInt extends DbField {
 	protected Object getDefaultValue() {
 		return defval;
 	}
+
+	public void setInt(final DbObject ths, final int v) {
+		setObj(ths, v);
+	}
+
+	public int getInt(final DbObject ths) {
+		return (Integer) getObj(ths);
+	}
 }

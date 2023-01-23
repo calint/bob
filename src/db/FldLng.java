@@ -17,4 +17,13 @@ public final class FldLng extends DbField {
 	protected Object getDefaultValue() {
 		return defval;
 	}
+
+	public void setLng(final DbObject ths, final long v) {
+		setObj(ths, v);
+	}
+
+	public long getLng(final DbObject ths) {
+		return (Long) getObj(ths);
+	}
+
 }

@@ -14,15 +14,15 @@ public final class sessionobj extends DbObject{
 	public final static Index ixPath=new Index(path);
 
 	public String path(){
-		return getStr(path);
+		return path.getStr(this);
 	}
 
 	public void path(final String v){
-		set(path,v);
+		path.setStr(this,v);
 	}
 
 	public Object object(){
-		final Object v=get(object);
+		final Object v=object.getObj(this);
 		if(v==null)
 			return null;
 
@@ -35,7 +35,7 @@ public final class sessionobj extends DbObject{
 			final ObjectInputStream ois=new ObjectInputStream(new ByteArrayInputStream(ba));
 			final Object o=ois.readObject();
 			ois.close();
-			put(object,o); // put without marking field dirty
+			object.putObj(this,o);  // put without marking field dirty
 			return o;
 		}catch(final Throwable t){
 			return null; // ? what to do?
@@ -43,7 +43,7 @@ public final class sessionobj extends DbObject{
 	}
 
 	public void object(final Serializable v){
-		set(object,v);
+		object.setObj(this,v);
 	}
 
 }
