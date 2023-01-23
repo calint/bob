@@ -158,7 +158,10 @@ public abstract class DbField {
 		ths.markDirty(this);
 	}
 
-	/** Sets value in object field values withouth marking field or object dirty. */
+	/**
+	 * Sets value in object field values without marking field or object dirty. Used
+	 * for optimizing handling of serialized objects.
+	 */
 	public final void putObj(final DbObject ths, final Object v) {
 		ths.fieldValues[slotNbr] = v;
 	}
