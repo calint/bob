@@ -1,5 +1,7 @@
 package bob;
 
+import java.util.List;
+
 import b.a;
 import b.xwriter;
 import db.DbObject;
@@ -7,18 +9,21 @@ import db.DbObjects;
 import db.RelAggN;
 
 public final class InputRelAggN extends a {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 	final private Class<? extends Form> createFormCls;
 	final Class<? extends DbObject> objCls;
 	final int objId;
 	final String relationName;
+	final List<String> idPath;
 
-	public InputRelAggN(final DbObject obj, final RelAggN rel, final Class<? extends Form> createFormCls) {
+	public InputRelAggN(final List<String> idPath, final DbObject obj, final RelAggN rel,
+			final Class<? extends Form> createFormCls) {
 		if (obj == null)
 			throw new RuntimeException(
 					"Element cannot be created with object being null. Try 'create at init' pattern to initiate the object before creating this element.");
 		objCls = obj.getClass();
 		objId = obj.id();
+		this.idPath = idPath;
 		relationName = rel.getName();
 		this.createFormCls = createFormCls;
 	}
@@ -50,23 +55,24 @@ public final class InputRelAggN extends a {
 
 	/** Callback "create". */
 	public void x_c(final xwriter x, final String param) throws Throwable {
-		final DbObject ro = getRelation().create(objId);
-		final Form f = createFormCls.getConstructor(String.class, String.class)
-				.newInstance(Integer.toString(ro.id()), null).init();
+		final Form f = createFormCls.getConstructor(List.class, String.class, String.class).newInstance(idPath, null,
+				null);
+		f.init();
 		super.bubble_event(x, this, f); // display the form
 	}
 
 	/** Callback "delete". */
 	public void x_d(final xwriter x, final String param) throws Throwable {
-		getRelation().delete(objId, Integer.parseInt(param));
+		getRelation().delete(objId, Integer.parseInt(param)); // ? idPath
 		x.xu(this);
 	}
 
 	/** Callback "edit". */
 	public void x_e(final xwriter x, final String param) throws Throwable {
-		final DbObject ro = getRelation().get(objId).get(param);
-		final Form f = createFormCls.getConstructor(String.class, String.class)
-				.newInstance(Integer.toString(ro.id()), null).init();
+		final DbObject ro = getRelation().get(objId).get(param); // ? idPath
+		final Form f = createFormCls.getConstructor(List.class, String.class, String.class).newInstance(idPath,
+				Integer.toString(ro.id()), null);
+		f.init();
 		super.bubble_event(x, this, f); // display the form
 	}
 }

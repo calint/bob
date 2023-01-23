@@ -13,8 +13,8 @@
 [ ] View: clear search
 [o] FormDbo with convenience for editing dbobjects
 [ ]   parentId? objectId x/y/z
-[ ]     id path List<String> to Form and View?
-[ ]     path,objectId to Form,View where path encoded x/y/z?
+[x]     id path List<String> to Form and View? implemented with code smell.
+[-]     path,objectId to Form,View where path encoded x/y/z?
 [ ]     create object in View instead of Form?
 [ ]     create object from other object. example book from publisher with publisher as default value
 [x]   find/select/create

@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Set;
 
 import b.a;
@@ -43,15 +44,18 @@ public abstract class FormDbo extends Form {
 	private transient SimpleDateFormat fmtDate;
 	private transient SimpleDateFormat fmtDateTime;
 	private transient NumberFormat fmtNbr;
+	private final boolean isNewObject;
 
-	public FormDbo(final Class<? extends DbObject> objCls, final String objectId, final String initStr) {
-		this(objCls, objectId, initStr, BIT_SAVE_CLOSE | BIT_SAVE | BIT_CLOSE);
+	public FormDbo(final List<String> idPath, final Class<? extends DbObject> objCls, final String objectId,
+			final String initStr) {
+		this(idPath, objCls, objectId, initStr, BIT_SAVE_CLOSE | BIT_SAVE | BIT_CLOSE);
 	}
 
-	public FormDbo(final Class<? extends DbObject> objCls, final String objectId, final String initStr,
-			final int enabledFormBits) {
-		super(objectId, initStr, enabledFormBits);
+	public FormDbo(final List<String> idPath, final Class<? extends DbObject> objCls, final String objectId,
+			final String initStr, final int enabledFormBits) {
+		super(idPath, objectId, initStr, enabledFormBits);
 		this.objCls = objCls;
+		isNewObject = objectId == null;
 	}
 
 	@Override
@@ -61,6 +65,10 @@ public abstract class FormDbo extends Form {
 			objectId = Integer.toString(o.id());
 		}
 		return super.init();
+	}
+
+	final public boolean isNewObject() {
+		return isNewObject;
 	}
 
 	@Override
@@ -410,16 +418,16 @@ public abstract class FormDbo extends Form {
 		x.divh(e);
 	}
 
-	final protected void inputAgg(final xwriter x, final String label, final DbObject o, final RelAgg rel,
-			final Class<? extends Form> createFormCls) {
-		inputAgg(x, label, rel.getName(), o, rel, createFormCls);
+	final protected void inputAgg(final xwriter x, final String label, final List<String> idPath, final DbObject o,
+			final RelAgg rel, final Class<? extends Form> createFormCls) {
+		inputAgg(x, label, rel.getName(), idPath, o, rel, createFormCls);
 	}
 
-	final protected void inputAgg(final xwriter x, final String label, final String field, final DbObject o,
-			final RelAgg rel, final Class<? extends Form> createFormCls) {
+	final protected void inputAgg(final xwriter x, final String label, final String field, final List<String> idPath,
+			final DbObject o, final RelAgg rel, final Class<? extends Form> createFormCls) {
 		InputRelAgg e = (InputRelAgg) fields.get(field);
 		if (e == null) {
-			e = new InputRelAgg(o, rel, createFormCls);
+			e = new InputRelAgg(idPath, o, rel, createFormCls);
 			e.parent(this);
 			e.name(field);
 			fields.put(field, e);
@@ -428,16 +436,16 @@ public abstract class FormDbo extends Form {
 		x.divh(e);
 	}
 
-	final protected void inputAggN(final xwriter x, final String label, final DbObject o, final RelAggN rel,
-			final Class<? extends Form> createFormCls) {
-		inputAggN(x, label, rel.getName(), o, rel, createFormCls);
+	final protected void inputAggN(final xwriter x, final String label, final List<String> idPath, final DbObject o,
+			final RelAggN rel, final Class<? extends Form> createFormCls) {
+		inputAggN(x, label, rel.getName(), idPath, o, rel, createFormCls);
 	}
 
-	final protected void inputAggN(final xwriter x, final String label, final String field, final DbObject o,
-			final RelAggN rel, final Class<? extends Form> createFormCls) {
+	final protected void inputAggN(final xwriter x, final String label, final String field, final List<String> idPath,
+			final DbObject o, final RelAggN rel, final Class<? extends Form> createFormCls) {
 		InputRelAggN e = (InputRelAggN) fields.get(field);
 		if (e == null) {
-			e = new InputRelAggN(o, rel, createFormCls);
+			e = new InputRelAggN(idPath, o, rel, createFormCls);
 			e.parent(this);
 			e.name(field);
 			fields.put(field, e);

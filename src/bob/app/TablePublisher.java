@@ -26,7 +26,7 @@ public final class TablePublisher extends ViewTable {
 	private final int publisherId;
 
 	public TablePublisher(final int publisherId) {
-		super(BIT_SEARCH | BIT_SELECT | BIT_CREATE | BIT_DELETE, BIT_CLICK_ITEM, new TypeInfo("book", "books"));
+		super(null, BIT_SEARCH | BIT_SELECT | BIT_CREATE | BIT_DELETE, BIT_CLICK_ITEM, new TypeInfo("book", "books"));
 		this.publisherId = publisherId;
 	}
 

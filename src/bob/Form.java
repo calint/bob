@@ -1,5 +1,7 @@
 package bob;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import b.a;
@@ -7,7 +9,7 @@ import b.xwriter;
 import bob.View.SelectReceiverSingle;
 
 public abstract class Form extends a implements Titled {
-	static final long serialVersionUID = 1;
+	static final long serialVersionUID = 2;
 
 	public final static int BIT_SAVE_CLOSE = 1;
 	public final static int BIT_SAVE = 2;
@@ -22,6 +24,7 @@ public abstract class Form extends a implements Titled {
 														// object id
 	final private String initStr;
 	private boolean hasBeenSaved;
+	final private List<String> idPath;
 
 	/**
 	 * @param objectId        string representing the object.
@@ -30,7 +33,8 @@ public abstract class Form extends a implements Titled {
 	 * @param enabledFormBits rendering of "save and close", "save" and "close"
 	 *                        actions.
 	 */
-	public Form(final String objectId, final String initStr, final int enabledFormBits) {
+	public Form(final List<String> idPath, final String objectId, final String initStr, final int enabledFormBits) {
+		this.idPath = idPath;
 		this.objectId = objectId;
 		this.initStr = initStr;
 		this.enabledFormBits = enabledFormBits;
@@ -68,6 +72,25 @@ public abstract class Form extends a implements Titled {
 			}
 		}
 		return this;
+	}
+
+	final public List<String> getIdPath() {
+		if (idPath == null)
+			return Collections.<String>emptyList();
+		return idPath;
+	}
+
+	final public List<String> makeExtendedIdPath(final int id) {
+		return makeExtendedIdPath(Integer.toString(id));
+	}
+
+	final public List<String> makeExtendedIdPath(final String id) {
+		final ArrayList<String> ls = new ArrayList<String>();
+		if (idPath != null) {
+			ls.addAll(idPath);
+		}
+		ls.add(id);
+		return ls;
 	}
 
 	public final String getObjectId() {

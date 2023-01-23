@@ -11,7 +11,7 @@ public final class FormDbClass extends Form {
 	private final String javaClassName;
 
 	public FormDbClass(final DbClass dbclass) {
-		super(dbclass.getJavaClass().getName(), null, BIT_CLOSE);
+		super(null, dbclass.getJavaClass().getName(), null, BIT_CLOSE);
 		javaClassName = dbclass.getJavaClass().getName();
 	}
 

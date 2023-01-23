@@ -26,7 +26,7 @@ public final class TableCategory extends ViewTable {
 	private final int categoryId;
 
 	public TableCategory(final int categoryId) {
-		super(BIT_SEARCH | BIT_SELECT | BIT_CREATE | BIT_DELETE, BIT_CLICK_ITEM, new TypeInfo("book", "books"));
+		super(null, BIT_SEARCH | BIT_SELECT | BIT_CREATE | BIT_DELETE, BIT_CLICK_ITEM, new TypeInfo("book", "books"));
 		this.categoryId = categoryId;
 	}
 

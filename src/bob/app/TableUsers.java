@@ -20,7 +20,7 @@ public final class TableUsers extends ViewTable {
 	static final long serialVersionUID = 1;
 
 	public TableUsers() {
-		super(BIT_SEARCH | BIT_CREATE | BIT_DELETE | BIT_SELECT, BIT_CLICK_ITEM, new TypeInfo("user", "users"));
+		super(null, BIT_SEARCH | BIT_CREATE | BIT_DELETE | BIT_SELECT, BIT_CLICK_ITEM, new TypeInfo("user", "users"));
 	}
 
 	public String getTitle() {

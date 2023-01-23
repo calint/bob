@@ -25,7 +25,7 @@ public final class TableAuthor extends ViewTable {
 	private final int authorId;
 
 	public TableAuthor(final int authorId) {
-		super(BIT_SEARCH | BIT_SELECT | BIT_CREATE | BIT_DELETE, BIT_CLICK_ITEM, new TypeInfo("book", "books"));
+		super(null, BIT_SEARCH | BIT_SELECT | BIT_CREATE | BIT_DELETE, BIT_CLICK_ITEM, new TypeInfo("book", "books"));
 		this.authorId = authorId;
 	}
 

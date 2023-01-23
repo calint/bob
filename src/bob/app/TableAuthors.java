@@ -17,7 +17,8 @@ public final class TableAuthors extends ViewTable {
 	static final long serialVersionUID = 2;
 
 	public TableAuthors() {
-		super(BIT_SEARCH | BIT_CREATE | BIT_DELETE | BIT_SELECT, BIT_CLICK_ITEM, new TypeInfo("author", "authors"));
+		super(null, BIT_SEARCH | BIT_CREATE | BIT_DELETE | BIT_SELECT, BIT_CLICK_ITEM,
+				new TypeInfo("author", "authors"));
 	}
 
 	public String getTitle() {

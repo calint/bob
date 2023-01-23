@@ -13,7 +13,7 @@ public final class FormPublisher extends FormDbo {
 	}
 
 	public FormPublisher(final String objectId, final String initStr) {
-		super(Publisher.class, objectId, initStr);
+		super(null, Publisher.class, objectId, initStr);
 	}
 
 	public String getTitle() {

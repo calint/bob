@@ -20,7 +20,7 @@ public final class FormBook extends Form {
 	public a publishedDate;
 
 	public FormBook(final String objectId, final String initStr) {
-		super(objectId, initStr, BIT_SAVE_CLOSE | BIT_SAVE | BIT_CLOSE);
+		super(null, objectId, initStr, BIT_SAVE_CLOSE | BIT_SAVE | BIT_CLOSE);
 		final Book o = (Book) (objectId == null ? null : Db.currentTransaction().get(Book.class, objectId));
 		title.set(o == null ? initStr : o.getName());
 		authorsStr.set(o == null ? "" : o.getAuthorsStr());

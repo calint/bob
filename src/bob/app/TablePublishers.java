@@ -17,7 +17,7 @@ public final class TablePublishers extends ViewTable {
 	static final long serialVersionUID = 2;
 
 	public TablePublishers() {
-		super(BIT_SEARCH | BIT_CREATE | BIT_DELETE | BIT_SELECT, BIT_CLICK_ITEM,
+		super(null, BIT_SEARCH | BIT_CREATE | BIT_DELETE | BIT_SELECT, BIT_CLICK_ITEM,
 				new TypeInfo("publisher", "publishers"));
 	}
 

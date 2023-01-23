@@ -13,7 +13,7 @@ public final class FormAuthor extends FormDbo {
 	}
 
 	public FormAuthor(final String objectId, final String initStr) {
-		super(Author.class, objectId, initStr);
+		super(null, Author.class, objectId, initStr);
 	}
 
 	public String getTitle() {

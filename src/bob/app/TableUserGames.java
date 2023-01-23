@@ -18,7 +18,7 @@ public final class TableUserGames extends ViewTable {
 	private final int userId;
 
 	public TableUserGames(final int userId) {
-		super(BIT_SEARCH | BIT_SELECT | BIT_CREATE | BIT_DELETE, BIT_CLICK_ITEM,
+		super(null, BIT_SEARCH | BIT_SELECT | BIT_CREATE | BIT_DELETE, BIT_CLICK_ITEM,
 				new TypeInfo("user game", "user games"));
 		this.userId = userId;
 	}
@@ -76,7 +76,7 @@ public final class TableUserGames extends ViewTable {
 	@Override
 	protected void onRowClick(final xwriter x, final String id, final String cmd) throws Throwable {
 		if (cmd == null) {
-			final Form f = new FormGame(id, null).init();
+			final Form f = new FormUserGame(makeExtendedIdPath(Integer.toString(userId)), id, null).init();
 			super.bubble_event(x, this, f);
 			return;
 		}
@@ -84,11 +84,11 @@ public final class TableUserGames extends ViewTable {
 
 	@Override
 	protected void onActionCreate(final xwriter x, final String initStr) throws Throwable {
-		final DbTransaction tn = Db.currentTransaction();
-		final User u = (User) tn.get(User.class, userId);
-		final Game o = u.createGame();
-		o.setName(initStr);
-		final Form f = new FormGame(Integer.toString(o.id()), initStr).init();
+//		final DbTransaction tn = Db.currentTransaction();
+//		final User u = (User) tn.get(User.class, userId);
+//		final Game o = u.createGame();
+//		o.setName(initStr);
+		final Form f = new FormUserGame(makeExtendedIdPath(Integer.toString(userId)), null, initStr).init();
 		super.bubble_event(x, this, f);
 	}
 

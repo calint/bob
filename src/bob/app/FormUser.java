@@ -12,14 +12,14 @@ import db.DbObject;
 import db.test.User;
 
 public final class FormUser extends FormDbo implements FormDbo.CreateObjectAtInit {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 3L;
 
 	public FormUser() {
 		this(null, null);
 	}
 
 	public FormUser(final String id, final String initStr) {
-		super(User.class, id, initStr, BIT_SAVE_CLOSE | BIT_SAVE | BIT_CANCEL);
+		super(null, User.class, id, initStr, BIT_SAVE_CLOSE | BIT_SAVE | BIT_CANCEL);
 	}
 
 	@Override
@@ -31,9 +31,9 @@ public final class FormUser extends FormDbo implements FormDbo.CreateObjectAtIni
 
 	@Override
 	protected void cancel(final xwriter x) throws Throwable {
-		if (hasBeenSaved())
-			return;
-		Db.currentTransaction().delete(getObject());
+		if (isNewObject() && !hasBeenSaved()) {
+			Db.currentTransaction().delete(getObject());
+		}
 	}
 
 	@Override
@@ -61,8 +61,8 @@ public final class FormUser extends FormDbo implements FormDbo.CreateObjectAtIni
 		inputTimestamp(x, "Timestamp", o, User.birthTime, null);
 		inputDateTime(x, "Date time", o, User.dateTime, null);
 		inputDate(x, "Date", o, User.date, null);
-		inputAgg(x, "Profile picture", o, User.profilePic, FormFile.class);
-		inputAggN(x, "Files", o, User.files, FormFile.class);
+		inputAgg(x, "Profile picture", makeExtendedIdPath(o.id()), o, User.profilePic, FormUserProfilePic.class);
+		inputAggN(x, "Files", makeExtendedIdPath(o.id()), o, User.files, FormUserFile.class);
 		endForm(x);
 	}
 

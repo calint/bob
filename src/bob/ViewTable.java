@@ -21,8 +21,8 @@ public abstract class ViewTable extends View {
 	/** The actions that are enabled in the table. */
 	final protected int enabledTableBits;
 
-	public ViewTable(final int viewBits, final int tableBits, final TypeInfo typeInfo) {
-		super(viewBits, typeInfo);
+	public ViewTable(final List<String> idPath, final int viewBits, final int tableBits, final TypeInfo typeInfo) {
+		super(idPath, viewBits, typeInfo);
 		enabledTableBits = tableBits;
 		t.setTableView(this);
 		p.setTableView(this);

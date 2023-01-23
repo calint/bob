@@ -13,7 +13,7 @@ public final class FormCategory extends FormDbo {
 	}
 
 	public FormCategory(final String objectId, final String initStr) {
-		super(Category.class, objectId, initStr);
+		super(null, Category.class, objectId, initStr);
 	}
 
 	public String getTitle() {
