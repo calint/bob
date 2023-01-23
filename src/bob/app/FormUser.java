@@ -45,6 +45,10 @@ public final class FormUser extends FormDbo implements FormDbo.CreateObjectAtIni
 		return ls;
 	}
 
+	public String getTitle() {
+		return Util.toStr(getStr(User.name), "New user");
+	}
+
 	@Override
 	protected void render(final xwriter x) throws Throwable {
 		final User o = (User) getObject();
@@ -64,10 +68,6 @@ public final class FormUser extends FormDbo implements FormDbo.CreateObjectAtIni
 		inputAgg(x, "Profile picture", makeExtendedIdPath(o.id()), o, User.profilePic, FormUserProfilePic.class);
 		inputAggN(x, "Files", makeExtendedIdPath(o.id()), o, User.files, FormUserFile.class);
 		endForm(x);
-	}
-
-	public String getTitle() {
-		return Util.toStr(getStr(User.name), "New user");
 	}
 
 	@Override

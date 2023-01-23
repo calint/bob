@@ -67,7 +67,7 @@ public abstract class FormDbo extends Form {
 		return super.init();
 	}
 
-	final public boolean isNewObject() {
+	final protected boolean isNewObject() {
 		return isNewObject;
 	}
 

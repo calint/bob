@@ -160,7 +160,7 @@ public abstract class Form extends a implements Titled {
 		super.bubble_event(x, from, o);
 	}
 
-	/** @return user actions for this form. */
+	/** @return list of actions for this form. */
 	protected List<Action> getActionsList() {
 		return null;
 	}
@@ -170,7 +170,7 @@ public abstract class Form extends a implements Titled {
 		return null;
 	}
 
-	/** Called when "cancel" action has been clicked. */
+	/** Called when "cancel" action has been activated. */
 	protected void cancel(final xwriter x) throws Throwable {
 	}
 
