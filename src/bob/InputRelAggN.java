@@ -69,9 +69,8 @@ public final class InputRelAggN extends a {
 
 	/** Callback "edit". */
 	public void x_e(final xwriter x, final String param) throws Throwable {
-		final DbObject ro = getRelation().get(objId).get(param); // ? idPath
-		final Form f = createFormCls.getConstructor(List.class, String.class, String.class).newInstance(idPath,
-				Integer.toString(ro.id()), null);
+		final Form f = createFormCls.getConstructor(List.class, String.class, String.class).newInstance(idPath, param,
+				null);
 		f.init();
 		super.bubble_event(x, this, f); // display the form
 	}
