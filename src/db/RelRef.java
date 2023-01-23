@@ -1,7 +1,5 @@
 package db;
 
-import java.util.List;
-
 /** Association One-to-One. */
 public final class RelRef extends DbRelation {
 	public RelRef(final Class<? extends DbObject> toCls) {
@@ -44,7 +42,7 @@ public final class RelRef extends DbRelation {
 
 	/** @returns 0 if id is null. */
 	public int getId(final DbObject ths) {
-		final Object objId = ths.fieldValues[relFld.slotNbr];
+		final Object objId = relFld.getObj(ths);
 		if (objId == null)
 			return 0;
 		return (Integer) objId;
@@ -54,10 +52,11 @@ public final class RelRef extends DbRelation {
 		final int id = getId(ths);
 		if (id == 0)
 			return null;
-		final List<? extends DbObject> ls = Db.currentTransaction().get(toCls, new Query(toCls, id), null, null);
-		if (ls.isEmpty())
-			return null; // ? dangling reference
-		return ls.get(0);
+		final DbObject o = Db.currentTransaction().get(toCls, id);
+//		if (o == null) // ? setting in Db for this case
+//			throw new RuntimeException(ths.getClass().getName() + "[" + ths.id() + "] relation [" + name + "] has id ["
+//					+ id + "] but object cannot be found.");
+		return o;
 	}
 
 	@Override

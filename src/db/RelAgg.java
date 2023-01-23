@@ -36,9 +36,9 @@ public final class RelAgg extends DbRelation {
 			return null;
 		}
 		final DbObject o = tn.get(toCls, id);
-		if (o == null)
-			throw new RuntimeException(ths.getClass().getName() + "[" + ths.id() + "] relation [" + name + "] has id ["
-					+ id + "] but object cannot be found.");
+//		if (o == null) // ? Db setting for this but it may not be able to delete parent object.
+//			throw new RuntimeException(ths.getClass().getName() + "[" + ths.id() + "] relation [" + name + "] has id ["
+//					+ id + "] but object cannot be found.");
 		return o;
 	}
 
@@ -57,7 +57,9 @@ public final class RelAgg extends DbRelation {
 		final DbClass dbClsTo = Db.dbClassForJavaClass(toCls);
 		if (dbClsTo.cascadeDelete) {
 			final DbObject o = get(ths, false);
-			tn.delete(o);
+			if (o != null) { // ? how to handle dangling ref
+				tn.delete(o);
+			}
 			return;
 		}
 
