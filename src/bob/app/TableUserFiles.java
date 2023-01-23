@@ -5,6 +5,7 @@ import java.util.Set;
 
 import b.xwriter;
 import bob.Form;
+import bob.Util;
 import bob.ViewTable;
 import db.Db;
 import db.DbObjects;
@@ -65,6 +66,7 @@ public final class TableUserFiles extends ViewTable {
 	@Override
 	protected void renderHeaders(final xwriter x) {
 		x.th().p("Name");
+		x.th().p("Bytes");
 	}
 
 	@Override
@@ -72,6 +74,8 @@ public final class TableUserFiles extends ViewTable {
 		final File o = (File) obj;
 		x.td();
 		renderLink(x, o, o.getName());
+		x.td("nbr");
+		x.p(Util.formatSizeInBytes(o.getSize_B()));
 	}
 
 	@Override
@@ -85,10 +89,6 @@ public final class TableUserFiles extends ViewTable {
 
 	@Override
 	protected void onActionCreate(final xwriter x, final String initStr) throws Throwable {
-//		final DbTransaction tn = Db.currentTransaction();
-//		final User u = (User) tn.get(User.class, userId);
-//		final File o = u.createFile();
-//		o.setName(initStr);
 		final Form f = new FormUserFile(makeExtendedIdPath(Integer.toString(userId)), null, initStr).init();
 		super.bubble_event(x, this, f);
 	}
@@ -103,5 +103,4 @@ public final class TableUserFiles extends ViewTable {
 		}
 		sel.clear();
 	}
-
 }
