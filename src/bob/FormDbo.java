@@ -44,8 +44,6 @@ public abstract class FormDbo extends Form {
 	private transient SimpleDateFormat fmtDate;
 	private transient SimpleDateFormat fmtDateTime;
 	private transient NumberFormat fmtNbr;
-	private final boolean isNewObject;
-
 	public FormDbo(final List<String> idPath, final Class<? extends DbObject> objCls, final String objectId,
 			final String initStr) {
 		this(idPath, objCls, objectId, initStr, BIT_SAVE_CLOSE | BIT_SAVE | BIT_CLOSE);
@@ -55,7 +53,6 @@ public abstract class FormDbo extends Form {
 			final String initStr, final int enabledFormBits) {
 		super(idPath, objectId, initStr, enabledFormBits);
 		this.objCls = objCls;
-		isNewObject = objectId == null;
 	}
 
 	@Override
@@ -65,10 +62,6 @@ public abstract class FormDbo extends Form {
 			objectId = Integer.toString(o.id());
 		}
 		return super.init();
-	}
-
-	final protected boolean isNewObject() {
-		return isNewObject;
 	}
 
 	@Override

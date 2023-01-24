@@ -26,6 +26,8 @@ public abstract class Form extends a implements Titled {
 	private boolean hasBeenSaved; // true if the form has been saved
 	final private List<String> idPath; // a list of identifiers to be able to navigate to the parent object in context
 
+	protected final boolean isNewObject;
+
 	/**
 	 * @param objectId        string representing the object.
 	 * @param initStr         the initial string for constructor to use. ViewTable
@@ -36,6 +38,7 @@ public abstract class Form extends a implements Titled {
 	public Form(final List<String> idPath, final String objectId, final String initStr, final int enabledFormBits) {
 		this.idPath = idPath;
 		this.objectId = objectId;
+		isNewObject = objectId == null;
 		this.initStr = initStr;
 		this.enabledFormBits = enabledFormBits;
 		if ((enabledFormBits & BIT_SAVE_CLOSE) != 0) {
@@ -72,6 +75,10 @@ public abstract class Form extends a implements Titled {
 			}
 		}
 		return this;
+	}
+
+	protected final boolean isNewObject() {
+		return isNewObject;
 	}
 
 	final public List<String> getIdPath() {
