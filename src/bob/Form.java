@@ -22,9 +22,9 @@ public abstract class Form extends a implements Titled {
 	protected String objectId; // an id that represents the resource this form is rendering
 	private SelectReceiverSingle selectReceiverSingle; // when select mode this interface will receive the created
 														// object id
-	final private String initStr;
-	private boolean hasBeenSaved;
-	final private List<String> idPath;
+	final private String initStr; // the initiation string passed by the view from the query field
+	private boolean hasBeenSaved; // true if the form has been saved
+	final private List<String> idPath; // a list of identifiers to be able to navigate to the parent object in context
 
 	/**
 	 * @param objectId        string representing the object.
