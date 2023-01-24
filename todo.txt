@@ -1,6 +1,7 @@
 [ ] b: fix for client that makes many threaded requests and then stalls them to starve server of threads or create too many. ddos.
 [ ]   slowhttptest
 [ ] b.user: email, password hash, security bits. b.session: ref user
+[ ] db: when delete check if object is aggregated
 [-] bob: Form idPath, objectId etc moved to FormDbo to reduce context of Form.
 [ ] db: RelAgg, RelRef how to handle dangling references. Exception mode in Db settings?
 [ ] bob: InputRelX: use reflection and jem naming conventions instead of accessing relation objects?
