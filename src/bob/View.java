@@ -1,15 +1,12 @@
 package bob;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import b.a;
 import b.xwriter;
 
-public abstract class View extends a implements Titled {
+public abstract class View extends Elem {
 	static final long serialVersionUID = 1;
 
 	public final static int BIT_CREATE = 1;
@@ -24,31 +21,11 @@ public abstract class View extends a implements Titled {
 	private SelectReceiverMulti selectReceiverMulti;
 	private SelectReceiverSingle selectReceiverSingle;
 	final private View.TypeInfo typeInfo; // the name and plural of the object type
-	final private List<String> idPath;
 
 	public View(final List<String> idPath, final int enabledBits, final TypeInfo ti) {
-		this.idPath = idPath;
+		super(idPath);
 		enabledViewBits = enabledBits;
 		typeInfo = ti == null ? new TypeInfo("object", "objects") : ti;
-	}
-
-	final public List<String> getIdPath() {
-		if (idPath == null)
-			return Collections.<String>emptyList();
-		return idPath;
-	}
-
-	final public List<String> makeExtendedIdPath(final int id) {
-		return makeExtendedIdPath(Integer.toString(id));
-	}
-
-	final public List<String> makeExtendedIdPath(final String id) {
-		final ArrayList<String> ls = new ArrayList<String>();
-		if (idPath != null) {
-			ls.addAll(idPath);
-		}
-		ls.add(id);
-		return ls;
 	}
 
 	final public TypeInfo getTypeInfo() {

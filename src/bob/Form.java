@@ -1,14 +1,12 @@
 package bob;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import b.a;
 import b.xwriter;
 import bob.View.SelectReceiverSingle;
 
-public abstract class Form extends a implements Titled {
+public abstract class Form extends Elem {
 	static final long serialVersionUID = 2;
 
 	public final static int BIT_SAVE_CLOSE = 1;
@@ -24,7 +22,6 @@ public abstract class Form extends a implements Titled {
 														// object id
 	final private String initStr; // the initiation string passed by the view from the query field
 	private boolean hasBeenSaved; // true if the form has been saved
-	final private List<String> idPath; // a list of identifiers to be able to navigate to the parent object in context
 
 	protected final boolean isNewObject;
 
@@ -36,7 +33,7 @@ public abstract class Form extends a implements Titled {
 	 *                        actions.
 	 */
 	public Form(final List<String> idPath, final String objectId, final String initStr, final int enabledFormBits) {
-		this.idPath = idPath;
+		super(idPath);
 		this.objectId = objectId;
 		isNewObject = objectId == null;
 		this.initStr = initStr;
@@ -79,25 +76,6 @@ public abstract class Form extends a implements Titled {
 
 	protected final boolean isNewObject() {
 		return isNewObject;
-	}
-
-	final public List<String> getIdPath() {
-		if (idPath == null)
-			return Collections.<String>emptyList();
-		return idPath;
-	}
-
-	final public List<String> makeExtendedIdPath(final int id) {
-		return makeExtendedIdPath(Integer.toString(id));
-	}
-
-	final public List<String> makeExtendedIdPath(final String id) {
-		final ArrayList<String> ls = new ArrayList<String>();
-		if (idPath != null) {
-			ls.addAll(idPath);
-		}
-		ls.add(id);
-		return ls;
 	}
 
 	public final String getObjectId() {

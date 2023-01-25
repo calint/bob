@@ -16,7 +16,7 @@
 [x] Form: two-step-constructions to implement
 [x]   aggregated objects views in tabs
 [ ] View: clear search
-[ ] BobElem implementing idPath logic from Form and View.
+[x] BobElem implementing idPath logic from Form and View.
 [-] BobElem: implement Titled.   
 [o] FormDbo with convenience for editing dbobjects
 [-]   parentId? objectId x/y/z
