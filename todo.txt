@@ -1,5 +1,6 @@
 [ ] b: fix for client that makes many threaded requests and then stalls them to starve server of threads or create too many. ddos.
 [ ]   slowhttptest
+[ ] db: DbObject.onCreate().
 [ ] b.user: email, password hash, security bits. b.session: ref user
 [ ] b.session: created, updated time stamp
 [ ] class_init extended to set statics on any class
