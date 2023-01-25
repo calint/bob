@@ -1,6 +1,8 @@
 [ ] b: fix for client that makes many threaded requests and then stalls them to starve server of threads or create too many. ddos.
 [ ]   slowhttptest
 [ ] b.user: email, password hash, security bits. b.session: ref user
+[ ] b.session: created, updated time stamp
+[ ] class_init extended to set statics on any class
 [ ] db: when delete check if object is aggregated
 [-] bob: Form idPath, objectId etc moved to FormDbo to reduce context of Form.
 [ ] db: RelAgg, RelRef how to handle dangling references. Exception mode in Db settings?
@@ -94,8 +96,6 @@
 [ ]     keep reading pages until scroll bar appears
 [ ]   review code
 [x]   mobile chromium vertical document height (white-space:pre caused it)
-[ ] session: created, updated time stamp
-[ ] class_init extended to set statics on any class
 [ ] fix "// todo" comments
 [ ]   WebsockBob: load/save element at on_open and on_close
 [ ] FormFsFile: form has white space at the end of page from white-space:pre in div.output
