@@ -40,7 +40,7 @@ public abstract class Elem extends a implements Titled {
 		return ls;
 	}
 
-	/** Convenience for the int id. */
+	/** Convenience for a integer id. */
 	final public List<String> makeExtendedIdPath(final int id) {
 		return makeExtendedIdPath(Integer.toString(id));
 	}
