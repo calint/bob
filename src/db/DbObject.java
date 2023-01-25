@@ -33,11 +33,14 @@ public abstract class DbObject {
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
+		final DbClass dbc=Db.getDbClassForJavaClass(getClass());
 		sb.append(getClass().getName()).append("{");
+		int i = 0;
 		for (final Object v : fieldValues) {
-			sb.append(v).append(",");
+			sb.append(dbc.allFields.get(i).getName()).append("=").append(v).append(", ");
+			i++;
 		}
-		sb.setLength(sb.length() - 1);
+		sb.setLength(sb.length() - ", ".length());
 		sb.append("}");
 		return sb.toString();
 	}
