@@ -5,7 +5,6 @@ import java.util.List;
 import db.Db;
 import db.DbObject;
 import db.DbTransaction;
-import db.test.File;
 import db.test.User;
 
 public final class FormUserFile extends FormFileAbstract {
@@ -35,6 +34,6 @@ public final class FormUserFile extends FormFileAbstract {
 		final List<String> idPath = getIdPath();
 		final DbTransaction tn = Db.currentTransaction();
 		final User u = (User) tn.get(User.class, idPath.get(0));
-		return (File) u.getFiles().get(oid);
+		return u.getFiles().get(oid);
 	}
 }

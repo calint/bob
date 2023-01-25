@@ -1,7 +1,10 @@
 package b;
 
+import java.sql.Timestamp;
 import java.util.List;
+
 import db.DbObject;
+import db.FldTs;
 import db.Index;
 import db.Query;
 import db.RelAggN;
@@ -9,15 +12,25 @@ import db.test.FldChars;
 
 public final class session extends DbObject{
 	public final static FldChars sessionId=new FldChars(32,"");
+	public final static FldTs createdTs=new FldTs();
 	public final static RelAggN objects=new RelAggN(sessionobj.class);
 	public final static Index ixSessionId=new Index(sessionId);
 
+	@Override
+	protected void onCreate(){
+		createdTs.setTs(this,new Timestamp(System.currentTimeMillis()));
+	}
+	
 	public String session_id(){
 		return sessionId.getChars(this);
 	}
 
 	public void session_id(final String v){
 		sessionId.setChars(this,v);
+	}
+	
+	public Timestamp createdTs(){
+		return createdTs.getTs(this);
 	}
 
 	public sessionobj object(final String path){

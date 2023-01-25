@@ -30,10 +30,13 @@ public abstract class DbObject {
 		Db.currentTransaction().dirtyObjects.add(this);
 	}
 
+	protected void onCreate() {
+	}
+
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
-		final DbClass dbc=Db.getDbClassForJavaClass(getClass());
+		final DbClass dbc = Db.getDbClassForJavaClass(getClass());
 		sb.append(getClass().getName()).append("{");
 		int i = 0;
 		for (final Object v : fieldValues) {

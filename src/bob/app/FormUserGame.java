@@ -51,7 +51,7 @@ public final class FormUserGame extends FormDbo {
 		final List<String> idPath = getIdPath();
 		final DbTransaction tn = Db.currentTransaction();
 		final User u = (User) tn.get(User.class, idPath.get(0));
-		return (Game) u.getGames().get(oid);
+		return u.getGames().get(oid);
 	}
 
 	@Override

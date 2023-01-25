@@ -52,11 +52,11 @@ public final class RelRef extends DbRelation {
 		final int id = getId(ths);
 		if (id == 0)
 			return null;
-		final DbObject o = Db.currentTransaction().get(toCls, id);
+
 //		if (o == null) // ? setting in Db for this case
 //			throw new RuntimeException(ths.getClass().getName() + "[" + ths.id() + "] relation [" + name + "] has id ["
 //					+ id + "] but object cannot be found.");
-		return o;
+		return Db.currentTransaction().get(toCls, id);
 	}
 
 	@Override

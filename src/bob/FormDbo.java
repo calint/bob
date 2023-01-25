@@ -44,6 +44,7 @@ public abstract class FormDbo extends Form {
 	private transient SimpleDateFormat fmtDate;
 	private transient SimpleDateFormat fmtDateTime;
 	private transient NumberFormat fmtNbr;
+
 	public FormDbo(final List<String> idPath, final Class<? extends DbObject> objCls, final String objectId,
 			final String initStr) {
 		this(idPath, objCls, objectId, initStr, BIT_SAVE_CLOSE | BIT_SAVE | BIT_CLOSE);

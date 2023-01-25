@@ -27,7 +27,7 @@ public abstract class Elem extends a implements Titled {
 
 	/**
 	 * Extends the id path with a new id.
-	 * 
+	 *
 	 * @param id a new id to add to the copy of the path.
 	 * @return a new id path.
 	 */

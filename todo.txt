@@ -1,8 +1,8 @@
 [ ] b: fix for client that makes many threaded requests and then stalls them to starve server of threads or create too many. ddos.
 [ ]   slowhttptest
-[ ] db: DbObject.onCreate().
+[x] db: DbObject.onCreate().
 [ ] b.user: email, password hash, security bits. b.session: ref user
-[ ] b.session: created, updated time stamp
+[x] b.session: created time stamp
 [ ] class_init extended to set statics on any class
 [ ] db: when delete check if object is aggregated
 [-] bob: Form idPath, objectId etc moved to FormDbo to reduce context of Form.

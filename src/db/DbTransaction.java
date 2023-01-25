@@ -103,6 +103,8 @@ public final class DbTransaction {
 				cache.put(o);
 			}
 
+			o.onCreate();
+
 			return o;
 		} catch (final Throwable t) {
 			throw new RuntimeException(t);
