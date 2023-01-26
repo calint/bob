@@ -167,7 +167,7 @@ public final class User extends DbObject {
 	}
 
 	public void setGroupPic(final File o) {
-		groupPic.set(this, o == null ? 0 : o.id());
+		groupPic.set(this, o);
 	}
 
 	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
@@ -184,7 +184,7 @@ public final class User extends DbObject {
 	}
 
 	public void deleteFile(final File o) {
-		files.delete(this, o.id());
+		files.delete(this, o);
 	}
 
 	public void deleteAllFiles() {
@@ -197,7 +197,7 @@ public final class User extends DbObject {
 	}
 
 	public void addRefFile(final File o) {
-		refFiles.add(this, o.id());
+		refFiles.add(this, o);
 	}
 
 	public DbObjects getRefFiles() {
@@ -209,7 +209,7 @@ public final class User extends DbObject {
 	}
 
 	public void removeRefFile(final File o) {
-		refFiles.remove(this, o.id());
+		refFiles.remove(this, o);
 	}
 
 	public void removeAllRefFiles() {
@@ -230,7 +230,7 @@ public final class User extends DbObject {
 	}
 
 	public void deleteGame(final Game o) {
-		games.delete(this, o.id());
+		games.delete(this, o);
 	}
 
 	public void deleteAllGames() {

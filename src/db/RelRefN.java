@@ -24,6 +24,10 @@ public final class RelRefN extends DbRelation {
 		todbcls.referingRefN.add(this);
 	}
 
+	public void add(final DbObject ths, final DbObject o) {
+		add(ths.id(), o.getId());
+	}
+
 	public void add(final DbObject ths, final int toId) {
 		add(ths.id(), toId);
 	}
@@ -47,6 +51,10 @@ public final class RelRefN extends DbRelation {
 
 	public DbObjects get(final DbObject ths) {
 		return get(ths.id());
+	}
+
+	public void remove(final DbObject ths, final DbObject o) {
+		remove(ths.id(), o.id());
 	}
 
 	public void remove(final DbObject ths, final int toId) {

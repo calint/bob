@@ -62,14 +62,8 @@ public class JemRelRef extends JemRel {
 		out.println("}");
 		out.println();
 
-		out.print("public void set");
-		out.print(acc);
-		out.print("(final ");
-		out.print(toClsNm);
-		out.println(" o){");
-		out.print("\t");
-		out.print(rel.getName());
-		out.println(".set(this,o==null?0:o.id());");
+		out.println("public void set" + acc + "(final " + toClsNm + " o){");
+		out.println("\t" + rel.getName() + ".set(this,o);");
 		out.println("}");
 		out.println();
 	}

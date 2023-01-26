@@ -31,14 +31,8 @@ public class JemRelRefN extends JemRel {
 		final Class<? extends DbObject> toCls = ((RelRefN) rel).getToClass(); // ? ugly cast
 		final String toClsNm = toCls.getName().substring(toCls.getName().lastIndexOf('.') + 1);
 
-		out.print("public void add");
-		out.print(accSing);
-		out.print("(final ");
-		out.print(toClsNm);
-		out.println(" o){");
-		out.print("\t");
-		out.print(rel.getName());
-		out.println(".add(this,o.id());");
+		out.println("public void add" + accSing + "(final " + toClsNm + " o){");
+		out.println("\t" + rel.getName() + ".add(this,o);");
 		out.println("}");
 		out.println();
 
@@ -67,14 +61,8 @@ public class JemRelRefN extends JemRel {
 		out.println("}");
 		out.println();
 
-		out.print("public void remove");
-		out.print(accSing);
-		out.print("(final ");
-		out.print(toClsNm);
-		out.println(" o){");
-		out.print("\t");
-		out.print(rel.getName());
-		out.println(".remove(this,o.id());");
+		out.println("public void remove" + accSing + "(final " + toClsNm + " o){");
+		out.println("\t" + rel.getName() + ".remove(this,o);");
 		out.println("}");
 		out.println();
 

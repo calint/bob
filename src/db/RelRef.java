@@ -36,6 +36,10 @@ public final class RelRef extends DbRelation {
 		relFld.setId(ths, trgId);
 	}
 
+	public void set(final DbObject ths, final DbObject trg) {
+		relFld.setId(ths, trg == null ? 0 : trg.id());
+	}
+
 //	public void remove(final DbObject ths) {
 //		set(ths, 0);
 //	}
