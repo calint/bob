@@ -1,5 +1,5 @@
 # run.sh configuration
-# (linode)
+# (aws)
 
 MYSQL_HOST=localhost
 MYSQL_DB=testdb
