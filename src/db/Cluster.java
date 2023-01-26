@@ -126,9 +126,6 @@ public final class Cluster {
 					final SocketChannel sc = ssc.accept();
 					sc.configureBlocking(false);
 					sc.socket().setTcpNoDelay(true);
-//					sc.setOption(StandardSocketOptions.TCP_NODELAY, true);
-//					InetSocketAddress sa = (InetSocketAddress) sc.getRemoteAddress();
-//					Client ct = findClientByAddress(sa.getHostString());
 					final String host = sc.socket().getInetAddress().getHostAddress();
 					final Client ct = findClientByAddress(host);
 					ct.socketChannel = sc;
@@ -454,7 +451,7 @@ public final class Cluster {
 						}
 					}
 				}
-				if (stopped) { // thread might be flagged for stop after interrupt
+				if (stopped) { // thread might be flagged for stop and then interrupted
 					break;
 				}
 				prevSql = current_sql;
