@@ -574,10 +574,9 @@ public final class Db {
 	}
 
 	static String tableNameForJavaClass(final Class<? extends DbObject> cls) {
-
-//		final String tblnm = cls.getName().replace('.', '_');
+		return cls.getName().replace('.', '_');
 //		final String tblnm = cls.getName();
-		return cls.getName().substring(cls.getName().lastIndexOf('.') + 1);
+//		return cls.getName().substring(cls.getName().lastIndexOf('.') + 1);
 	}
 
 	static DbClass dbClassForJavaClass(final Class<?> c) {
