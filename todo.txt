@@ -113,6 +113,7 @@
 [ ] bob.app: dbclass to class
 [ ] Content-disposition: attachment; filename=file.txt
 [ ] howto for google cloud
+[ ] java: synchronize(Object) read { ... } allows multiple reader threads. synchronize(Object) write { ... } allows only one thread.
 -------------------------------------------------------------------------------
 dbo
 [x] RelRefN: removeAll
