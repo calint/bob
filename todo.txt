@@ -1,7 +1,8 @@
 [ ] b: fix for client that makes many threaded requests and then stalls them to starve server of threads or create too many. ddos.
 [ ]   slowhttptest
 [x] db: DbField.defaultValue to avoid boxing.
-[ ] ViewTable: Element.scrollIntoView() instead of scroll to top considering included views.
+[ ] db.test: test default values
+[ ] ViewTable: Element.scrollIntoView() instead of scroll to top considering included views
 [ ] b.user: email, password hash, security bits. b.session: ref user
 [ ] bob: login framework
 [x] db: DbObject.onCreate().
@@ -12,20 +13,20 @@
 [ ] db: RelAgg, RelRef how to handle dangling references. Exception mode in Db settings?
 [ ] bob: InputRelX: use reflection and jem naming conventions instead of accessing relation objects?
 [x] DbObject fields in an list with DbField holding an index in the list instead of a map of values.
-[x] db: DbField.getValue(DbObject) FldInt.getInt(DbObject)->int etc
-[x]   update jem accessors generator
-[x] DbField.getDefaultValue()->Object instead of .setDefaultValue(Object[])
+[x] db: DbField.getValue(DbObject) FldInt.getInt(DbObject)->int etc.
+[x]   update jem accessors generator.
+[x] DbField.getDefaultValue()->Object instead of .setDefaultValue(Object[]).
 [-] db: tn.delete(Class,id) taking into account if a dbobject needs cascading delete. needs instance of object thus convenience only.
 [x] db: RelAggN and RelAgg must delete through transaction to keep cache and dirty objects in sync.
 [x]   flush transaction prior to delete and check referring classes.
-[x] db: DbObjects getFirst(q,s,l) => DbObjects.first()
-[x] Form: two-step-constructions to implement
-[x]   aggregated objects views in tabs
+[x] db: DbObjects getFirst(q,s,l) => DbObjects.first().
+[x] Form: two-step-constructions to implement.
+[x]   aggregated objects views in tabs.
 [ ] View: clear search
 [x] BobElem implementing idPath logic from Form and View.
-[-] BobElem: implement Titled.   
-[o] FormDbo with convenience for editing dbobjects
-[-]   parentId? objectId x/y/z
+[-] BobElem: implement Titled.
+[o] FormDbo with convenience for editing dbobjects.
+[-]   parentId? objectId x/y/z.
 [x]     id path List<String> to Form and View? implemented with code smell.
 [-]     path,objectId to Form,View where path encoded x/y/z?
 [ ]     create object in View instead of Form?
@@ -36,30 +37,30 @@
 [x]     RelRef
 [x]       default value
 [x]     RelAgg. object must first be saved.
-[x]       create object with state "editing" when form is opened. when saved state "published"
+[x]       create object with state "editing" when form is opened. when saved state "published".
 [x]     RelAggN. object must first be saved.
-[x]       include ViewTable in form. includeView
+[x]       include ViewTable in form. includeView.
 [ ]         fix css for better rendering
-[x]       FormDbo: getViewsList(): for tabbed views of aggregated objects
-[x]         tabbed view query field grabs focus
-[x]   support for "create object at init" pattern
+[x]       FormDbo: getViewsList(): for tabbed views of aggregated objects.
+[x]         tabbed view query field grabs focus.
+[x]   support for "create object at init" pattern.
 [x]     annotation interface CreateObjectAtInit? ok.
-[x]     delete object at close in case no save has happened. action "cancel". onCancel(boolean saved)
-[x]        protected void cancel(xwriter)
+[x]     delete object at close in case no save has happened. action "cancel". onCancel(boolean saved).
+[x]        protected void cancel(xwriter).
 [ ]   include a form as a field for aggregation 1 to 1?
 [ ]   make it right. DboField, DboRel, save etc
 [ ]   FormRenderer wrapping xwriter and "this"? cookie.eat() or eat(cookie)
 [ ]   input clob
 [ ]   input blob
-[x] ViewTable: Query: throttle queries to one every nth milliseconds
-[x] bob.js: server is busy message box when typing fast
+[x] ViewTable: Query: throttle queries to one every nth milliseconds.
+[x] bob.js: server is busy message box when typing fast.
 [ ]   server busy ui element
 [ ] bob: FormDbo: save: check string lengths, min max values for numbers, timestamp
-[ ] bob: DboRef(Class,int) or DboRef(DbObject) with transient DbObject field intending to reduce calls to to db for object in context.
+[ ] bob: DboRef(Class,int) or DboRef(DbObject) with transient DbObject field intending to reduce calls to to db for object in context
 [ ]   websocket version will not serialize. ok to have object cached outliving the transaction?
 [x] db: RelAggN use id for context instead of ths? also.
 [x] db: RelRefN use id for context instead of ths? also.
-[x] db: RelAggN.delete(thsId,trgId) if target class does not need cascade do "delete from ... where ..."
+[x] db: RelAggN.delete(thsId,trgId) if target class does not need cascade do "delete from ... where ...".
 [x] db: DbRelation.ensureIndexes
 [x]   RelRef
 [x]   RelRefN
@@ -69,18 +70,18 @@
 [ ] xwriter: button tag
 [ ] xwriter: <elem> tag instead of duplicate code for span and div
 [ ] b: move convenience string methods etc to util
-[x] ViewTable: on mouse over row css
+[x] ViewTable: on mouse over row css.
 [ ] ViewTable: Table: <thead> and <tbody>
 [ ] ViewTable: click on row callback working with other links in the row
 [ ]   https://stackoverflow.com/questions/32404185/event-onclick-on-td-and-tr
 [ ]   https://stackoverflow.com/questions/28477422/checkbox-click-overriding-table-row-click
-[x] bob: Form: include view
+[x] bob: Form: include view.
 [ ] bob: Form: upload file
-[x] bob: Form: handling of exceptions, focus and highlighting field
+[x] bob: Form: handling of exceptions, focus and highlighting field.
 [ ] bob: version with query strings and pages
-[x] review x.css using bob.css
+[x] review x.css using bob.css.
 [ ] x.js and bob.js common script extracted
-[x] xwriter: select renderer
+[x] xwriter: select renderer.
 [o] xwriter review consistency tago etc
 [o] csv sample books:
 [x]   parse authors, separated by ';'
@@ -98,7 +99,7 @@
 [ ]   when initial page fits the page
 [ ]     keep reading pages until scroll bar appears
 [ ]   review code
-[x]   mobile chromium vertical document height (white-space:pre caused it)
+[x]   mobile chromium vertical document height (white-space:pre caused it).
 [ ] fix "// todo" comments
 [ ]   WebsockBob: load/save element at on_open and on_close
 [ ] FormFsFile: form has white space at the end of page from white-space:pre in div.output
@@ -115,7 +116,7 @@
 [ ] bob.app: dbclass to class
 [ ] Content-disposition: attachment; filename=file.txt
 [ ] howto for google cloud
-[ ] java: synchronize(Object) read { ... } allows multiple reader threads. synchronize(Object) write { ... } allows only one thread.
+[ ] java: synchronize(Object) read { ... } allows multiple reader threads. synchronize(Object) write { ... } allows only one thread
 -------------------------------------------------------------------------------
 dbo
 [x] RelRefN: removeAll
@@ -134,39 +135,39 @@ dbo
 [ ] cluster hangs when droplet (digitalocean) is destroyed
 [o] review code. search for "// todo" "// !" "// ?"
 [o] cluster
-[x]   connections to multiple servers
-[x]   write to all
+[x]   connections to multiple servers.
+[x]   write to all.
 [x]   read round robin. solved by the load balancer.
-[x]   file with ips of cluster nodes
-[x]   transactions on auto-commit
-[x]   establish one jdbc connection to the other servers
-[x]   all writes through a synchronized block writing to the other servers sequentially
-[x]   step 2. all writes through a synchronized block
-[x]   step 3. cluster server that synchronizes all writes
-[x]   cluster server does sql in parallel
-[x]   refresh connection every nth ms
+[x]   file with ips of cluster nodes.
+[x]   transactions on auto-commit.
+[x]   establish one jdbc connection to the other servers.
+[x]   all writes through a synchronized block writing to the other servers sequentially.
+[x]   step 2. all writes through a synchronized block.
+[x]   step 3. cluster server that synchronizes all writes.
+[x]   cluster server does sql in parallel.
+[x]   refresh connection every nth ms.
 [ ]   restore node with mysqldump
 [ ]     pause the cluster writes
 [ ]     mysqldump testdb | mysql -h ... etc
 [ ]     start bob
 [ ]     cluster listen
 [ ]     resume cluster writes 
-[x] Db.tableNameForJavaClass does not include package name
+[x] Db.tableNameForJavaClass does not include package name.
 [o] javadoc
 [ ] Query.TableAliasMap: User -> u. if u present try us etc
 [o] removing referenced DbObject. check and possibly fail or update to null? DbClass.List<RelRef>. setting on db update_referring
 [x]   updates referring tables column to null
 [ ]   objects in cache not updated. evict all objects of the referring type or iterate through cache and set null where field refers to deleted object
-[x]   racing conditions. example object referring to deleted object is committed after the deletes. not resolvable
-[x]   index on the referring field for delete ... where
+[x]   racing conditions. example object referring to deleted object is committed after the deletes. not resolvable.
+[x]   index on the referring field for delete ... where.
 [ ] Db.instance().makeConsistent() deleting RefN orphans, setting null on missing Ref etc 
 [ ] Db.instance().delete(Index) Db.instance().create(Index) for faster imports?
 [ ] check RelRef.set(id) vs RelRef.set(DbObject) check type? requires get() for id. still not safe. maybe when Db.mode_safe_ref_set=true
 [o] Index(DbField...)
-[x]    Collation asc (default)
+[x]    Collation asc (default).
 [ ]    Collation desc
 [o] Query(IndexFt,String)
-[x]   IN BOOLEAN MODE (default)
+[x]   IN BOOLEAN MODE (default).
 [ ]   IN NATURAL LANGUAGE MODE
 [ ]   IN NATURAL LANGUAGE MODE WITH QUERY EXPANSION
 [ ]   WITH QUERY EXPANSION
