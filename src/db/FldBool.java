@@ -2,11 +2,9 @@ package db;
 
 /** Boolean field. */
 public final class FldBool extends DbField {
-	final private boolean defval;
 
-	public FldBool(final boolean def) {
-		super("bit", 1, def ? "b'1'" : "b'0'", false, false);
-		defval = def;
+	public FldBool(final boolean defVal) {
+		super("bit", 1, defVal ? "b'1'" : "b'0'", defVal, false, false);
 	}
 
 	public FldBool() {
@@ -16,11 +14,6 @@ public final class FldBool extends DbField {
 	@Override
 	protected void sql_updateValue(final StringBuilder sb, final DbObject o) {
 		sb.append(getBool(o) ? "b'1'" : "b'0'");
-	}
-
-	@Override
-	protected Object getDefaultValue() {
-		return defval ? Boolean.TRUE : Boolean.FALSE;
 	}
 
 	public void setBool(final DbObject ths, final boolean v) {

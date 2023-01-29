@@ -12,23 +12,18 @@ public final class FldStr extends DbField {
 		this(size, null, true);
 	}
 
-	public FldStr(final String def) {
-		this(250, def, true);
+	public FldStr(final String defVal) {
+		this(250, defVal, true);
 	}
 
-	public FldStr(final int size, final String def) {
-		this(size, def, true);
+	public FldStr(final int size, final String defVal) {
+		this(size, defVal, true);
 	}
 
-	public FldStr(final int size, final String def, final boolean allowNull) {
-		super("varchar", size, def, allowNull, true);
+	public FldStr(final int size, final String defVal, final boolean allowNull) {
+		super("varchar", size, defVal, defVal, allowNull, true);
 		if (size > MAX_SIZE)
 			throw new RuntimeException("size " + size + " exceeds maximum of " + MAX_SIZE);
-	}
-
-	@Override
-	protected Object getDefaultValue() {
-		return sqlDefVal;
 	}
 
 	public void setStr(final DbObject ths, final String v) {

@@ -4,20 +4,13 @@ import java.sql.Timestamp;
 
 /** Timestamp field. */
 public final class FldTs extends DbField {
-	final private Timestamp defval;
 
-	public FldTs(final Timestamp def) {
-		super("timestamp", 0, def == null ? null : defValToStr(def), true, true);
-		defval = def;
+	public FldTs(final Timestamp defVal) {
+		super("timestamp", 0, defVal == null ? null : defValToStr(defVal), defVal, true, true);
 	}
 
 	public FldTs() {
 		this(null);
-	}
-
-	@Override
-	protected Object getDefaultValue() {
-		return defval;
 	}
 
 	public void setTs(final DbObject ths, final Timestamp v) {

@@ -22,6 +22,9 @@ public abstract class DbField {
 	 * {@link DatabaseMetaData}.getColumns(...).
 	 */
 	final protected String sqlDefVal;
+
+	/** Default value of type returned by {@link ResultSet}. */
+	final protected Object defVal;
 	final protected boolean allowsNull;
 	/**
 	 * true if default value is to be enclosed by quotes and escaped at column
@@ -42,11 +45,12 @@ public abstract class DbField {
 	 * @param isStringType true if default value is to be enclosed by quotes and
 	 *                     escaped at column definition and update.
 	 */
-	protected DbField(final String sqlType, final int size, final String sqlDefVal, final boolean allowsNull,
-			final boolean isStringType) {
+	protected DbField(final String sqlType, final int size, final String sqlDefVal, final Object defVal,
+			final boolean allowsNull, final boolean isStringType) {
 		type = sqlType;
 		this.size = size;
 		this.sqlDefVal = sqlDefVal;
+		this.defVal = defVal;
 		this.allowsNull = allowsNull;
 		this.isStringType = isStringType;
 	}
@@ -148,8 +152,8 @@ public abstract class DbField {
 	 * @return default value as an object of type returned by {@link ResultSet}
 	 *         getObject(int).
 	 */
-	protected Object getDefaultValue() {
-		return null;
+	protected final Object getDefaultValue() {
+		return defVal;
 	}
 
 	/** Sets value in object field values and marks field and object dirty. */

@@ -2,20 +2,13 @@ package db;
 
 /** Double field. */
 public final class FldDbl extends DbField {
-	final private Double defval;
 
-	public FldDbl(final double def) {
-		super("double", 0, defValToStr(def), false, false);
-		defval = def;
+	public FldDbl(final double defVal) {
+		super("double", 0, defValToStr(defVal), defVal, false, false);
 	}
 
 	public FldDbl() {
 		this(0.0);
-	}
-
-	@Override
-	protected Object getDefaultValue() {
-		return defval;
 	}
 
 	// mysql default values returns no decimals if none necessary

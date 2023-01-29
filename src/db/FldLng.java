@@ -2,20 +2,13 @@ package db;
 
 /** Long field. */
 public final class FldLng extends DbField {
-	final private Long defval;
 
-	public FldLng(final long def) {
-		super("bigint", 0, Long.toString(def), false, false);
-		defval = def;
+	public FldLng(final long defVal) {
+		super("bigint", 0, Long.toString(defVal), defVal, false, false);
 	}
 
 	public FldLng() {
 		this(0);
-	}
-
-	@Override
-	protected Object getDefaultValue() {
-		return defval;
 	}
 
 	public void setLng(final DbObject ths, final long v) {

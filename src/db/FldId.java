@@ -3,7 +3,7 @@ package db;
 /** Primary key integer field. */
 public final class FldId extends DbField {
 	FldId() {
-		super("int", 0, null, false, false);
+		super("int", 0, null, null, false, false);
 	}
 
 	public void setId(final DbObject ths, final int v) {

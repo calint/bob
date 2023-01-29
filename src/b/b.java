@@ -547,9 +547,9 @@ final public class b{
 		}
 		return true;
 	}
-	enum op{
-		read,write,noop
-	}
+//	enum op{
+//		read,write,noop
+//	}
 	public static void cp(final InputStream in,final Writer out) throws Throwable{
 		cp(new InputStreamReader(in,strenc),out,null);
 	}

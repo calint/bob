@@ -4,13 +4,8 @@ import db.DbField;
 import db.DbObject;
 
 public final class FldChars extends DbField {
-	public FldChars(final int size, final String def) {
-		super("char", size, def == null ? null : def, true, true);
-	}
-
-	@Override
-	protected Object getDefaultValue() {
-		return sqlDefVal;
+	public FldChars(final int size, final String defVal) {
+		super("char", size, defVal == null ? null : defVal, defVal, true, true);
 	}
 
 	public void setChars(final DbObject ths, final String v) {

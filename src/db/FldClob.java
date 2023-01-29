@@ -3,7 +3,7 @@ package db;
 /** CLOB field. */
 public final class FldClob extends DbField {
 	public FldClob() {
-		super("longtext", 0, null, true, true);
+		super("longtext", 0, null, null, true, true);
 	}
 
 	public void setClob(final DbObject ths, final String v) {

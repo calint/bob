@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 public final class FldSerializable extends DbField {
 	public FldSerializable() {
-		super("longblob", 0, null, true, false);
+		super("longblob", 0, null, null, true, false);
 	}
 
 	@Override
