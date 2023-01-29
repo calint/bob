@@ -87,6 +87,16 @@ public abstract class DbField {
 		return sqlDefVal;
 	}
 
+	/**
+	 * Called by {@link DbTransaction} at object creation.
+	 *
+	 * @return default value as an object of type returned by {@link ResultSet}
+	 *         getObject(int).
+	 */
+	public final Object getDefaultValue() {
+		return defVal;
+	}
+
 	public final boolean isAllowsNull() {
 		return allowsNull;
 	}
@@ -144,16 +154,6 @@ public abstract class DbField {
 		}
 
 		sb.append(v);
-	}
-
-	/**
-	 * Called by {@link DbTransaction} at object creation.
-	 *
-	 * @return default value as an object of type returned by {@link ResultSet}
-	 *         getObject(int).
-	 */
-	protected final Object getDefaultValue() {
-		return defVal;
 	}
 
 	/** Sets value in object field values and marks field and object dirty. */

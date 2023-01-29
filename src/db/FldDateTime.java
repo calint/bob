@@ -3,7 +3,7 @@ package db;
 import java.sql.Timestamp;
 
 /** Date time field. */
-public class FldDateTime extends DbField {
+public final class FldDateTime extends DbField {
 
 	public FldDateTime() {
 		this(null);
