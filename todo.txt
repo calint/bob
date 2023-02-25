@@ -1,10 +1,11 @@
 [ ] b: fix for client that makes many threaded requests and then stalls them to starve server of threads or create too many. ddos.
 [ ]   slowhttptest
-[x] db: DbField.defaultValue to avoid boxing.
-[ ] db.test: test default values
 [ ] ViewTable: Element.scrollIntoView() instead of scroll to top considering included views
 [ ] b.user: email, password hash, security bits. b.session: ref user
 [ ] bob: login framework
+[ ] bob: Form: upload file
+[x] db: DbField.defaultValue to avoid boxing.
+[ ] db.test: test default values
 [x] db: DbObject.onCreate().
 [x] b.session: created time stamp
 [ ] class_init extended to set statics on any class
@@ -76,7 +77,6 @@
 [ ]   https://stackoverflow.com/questions/32404185/event-onclick-on-td-and-tr
 [ ]   https://stackoverflow.com/questions/28477422/checkbox-click-overriding-table-row-click
 [x] bob: Form: include view.
-[ ] bob: Form: upload file
 [x] bob: Form: handling of exceptions, focus and highlighting field.
 [ ] bob: version with query strings and pages
 [x] review x.css using bob.css.
