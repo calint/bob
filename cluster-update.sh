@@ -12,7 +12,7 @@ for IP in $IPS; do
 	CMD='cd /bob && git fetch && git reset --hard HEAD && git merge '@{u}' && ./build.sh'
 
 	echo $IP: $CMD
-	ssh -n root@$IP "$CMD" &
+	ssh -o "StrictHostKeyChecking no" -n root@$IP "$CMD" &
 done
 
 wait
