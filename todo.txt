@@ -5,7 +5,7 @@
 [ ] bob: login framework
 [ ] bob: Form: upload file
 [ ] b: in memory session with transfer between cluster members
-[ ]   in session (updated at every request) current server ip is stored
+[ ]   in session (updated at every request) store current server ip
 [ ]   if ip changes transfer in memory session from previous ip to current ip
 [ ]   load balancer mode sticky session
 [x] db: DbField.defaultValue to avoid boxing.
