@@ -1,0 +1,49 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "bob",
+            "request": "launch",
+            "mainClass": "b.b",
+            "projectName": "bob",
+            "args": [
+                "bapp_jdbc_host", "localhost",
+                "bapp_jdbc_db", "testdb", 
+                "bapp_jdbc_user", "c",
+                "bapp_jdbc_password", "password",
+                "bapp_jdbc_ncons", "10",
+            ]
+        },
+        {
+            "type": "java",
+            "name": "bob-cluster-mode",
+            "request": "launch",
+            "mainClass": "b.b",
+            "projectName": "bob",
+            "args": [
+                "bapp_cluster_mode", "true", 
+                "bapp_cluster_ip", "127.0.0.1", 
+                "bapp_cluster_port", "8889", 
+                "bapp_jdbc_host", "localhost",
+                "bapp_jdbc_db", "testdb", 
+                "bapp_jdbc_user", "c",
+                "bapp_jdbc_password", "password",
+                "bapp_jdbc_ncons", "10"
+            ]
+        },
+        {
+            "type": "java",
+            "name": "bob-cluster",
+            "request": "launch",
+            "mainClass": "db.Cluster",
+            "projectName": "bob",
+            "args": [
+                "cluster.cfg", "testdb", "c", "password"
+            ]
+        }
+    ]
+}
