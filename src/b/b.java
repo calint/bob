@@ -105,6 +105,7 @@ final public class b{
 	private final static HashMap<String,byte[]> file_suffix_to_content_type_map=new HashMap<String,byte[]>();
 	public static void main(final String[] args) throws Throwable{
 		out.println(hello);
+		out.println("java: "+System.getProperty("java.version"));
 		id=InetAddress.getLocalHost().getHostName();
 		if(!class_init(b.class,args))
 			return;

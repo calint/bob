@@ -1,0 +1,9 @@
+{
+    "java.configuration.runtimes": [
+        {
+            "name": "J2SE-1.5",
+            "path": "/home/c/Downloads/jdk1.5.0_22",
+            "default": true
+        }
+    ]
+}
