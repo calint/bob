@@ -9,7 +9,7 @@ TRGT=$1
 IPS=$(cat cluster-ips.txt.$TRGT | sed -r '/^\s*$/d' | sed -r '/^\s*#/d')
 
 for IP in $IPS; do
-	CMD='cd /bob && git fetch && git reset --hard HEAD && git merge '@{u}' && ./build.sh'
+	CMD='cd /bob && git reset --hard HEAD && ./build.sh'
 
 	echo $IP: $CMD
 	ssh -o "StrictHostKeyChecking no" -n root@$IP "$CMD" &
