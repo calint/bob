@@ -7,6 +7,10 @@ ssh root@ journalctl -u bob -e | grep http404 | cut -b 79-180 | sort -u | less
 
 SHOW VARIABLES WHERE Variable_Name IN ('connect_timeout', 'interactive_timeout', 'wait_timeout');
 
+TAG=2023-04-19--1 && git tag $TAG && git push origin $TAG
+
+git reset --hard HEAD
+
 localhost, cluster 1 node 
 test1 100 runs
 no-cluster    cluster    cluster-nio  no-cluster (autocommit)
