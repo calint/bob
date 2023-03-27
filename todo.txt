@@ -85,7 +85,6 @@
 [ ] bob: version with query strings and pages
 [x] review x.css using bob.css.
 [ ] x.js and bob.js common script extracted
-[x] xwriter: select renderer.
 [o] xwriter review consistency tago etc
 [o] csv sample books:
 [x]   parse authors, separated by ';'
@@ -122,6 +121,7 @@
 [ ] howto for google cloud
 [ ] java: synchronize(Object) read { ... } allows multiple reader threads. synchronize(Object) write { ... } allows only one thread
 -------------------------------------------------------------------------------
+[x] xwriter: select renderer.
 dbo
 [x] RelRefN: removeAll
 [x]   update jem
