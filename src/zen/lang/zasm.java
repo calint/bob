@@ -64,7 +64,7 @@ public class zasm {
 					throw new Exception(id.sourcePos() + ": unexpected end of file");
 			}
 			if (zn.isEmpty()) {
-				stmts.add(new Eof(zn));
+				stmts.add(new StmtEof(zn));
 				break;
 			}
 			if (id == null) {
