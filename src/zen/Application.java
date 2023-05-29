@@ -22,6 +22,7 @@ public final class Application implements bapp {
 
 		b.b.set_file_suffix_to_content_type("java", "text/plain");
 
+		// bob.js uses this websocket
 		b.b.set_path_to_class("/bob/websocket", zen.WebSock.class);
 	}
 
