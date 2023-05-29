@@ -22,6 +22,21 @@ public class zasm {
 
 		System.out.println("compiling: " + srcPath);
 		String srcIn = readFileToString(srcPath.toString());
+
+		CompilationResult cr = compile(srcIn, padTo64K);
+
+		String compiledPathStr = srcPathStr.substring(0, srcPathStr.lastIndexOf('.')) + ".mem";
+		writeStringToFile(compiledPathStr, cr.output);
+		System.out.println("    wrote: " + compiledPathStr);
+		System.out.println("     size: " + cr.size);
+	}
+
+	private static class CompilationResult {
+		String output;
+		int size;
+	}
+
+	private static CompilationResult compile(String srcIn, boolean padTo64K) throws Throwable {
 		Tokenizer tz = new Tokenizer(srcIn);
 		StringBuilder srcOut = new StringBuilder();
 		while (true) {
@@ -138,12 +153,10 @@ public class zasm {
 			System.out.println("!!! source and parsed source differ. See file 'diff'");
 		}
 		// String compiled = toc.toHexString();
-		String compiled = tc.toAnnotatedHexString(padTo64K); // false: don't pad to 64K
-
-		String compiledPathStr = srcPathStr.substring(0, srcPathStr.lastIndexOf('.')) + ".mem";
-		writeStringToFile(compiledPathStr, compiled);
-		System.out.println("    wrote: " + compiledPathStr);
-		System.out.println("     size: " + tc.getProgramCounter());
+		CompilationResult cr = new CompilationResult();
+		cr.output = tc.toAnnotatedHexString(padTo64K); // false: don't pad to 64K
+		cr.size = tc.getProgramCounter();
+		return cr;
 	}
 
 	public static String readFileToString(String filePath) throws IOException {

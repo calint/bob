@@ -284,4 +284,13 @@ class Toc {
 		sb.append('\n');
 		return sb.toString();
 	}
+
+	public short[] toBinary(final short[] bin) {
+		final int n = instrs.size();
+		for (int i = 0; i < n; i++) {
+			short instr = instrs.get(i);
+			bin[i] = instr;
+		}
+		return bin;
+	}
 }
