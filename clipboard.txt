@@ -1,3 +1,8 @@
+-------------------------------------------------------------------------------------------------
+new database for new application:
+sudo mysql -u root
+create database zen;create user 'c'@'%' identified by 'password';grant all on zen.* to 'c'@'%';
+-------------------------------------------------------------------------------------------------
 
 journalctl -u bob | grep ClassNotFoundException | cut -c 1-200
 

@@ -122,6 +122,8 @@ final public class b{
 		set_path_to_resource("/x.js","/b/x.js");
 		set_path_to_resource("/x.css","/b/x.css");
 		set_path_to_resource("/favicon.ico","/b/favicon.ico");
+		set_path_to_resource("/bob.js","/b/bob.js");
+
 		set_file_suffix_to_content_type("js","application/javascript");
 
 		// initiate db

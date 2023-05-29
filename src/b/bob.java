@@ -1,32 +1,32 @@
-package bob;
+package b;
 
 import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
-import b.a;
-import b.b;
-import b.websock;
-import b.xwriter;
 import db.Db;
 
-final public class WebsockBob extends websock {
+public class bob extends websock {
 	private final static String axfld = "$";
-	public String controllerClassName = "bob.app.Ctrl";
 	protected a controller;
 
-	public WebsockBob() {
+	public bob() {
 		super(true);
 	}
 
+	/** override to provide the root class */
+	protected Class<? extends a> rootClass() {
+		return a.class;
+	}
+
 	@Override
-	protected void on_opened() throws Throwable {
+	final protected void on_opened() throws Throwable {
 //		System.out.println("websocket "+Integer.toHexString(hashCode())+": on_opened");
 		try {
 			Db.initCurrentTransaction();
 			// todo load root from db or create new
-			controller = (a) Class.forName(controllerClassName).getConstructor().newInstance();
+			controller = (a) rootClass().getConstructor().newInstance();
 
 			final xwriter js = new xwriter();
 			final xwriter x = js.xub(controller, true, false);
@@ -40,7 +40,7 @@ final public class WebsockBob extends websock {
 	}
 
 	@Override
-	protected void on_message(final ByteBuffer bb) throws Throwable {
+	final protected void on_message(final ByteBuffer bb) throws Throwable {
 		if (bb.remaining() == 0) // a keep-alive message from bob.js
 			return;
 		try {
@@ -129,7 +129,7 @@ final public class WebsockBob extends websock {
 	}
 
 	@Override
-	protected void on_closed() throws Throwable {
+	final protected void on_closed() throws Throwable {
 //		System.out.println("websocket "+Integer.toHexString(hashCode())+": on_closed");
 		// todo store root in db
 	}

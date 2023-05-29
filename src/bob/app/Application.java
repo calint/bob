@@ -42,7 +42,7 @@ public final class Application implements bapp {
 
 		b.b.set_file_suffix_to_content_type("java", "text/plain");
 
-		b.b.set_path_to_class("/bob/websocket", bob.WebsockBob.class);
+		b.b.set_path_to_class("/bob/websocket", WebSock.class);
 		b.b.set_path_to_class("/stats", b.a_stats.class);
 		b.b.set_path_to_class("/pbob", bob.app.ControllerPostback.class);
 //		b.b.set_path_to_class("/bob", bob.elem.ctrl.class);
