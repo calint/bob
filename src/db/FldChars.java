@@ -1,7 +1,4 @@
-package db.test;
-
-import db.DbField;
-import db.DbObject;
+package db;
 
 public final class FldChars extends DbField {
 	public FldChars(final int size, final String defVal) {

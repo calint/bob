@@ -4,11 +4,11 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import db.DbObject;
+import db.FldChars;
 import db.FldTs;
 import db.Index;
 import db.Query;
 import db.RelAggN;
-import db.test.FldChars;
 
 public final class session extends DbObject{
 	public final static FldChars sessionId=new FldChars(32,"");

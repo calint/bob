@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import db.DbObject;
+import db.FldChars;
 import db.FldDateTime;
 import db.FldSerializable;
 import db.FldStr;
