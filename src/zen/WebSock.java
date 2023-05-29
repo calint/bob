@@ -1,11 +1,11 @@
 package zen;
 
-import b.bob;
 import b.a;
+import b.bob;
 
 public class WebSock extends bob {
-    @Override
-    protected Class<? extends a> rootClass() {
-        return One.class;
-    }
+	@Override
+	protected Class<? extends a> rootClass() {
+		return One.class;
+	}
 }
