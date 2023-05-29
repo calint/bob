@@ -3,7 +3,7 @@ package zen.emu;
 public final class Core {
 	private final Calls cs;
 
-	private final RAM ram;
+	private final short[] ram;
 	private final UartTx utx;
 	private final UartRx urx;
 
@@ -12,10 +12,6 @@ public final class Core {
 	private int pc;
 	private boolean zf;
 	private boolean nf;
-	private boolean is_ldi;
-	private int ldi_reg;
-	private boolean is_do_op = true;
-	private boolean was_do_op = true;
 	private int leds;
 
 	private static final int OP_ADDI = 0x1;
@@ -39,8 +35,10 @@ public final class Core {
 	private static final int OP_IO_LED = 0x7;
 	private static final int OP_IO_LEDI = 0xf;
 
+	private long tck;
+
 	public Core(final int regs_addr_width, final int calls_addr_width,
-			final RAM ram, final UartTx utx, final UartRx urx) {
+			final short[] ram, final UartTx utx, final UartRx urx) {
 		this.regs = new short[2 ^ regs_addr_width];
 		cs = new Calls(calls_addr_width);
 		this.ram = ram;
@@ -48,8 +46,10 @@ public final class Core {
 		this.urx = urx;
 	}
 
-	public void tick() { // ? does not emulate pipeline bubble
-		final short instr = ram.get(pc);
+	public void tick() { // ? does not emulate pipeline bubble or 2 cycle ldi
+		tck++;
+
+		final short instr = ram[pc];
 		final boolean instr_z = (instr & 1) != 0;
 		final boolean instr_n = (instr & 2) != 0;
 		final boolean instr_r = (instr & 4) != 0;
@@ -59,39 +59,31 @@ public final class Core {
 		final int regb = (instr & 0xf000) >> 12;
 		final int imm12 = (instr & 0xfff0) >> 4;
 
-		was_do_op = is_do_op;
+		final boolean is_do_op = ((instr_z && instr_n)
+				|| (instr_z == zf && instr_n == nf));
 
-		is_do_op = !is_ldi
-				&& ((instr_z && instr_n) || (instr_z == zf && instr_n == nf));
-		final boolean is_call = is_do_op && instr_c && !instr_r;
-		final boolean is_ret = is_do_op && !instr_c && instr_r;
-		final boolean is_jmp = is_do_op && instr_c && instr_r;
-
-		if (was_do_op && is_ldi) {
-			regs[ldi_reg] = instr;
-			is_ldi = false;
+		if (!is_do_op) {
 			pc++;
 			return;
 		}
-		if (is_call) {
+
+		if (is_do_op && instr_c && !instr_r) { // call
 			cs.push(pc, zf, nf);
 			pc = imm12 << 4;
+			tck++; // bubble
 			return;
 		}
-		if (is_jmp) {
+
+		if (is_do_op && instr_c && instr_r) { // jmp
 			final int signedImm12 = signedImm12ToInt(imm12);
 			pc += signedImm12;
+			tck++; // bubble
 			return;
 		}
-		if (is_ret) {
-			zf = cs.getZf();
-			nf = cs.getNf();
-			pc = cs.getPc() + 1;
-			cs.pop();
-		} else {
-			pc++;
-		}
-		if (op == OP_LDI && rega != 0) {
+
+		boolean is_stall = false;
+
+		if (op == OP_LDI && rega != 0) { // is I/O ?
 			switch (rega) {
 				case OP_IO_WL :
 					utx.send(regs[regb] & 0x00ff);
@@ -100,8 +92,17 @@ public final class Core {
 					utx.send(((regs[regb] & 0xff00) >> 8) & 0xff);
 					break;
 				case OP_IO_RL :
+					if (urx.dr) {
+						regs[regb] = (short) ((regs[regb] & 0xff00) | urx.data);
+						urx.dr = false;
+					}
 					break;
 				case OP_IO_RH :
+					if (urx.dr) {
+						regs[regb] |= (short) ((regs[regb] & 0x00ff)
+								| urx.data << 8);
+						urx.dr = false;
+					}
 					break;
 				case OP_IO_LED :
 					leds = regs[regb] & 0x000f;
@@ -110,75 +111,92 @@ public final class Core {
 					leds = rega;
 					break;
 			}
+		} else {
+			short res;
+			switch (op) {
+				case OP_ADD :
+					res = (short) (regs[regb] + regs[rega]);
+					zn(res);
+					regs[regb] = res;
+					break;
+				case OP_SUB :
+					res = (short) (regs[regb] - regs[rega]);
+					zn(res);
+					regs[regb] = res;
+					break;
+				case OP_OR :
+					res = (short) (regs[regb] | regs[rega]);
+					zn(res);
+					regs[regb] = res;
+					break;
+				case OP_XOR :
+					res = (short) (regs[regb] ^ regs[rega]);
+					zn(res);
+					regs[regb] = res;
+					break;
+				case OP_AND :
+					res = (short) (regs[regb] & regs[rega]);
+					zn(res);
+					regs[regb] = res;
+					break;
+				case OP_NOT :
+					res = (short) ~regs[rega];
+					zn(res);
+					regs[regb] = res;
+					break;
+				case OP_CP :
+					res = (short) ~regs[rega];
+					zn(res);
+					regs[regb] = res;
+					break;
+				case OP_SHF :
+					final int nbits = signedImm4PosIncInt(rega);
+					res = (short) (nbits < 0
+							? regs[regb] << nbits
+							: regs[regb] >> nbits);
+					zn(res);
+					regs[regb] = res;
+					break;
+				case OP_ADDI :
+					res = (short) (regs[regb] + signedImm4PosIncInt(rega));
+					zn(res);
+					regs[regb] = res;
+					break;
+				case OP_LDI :
+					pc++;
+					regs[rega] = ram[pc];
+					break;
+				case OP_LD : {
+					regs[regb] = ram[shortToUnsignedInt(regs[rega])];
+					break;
+				}
+				case OP_ST : {
+					ram[shortToUnsignedInt(regs[rega])] = regs[regb];
+					break;
+				}
+				default :
+					assert (false);
+			}
+		}
+
+		if (is_stall)
 			return;
+
+		if (is_do_op && !instr_c && instr_r) { // ret
+			zf = cs.getZf();
+			nf = cs.getNf();
+			pc = cs.getPc() + 1;
+			cs.pop();
+			tck++; // bubble
+		} else {
+			pc++;
 		}
-		short res;
-		switch (op) {
-			case OP_ADD :
-				res = (short) (regs[regb] + regs[rega]);
-				zn(res);
-				regs[regb] = res;
-				break;
-			case OP_SUB :
-				res = (short) (regs[regb] - regs[rega]);
-				zn(res);
-				regs[regb] = res;
-				break;
-			case OP_OR :
-				res = (short) (regs[regb] | regs[rega]);
-				zn(res);
-				regs[regb] = res;
-				break;
-			case OP_XOR :
-				res = (short) (regs[regb] ^ regs[rega]);
-				zn(res);
-				regs[regb] = res;
-				break;
-			case OP_AND :
-				res = (short) (regs[regb] & regs[rega]);
-				zn(res);
-				regs[regb] = res;
-				break;
-			case OP_NOT :
-				res = (short) ~regs[rega];
-				zn(res);
-				regs[regb] = res;
-				break;
-			case OP_CP :
-				res = (short) ~regs[rega];
-				zn(res);
-				regs[regb] = res;
-				break;
-			case OP_SHF :
-				final int nbits = signedImm4PosIncInt(rega);
-				res = (short) (nbits < 0
-						? regs[regb] << nbits
-						: regs[regb] >> nbits);
-				zn(res);
-				regs[regb] = res;
-				break;
-			case OP_ADDI :
-				res = (short) (regs[regb] + signedImm4PosIncInt(rega));
-				zn(res);
-				regs[regb] = res;
-				break;
-			case OP_LDI :
-				ldi_reg = rega;
-				is_ldi = true;
-				break;
-			case OP_LD : {
-				regs[regb] = ram.get(shortToUnsignedInt(regs[rega]));
-				break;
-			}
-			case OP_ST : {
-				ram.set(shortToUnsignedInt(regs[rega]), regs[regb]);
-				break;
-			}
-			default :
-				assert (false);
-		}
+
 	}
 
+	public long getTickNum() {
+		return tck;
+	}
 	private void zn(short i) {
 		zf = i == 0;
 		nf = i < 0;
@@ -201,5 +219,36 @@ public final class Core {
 
 	public int getLeds() {
 		return leds;
+	}
+
+	private final static class Calls {
+		final private int[] mem;
+		int idx = -1;
+
+		public Calls(final int addr_width) {
+			mem = new int[2 ^ addr_width];
+		}
+
+		public void push(final int addr, final boolean zf, final boolean nf) {
+			idx++;
+			mem[idx] = addr | (zf ? 0x1000 : 0) | (nf ? 0x2000 : 0);
+		}
+
+		public void pop() {
+			idx--;
+			assert (idx >= -1);
+		}
+
+		public int getPc() {
+			return mem[idx] & 0xffff;
+		}
+
+		public boolean getZf() {
+			return (mem[idx] & 0x10000) != 0;
+		}
+
+		public boolean getNf() {
+			return (mem[idx] & 0x20000) != 0;
+		}
 	}
 }

@@ -6,4 +6,7 @@ public final class UartTx {
 		System.out.println("UartTx: " + imm8);
 	}
 
+	public void tick() {
+
+	}
 }
