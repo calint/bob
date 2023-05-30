@@ -6,7 +6,6 @@ public final class UartTx {
 	public boolean go;
 
 	public void send(int imm8) {
-		System.out.println("UartTx: " + imm8);
 		dataImm8 = imm8;
 		go = true;
 	}

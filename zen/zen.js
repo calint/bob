@@ -4,7 +4,7 @@ let zen_tx_buf = [];
 function zen_run_toggle() {
     zen_run_do = !zen_run_do;
     if (zen_run_do) {
-        zen_run_interval_id = setInterval(zen_run, 100);
+        zen_run_interval_id = setInterval(zen_run, 10);
     } else {
         clearInterval(zen_run_interval_id);
     }

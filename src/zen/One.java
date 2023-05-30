@@ -40,7 +40,8 @@ public class One extends a {
 		x.a("javascript:zen_tick()", "step");
 		// x.ax(this, "t", "step");
 		x.p(" ");
-		x.ax(this, "r", "run");
+		x.a("javascript:zen_run_toggle()", "run");
+//		x.ax(this, "r", "run");
 		x.p(" ");
 		x.ax(this, "rst", "reset");
 		x.div_();
@@ -71,7 +72,7 @@ public class One extends a {
 		zasm.compile(s.toString(), soc.ram);
 		x.xu(r);
 		x.xu(c);
-		selectSourceRange(x);
+		// selectSourceRange(x);
 	}
 
 	private boolean selectActiveInstruction = true;
@@ -90,22 +91,21 @@ public class One extends a {
 		}
 		x.xu(r);
 		x.xu(c);
-		if (selectActiveInstruction) {
-			selectSourceRange(x);
-		}
+		// if (selectActiveInstruction) {
+		// 	selectSourceRange(x);
+		// }
 	}
 
 	public final void x_rst(final xwriter x, final String param) throws Throwable {
 		soc.reset();
 		x.xu(r);
 		x.xu(c);
-		if (selectActiveInstruction) {
-			selectSourceRange(x);
-		}
+		// if (selectActiveInstruction) {
+		// 	selectSourceRange(x);
+		// }
 	}
 
 	public final void x_r(final xwriter x, final String param) throws Throwable {
-		x.p("zen_run_toggle();");
 		selectActiveInstruction = !selectActiveInstruction;
 	}
 
