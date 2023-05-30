@@ -23,9 +23,13 @@ public class One extends a {
 	public void to(xwriter x) throws Throwable {
 		x.p("zen-one emulator and integrated development environment");
 		x.br();
+		x.ax(this, "s", "save");
+		x.p(" ");
 		x.ax(this, "c", "compile");
 		x.p(" ");
-		x.ax(this, "t", "tick");
+		x.ax(this, "t", "step");
+		x.p(" ");
+		x.ax(this, "r", "run");
 		x.br();
 		x.inptxtarea(src, "large");
 		x.divh(ram);

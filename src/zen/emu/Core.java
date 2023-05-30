@@ -208,7 +208,7 @@ public final class Core {
 	}
 
 	private static int signedImm12ToInt(final int imm12) {
-		return ((imm12 & 0x800) != 0) ? (imm12 | 0xffff0000) : imm12;
+		return ((imm12 & 0x800) != 0) ? (imm12 | 0xfffff000) : imm12;
 	}
 
 	private static int shortToUnsignedInt(final short i) {

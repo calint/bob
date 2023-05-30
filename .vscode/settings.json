@@ -5,5 +5,6 @@
             "path": "~/Downloads/jdk1.5.0_22",
             "default": true
         }
-    ]
+    ],
+    "java.debug.settings.hotCodeReplace": "auto"
 }
