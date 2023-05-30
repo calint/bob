@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
 
-class Toc {
+final class Toc {
 	public enum LinkType {
 		CALL, JMP, LDI
 	}
@@ -18,7 +18,8 @@ class Toc {
 	private int pc;
 
 	private static class Scope {
-		HashMap<String, Label> labels = new HashMap<String, Label>(); // labels declared in this scope
+		// labels declared in this scope
+		HashMap<String, Label> labels = new HashMap<String, Label>();
 		String name; // the function name
 
 		public Scope(String name) {
@@ -33,7 +34,8 @@ class Toc {
 		String scopedName; // name including scope
 		LinkType type; // call, jmp, ldi
 
-		public Link(Token token, int pc, String name, String scopedName, LinkType type) {
+		public Link(Token token, int pc, String name, String scopedName,
+				LinkType type) {
 			this.token = token;
 			this.pc = pc;
 			this.name = name;
@@ -58,7 +60,8 @@ class Toc {
 
 	public void enterFunc(Token tk, String name) throws Throwable {
 		if (!scopes.isEmpty())
-			throw new Exception(tk.sourcePos() + ": cannot declare function within function");
+			throw new Exception(tk.sourcePos()
+					+ ": cannot declare function within function");
 		scopes.push(new Scope(name));
 	}
 
@@ -91,7 +94,8 @@ class Toc {
 
 	private void ensureCommentsArraySize() {
 		final int n = comments.size();
-		final int m = pc + 1; // +1 because comments before the statement are added to next pc
+		final int m = pc + 1; // +1 because comments before the statement are
+								// added to next pc
 		for (int i = n; i < m; i++) {
 			comments.add(null);
 		}
@@ -113,42 +117,53 @@ class Toc {
 		pc++;
 	}
 
-	public void write(Statement stmt, short instr, LinkType linkType, String label, Token tk) {
+	public void write(Statement stmt, short instr, LinkType linkType,
+			String label, Token tk) {
 		Link lnk = new Link(tk, pc, label, getScopePrefix() + label, linkType);
 		links.add(lnk);
 		write(stmt, instr);
 	}
 
-	public void addLabel(Token tk, String name, boolean isFunc) throws Throwable {
+	public void addLabel(Token tk, String name, boolean isFunc)
+			throws Throwable {
 		Label lbl = getLabelInCurrentScope(name);
 		if (lbl != null) {
-			throw new Exception(tk.sourcePos() + ": label '" + name + "' already declared at " + lbl.token.sourcePos());
+			throw new Exception(tk.sourcePos() + ": label '" + name
+					+ "' already declared at " + lbl.token.sourcePos());
 		}
 		if (isFunc) {
 			// align at 16 bytes
 			if ((pc & 0xf) != 0) {
 				int pc_nxt = (pc & 0xfff0) + 0x10;
 				if (pc_nxt > 0xffff)
-					throw new Exception(tk.sourcePos() + ": function '" + name + "' cannot be located at '" + pc_nxt
-							+ "' because it would be out-of-range of '" + 0xfff0 + "'");
+					throw new Exception(tk.sourcePos() + ": function '" + name
+							+ "' cannot be located at '" + pc_nxt
+							+ "' because it would be out-of-range of '" + 0xfff0
+							+ "'");
 				fwdPcTo(tk, pc_nxt, true);
 			}
 		}
 		Label newLbl = new Label(tk, pc, name, isFunc);
-		allLabels.put(getScopePrefix() + name, newLbl); // i.e. 'print.done' where 'done' is the label
+		allLabels.put(getScopePrefix() + name, newLbl); // i.e. 'print.done'
+														// where 'done' is the
+														// label
 		if (isFunc) {
 			enterFunc(tk, name);
 		} else {
-			if (!scopes.isEmpty()) { // if within the scope of a function add the label to current scope
+			if (!scopes.isEmpty()) { // if within the scope of a function add
+										// the label to current scope
 				scopes.peek().labels.put(name, newLbl);
 			}
 		}
 	}
 
 	/** Moves the program counter forward and pads the space with 0. */
-	public void fwdPcTo(Token tk, int addr, boolean moveComments) throws Throwable {
+	public void fwdPcTo(Token tk, int addr, boolean moveComments)
+			throws Throwable {
 		if (addr < pc)
-			throw new Exception(tk.sourcePos() + ": cannot move program counter to " + addr + " because it is " + pc);
+			throw new Exception(
+					tk.sourcePos() + ": cannot move program counter to " + addr
+							+ " because it is " + pc);
 		// add empty statements in the padding
 		for (int i = pc; i < addr; i++) {
 			instrs.add((short) 0);
@@ -168,38 +183,47 @@ class Toc {
 		for (Link lnk : links) {
 			short instr = instrs.get(lnk.pc);
 			switch (lnk.type) {
-			case CALL: {
-				Label lbl = allLabels.get(lnk.name); // get function from global scope using 'name'
-				if (lbl == null)
-					throw new Exception(lnk.token.sourcePos() + ": function '" + lnk.name + "' not found");
+				case CALL : {
+					Label lbl = allLabels.get(lnk.name); // get function from
+															// global scope
+															// using 'name'
+					if (lbl == null)
+						throw new Exception(lnk.token.sourcePos()
+								+ ": function '" + lnk.name + "' not found");
 
-				assert ((lbl.pc & 0xf) == 0);
-				instr |= lbl.pc;
-				break;
-			}
-			case JMP: {
-				Label lbl = allLabels.get(lnk.scopedName); // get label from current scope
-				if (lbl == null)
-					throw new Exception(lnk.token.sourcePos() + ": label '" + lnk.scopedName + "' not found");
-
-				int dpc = lbl.pc - lnk.pc;
-				if (dpc > 2047 || dpc < -2048) {
-					throw new Exception(
-							lnk.token.sourcePos() + ": jmp to '" + lbl.name + "' out-of-range (offset: " + dpc + ")");
+					assert ((lbl.pc & 0xf) == 0);
+					instr |= lbl.pc;
+					break;
 				}
-				instr |= (dpc & 0xfff) << 4;
-				break;
-			}
-			case LDI: {
-				Label lbl = allLabels.get(lnk.name); // get from global scope using 'name'
-				if (lbl == null)
-					throw new Exception(lnk.token.sourcePos() + ": function '" + lnk.name + "' not found");
+				case JMP : {
+					Label lbl = allLabels.get(lnk.scopedName); // get label from
+																// current scope
+					if (lbl == null)
+						throw new Exception(lnk.token.sourcePos() + ": label '"
+								+ lnk.scopedName + "' not found");
 
-				instr = (short) lbl.pc;
-				break;
-			}
-			default:
-				assert (false);
+					int dpc = lbl.pc - lnk.pc;
+					if (dpc > 2047 || dpc < -2048) {
+						throw new Exception(lnk.token.sourcePos() + ": jmp to '"
+								+ lbl.name + "' out-of-range (offset: " + dpc
+								+ ")");
+					}
+					instr |= (dpc & 0xfff) << 4;
+					break;
+				}
+				case LDI : {
+					Label lbl = allLabels.get(lnk.name); // get from global
+															// scope using
+															// 'name'
+					if (lbl == null)
+						throw new Exception(lnk.token.sourcePos()
+								+ ": function '" + lnk.name + "' not found");
+
+					instr = (short) lbl.pc;
+					break;
+				}
+				default :
+					assert (false);
 			}
 			instrs.set(lnk.pc, instr);
 		}
@@ -235,7 +259,8 @@ class Toc {
 			return;
 		boolean lastCommentHadNewline = true;
 		for (String s : cmnts) {
-			if (s == null || s.length() == 0) // ? find out where an empty comment is inserted
+			if (s == null || s.length() == 0) // ? find out where an empty
+												// comment is inserted
 				continue;
 			if (lastCommentHadNewline) {
 				sb.append("// ");
@@ -265,7 +290,8 @@ class Toc {
 			sb.append(String.format("%04X", instr));
 			Statement stmt = stmts.get(i);
 			if (stmt != null) {
-				sb.append(" // ").append("[").append(i).append("] ").append(stmt.sourcePos()).append('\n');
+				sb.append(" // ").append("[").append(i).append("] ")
+						.append(stmt.sourcePos()).append('\n');
 			} else {
 				sb.append("\n");
 			}

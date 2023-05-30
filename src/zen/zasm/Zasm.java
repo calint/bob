@@ -23,20 +23,29 @@ public class Zasm {
 		System.out.println("compiling: " + srcPath);
 		String srcIn = readFileToString(srcPath.toString());
 
-		CompilationResult cr = compile(srcIn, padTo64K);
+		Toc tc = compile(srcIn, padTo64K);
 
-		String compiledPathStr = srcPathStr.substring(0, srcPathStr.lastIndexOf('.')) + ".mem";
-		writeStringToFile(compiledPathStr, cr.output);
+		String output = tc.toAnnotatedHexString(padTo64K); // false: don't pad
+															// to 64K
+
+		String compiledPathStr = srcPathStr.substring(0,
+				srcPathStr.lastIndexOf('.')) + ".mem";
+		writeStringToFile(compiledPathStr, output);
 		System.out.println("    wrote: " + compiledPathStr);
-		System.out.println("     size: " + cr.size);
+		System.out.println("     size: " + tc.getProgramCounter());
 	}
 
-	private static class CompilationResult {
-		String output;
-		int size;
+	public static void compile(String src, short[] ram) throws Throwable {
+		for (int i = 0; i < ram.length; i++) {
+			ram[i] = 0;
+		}
+		Toc tc = compile(src, false);
+		tc.toBinary(ram);
 	}
 
-	private static CompilationResult compile(String srcIn, boolean padTo64K) throws Throwable {
+	private static Toc compile(String srcIn, boolean padTo64K)
+			throws Throwable {
+		stmts.clear();
 		Tokenizer tz = new Tokenizer(srcIn);
 		StringBuilder srcOut = new StringBuilder();
 		while (true) {
@@ -61,7 +70,8 @@ public class Zasm {
 			if (zn.isId("ifz") || zn.isId("ifn") || zn.isId("ifp")) {
 				id = tz.nextToken();
 				if (id.isEmpty())
-					throw new Exception(id.sourcePos() + ": unexpected end of file");
+					throw new Exception(
+							id.sourcePos() + ": unexpected end of file");
 			}
 			if (zn.isEmpty()) {
 				stmts.add(new StmtEof(zn));
@@ -117,9 +127,11 @@ public class Zasm {
 		}
 
 		Toc tc = new Toc();
-		// ? messy handling of comments that are on the same line as the statement
+		// ? messy handling of comments that are on the same line as the
+		// statement
 		// example:
-		// cp r1 r1 # comment statement is after the statement that needs compile
+		// cp r1 r1 # comment statement is after the statement that needs
+		// compile
 		int i = 0;
 		final int n = stmts.size();
 		while (true) {
@@ -150,13 +162,11 @@ public class Zasm {
 		String src = srcOut.toString();
 		if (!src.toString().equals(srcIn)) {
 			writeStringToFile("diff.zasm", src);
-			System.out.println("!!! source and parsed source differ. See file 'diff'");
+			throw new Exception(
+					"reproduced source from statements differs from the source");
 		}
-		// String compiled = toc.toHexString();
-		CompilationResult cr = new CompilationResult();
-		cr.output = tc.toAnnotatedHexString(padTo64K); // false: don't pad to 64K
-		cr.size = tc.getProgramCounter();
-		return cr;
+
+		return tc;
 	}
 
 	public static String readFileToString(String filePath) throws IOException {
@@ -171,7 +181,8 @@ public class Zasm {
 		return sb.toString();
 	}
 
-	public static void writeStringToFile(String filePath, String fileContent) throws IOException {
+	public static void writeStringToFile(String filePath, String fileContent)
+			throws IOException {
 		BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
 		writer.write(fileContent);
 		writer.close();

@@ -39,11 +39,19 @@ public final class Core {
 
 	public Core(final int regs_addr_width, final int calls_addr_width,
 			final short[] ram, final UartTx utx, final UartRx urx) {
-		this.regs = new short[2 ^ regs_addr_width];
+		this.regs = new short[(int) Math.pow(2, regs_addr_width)];
 		cs = new Calls(calls_addr_width);
 		this.ram = ram;
 		this.utx = utx;
 		this.urx = urx;
+	}
+
+	public void reset() {
+		tck = 0;
+		pc = 0;
+		zf = false;
+		nf = false;
+		leds = 0;
 	}
 
 	public void tick() { // ? does not emulate pipeline bubble or 2 cycle ldi
@@ -194,16 +202,13 @@ public final class Core {
 
 	}
 
-	public long getTickNum() {
-		return tck;
-	}
-	private void zn(short i) {
+	private void zn(final short i) {
 		zf = i == 0;
 		nf = i < 0;
 	}
 
 	private static int signedImm12ToInt(final int imm12) {
-		return ((imm12 & 0x800) != 0) ? (imm12 | 0xffff8000) : imm12;
+		return ((imm12 & 0x800) != 0) ? (imm12 | 0xffff0000) : imm12;
 	}
 
 	private static int shortToUnsignedInt(final short i) {
@@ -212,7 +217,7 @@ public final class Core {
 
 	private static int signedImm4PosIncInt(final int imm4) {
 		if ((imm4 & 0x8) != 0) {
-			return imm4 | 0xfffffff8; // sign extend
+			return imm4 | 0xfffffff0; // sign extend
 		}
 		return imm4 + 1;
 	}
@@ -221,17 +226,17 @@ public final class Core {
 		return leds;
 	}
 
-	private final static class Calls {
+	public final static class Calls {
 		final private int[] mem;
 		int idx = -1;
 
 		public Calls(final int addr_width) {
-			mem = new int[2 ^ addr_width];
+			mem = new int[(int) Math.pow(2, addr_width)];
 		}
 
 		public void push(final int addr, final boolean zf, final boolean nf) {
 			idx++;
-			mem[idx] = addr | (zf ? 0x1000 : 0) | (nf ? 0x2000 : 0);
+			mem[idx] = addr | (zf ? 0x10000 : 0) | (nf ? 0x20000 : 0);
 		}
 
 		public void pop() {
@@ -251,4 +256,33 @@ public final class Core {
 			return (mem[idx] & 0x20000) != 0;
 		}
 	}
+
+	public int getPc() {
+		return pc;
+	}
+
+	public boolean isZf() {
+		return zf;
+	}
+
+	public boolean isNf() {
+		return nf;
+	}
+
+	public long getTck() {
+		return tck;
+	}
+
+	public Calls getCalls() {
+		return cs;
+	}
+
+	public short[] getRam() {
+		return ram;
+	}
+
+	public short[] getRegs() {
+		return regs;
+	}
+
 }
