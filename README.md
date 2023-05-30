@@ -4,7 +4,7 @@ experimental web applications built using server 'b' and object persistence fram
 contains
 * a performant and compact web application server (package b)
 * a framework for composing web applications with re-usable user interface components 
-* an object-relational mapping framework for MySQL (package db) supporting clusters of MySQL servers
+* an object-relational mapping framework for MySQL (package db) supporting cluster of MySQL servers
 * a framework for editing and viewing persistent objects (package bob)
 * cluster managing scripts
 * and ['zen-one'](https://github.com/calint/zen-one) emulator (package zen.*) 
