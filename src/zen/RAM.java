@@ -2,7 +2,6 @@ package zen;
 
 import b.a;
 import b.xwriter;
-import zen.emu.Core;
 
 public class RAM extends a {
 	private static final long serialVersionUID = 1L;
