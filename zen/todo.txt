@@ -1,9 +1,9 @@
-[ ] UartTx
-[ ] UartRx
+[x] UartTx
+[x] UartRx
 [ ] test cases sim_1
 [ ] test cases sim_4
 [ ] select source in textarea while stepping
-[ ] a way to send and receive character through uart
+[x] a way to send and receive character through uart
 [x] separate style from html
 [ ] separate script from html
 [ ] better selection when stepping
