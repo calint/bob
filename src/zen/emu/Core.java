@@ -74,9 +74,11 @@ public final class Core {
 
 		if (!is_do_op) {
 			pc++;
-			if (op == OP_LDI && rega == 0) {
+			// check that is not a 'jmp' or 'call' and 'ldi'
+			if (!(instr_c && instr_r) && !(instr_c && !instr_r) && op == OP_LDI && rega == 0) {
 				// one more step for 'ldi'
 				pc++;
+				tick++;
 			}
 			return;
 		}
