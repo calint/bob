@@ -1,5 +1,5 @@
 # bob
-experimental web applications built using web application server 'b' and object persistence framework 'dbo'
+experimental web applications built using server 'b' and object persistence framework 'dbo'
 
 contains
 * a performant and compact web application server (package b)
