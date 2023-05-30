@@ -33,7 +33,6 @@ public class One extends a {
 	}
 	
 	public final void x_c(final xwriter x, final String param) throws Throwable {
-		x.xalert(""+soc.core().getRam().length);
 		Zasm.compile(src.toString(), soc.getRAM());
 		soc.reset();
 		x.xu(ram);

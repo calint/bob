@@ -1,0 +1,49 @@
+# ram intended for test bench
+#  compile with 'zasm'
+
+ledi 0b1000         # a nop-like instruction that runs multiple times while the pipeline starts
+
+ldi 0x0001 r1       # r1=0x0001
+ldi 0xffff r2       # r2=0xffff
+cp r1 r3            # r3=r1 == 0x0001
+add r2 r3           # r3+=r1 == 0
+ifz ledi 0b0010     # if(r3==0)     
+ifp call err        # if(r3>0)
+ifn call err        # if(r3<0)
+cp r2 r3            # r3=r2 == 0xffff
+ifn call foo        # if(r3<0)
+jmp lbl1            # pc -> 0x0020
+
+@ 0x0010 foo: func
+    ledi 0b0010  ret    # 
+endfunc
+
+@ 0x0020 lbl1:          # zn==01
+    st r1 r3            # ram[0x0001]=0xffff
+    ifp ld r1 r4        # zn!=00 ; not executed
+    ifn ld r1 r4        # zn==01 ; executed r4=ram[0x0001] == 0xffff
+    call bar
+    jmp lbl2
+
+@ 0x0030 bar: func
+    ld r1 r5  ret       # r5=ram[0x0001] == 0xffff
+endfunc
+
+@ 0x0040 lbl2:
+    ifz ldi 0x0002 r6   # zn==01 ; not executed
+    ld r1 r7            # r7=ram[1] == 0xffff
+    add r7 r7           # 0xffff + 0xffff = 0xfffe
+    ld r1 r8            # r8=ram[1] == 0xffff
+    st r8 r1            # ram[0xffff]=1
+    ld r1 r8            # r8=ram[1] == 0xffff
+    st r9 r8            # ram[0]=0xffff
+    
+done:
+    ledi 0b0001
+    jmp done
+
+@ 0xfff0 err: func
+    loop:
+        ledi 0b1111
+        jmp loop
+endfunc
