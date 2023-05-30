@@ -14,5 +14,8 @@ public final class SoC {
 
 	public void reset() {
 		core.reset();
+		for (int i = 0; i < ram.length; i++) {
+			ram[i] = 0;
+		}
 	}
 }

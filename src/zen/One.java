@@ -65,9 +65,9 @@ public class One extends a {
 	}
 
 	public final void x_c(final xwriter x, final String param) throws Throwable {
+		soc.reset();
 		zasm = new Zasm();
 		zasm.compile(s.toString(), soc.ram);
-		soc.reset();
 		x.xu(r);
 		x.xu(c);
 		selectSourceRange(x);
