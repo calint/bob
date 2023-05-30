@@ -1,11 +1,14 @@
 # bob
 experimental web application built using server b and object persistence dbo
 
-has
-* a performant web application server 'b' supporting web sockets
+contains
+* a performant web application server 'b'
+* a framework for composing web interfaces
 * an object-relational mapping framework for MySQL
 * a framework of views and forms for database objects
+* cluster related scripts
 * also contains ['zen-one'](https://github.com/calint/zen-one) emulator 
+
 
 explored digitalocean.com and linode.com services
 * load balancing using service provider
