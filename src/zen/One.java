@@ -51,7 +51,7 @@ public class One extends a {
 		x.divh(t, "term");
 
 		x.tago("input").attr("class", "inp")
-				.attr("onkeydown", "this.value='';$x('" + id() + " key '+event.keyCode)")
+				.attr("onkeydown", "this.value='';if(ui.is_busy)return;$x('" + id() + " key '+event.keyCode)")
 				.tagoe();
 
 		x.br().br();
@@ -73,18 +73,33 @@ public class One extends a {
 		selectSourceRange(x);
 	}
 
+	private boolean selectActiveInstruction = true;
+
 	public final void x_t(final xwriter x, final String param) throws Throwable {
 		soc.tick();
+		if (soc.utx.go) {
+			x.xp(t, String.valueOf((char) soc.utx.dataImm8));
+			soc.utx.go = false;
+		}
 		x.xu(r);
 		x.xu(c);
-		selectSourceRange(x);
+		if (selectActiveInstruction) {
+			selectSourceRange(x);
+		}
 	}
 
 	public final void x_rst(final xwriter x, final String param) throws Throwable {
 		soc.reset();
 		x.xu(r);
 		x.xu(c);
-		selectSourceRange(x);
+		if (selectActiveInstruction) {
+			selectSourceRange(x);
+		}
+	}
+
+	public final void x_r(final xwriter x, final String param) throws Throwable {
+		x.p("zen_run_toggle();");
+		selectActiveInstruction = !selectActiveInstruction;
 	}
 
 	private void selectSourceRange(final xwriter x) throws Throwable {
@@ -99,7 +114,6 @@ public class One extends a {
 		System.out.println(param);
 		soc.urx.data = Integer.parseInt(param);
 		soc.urx.dr = true;
-		t.onKey(x, soc.urx.data);
 	}
 
 	public static String readResourceAsString(String resourceName) throws IOException {

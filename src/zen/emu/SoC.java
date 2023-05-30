@@ -7,8 +7,6 @@ public final class SoC {
 	public final Core core = new Core(4, 6, ram, utx, urx);
 
 	public void tick() {
-		utx.tick();
-		urx.tick();
 		core.tick();
 	}
 

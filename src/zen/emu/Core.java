@@ -30,7 +30,7 @@ public final class Core {
 
 	private static final int OP_IO_WL = 0x2;
 	private static final int OP_IO_WH = 0xa;
-	private static final int OP_IO_RL = 0xc;
+	private static final int OP_IO_RL = 0x6;
 	private static final int OP_IO_RH = 0xe;
 	private static final int OP_IO_LED = 0x7;
 	private static final int OP_IO_LEDI = 0xf;
@@ -111,13 +111,17 @@ public final class Core {
 					if (urx.dr) {
 						regs[regb] = (short) ((regs[regb] & 0xff00) | urx.data);
 						urx.dr = false;
+					} else {
+						is_stall = true;
 					}
 					break;
 				case OP_IO_RH:
 					if (urx.dr) {
-						regs[regb] |= (short) ((regs[regb] & 0x00ff)
+						regs[regb] = (short) ((regs[regb] & 0x00ff)
 								| urx.data << 8);
 						urx.dr = false;
+					} else {
+						is_stall = true;
 					}
 					break;
 				case OP_IO_LED:
