@@ -14,6 +14,7 @@ public class One extends a {
 	private static final long serialVersionUID = 1L;
 
 	final private SoC soc = new SoC();
+	private Zasm zasm;
 
 	public RAM r;
 	public CoreUI c;
@@ -35,14 +36,14 @@ public class One extends a {
 		x.p("zen-one emulator");
 		x.br().br();
 
-		x.divh(t,"term");
-		
+		x.divh(t, "term");
+
 		x.tago("input").attr("class", "inp")
 				.attr("onkeydown", "this.value='';$x('" + id() + " key '+event.keyCode)")
 				.tagoe();
 
 		x.br().br();
-		x.tago("div").attr("class","row").tagoe();
+		x.tago("div").attr("class", "row").tagoe();
 		x.ax(this, "s", "save");
 		x.p(" ");
 		x.ax(this, "c", "compile");
@@ -53,7 +54,7 @@ public class One extends a {
 		x.p(" ");
 		x.ax(this, "rst", "reset");
 		x.br().br();
-		
+
 		x.divo(this, "row", null).tagoe();
 		x.divh(c, "col1");
 		x.divh(r, "col2");
@@ -63,22 +64,34 @@ public class One extends a {
 	}
 
 	public final void x_c(final xwriter x, final String param) throws Throwable {
-		Zasm.compile(s.toString(), soc.ram);
+		zasm = new Zasm();
+		zasm.compile(s.toString(), soc.ram);
 		soc.reset();
 		x.xu(r);
 		x.xu(c);
+		selectSourceRange(x);
 	}
 
 	public final void x_t(final xwriter x, final String param) throws Throwable {
 		soc.tick();
 		x.xu(r);
 		x.xu(c);
+		selectSourceRange(x);
 	}
 
 	public final void x_rst(final xwriter x, final String param) throws Throwable {
 		soc.reset();
 		x.xu(r);
 		x.xu(c);
+		selectSourceRange(x);
+	}
+
+	private void selectSourceRange(final xwriter x) throws Throwable {
+		if (zasm == null)
+			return;
+		final int[] rng = zasm.getInstructionSourceRange(soc.core.pc);
+		final String sid = s.id();
+		x.xfocus(sid).p("$('" + sid + "').setSelectionRange(" + rng[0] + "," + rng[1] + ");");
 	}
 
 	public final void x_key(final xwriter x, final String param) throws Throwable {

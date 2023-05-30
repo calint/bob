@@ -6,3 +6,5 @@
 [ ] a way to send and receive character through uart
 [x] separate style from html
 [ ] separate script from html
+[ ] better selection when stepping
+[ ] floating controls when stepping out of page

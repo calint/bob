@@ -9,8 +9,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Zasm {
-	private static ArrayList<Statement> stmts = new ArrayList<Statement>();
-
+	private ArrayList<Statement> stmts = new ArrayList<Statement>();
+	private Toc tc;
 	public static void main(String[] args) throws Throwable {
 		String srcPathStr = args.length == 0 ? "rom.zasm" : args[0];
 		File srcPath = new File(srcPathStr);
@@ -23,7 +23,7 @@ public class Zasm {
 		System.out.println("compiling: " + srcPath);
 		String srcIn = readFileToString(srcPath.toString());
 
-		Toc tc = compile(srcIn, padTo64K);
+		Toc tc = new Zasm().compile(srcIn, padTo64K);
 
 		String output = tc.toAnnotatedHexString(padTo64K); // false: don't pad
 															// to 64K
@@ -35,15 +35,19 @@ public class Zasm {
 		System.out.println("     size: " + tc.getProgramCounter());
 	}
 
-	public static void compile(String src, short[] ram) throws Throwable {
+	public void compile(String src, short[] ram) throws Throwable {
 		for (int i = 0; i < ram.length; i++) {
 			ram[i] = 0;
 		}
-		Toc tc = compile(src, false);
+		compile(src, false);
 		tc.toBinary(ram);
 	}
 
-	private static Toc compile(String srcIn, boolean padTo64K)
+	public int[] getInstructionSourceRange(final int pc) {
+		return tc.getInstructionSourceRange(pc);
+	}
+
+	private Toc compile(String srcIn, boolean padTo64K)
 			throws Throwable {
 		stmts.clear();
 		Tokenizer tz = new Tokenizer(srcIn);
@@ -126,7 +130,7 @@ public class Zasm {
 			}
 		}
 
-		Toc tc = new Toc();
+		tc = new Toc();
 		// ? messy handling of comments that are on the same line as the
 		// statement
 		// example:

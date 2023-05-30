@@ -60,6 +60,11 @@ class Statement {
 		return zn == null ? tk.sourcePos() : zn.sourcePos();
 	}
 
+	public int[] sourceRange() {
+		return new int[] { zn != null ? zn.getStartPos() : tk.getStartPos(),
+				ret != null ? ret.getEndPos() : tk.getEndPos() };
+	}
+
 	public static short registerAddressFromToken(Token addr) throws Throwable {
 		short a = Short.parseShort(addr.id().substring(1));
 		if (a < 0 || a > 15) {

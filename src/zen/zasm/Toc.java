@@ -321,4 +321,9 @@ final class Toc {
 		}
 		return bin;
 	}
+
+	public int[] getInstructionSourceRange(int pc) {
+		final Statement stmt=stmts.get(pc);
+		return stmt.sourceRange();
+ 	}
 }
