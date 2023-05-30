@@ -31,28 +31,20 @@ public class One extends a {
 
 	@Override
 	public void to(xwriter x) throws Throwable {
-		x.style();
-		x.p(".row{text-align:center;white-space:nowrap;}");
-		x.p(".col1,.col2,.col3,.col4{display:inline-block;width:fit-content;vertical-align:top;padding:1rem;}");
-		x.p(".col3{width:3rem;height:" + LineNums.LINE_NUMS
-				+ "rem;text-align:right;background:lightgray;padding-right:0.5rem;padding-left:0}");
-		x.p(".col4{width:40rem;height:" + LineNums.LINE_NUMS
-				+ "rem;overflow-wrap:normal;white-space:pre;spell-check:false;}");
-		x.p(".term{width:40rem;height:20rem;border:1px dotted green;background:lightgrey;text-align:left}");
-		x.style_();
-
 		x.br();
 		x.p("zen-one emulator");
 		x.br().br();
 
-		x.tago("div").attr("style","display:flex;justify-content:center").tagoe();
-		t.to(x);
-		x.tage("div");
+		
+		
+		x.divh(t,"term");
+		
 		x.tago("input").attr("class", "inp")
 				.attr("onkeydown", "this.value='';$x('" + id() + " key '+event.keyCode)")
 				.tagoe();
+
 		x.br().br();
-		
+		x.tago("div").attr("class","row").tagoe();
 		x.ax(this, "s", "save");
 		x.p(" ");
 		x.ax(this, "c", "compile");
@@ -63,6 +55,7 @@ public class One extends a {
 		x.p(" ");
 		x.ax(this, "rst", "reset");
 		x.br().br();
+		
 		x.divo(this, "row", null).tagoe();
 		x.divh(c, "col1");
 		x.divh(r, "col2");

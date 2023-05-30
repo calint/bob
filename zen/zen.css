@@ -1,0 +1,5 @@
+.row{text-align:center;white-space:nowrap;}
+.col1,.col2,.col3,.col4{display:inline-block;width:fit-content;vertical-align:top;padding:1rem}
+.col3{width:3rem;height:256rem;text-align:right;background:lightgray;padding-right:0.5rem;padding-left:0}
+.col4{width:40rem;height:256rem;overflow-wrap:normal;white-space:pre}
+.term{width:40rem;height:20rem;border:1px dotted green;background:lightgrey;margin:0 auto;text-align:left}
