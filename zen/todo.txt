@@ -1,3 +1,8 @@
+[ ] UartTx
+[ ] UartRx
 [ ] test cases sim_1
 [ ] test cases sim_4
 [ ] select source in textarea while stepping
+[ ] a way to send and receive character through uart
+[ ] separate style from html
+[ ] separate script from html

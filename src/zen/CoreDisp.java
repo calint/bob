@@ -17,7 +17,7 @@ public class CoreDisp extends a {
 	@Override
 	public void to(xwriter x) throws Throwable {
 		x.p("t:").p(core.tick).br();
-		x.p(core.pc).p(" ").p(core.zf ? "z" : "-").p(core.nf ? "n" : "-").p(" ");
+		x.p("[").p(core.pc).p(" ").p(core.zf ? "z" : "-").p(core.nf ? "n" : "-").p(" ");
 		int leds = core.leds;
 		for (int i = 0; i < 4; i++) {
 			x.p((leds & 8) != 0 ? "o" : ".");
