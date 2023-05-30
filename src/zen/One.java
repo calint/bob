@@ -16,7 +16,7 @@ public class One extends a {
 	final private SoC soc = new SoC();
 
 	public RAM r;
-	public CoreDisp c;
+	public CoreUI c;
 	public LineNums l;
 	public a s;
 	public Terminal t;
