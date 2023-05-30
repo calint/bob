@@ -35,8 +35,6 @@ public class One extends a {
 		x.p("zen-one emulator");
 		x.br().br();
 
-		
-		
 		x.divh(t,"term");
 		
 		x.tago("input").attr("class", "inp")
