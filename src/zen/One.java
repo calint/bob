@@ -110,13 +110,13 @@ public class One extends a {
 		selectActiveInstruction = !selectActiveInstruction;
 	}
 
-	private void selectSourceRange(final xwriter x) throws Throwable {
-		if (zasm == null)
-			return;
-		final int[] rng = zasm.getInstructionSourceRange(soc.core.pc);
-		final String sid = s.id();
-		x.xfocus(sid).p("$('" + sid + "').setSelectionRange(" + rng[0] + "," + rng[1] + ");");
-	}
+	// private void selectSourceRange(final xwriter x) throws Throwable {
+	// 	if (zasm == null)
+	// 		return;
+	// 	final int[] rng = zasm.getInstructionSourceRange(soc.core.pc);
+	// 	final String sid = s.id();
+	// 	x.xfocus(sid).p("$('" + sid + "').setSelectionRange(" + rng[0] + "," + rng[1] + ");");
+	// }
 
 	// public final void x_key(final xwriter x, final String param) throws Throwable
 	// {

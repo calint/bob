@@ -1,7 +1,6 @@
 package zen;
 
 import b.bapp;
-import db.Db;
 
 public final class Application implements bapp {
 	private static Application inst;
