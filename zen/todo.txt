@@ -1,2 +1,3 @@
 [ ] test cases sim_1
 [ ] test cases sim_4
+[ ] select source in textarea while stepping

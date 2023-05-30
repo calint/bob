@@ -46,11 +46,11 @@ public class One extends a {
 		// x.p(".row{display:flex;}").nl();
 		// x.p(".col1,.col3{flex:1}").nl();
 		// x.p(".col2{flex:2;}").nl();
-		x.p(".row{text-align:center;}");
-		x.p(".col1,.col2,.col3,.col4{display:inline-block;width:fit-content;vertical-align:top;padding:1rem}");
+		x.p(".row{text-align:center;white-space:nowrap;}");
+		x.p(".col1,.col2,.col3,.col4{display:inline-block;width:fit-content;vertical-align:top;padding:1rem;}");
 		x.p(".col3{width:3rem;height:" + LineNums.LINE_NUMS
 				+ "rem;text-align:right;background:lightgray;padding-right:0.5rem;padding-left:0}");
-		x.p(".col4{width:40rem;height:" + LineNums.LINE_NUMS + "rem}");
+		x.p(".col4{width:40rem;height:" + LineNums.LINE_NUMS + "rem;overflow-wrap:normal;white-space:pre;spell-check:false;}");
 		x.style_();
 		x.divo(this, "row", null).tagoe();
 		x.divh(core, "col1");
