@@ -17,7 +17,7 @@ public final class Application implements bapp {
 	/** called by b at startup */
 	public void init() throws Throwable {
 		Db.log(getClass().getName() + ": init");
-//		Db.enable_log=false;
+		// Db.enable_log=false;
 		Db.enable_log_sql = false;
 
 		b.b.set_file_suffix_to_content_type("java", "text/plain");
