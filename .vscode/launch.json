@@ -11,6 +11,7 @@
             "mainClass": "b.b",
             "projectName": "bob",
             "args": [
+                "bapp_class", "bob.app.Application; zen.Application",
                 "bapp_jdbc_host", "localhost",
                 "bapp_jdbc_db", "testdb", 
                 "bapp_jdbc_user", "c",
@@ -25,6 +26,7 @@
             "mainClass": "b.b",
             "projectName": "bob",
             "args": [
+                "bapp_class", "bob.app.Application; zen.Application",
                 "bapp_cluster_mode", "true", 
                 "bapp_cluster_ip", "127.0.0.1", 
                 "bapp_cluster_port", "8889", 
@@ -43,21 +45,6 @@
             "projectName": "bob",
             "args": [
                 "cluster.cfg", "testdb", "c", "password"
-            ]
-        },
-        {
-            "type": "java",
-            "name": "zen",
-            "request": "launch",
-            "mainClass": "b.b",
-            "projectName": "bob",
-            "args": [
-                "bapp_class", "bob.app.Application; zen.Application",
-                "bapp_jdbc_host", "localhost",
-                "bapp_jdbc_db", "zen", 
-                "bapp_jdbc_user", "c",
-                "bapp_jdbc_password", "password",
-                "bapp_jdbc_ncons", "10",
             ]
         }
     ]
