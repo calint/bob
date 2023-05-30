@@ -16,13 +16,14 @@ public class CoreDisp extends a {
 
 	@Override
 	public void to(xwriter x) throws Throwable {
-		x.p(core.tick).p(":[").p(core.pc).p("][").p(core.zf ? "z" : "-").p(core.nf ? "n" : "-").p("][");
+		x.p("t:").p(core.tick).br();
+		x.p(core.pc).p(" ").p(core.zf ? "z" : "-").p(core.nf ? "n" : "-").p(" ");
 		int leds = core.leds;
 		for (int i = 0; i < 4; i++) {
-			x.p((leds & 1) != 0 ? "o" : ".");
-			leds >>= 1;
+			x.p((leds & 8) != 0 ? "o" : ".");
+			leds <<= 1;
 		}
-		x.p("]").br().p(String.format("%04x", core.ram[core.pc])).br();
+		x.p(" ").br().p(String.format("%04x", core.ram[core.pc])).br();
 		//x.p("registers:").br();
 		regs.to(x);
 		//x.p("calls: ").p(core.cs.idx).br();
@@ -31,7 +32,7 @@ public class CoreDisp extends a {
 			final int pc = core.cs.mem[i] & 0xffff;
 			final boolean zf = (core.cs.mem[i] & 0x10000) != 0;
 			final boolean nf = (core.cs.mem[i] & 0x20000) != 0;
-			x.p(zf ? "z" : "-").p(nf ? "n" : "-").p(core.cs.idx == i ? "*" : " ")
+			x.p(core.cs.idx == i ? ">" : " ").p(zf ? "z" : "-").p(nf ? "n" : "-").p(" ")
 					.p(String.format("%04x", pc)).p(" ");
 			if (i % 2 == 1) {
 				x.br();

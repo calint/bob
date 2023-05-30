@@ -1,5 +1,10 @@
 package zen;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import b.a;
 import b.xwriter;
 import zen.emu.SoC;
@@ -13,11 +18,14 @@ public class One extends a {
 	public RAM ram;
 	public a src;
 	public CoreDisp core;
+	public LineNums lineNums;
 
-	public One() {
+	public One() throws Throwable {
 		ram.ram = soc.ram;
 		core.core = soc.core;
 		core.init();
+		final String s = readResourceAsString("/zen/emu/tests/TB_Top1.zasm");
+		src.set(s);
 	}
 
 	@Override
@@ -35,17 +43,20 @@ public class One extends a {
 		x.ax(this, "rst", "reset");
 		x.br().br();
 		x.style();
-//		x.p(".row{display:flex;}").nl();
-//		x.p(".col1,.col3{flex:1}").nl();
-//		x.p(".col2{flex:2;}").nl();
+		// x.p(".row{display:flex;}").nl();
+		// x.p(".col1,.col3{flex:1}").nl();
+		// x.p(".col2{flex:2;}").nl();
 		x.p(".row{text-align:center;}");
-		x.p(".col1,.col2,.col3{display:inline-block;width: fit-content;vertical-align:top;padding:1rem}");
-		x.p(".col3{width:30rem;height:256rem;padding:1rem}");
+		x.p(".col1,.col2,.col3,.col4{display:inline-block;width:fit-content;vertical-align:top;padding:1rem}");
+		x.p(".col3{width:3rem;height:" + LineNums.LINE_NUMS
+				+ "rem;text-align:right;background:lightgray;padding-right:0.5rem;padding-left:0}");
+		x.p(".col4{width:40rem;height:" + LineNums.LINE_NUMS + "rem}");
 		x.style_();
 		x.divo(this, "row", null).tagoe();
 		x.divh(core, "col1");
 		x.divh(ram, "col2");
-		x.inptxtarea(src, "col3");
+		x.divh(lineNums, "col3");
+		x.inptxtarea(src, "col4");
 		x.div_();
 	}
 
@@ -68,4 +79,17 @@ public class One extends a {
 		x.xu(core);
 	}
 
+	public static String readResourceAsString(String resourceName) throws IOException {
+		StringBuilder sb = new StringBuilder();
+
+		InputStream is = One.class.getResourceAsStream(resourceName);
+		InputStreamReader isr = new InputStreamReader(is, "utf8");
+		BufferedReader br = new BufferedReader(isr);
+		String line;
+		while ((line = br.readLine()) != null) {
+			sb.append(line).append("\n");
+		}
+		br.close();
+		return sb.toString();
+	}
 }
