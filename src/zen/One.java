@@ -37,7 +37,8 @@ public class One extends a {
 		x.p(" ");
 		x.ax(this, "c", "compile");
 		x.p(" ");
-		x.ax(this, "t", "step");
+		x.a("javascript:zen_tick()", "step");
+		// x.ax(this, "t", "step");
 		x.p(" ");
 		x.ax(this, "r", "run");
 		x.p(" ");
@@ -51,7 +52,7 @@ public class One extends a {
 		x.divh(t, "term");
 
 		x.tago("input").attr("class", "inp")
-				.attr("onkeydown", "this.value='';if(ui.is_busy)return;$x('" + id() + " key '+event.keyCode)")
+				.attr("onkeydown", "this.value='';zen_tx_buf.push(event.keyCode)")
 				.tagoe();
 
 		x.br().br();
@@ -76,6 +77,12 @@ public class One extends a {
 	private boolean selectActiveInstruction = true;
 
 	public final void x_t(final xwriter x, final String param) throws Throwable {
+		final int key = Integer.parseInt(param);
+		if (key != 0) {
+			soc.urx.data = key;
+			soc.urx.dr = true;
+			System.out.println(key);
+		}
 		soc.tick();
 		if (soc.utx.go) {
 			x.xp(t, String.valueOf((char) soc.utx.dataImm8));
@@ -110,11 +117,12 @@ public class One extends a {
 		x.xfocus(sid).p("$('" + sid + "').setSelectionRange(" + rng[0] + "," + rng[1] + ");");
 	}
 
-	public final void x_key(final xwriter x, final String param) throws Throwable {
-		System.out.println(param);
-		soc.urx.data = Integer.parseInt(param);
-		soc.urx.dr = true;
-	}
+	// public final void x_key(final xwriter x, final String param) throws Throwable
+	// {
+	// System.out.println(param);
+	// soc.urx.data = Integer.parseInt(param);
+	// soc.urx.dr = true;
+	// }
 
 	public static String readResourceAsString(String resourceName) throws IOException {
 		StringBuilder sb = new StringBuilder();
