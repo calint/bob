@@ -6,7 +6,6 @@ contains
 * a framework for composing web applications with re-usable user interface components 
 * an object-relational mapping framework for MySQL (package db) supporting clusters
 * a framework for editing and viewing persistent objects (package bob)
-* cluster managing scripts
 * and ['zen-one'](https://github.com/calint/zen-one) emulator (package zen.*) 
 
 
