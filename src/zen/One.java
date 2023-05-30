@@ -33,17 +33,18 @@ public class One extends a {
 	@Override
 	public void to(xwriter x) throws Throwable {
 		x.tago("div").attr("class", "topmenu").tagoe();
-		x.ax(this, "s", "save");
-		x.p(" ");
+		// x.ax(this, "s", "save");
+		// x.p(" ");
 		x.ax(this, "c", "compile");
 		x.p(" ");
 		x.a("javascript:zen_tick()", "step");
-		// x.ax(this, "t", "step");
 		x.p(" ");
-		x.a("javascript:zen_run_toggle()", "run");
-//		x.ax(this, "r", "run");
+		x.a("javascript:zen_run_start()", "run");
 		x.p(" ");
-		x.ax(this, "rst", "reset");
+		x.a("javascript:zen_run_stop()", "stop");
+		x.p(" ");
+		x.a("javascript:zen_reset()", "reset");
+		x.p(" ");
 		x.div_();
 
 		x.br();

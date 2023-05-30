@@ -1,13 +1,21 @@
-let zen_run_do = false;
 let zen_run_interval_id = 0;
 let zen_tx_buf = [];
-function zen_run_toggle() {
-    zen_run_do = !zen_run_do;
-    if (zen_run_do) {
-        zen_run_interval_id = setInterval(zen_run, 10);
-    } else {
-        clearInterval(zen_run_interval_id);
-    }
+function zen_run_start() {
+    if (zen_run_interval_id != 0)
+        return;
+    zen_run_interval_id = setInterval(zen_run, 10);
+}
+
+function zen_run_stop() {
+    if (zen_run_interval_id == 0)
+        return;
+    clearInterval(zen_run_interval_id);
+    zen_run_interval_id = 0;
+}
+
+function zen_reset() {
+    zen_run_stop();
+    $x('- rst');
 }
 
 function zen_tick() {
