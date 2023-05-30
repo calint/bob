@@ -32,6 +32,18 @@ public class One extends a {
 
 	@Override
 	public void to(xwriter x) throws Throwable {
+		x.tago("div").attr("class", "topmenu").tagoe();
+		x.ax(this, "s", "save");
+		x.p(" ");
+		x.ax(this, "c", "compile");
+		x.p(" ");
+		x.ax(this, "t", "step");
+		x.p(" ");
+		x.ax(this, "r", "run");
+		x.p(" ");
+		x.ax(this, "rst", "reset");
+		x.div_();
+
 		x.br();
 		x.p("zen-one emulator");
 		x.br().br();
@@ -44,17 +56,6 @@ public class One extends a {
 
 		x.br().br();
 		x.tago("div").attr("class", "row").tagoe();
-		x.ax(this, "s", "save");
-		x.p(" ");
-		x.ax(this, "c", "compile");
-		x.p(" ");
-		x.ax(this, "t", "step");
-		x.p(" ");
-		x.ax(this, "r", "run");
-		x.p(" ");
-		x.ax(this, "rst", "reset");
-		x.br().br();
-
 		x.divo(this, "row", null).tagoe();
 		x.divh(c, "col1");
 		x.divh(r, "col2");
