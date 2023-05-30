@@ -30,6 +30,8 @@ public class One extends a {
 		x.ax(this, "t", "step");
 		x.p(" ");
 		x.ax(this, "r", "run");
+		x.p(" ");
+		x.ax(this, "rst", "reset");
 		x.br();
 		x.inptxtarea(src, "large");
 		x.divh(ram);
@@ -47,4 +49,11 @@ public class One extends a {
 		soc.tick();
 		x.xu(zen);
 	}	
+
+	public final void x_rst(final xwriter x, final String param) throws Throwable {
+		soc.reset();
+		x.xu(ram);
+		x.xu(zen);
+	}	
+
 }
