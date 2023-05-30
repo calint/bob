@@ -168,7 +168,7 @@ $x=function(pb){
 	ui.ws.send(post);
 }
 
-ui.ws=new WebSocket('ws'+(location.protocol=='https:'?'s':'')+'://'+location.host+'/bob/websocket');
+ui.ws=new WebSocket('ws'+(location.protocol=='https:'?'s':'')+'://'+location.host+ui_ws_uri);
 ui.ws.onopen=function(e){
 	$d('web socket: onopen');
 	ui.is_open=true;

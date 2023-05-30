@@ -26,7 +26,6 @@ public final class Application implements bapp {
 
 	/** called by b at startup */
 	public void init() throws Throwable {
-		Db.log(getClass().getName() + ": init");
 //		Db.enable_log=false;
 		Db.enable_log_sql = false;
 		Db.register(User.class);
@@ -74,7 +73,5 @@ public final class Application implements bapp {
 
 	/** called by b at shutdown */
 	public void shutdown() throws Throwable {
-		Db.log(getClass().getName() + ": shutdown");
-		Db.shutdown();
 	}
 }

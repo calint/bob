@@ -97,7 +97,7 @@ final public class b{
 	public static boolean bapp_cluster_mode=false;
 	public static String bapp_cluster_ip="127.0.0.1";
 	public static int bapp_cluster_port=8889;
-	public static bapp bapp=null;
+	public static bapp[]bapps=null;
 
 	private final static HashMap<String,Class<?>> path_to_class_map=new HashMap<String,Class<?>>();
 	private final static HashMap<String,String> path_to_resource_map=new HashMap<String,String>();
@@ -133,8 +133,14 @@ final public class b{
 		Db.register(sessionobj.class);
 		// initiate application
 		if(b.bapp_class!=null){
-			b.bapp=(bapp)Class.forName(b.bapp_class).getConstructor().newInstance();
-			b.bapp.init();
+			final String[]apps=b.bapp_class.split(";");
+			b.bapps=new bapp[apps.length];
+			for(int i=0;i<apps.length;i++){
+				final String clsnm=apps[i].trim();
+				b.log("init: "+clsnm);
+				bapps[i]=(bapp)Class.forName(clsnm).getConstructor().newInstance();
+				bapps[i].init();
+			}
 		}
 		Db.init(bapp_jdbc_host,bapp_jdbc_db,bapp_jdbc_user,bapp_jdbc_password,bapp_jdbc_ncons,bapp_cluster_ip,bapp_cluster_port);
 

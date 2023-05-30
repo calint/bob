@@ -52,7 +52,7 @@
             "mainClass": "b.b",
             "projectName": "bob",
             "args": [
-                "bapp_class", "zen.Application",
+                "bapp_class", "bob.app.Application; zen.Application",
                 "bapp_jdbc_host", "localhost",
                 "bapp_jdbc_db", "zen", 
                 "bapp_jdbc_user", "c",
