@@ -1,6 +1,7 @@
 let zen_run_interval_id = 0;
 let zen_tx_buf = [];
 const fps = 1000 / 60;
+
 function zen_run_start() {
     if (zen_run_interval_id != 0)
         return;

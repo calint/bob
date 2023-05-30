@@ -26,7 +26,7 @@ public class One extends a {
 		r.ram = soc.ram;
 		c.core = soc.core;
 		c.init();
-		final String src = readResourceAsString("/zen/emu/tests/TB_Top1.zasm");
+		final String src = readResourceAsString("/zen/emu/tests/input-print.zasm");
 		s.set(src);
 	}
 
@@ -53,7 +53,7 @@ public class One extends a {
 
 		x.divh(t, "term");
 
-		x.tago("input").attr("class", "inp")
+		x.p("type here: ").tago("input").attr("class", "nbr")
 				.attr("onkeydown", "this.value='';zen_tx_buf.push(event.keyCode)")
 				.tagoe();
 
