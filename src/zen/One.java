@@ -37,11 +37,11 @@ public class One extends a {
 		// x.p(" ");
 		x.ax(this, "c", "compile");
 		x.p(" ");
-		x.a("javascript:zen_tick()", "step");
-		x.p(" ");
 		x.a("javascript:zen_run_start()", "run");
 		x.p(" ");
 		x.a("javascript:zen_run_stop()", "stop");
+		x.p(" ");
+		x.a("javascript:zen_tick()", "step");
 		x.p(" ");
 		x.a("javascript:zen_reset()", "reset");
 		x.p(" ");
@@ -101,6 +101,7 @@ public class One extends a {
 		soc.reset();
 		x.xu(r);
 		x.xu(c);
+		x.xu(t);
 		// if (selectActiveInstruction) {
 		// 	selectSourceRange(x);
 		// }
