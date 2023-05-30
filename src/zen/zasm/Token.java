@@ -11,8 +11,8 @@ class Token {
 	private int linenm;
 	private int charnm;
 
-	public Token(String id, String ws_lft, String ws_rht, int pos_ws_lft, int pos_strt, int pos_end, int pos_ws_rht,
-			int linenm, int charnm) {
+	public Token(String id, String ws_lft, String ws_rht, int pos_ws_lft,
+			int pos_strt, int pos_end, int pos_ws_rht, int linenm, int charnm) {
 		this.id = id;
 		this.ws_lft = ws_lft;
 		this.ws_rht = ws_rht;
@@ -50,5 +50,13 @@ class Token {
 
 	public int totalNChars() {
 		return pos_ws_rht - pos_ws_lft;
+	}
+
+	public int getStartPos() {
+		return pos_strt;
+	}
+
+	public int getEndPos() {
+		return pos_end;
 	}
 }

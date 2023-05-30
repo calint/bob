@@ -190,7 +190,9 @@ final class Toc {
 					if (lbl == null)
 						throw new Exception(lnk.token.sourcePos()
 								+ ": function '" + lnk.name + "' not found");
-
+					if (!lbl.isFunc)
+						throw new Exception(lnk.token.sourcePos() + ": label '"
+								+ lbl.name + "' is not a function");
 					assert ((lbl.pc & 0xf) == 0);
 					instr |= lbl.pc;
 					break;
