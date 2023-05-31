@@ -6,7 +6,7 @@ contains
 * a framework for composing web applications with re-usable user interface components focused on back-end development
 * an object-relational mapping framework for MySQL (package db) supporting cluster of servers, indexes, full-text searches, relations between objects, expandable field definitions for creating custom fields beyond the types provided
 * a framework for editing and viewing persistent objects (package bob) with focus on fast development of CRUD like tasks
-* and ['zen-one'](https://github.com/calint/zen-one) emulator (package zen.*) 
+* and an emulator of a retro 16 bit CPU ['zen-one'](https://github.com/calint/zen-one) (package zen.*) implemented in a web application
 
 
 explored digitalocean.com and linode.com services
