@@ -12,6 +12,6 @@ contains
 explored digitalocean.com and linode.com services
 * load balancing using service provider
 * ssl enabled using load balancer
-* mysql cluster implemented in db package
+* mysql cluster implemented in package 'db'
 
 can be compiled and run by legacy java 1.5
