@@ -67,43 +67,48 @@ public class One extends a {
 		x.div_();
 	}
 
+	/** compile */
 	public final void x_c(final xwriter x, final String param) throws Throwable {
 		soc.reset();
 		zasm = new Zasm();
 		zasm.compile(s.toString(), soc.ram);
 		x.xu(r);
 		x.xu(c);
+		x.xu(t);
 		// selectSourceRange(x);
 	}
 
 	private boolean selectActiveInstruction = true;
 
+	/** tick */
 	public final void x_t(final xwriter x, final String param) throws Throwable {
 		final int key = Integer.parseInt(param);
 		if (key != 0) {
 			soc.urx.data = key;
 			soc.urx.dr = true;
-			System.out.println(key);
+			// System.out.println("uart in: " + key);
 		}
 		soc.tick();
 		if (soc.utx.go) {
 			x.xp(t, String.valueOf((char) soc.utx.dataImm8));
 			soc.utx.go = false;
+			// System.out.println("uart out: " + soc.utx.dataImm8);
 		}
 		x.xu(r);
 		x.xu(c);
 		// if (selectActiveInstruction) {
-		// 	selectSourceRange(x);
+		// selectSourceRange(x);
 		// }
 	}
 
+	/** reset */
 	public final void x_rst(final xwriter x, final String param) throws Throwable {
 		soc.reset();
 		x.xu(r);
 		x.xu(c);
 		x.xu(t);
 		// if (selectActiveInstruction) {
-		// 	selectSourceRange(x);
+		// selectSourceRange(x);
 		// }
 	}
 
@@ -112,11 +117,12 @@ public class One extends a {
 	}
 
 	// private void selectSourceRange(final xwriter x) throws Throwable {
-	// 	if (zasm == null)
-	// 		return;
-	// 	final int[] rng = zasm.getInstructionSourceRange(soc.core.pc);
-	// 	final String sid = s.id();
-	// 	x.xfocus(sid).p("$('" + sid + "').setSelectionRange(" + rng[0] + "," + rng[1] + ");");
+	// if (zasm == null)
+	// return;
+	// final int[] rng = zasm.getInstructionSourceRange(soc.core.pc);
+	// final String sid = s.id();
+	// x.xfocus(sid).p("$('" + sid + "').setSelectionRange(" + rng[0] + "," + rng[1]
+	// + ");");
 	// }
 
 	// public final void x_key(final xwriter x, final String param) throws Throwable

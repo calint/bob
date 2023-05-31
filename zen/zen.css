@@ -26,6 +26,7 @@
 .term{
     width:40rem;
     height:20rem;
+    white-space:pre;
     border:1px dotted green;
     background:rgb(171, 239, 195);
     margin:0 auto;
