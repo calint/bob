@@ -22,7 +22,7 @@ public final class TableFiles extends ViewTable {
 	}
 
 	public String getTitle() {
-		return "Users";
+		return "Files";
 	}
 
 	@Override
