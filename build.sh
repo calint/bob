@@ -10,6 +10,7 @@ find src -type f | grep -v '\.java$' > resources.txt
 javac -Xlint:deprecation -encoding UTF-8 -d bin @sources.txt
 
 cat resources.txt | while read f; do
+    mkdir -p "$(dirname bin/${f#*/})"
     CMD="cp $f bin/${f#*/}"
     echo $CMD
     $CMD

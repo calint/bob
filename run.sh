@@ -18,6 +18,7 @@ echo
 cmd="java -cp bin:lib/mysql-connector-java-5.1.49.jar b.b \
 	server_port $B_PORT \
 	thread_pool_size $B_NTHREADS \
+	bapp_class bob.app.Application;zen.Application \
 	bapp_cluster_mode $CLUSTER_MODE \
 	bapp_cluster_ip $CLUSTER_IP \
 	bapp_cluster_port $CLUSTER_PORT \
