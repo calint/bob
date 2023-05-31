@@ -53,7 +53,7 @@ public class One extends a {
 
 		x.divh(t, "term");
 
-		x.p("type here: ").tago("input").attr("class", "nbr")
+		x.p("type here -&gt; ").tago("input").attr("class", "nbr")
 				.attr("onkeydown", "this.value='';zen_tx_buf.push(event.keyCode)")
 				.tagoe();
 
