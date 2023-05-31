@@ -96,34 +96,46 @@ public class One extends a {
 		}
 		x.xu(r);
 		x.xu(c);
-		// if (selectActiveInstruction) {
-		// selectSourceRange(x);
-		// }
+		selectSourceRange(x);
+	}
+
+	/** fast tick used by zen.js */
+	public final void x_ft(final xwriter x, final String param) throws Throwable {
+		final int key = Integer.parseInt(param);
+		if (key != 0) {
+			soc.urx.data = key;
+			soc.urx.dr = true;
+			System.out.println("Tick key in: " + key);
+		}
+		soc.tick();
+		if (soc.utx.go) {
+			x.xp(t, String.valueOf((char) soc.utx.dataImm8));
+			soc.utx.go = false;
+		}
+		x.xu(c);
+		x.xu(r);
 	}
 
 	/** reset */
 	public final void x_rst(final xwriter x, final String param) throws Throwable {
 		soc.reset();
-		x.xu(r);
 		x.xu(c);
+		x.xu(r);
 		x.xu(t);
-		// if (selectActiveInstruction) {
-		// selectSourceRange(x);
-		// }
 	}
 
 	public final void x_r(final xwriter x, final String param) throws Throwable {
 		selectActiveInstruction = !selectActiveInstruction;
 	}
 
-	// private void selectSourceRange(final xwriter x) throws Throwable {
-	// if (zasm == null)
-	// return;
-	// final int[] rng = zasm.getInstructionSourceRange(soc.core.pc);
-	// final String sid = s.id();
-	// x.xfocus(sid).p("$('" + sid + "').setSelectionRange(" + rng[0] + "," + rng[1]
-	// + ");");
-	// }
+	private void selectSourceRange(final xwriter x) throws Throwable {
+		if (zasm == null)
+			return;
+		final int[] rng = zasm.getInstructionSourceRange(soc.core.pc);
+		final String sid = s.id();
+		x.xfocus(sid).p("$('" + sid + "').setSelectionRange(" + rng[0] + "," + rng[1]
+				+ ");");
+	}
 
 	// public final void x_key(final xwriter x, final String param) throws Throwable
 	// {
