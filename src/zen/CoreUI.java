@@ -24,8 +24,10 @@ public class CoreUI extends a {
 			leds <<= 1;
 		}
 		x.p(" ").br().p(String.format("%04x", core.ram[core.pc])).br();
+		x.br();
 		// x.p("registers:").br();
 		regs.to(x);
+		x.br();
 		// x.p("calls: ").p(core.cs.idx).br();
 		final int n = core.cs.mem.length > 32 ? 32 : core.cs.mem.length;
 		for (int i = 0; i < n; i++) {
