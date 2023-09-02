@@ -4,7 +4,9 @@ import b.a;
 import b.xwriter;
 
 public class Terminal extends a {
-    @Override
+    private static final long serialVersionUID = 1L;
+
+	@Override
     public void to(xwriter x) throws Throwable {
     }
 
