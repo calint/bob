@@ -2,11 +2,11 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "java",
+            "projectName": "bob",
             "name": "bob",
             "request": "launch",
+            "type": "java",
             "mainClass": "b.b",
-            "projectName": "bob",
             "args": [
                 "bapp_class", "bob.app.Application;zen.Application",
                 "bapp_jdbc_host", "localhost",
@@ -17,11 +17,11 @@
             ]
         },
         {
-            "type": "java",
+            "projectName": "bob",
             "name": "bob-cluster-mode",
             "request": "launch",
+            "type": "java",
             "mainClass": "b.b",
-            "projectName": "bob",
             "args": [
                 "bapp_class", "bob.app.Application;zen.Application",
                 "bapp_cluster_mode", "true", 
@@ -35,11 +35,11 @@
             ]
         },
         {
-            "type": "java",
+            "projectName": "bob",
             "name": "bob-cluster",
             "request": "launch",
+            "type": "java",
             "mainClass": "db.Cluster",
-            "projectName": "bob",
             "args": [
                 "cluster.cfg", "testdb", "c", "password"
             ]
