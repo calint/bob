@@ -3,7 +3,6 @@ new database for new application:
 sudo mysql -u root
 create database zen;create user 'c'@'%' identified by 'password';grant all on zen.* to 'c'@'%';
 -------------------------------------------------------------------------------------------------
-
 journalctl -u bob | grep ClassNotFoundException | cut -c 1-200
 
 sudo tcpdump -i lo port 8888 -X
@@ -11,105 +10,12 @@ sudo tcpdump -i lo port 8888 -X
 ssh root@ journalctl -u bob -e | grep http404 | cut -b 79-180 | sort -u | less
 
 SHOW VARIABLES WHERE Variable_Name IN ('connect_timeout', 'interactive_timeout', 'wait_timeout');
-
+-------------------------------------------------------------------------------------------------
 TAG=2023-04-19--1 && git tag $TAG && git push origin $TAG
 
+TAG=$(date "+%Y-%m-%d--%H-%M") && git tag $TAG && git push origin $TAG
+
 git reset --hard HEAD
-
-localhost, cluster 1 node 
-test1 100 runs
-no-cluster    cluster    cluster-nio  no-cluster (autocommit)
-6867ms        20106ms    17273ms      18528ms
-6526ms        19227ms    19175ms      17792ms
-5989ms        13960ms    18826ms      18052ms   
-5429ms        19495ms    18736ms      13415ms
-5864ms        19215ms    19012ms      18080ms
-
-localhost, cluster 1 node
-ab -c1 -n1000 http://localhost:8888/b/test/t4
-[#/sec] (mean)
-cluster-nio    cluster    no-cluster  no-cluster (autocommit)
-60.45          57.79      131.61      66.56
-60.45          62.05      147.17      66.37
-63.73          62.05      156.10      66.25
-61.89          77.72      155.92      67.28
-63.27          64.10      168.09      66.29
-
-localhost, mysam, cluster 1 node
-test1 100 runs
-no-cluster     cluster-nio   cluster
-8838ms         13230ms       11508ms
-9899ms         10146ms       9927ms
-9036ms         7910ms        9612ms
-8939ms         9831ms        9295ms
-8618ms         9688ms        9541ms
-
-localhost, mysam, cluster, 1 node
-ab -c1 -n1000 http://localhost:8888/b/test/t4
-cluster-nio    no-cluster
-[#/sec]        [#/sec]
-91.31          93.45
-80.86          116.88
-104.03         99.16
-103.26         103.17
-97.26          111.35
-
-localhost, mysam, cluster 1 node, 
-http://localhost:8888/dbo/test/test_dbo
-cluster   no-cluster  cluster (seq)
-[ms]      [ms]        [ms]
-23441     18108       22071
-18941     17197       19305
-19921     17365       17979
-15862     17328       18892
-19429     17344       18872
-20295     17482       18471
-19632     17115       18748
-
-
-digitalocean, mysam, cluster 2 nodes
-/dbo/test/test_dbo
-cluster   no-cluster  cluster (seq)   cluster (par)
-[ms]      [ms]        [ms]            [ms]
-57856     31568       135043          89667
-57746     27087       100352          66315
-55063     27451       93978           64928
-56176     26107       134990          87974
-73768     24813       99446           70632
-58643     26594       91095           75886
-68369     25730       119031          69901
-59102     28854       114881          77593
-57379     24646       127372          87361
-62398     27026       102071          61499
-
-digitalocean, mysam, cluster
-/dbo/test/test_dbo
-cluster (seq)   cluster 4 (par)  cluster 8 (par)   cluster 8 (seq)
-[ms]            [ms]             [ms]              [ms]
-205663          167378           145749            571333            
-193834          158077           119280            548682
-266692          145235           150158            882120
-                106115           155272            597707
-                66789            137096            655392
-                71192            133770            675917
-                71044            144028            598558
-                89101            115448            582639
-                92687            149826            536344
-                78379            164321
-                86372            131075
-                80014            129390
-                73625            163615
-                76124            147083            
-                84535            134758
-                91653            165878
-                78726            169482
-                                 131810
-                                 155717
-                
-                
-                
-                
-                
 ----------------------------------------------------------------------------------
 To enable Hot Code Replace (HCR) in Visual Studio Code for Java development, you need to make sure that the VS Code Java extension is installed and configured.
 
@@ -117,4 +23,5 @@ Here are the steps to enable it:
  *  Install the VS Code Java extension by going to the Extensions view in VS Code and searching for "Java".
  *  Open the settings editor by navigating to Preferences: Open User Settings from the Command Palette (Ctrl + Shift + P).
  *  In the settings editor, search for "java.debug.settings.hotCodeReplace" and set it to "auto" to enable automatic HCR.
+
 ----------------------------------------------------------------------------------

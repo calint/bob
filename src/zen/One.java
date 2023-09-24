@@ -86,7 +86,7 @@ public class One extends a {
 		if (key != 0) {
 			soc.urx.data = key;
 			soc.urx.dr = true;
-			System.out.println("Tick key in: " + key);
+			// System.out.println("Tick key in: " + key);
 		}
 		soc.tick();
 		if (soc.utx.go) {
@@ -105,7 +105,7 @@ public class One extends a {
 		if (key != 0) {
 			soc.urx.data = key;
 			soc.urx.dr = true;
-			System.out.println("Tick key in: " + key);
+			// System.out.println("Tick key in: " + key);
 		}
 		soc.tick();
 		if (soc.utx.go) {
