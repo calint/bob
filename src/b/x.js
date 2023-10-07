@@ -18,7 +18,7 @@ $s=function(eid,txt){
 			break;
 		const i_end=txt.indexOf(tag_end,i_bgn+tag_bgn_len);
 		if(i_end==-1){
-			alert('Did not find end tag after index '+(i_bgn+tag_bgn_len));
+			ui.alert('Did not find end tag after index '+(i_bgn+tag_bgn_len));
 			break;
 		}
 		const script=txt.substring(i_bgn+tag_bgn_len,i_end);
@@ -71,7 +71,7 @@ $p=function(eid,txt){
 }
 //$l=function(){if(ui.keys)document.onkeyup=ui.onkey;}
 $a=function(eid,a,v){$(eid).setAttribute(a,v);}
-$r=function(ev,ths,axpb){if(event.keyCode!=13)return true;$x(axpb);return false;}
+$r=function(ev,ths,axpb){if(ev.keyCode!=13)return true;$x(axpb);return false;}
 $f=function(eid){
 	if(ui.focusDone)return;
 	const e=$(eid);
@@ -240,7 +240,7 @@ $x=function(pb){
 		while(ui.req.readyState==1||ui.req.readyState==2||ui.req.readyState==3){
 			if(ui.axconwait){
 				$d("  * busy, waiting");
-				alert("connection busy. waiting.");
+				ui.alert("connection busy. waiting.");
 				count++;
 				if(count>3)
 					throw "waiting cancelled";

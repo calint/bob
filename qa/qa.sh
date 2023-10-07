@@ -3,6 +3,7 @@ set -e
 
 . ./qa.cfg
 
+date
 echo Host: $QA_BASE_URL
 
 URI_FILES="qa/files"
@@ -103,3 +104,4 @@ if ! cmp -s $DIR_CMP/10 res; then exit 1; fi
 echo " ok"
 #--------------------------------------------------------
 rm res
+date

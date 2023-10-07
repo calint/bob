@@ -36,7 +36,9 @@ final class chdresp_file extends chdresp{
 		if(content_type!=null){
 			bb.put(req.h_content_type).put(content_type);
 		}
-		etag="\""+path_lastModified+"\"";
+		// note. java 21 uses millis in timestamp
+		//       java 5 seconds
+		etag="\""+(path_lastModified/1000)*1000+"\"";
 		bb.put(req.h_etag).put(etag.getBytes());
 		bb.put(req.hkp_connection_keep_alive);
 		additional_headers_insertion_position=bb.position();

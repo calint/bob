@@ -1,0 +1,16 @@
+lör  7 okt 2023 04:50:48 CEST
+Host: http://localhost:8888
+get small file: ok
+get medium file: ok
+get ranged from cache (range 1-): ok
+get ranged from cache (range -5): ok
+get ranged from cache (range 1-5): ok
+get ranged (range 1-): ok
+get ranged (range -10): ok
+get ranged (range 1-10): ok
+chained requests (static content): ok
+large oschunked reply hang: ok
+page 'hello world': ok
+xwriter elements: ok
+page 'hello world statefull': ok
+lör  7 okt 2023 04:50:48 CEST

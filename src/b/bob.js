@@ -71,7 +71,7 @@ $p=function(eid,txt){
 }
 //$l=function(){if(ui.keys)document.onkeyup=ui.onkey;}
 $a=function(eid,a,v){$(eid).setAttribute(a,v);}
-$r=function(ev,ths,axpb){if(event.keyCode!=13)return true;$x(axpb);return false;}
+$r=function(ev,ths,axpb){if(ev.keyCode!=13)return true;$x(axpb);return false;}
 $f=function(eid){
 	if(ui.focusDone)return;
 	const e=$(eid);
@@ -126,15 +126,12 @@ ui.fmt_data_per_second=function(nbytes,ms){
 	}
 }
 ui._pbls=[];
-ui.qpb=function(e){
+$b=function(e){
 	if(ui.is_dbg_pb)$d('qpb '+e.id);
-	if(ui.qpbhas(e.id))return;
+	if(e.id in ui._pbls)return;
 	ui._pbls[e.id]=e.id;
 }
-$b=ui.qpb;
-ui.qpbhas=function(id){return id in ui._pbls;}
 ui._axc=0;
-
 $x=function(pb){
 	if(ui.is_busy){
 		ui.alert('Server is busy. Try again in a moment.');
