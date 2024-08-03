@@ -40,10 +40,32 @@ public final class xwriter {
 		this.os = os;
 	}
 
+	/**
+	 * Returns the output stream wrapped by this.
+	 * 
+	 * @return this
+	 */
+	public OutputStream outputstream() {
+		return os;
+	}
+
+	/**
+	 * Renders '<a href ...>' open tag.
+	 * 
+	 * @param href
+	 * @return this
+	 */
 	public xwriter a(final String href) {
 		return tago("a").attr("href", enc_quot(href)).tagoe();
 	}
 
+	/**
+	 * Renders '<a href ...>html</a>' block.
+	 * 
+	 * @param href
+	 * @param html
+	 * @return this
+	 */
 	public xwriter a(final String href, final String html) {
 		return a(href).p(html).a_();
 	}
@@ -79,49 +101,96 @@ public final class xwriter {
 		return this;
 	}
 
-	public xwriter bell() {
-		return p('\07');
-	}
-
+	/**
+	 * Renders 'br' tag.
+	 * 
+	 * @return this
+	 */
 	public xwriter br() {
 		return tag("br");
 	}
 
-	public xwriter closeUpdateIfOpen() {
-		if (!is_xu_open)
-			return this;
-		is_xu_open = false;
-		return xube();
-	}
-
+	/**
+	 * Opens 'code' tag.
+	 * 
+	 * @return this
+	 */
 	public xwriter code() {
 		return tag("code");
 	}
 
+	/**
+	 * Closes 'code' tag.
+	 * 
+	 * @return this
+	 */
 	public xwriter code_() {
 		return tage("code");
 	}
 
+	/**
+	 * Renders CSS style for an element.
+	 * 
+	 * @param e     element
+	 * @param style CSS style
+	 * @return this
+	 */
 	public xwriter css(final a e, final String style) {
 		return p("#").p(e.id()).p("{").p(style).p("}");
 	}
 
+	/**
+	 * Renders CSS style for an element.
+	 * 
+	 * @param e        element
+	 * @param selector CSS selector
+	 * @param style    CSS style
+	 * @return this
+	 */
 	public xwriter css(final a e, final String selector, final String style) {
 		return css("#" + e.id() + " " + selector, style);
 	}
 
+	/**
+	 * Renders CSS style for selector.
+	 * 
+	 * @param selector CSS selector
+	 * @param style    CSS style
+	 * @return this
+	 */
 	public xwriter css(final String selector, final String style) {
 		return p(selector).p("{").p(style).p("}");
 	}
 
+	/**
+	 * Renders CSS element that loads a font.
+	 * 
+	 * @param name font name
+	 * @param url  URL to font
+	 * @return this
+	 */
 	public xwriter cssfont(final String name, final String url) {
 		return p("@font-face{font-family:").p(name).p(";src:url(").p(url).p(");}");
 	}
 
+	/**
+	 * Renders default attributes for HTML element.
+	 * 
+	 * @param e element
+	 * @return this
+	 */
 	public xwriter default_attrs_for_element(final a e) {
 		return default_attrs_for_element(e, null, null);
 	}
 
+	/**
+	 * Renders default attributes for HTML element.
+	 * 
+	 * @param e     element
+	 * @param cls   style class or null/empty string if none
+	 * @param style style or null/empty string if none
+	 * @return this
+	 */
 	public xwriter default_attrs_for_element(final a e, final String cls, final String style) {
 		if (e != null) {
 			attr("id", e.id());
@@ -135,15 +204,35 @@ public final class xwriter {
 		return this;
 	}
 
+	/**
+	 * Renders a div with HTML escaped element output.
+	 * 
+	 * @param e element
+	 * @return this
+	 */
 	public xwriter div(final a e) {
 		return div(e, null, null);
 	}
 
+	/**
+	 * Renders a div with HTML escaped element output.
+	 * 
+	 * @param e   element
+	 * @param cls style class or null/empty string if none
+	 * @return this
+	 */
 	public xwriter div(final a e, final String cls) {
 		return div(e, cls, null);
 	}
 
-	/** Renders a complete div with HTML escaped element output. */
+	/**
+	 * Renders a div with HTML escaped element output.
+	 * 
+	 * @param e     element
+	 * @param cls   style class or null/empty string if none
+	 * @param style style or null/empty string if none
+	 * @return this
+	 */
 	public xwriter div(final a e, final String cls, final String style) {
 		divo(e, cls, style).tagoe();
 		try {
@@ -154,23 +243,56 @@ public final class xwriter {
 		return div_();
 	}
 
+	/**
+	 * Closes a 'div' tag.
+	 * 
+	 * @return this
+	 */
 	public xwriter div_() {
 		return tage("div");
 	}
 
-	/** Renders a 'div' tag with unescaped element output assumed to be HTML. */
+	/**
+	 * Renders a 'div' with HTML output of the element.
+	 * 
+	 * @param e     element
+	 * @param cls   style class or null/empty string if none
+	 * @param style style or null/empty string if none
+	 * @return this
+	 */
 	public xwriter div_html(final a e, final String cls, final String style) {
 		return divh(e, cls, style);
 	}
 
+	/**
+	 * Renders a 'div' with HTML output of by the element.
+	 * 
+	 * @param e element
+	 * @return this
+	 */
 	public xwriter divh(final a e) {
 		return divh(e, null, null);
 	}
 
+	/**
+	 * Renders a 'div' with HTML output of by the element.
+	 * 
+	 * @param e   element
+	 * @param cls style class or null/empty string if none
+	 * @return this
+	 */
 	public xwriter divh(final a e, final String cls) {
 		return divh(e, cls, null);
 	}
 
+	/**
+	 * Renders a 'div' with HTML output of by the element.
+	 * 
+	 * @param e     element
+	 * @param cls   style class or null/empty string if none
+	 * @param style style or null/empty string if none
+	 * @return this
+	 */
 	public xwriter divh(final a e, final String cls, final String style) {
 		tago("div").attr("id", e.id());
 		if (!isempty(cls)) {
@@ -191,14 +313,15 @@ public final class xwriter {
 	/**
 	 * Opens a 'div' tag so that other attributes can be added. Close with
 	 * 'tagoe()'.
+	 * 
+	 * @param e     element
+	 * @param cls   style class or null/empty string if none
+	 * @param style style or null/empty string if none
+	 * @return this
 	 */
 	public xwriter divo(final a e, final String cls, final String style) {
 		tago("div").default_attrs_for_element(e, cls, style);
 		return this;
-	}
-
-	public xwriter enter() {
-		return p('\r');
 	}
 
 	/**
@@ -212,6 +335,23 @@ public final class xwriter {
 		xreload_requested = false;
 	}
 
+	/**
+	 * Closes 'xub(...)' is open.
+	 * 
+	 * @return this
+	 */
+	public xwriter close_update_if_open() {
+		if (!is_xu_open)
+			return this;
+		is_xu_open = false;
+		return xube();
+	}
+
+	/**
+	 * Flushes output stream.
+	 * 
+	 * @return this
+	 */
 	public xwriter flush() {
 		try {
 			os.flush();
@@ -221,15 +361,42 @@ public final class xwriter {
 		}
 	}
 
+	/**
+	 * Renders a 'script' block that focuses on element.
+	 * 
+	 * @param e element
+	 * @return this
+	 */
 	public xwriter focus(final a e) {
 		return script().p("$f('").p(e.id()).p("')").script_();
 	}
 
+	/**
+	 * Render 'hr' tag.
+	 * 
+	 * @return this
+	 */
 	public xwriter hr() {
 		return tag("hr");
 	}
 
-	// ? review this
+	/**
+	 * Input field.
+	 * 
+	 * @param e                          element
+	 * @param type                       HTML type
+	 * @param cls                        style class or null/empty string if none
+	 * @param style                      style or null/empty string if none
+	 * @param default_value              default value or null
+	 * @param on_enter_callback_elem     element to callback when key 'enter' is
+	 *                                   pressed
+	 * @param on_enter_callback          callback function name without prefix 'x_'
+	 *                                   and the rest is parameter
+	 * @param on_change_callback_elem    element to callback when field changes
+	 * @param on_change_callbackcallback function name without prefix 'x_' and the
+	 *                                   rest is parameter
+	 * @return this
+	 */
 	public xwriter inp(final a e, final String type, final String cls, final String style, final String default_value,
 			final a on_enter_callback_elem, final String on_enter_callback, final a on_change_callback_elem,
 			final String on_change_callback) {
@@ -278,54 +445,145 @@ public final class xwriter {
 		return tagoe();
 	}
 
+	/**
+	 * Input float.
+	 * 
+	 * @param e element
+	 * @return this
+	 */
 	public xwriter inpflt(final a e) {
 		return tago("input").attr("value", e.toString()).default_attrs_for_element(e).attr("type", "text")
 				.attr("class", "nbr").attr("size", 5).attr("oninput", "$b(this)").tagoe();
 	}
 
+	/**
+	 * Input int.
+	 * 
+	 * @param e element
+	 * @return this
+	 */
 	public xwriter inpint(final a e) {
 		return tago("input").attr("value", e.toString()).default_attrs_for_element(e).attr("type", "text")
 				.attr("class", "nbr").attr("size", 5).attr("oninput", "$b(this)").tagoe();
 	}
 
+	/**
+	 * Input long.
+	 * 
+	 * @param e element
+	 * @return this
+	 */
 	public xwriter inplng(final a e) {
 		return inpint(e);
 	}
 
+	/**
+	 * Input text field.
+	 * 
+	 * @param e element
+	 * @return this
+	 */
 	public xwriter inptxt(final a e) {
 		return inp(e, null, null, null, null, null, null, null, null);
 	}
 
+	/**
+	 * Input text field.
+	 * 
+	 * @param e                      element
+	 * @param callback_elem_on_enter element to callback when key 'enter' is entered
+	 * @return this
+	 */
 	public xwriter inptxt(final a e, final a callback_elem_on_enter) {
 		return inp(e, null, null, null, null, callback_elem_on_enter, null, null, null);
 	}
 
+	/**
+	 * Input text field.
+	 * 
+	 * @param e                      element
+	 * @param callback_elem_on_enter element to callback when key 'enter' is entered
+	 * @param callback               the callback where first word is method name
+	 *                               without prefix 'x_' and the rest is the
+	 *                               parameter
+	 * @return this
+	 */
 	public xwriter inptxt(final a e, final a callback_elem_on_enter, final String callback) {
 		return inp(e, null, null, null, null, callback_elem_on_enter, callback, null, null);
 	}
 
+	/**
+	 * Input text field.
+	 * 
+	 * @param e   element
+	 * @param cls style class or null/empty string if none
+	 * @return this
+	 */
 	public xwriter inptxt(final a e, final String cls) {
 		return inp(e, null, cls, null, null, null, null, null, null);
 	}
 
+	/**
+	 * Input text field.
+	 * 
+	 * @param e                      element
+	 * @param cls                    style class or null/empty string if none
+	 * @param callback_elem_on_enter element to callback when key 'enter' is entered
+	 * @param callback               the callback where first word is method name
+	 *                               without prefix 'x_' and the rest is the
+	 *                               parameter
+	 * @return this
+	 */
 	public xwriter inptxt(final a e, final String cls, final a callback_elem_on_enter, final String callback) {
 		return inp(e, null, cls, null, null, callback_elem_on_enter, callback, null, null);
 	}
 
+	/**
+	 * Input text field.
+	 * 
+	 * @param e                      element
+	 * @param cls                    style class or null/empty string if none
+	 * @param default_value          default value or null
+	 * @param callback_elem_on_enter element to callback when key 'enter' is entered
+	 * @param callback               the callback where first word is method name
+	 *                               without prefix 'x_' and the rest is the
+	 *                               parameter
+	 * @return this
+	 */
 	public xwriter inptxt(final a e, final String cls, final String default_value, final a callback_elem_on_enter,
 			final String callback) {
 		return inp(e, null, cls, null, default_value, callback_elem_on_enter, callback, null, null);
 	}
 
+	/**
+	 * Input text area.
+	 * 
+	 * @param e element
+	 * @return this
+	 */
 	public xwriter inptxtarea(final a e) {
 		return inptxtarea(e, null, null);
 	}
 
+	/**
+	 * Input text area.
+	 * 
+	 * @param e   element
+	 * @param cls style class or null/empty string if none
+	 * @return this
+	 */
 	public xwriter inptxtarea(final a e, final String cls) {
 		return inptxtarea(e, cls, null);
 	}
 
-	/** Input text area. */
+	/**
+	 * Input text area.
+	 * 
+	 * @param e     element
+	 * @param cls   style class or null/empty string if none
+	 * @param style style or null/empty string if none
+	 * @return this
+	 */
 	public xwriter inptxtarea(final a e, final String cls, final String style) {
 		tago("textarea").default_attrs_for_element(e, cls, style).attr("oninput", "$b(this)").tagoe();
 		try {
@@ -341,8 +599,8 @@ public final class xwriter {
 	 * Renders script for a callback.
 	 *
 	 * @param e                    element to call
-	 * @param callback             first word is method name and remaining string is
-	 *                             the parameter
+	 * @param callback             first word is method name without 'x_' prefix and
+	 *                             remaining string is the parameter
 	 * @param encode_for_attribute true to encode parameter for script in HTML
 	 *                             attribute
 	 */
@@ -360,6 +618,12 @@ public final class xwriter {
 		return this;
 	}
 
+	/**
+	 * Writes a string encoded for use in single quote delimited JavaScript.
+	 * 
+	 * @param s string
+	 * @return this
+	 */
 	@SuppressWarnings("resource") // osjsstr does not need to do any cleanup
 	public xwriter jsstr(final String s) {
 		try {
@@ -370,72 +634,178 @@ public final class xwriter {
 		}
 	}
 
+	/**
+	 * Opens 'li' tag.
+	 * 
+	 * @return this
+	 */
 	public xwriter li() {
 		return li(null);
 	}
 
+	/**
+	 * Opens 'li' tag.
+	 * 
+	 * @param cls style class or null/empty string if none
+	 * @return this
+	 */
 	public xwriter li(final String cls) {
 		if (isempty(cls))
 			return li();
 		return tago("li").attr("class", cls).tagoe();
 	}
 
-	public xwriter nbsp() {
-		return p("&nbsp;");
-	}
-
-	public xwriter nl() {
-		return p('\n');
-	}
-
+	/**
+	 * Opens 'ol' tag.
+	 * 
+	 * @return this
+	 */
 	public xwriter ol() {
 		return tag("ol");
 	}
 
+	/**
+	 * Closes 'ol' tag.
+	 * 
+	 * @return this
+	 */
 	public xwriter ol_() {
 		return tage("ol");
 	}
 
-	public OutputStream outputstream() {
-		return os;
+	/**
+	 * Prints HTML &nbsp;.
+	 * 
+	 * @return this
+	 */
+	public xwriter nbsp() {
+		return p("&nbsp;");
 	}
 
+	/**
+	 * Prints a newline character.
+	 * 
+	 * @return this
+	 */
+	public xwriter nl() {
+		return p('\n');
+	}
+
+	/**
+	 * Prints a carriage return.
+	 * 
+	 * @return this
+	 */
+	public xwriter enter() {
+		return p('\r');
+	}
+
+	/**
+	 * Prints bell character.
+	 * 
+	 * @return this
+	 */
+	public xwriter bell() {
+		return p('\07');
+	}
+
+	/**
+	 * Prints value of element 'e'. Note: it does not print the rendered output of
+	 * the element.
+	 * 
+	 * @param e element
+	 * @return this
+	 */
 	public xwriter p(final a e) {
 		return p(e.str());
 	}
 
-	public xwriter p(final boolean n) {
-		return p(Boolean.toString(n));
+	/**
+	 * Prints boolean.
+	 * 
+	 * @param bool boolean
+	 * @return this
+	 */
+	public xwriter p(final boolean bool) {
+		return p(Boolean.toString(bool));
 	}
 
+	/**
+	 * Prints byte.
+	 * 
+	 * @param n number
+	 * @return this
+	 */
 	public xwriter p(final byte n) {
 		return p(Byte.toString(n));
 	}
 
-	public xwriter p(final char n) {
-		return p(Character.toString(n));
+	/**
+	 * Prints character.
+	 * 
+	 * @param ch character
+	 * @return this
+	 */
+	public xwriter p(final char ch) {
+		return p(Character.toString(ch));
 	}
 
+	/**
+	 * Prints character sequence.
+	 * 
+	 * @param cs character sequence
+	 * @return this
+	 */
 	public xwriter p(final CharSequence cs) {
 		return p(cs.toString());
 	}
 
+	/**
+	 * Prints double.
+	 * 
+	 * @param n number
+	 * @return this
+	 */
 	public xwriter p(final double n) {
 		return p(Double.toString(n));
 	}
 
+	/**
+	 * Prints float.
+	 * 
+	 * @param n number
+	 * @return this
+	 */
 	public xwriter p(final float n) {
 		return p(Float.toString(n));
 	}
 
+	/**
+	 * Prints int.
+	 * 
+	 * @param n number
+	 * @return this
+	 */
 	public xwriter p(final int n) {
 		return p(Integer.toString(n));
 	}
 
+	/**
+	 * Prints long.
+	 * 
+	 * @param n number
+	 * @return this
+	 */
 	public xwriter p(final long n) {
 		return p(Long.toString(n));
 	}
 
+	/**
+	 * Prints string.
+	 * 
+	 * @param s string
+	 * @return this
+	 */
 	public xwriter p(final String s) {
 		if (s == null)
 			return this;
@@ -447,18 +817,40 @@ public final class xwriter {
 		return this;
 	}
 
+	/**
+	 * Prints newline.
+	 * 
+	 * @return this
+	 */
 	public xwriter pl() {
 		return nl();
 	}
 
+	/**
+	 * Prints string followed by newline.
+	 * 
+	 * @param s text
+	 * @return this
+	 */
 	public xwriter pl(final String s) {
 		return p(s).nl();
 	}
 
+	/**
+	 * Opens tag 'pre'.
+	 * 
+	 * @return this
+	 */
 	public xwriter pre() {
 		return pre(null);
 	}
 
+	/**
+	 * Opens tag 'pre'.
+	 * 
+	 * @param cls style class or null/empty string if none
+	 * @return this
+	 */
 	public xwriter pre(final String cls) {
 		tago("pre");
 		if (!isempty(cls)) {
@@ -467,6 +859,11 @@ public final class xwriter {
 		return tagoe();
 	}
 
+	/**
+	 * Closes tag 'pre'.
+	 * 
+	 * @return this
+	 */
 	public xwriter pre_() {
 		return tage("pre");
 	}
@@ -517,11 +914,10 @@ public final class xwriter {
 	/**
 	 * Renders 'select' block.
 	 *
-	 * @param e       element.
+	 * @param e       element
 	 * @param cls     style class or null/empty string if none
 	 * @param style   style or null/empty string if none
-	 * @param options text and value separated by |. Value is optional. If none
-	 *                provided text is used.
+	 * @param options text and optional value separated by |
 	 * @return this
 	 */
 	public xwriter select(final a e, final String cls, final String style, final List<String> options) {
@@ -534,8 +930,7 @@ public final class xwriter {
 	 * Renders select options list.
 	 *
 	 * @param e       element.
-	 * @param options text and value separated by |. Value is optional. If none
-	 *                provided text is used.
+	 * @param options text and optional value separated by |
 	 * @return this
 	 */
 	public xwriter select_options(final a e, final List<String> options) {
@@ -555,6 +950,7 @@ public final class xwriter {
 	/**
 	 * Opens 'select' tag.
 	 * 
+	 * @param e     element
 	 * @param cls   style class or null/empty string if none
 	 * @param style style or null/empty string if none
 	 * @return this
@@ -564,8 +960,9 @@ public final class xwriter {
 	}
 
 	/**
-	 * Renders a complete 'span' with HTML escaped value of 'e'.
+	 * Renders a complete 'span' with HTML escaped output of element.
 	 * 
+	 * @param e element
 	 * @return this
 	 */
 	public xwriter span(final a e) {
@@ -573,8 +970,9 @@ public final class xwriter {
 	}
 
 	/**
-	 * Renders a complete 'span' with HTML escaped value of 'e'.
+	 * Renders a complete 'span' with HTML escaped output of element.
 	 * 
+	 * @param e   element
 	 * @param cls style class or null/empty string if none
 	 * @return this
 	 */
@@ -583,8 +981,9 @@ public final class xwriter {
 	}
 
 	/**
-	 * Renders a complete 'span' with HTML escaped value of 'e'.
+	 * Renders a complete 'span' with HTML escaped output of element.
 	 * 
+	 * @param e     element
 	 * @param cls   style class or null/empty string if none
 	 * @param style style or null/empty string if none
 	 * @return this

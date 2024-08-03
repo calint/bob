@@ -973,7 +973,7 @@ public final class req {
 						.invoke(target_elem, x, target_elem_method_args);
 			} catch (final InvocationTargetException t) {
 				b.log(t.getTargetException());
-				x.closeUpdateIfOpen();
+				x.close_update_if_open();
 				x.xalert(t.getTargetException().getMessage());
 			} catch (final NoSuchMethodException t) {
 				x.xalert("method not found:\n" + target_elem.getClass().getName() + ".x_" + target_elem_method
