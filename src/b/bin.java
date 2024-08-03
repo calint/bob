@@ -1,4 +1,5 @@
 package b;
-public interface bin{
+
+public interface bin {
 	String content_type();
 }
