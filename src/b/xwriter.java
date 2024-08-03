@@ -158,7 +158,7 @@ public final class xwriter {
 		return tage("div");
 	}
 
-	/** Renders a div tag with element content. */
+	/** Renders a 'div' tag with unescaped element output assumed to be HTML. */
 	public xwriter div_html(final a e, final String cls, final String style) {
 		return divh(e, cls, style);
 	}
@@ -170,26 +170,6 @@ public final class xwriter {
 	public xwriter divh(final a e, final String cls) {
 		return divh(e, cls, null);
 	}
-
-	// public xwriter divo(){
-	// return divo(null,null,null);
-	// }
-
-	// public xwriter divo(final a e){
-	// return divo(e,null,null);
-	// }
-
-	// public xwriter divo(final a e,final String cls){
-	// return divo(e,cls,null);
-	// }
-
-	// public xwriter divo(final String cls){
-	// return divo(null,cls,null);
-	// }
-
-	// public xwriter divo(final String cls,final String style){
-	// return divo(null,cls,style);
-	// }
 
 	public xwriter divh(final a e, final String cls, final String style) {
 		tago("div").attr("id", e.id());
@@ -209,7 +189,8 @@ public final class xwriter {
 	}
 
 	/**
-	 * Opens a div tag so that other attributes can be added. Close with tagoe().
+	 * Opens a 'div' tag so that other attributes can be added. Close with
+	 * 'tagoe()'.
 	 */
 	public xwriter divo(final a e, final String cls, final String style) {
 		tago("div").default_attrs_for_element(e, cls, style);
@@ -221,7 +202,7 @@ public final class xwriter {
 	}
 
 	/**
-	 * Called before closing being the last script dont. Used to avoid racing
+	 * Called before closing, being the last script added. Used to avoid racing
 	 * between DbTransaction.commit() and reloading the page.
 	 */
 	public void finish() {
@@ -248,16 +229,6 @@ public final class xwriter {
 		return tag("hr");
 	}
 
-	// /** Closes inline script tag. */
-	// public xwriter inline_js_close(){
-	// return tage("is");
-	// }
-	// /** Opens a tag for inline script that is executed on the client side. The
-	// script is collected in a list from the response message and executed after
-	// the field has been set. */
-	// public xwriter inline_js_open(){
-	// return tag("is");
-	// }
 	// ? review this
 	public xwriter inp(final a e, final String type, final String cls, final String style, final String default_value,
 			final a on_enter_callback_elem, final String on_enter_callback, final a on_change_callback_elem,
@@ -307,45 +278,11 @@ public final class xwriter {
 		return tagoe();
 	}
 
-	/**
-	 * Input field that callbacks an element while typing.
-	 *
-	 * @param e             the element.
-	 * @param cls           style class.
-	 * @param callback_elem element to do callback on at change.
-	 * @param callback      callback argument. First word is the method and the rest
-	 *                      of the string is the parameter(s).
-	 */
-	// public xwriter inpax(final a e,final String cls,final a callback_elem,final
-	// String callback){
-	// tago("input").attr("value",e.toString()).default_attrs_for_element(e,cls,null).attr("type","text");
-	// attr("onfocus","this.setSelectionRange(this.value.length,this.value.length)");
-	// final StringBuilder sb=new StringBuilder();
-	// sb.append(callback_elem.id());
-	// if(!isempty(callback)){
-	// sb.append(" ").append(enc_js_in_attr(callback));
-	// }
-	// final String sbs=sb.toString();
-	// attr("oninput","$b(this);$x('"+sbs+"');return true;");
-	// attr("onkeypress","return $r(event,this,'"+callback_elem.id()+" sel')");
-	// return tagoe();
-	// }
-
-	// public xwriter inpax(final a e,final String cls,final a
-	// on_change_callback_elem,final String on_change_callback,final String
-	// on_enter_callback){
-	// return
-	// inp(e,null,cls,null,null,on_change_callback_elem,on_enter_callback,on_change_callback_elem,on_change_callback);
-	// }
-
 	public xwriter inpflt(final a e) {
 		return tago("input").attr("value", e.toString()).default_attrs_for_element(e).attr("type", "text")
 				.attr("class", "nbr").attr("size", 5).attr("oninput", "$b(this)").tagoe();
 	}
 
-	// public xwriter inp_color(final a e){
-	// return inp(e,"color",null,null,null,null,null,null,null);
-	// }
 	public xwriter inpint(final a e) {
 		return tago("input").attr("value", e.toString()).default_attrs_for_element(e).attr("type", "text")
 				.attr("class", "nbr").attr("size", 5).attr("oninput", "$b(this)").tagoe();
@@ -390,10 +327,7 @@ public final class xwriter {
 
 	/** Input text area. */
 	public xwriter inptxtarea(final a e, final String cls, final String style) {
-		// tago("textarea").default_attrs_for_element(e,cls,style).attr("onchange","$b(this)").attr("onkeydown","$b(this)");
-		tago("textarea").default_attrs_for_element(e, cls, style).attr("oninput", "$b(this)");
-		// attr("wrap","off").attr("spellcheck","false").tagoe();
-		tagoe();
+		tago("textarea").default_attrs_for_element(e, cls, style).attr("oninput", "$b(this)").tagoe();
 		try {
 			e.to(new osltgt(outputstream()));
 		} catch (final Throwable t) {
@@ -403,30 +337,14 @@ public final class xwriter {
 		return tage("textarea");
 	}
 
-	// /** Alias for inline_js_close() */
-	// public xwriter is_(){
-	// return inline_js_close();
-	// }
-	// /** Alias for inline_js_open() */
-	// public xwriter is(){
-	// return inline_js_open();
-	// }
-	// public xwriter js_x(final a e,final boolean encode_for_attribute){
-	// return js_x(e,null,encode_for_attribute);
-	// }
-	//
-	// public xwriter js_x(final a e,final String callback){
-	// return js_x(e,callback,false);
-	// }
-
 	/**
 	 * Renders script for a callback.
 	 *
 	 * @param e                    element to call
 	 * @param callback             first word is method name and remaining string is
-	 *                             the parameter.
+	 *                             the parameter
 	 * @param encode_for_attribute true to encode parameter for script in HTML
-	 *                             attribute.
+	 *                             attribute
 	 */
 	public xwriter js_x(final a e, final String callback, final boolean encode_for_attribute) {
 		p("$x('").p(e.id());
@@ -465,13 +383,6 @@ public final class xwriter {
 	public xwriter nbsp() {
 		return p("&nbsp;");
 	}
-
-	// public xwriter nl(final int number_of_newlines){
-	// for(int i=0;i<number_of_newlines;i++){
-	// p('\n');
-	// }
-	// return this;
-	// }
 
 	public xwriter nl() {
 		return p('\n');
