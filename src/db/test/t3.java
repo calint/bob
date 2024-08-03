@@ -11,13 +11,13 @@ public @stateless class t3 extends a {
 
 	@Override
 	public void to(final xwriter x) throws Throwable {
-		runTest(x, 1, new import_books("../csv-samples/books_data_200k.csv"));
+		runTest(x, 1, new import_books("/home/c/Downloads/csv-samples/books_data_200k.csv"));
 	}
 
 	private void runTest(final xwriter x, final int nruns, final TestCase c) throws Throwable {
 		c.out = new PrintStream(x.outputstream(), true);
 		c.number_of_runs = nruns;
-//		c.data_points_output = true;
+		// c.data_points_output = true;
 		c.out.println("<pre>");
 		c.run();
 	}

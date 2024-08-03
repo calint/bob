@@ -2,10 +2,11 @@ package jem;
 
 import java.io.PrintWriter;
 
+import db.FldChars;
 import db.FldStr;
 
-public final class JemFldStr extends JemFld {
-	public JemFldStr(final FldStr fld) {
+public final class JemFldChars extends JemFld {
+	public JemFldChars(final FldChars fld) {
 		super(fld);
 	}
 
@@ -16,11 +17,11 @@ public final class JemFldStr extends JemFld {
 
 		out.println(HR);
 		out.println("public String get" + acc + "(){");
-		out.println("\treturn " + fldName + ".getStr(this);");
+		out.println("\treturn " + fldName + ".getChars(this);");
 		out.println("}");
 		out.println();
 		out.println("public void set" + acc + "(final String v){");
-		out.println("\t" + fldName + ".setStr(this,v);");
+		out.println("\t" + fldName + ".setChars(this,v);");
 		out.println("}");
 		out.println();
 	}
