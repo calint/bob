@@ -903,7 +903,13 @@ public final class xwriter{
 	public xwriter xub(final a e,final boolean inner,final boolean escltgt){
 		is_xu_open=true;
 		p("$").p(inner?"s":"o").p("('").p(e.id()).p("','");
-		return new xwriter(new osjsstr(escltgt?new osltgt(os):os));
+		// return new xwriter(new osjsstr(escltgt?new osltgt(os):os));
+		// note: commented line generates byte code issue and exception
+		//       possible bug in java
+		if(escltgt){
+			return new xwriter(new osjsstr(new osltgt(os)));
+		}
+		return new xwriter(new osjsstr(os));
 	}
 
 	/** Completes an xub(...) call. */
