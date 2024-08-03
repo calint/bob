@@ -850,10 +850,12 @@ public final class xwriter {
 		return p("ui.alert('").jsstr(s).pl("');");
 	}
 
+	/** Focuses on element 'e'. */
 	public xwriter xfocus(final a e) {
 		return p("$f('").p(e.id()).pl("');");
 	}
 
+	/** Focuses on field identified by 'id'. */
 	public xwriter xfocus(final String id) {
 		return p("$f('").p(id).pl("');");
 	}
@@ -863,6 +865,7 @@ public final class xwriter {
 		return p("$p('").p(e.id()).p("','").jsstr(s).pl("');");
 	}
 
+	/** Requests page reload. */
 	public xwriter xreload() {
 		xreload_requested = true;
 		return this;
@@ -877,19 +880,10 @@ public final class xwriter {
 		return p("$t('").jsstr(s).pl("');");
 	}
 
-	/** Updates inner HTML of element e. */
+	/** Updates inner HTML of element 'e'. */
 	public xwriter xu(final a e) throws Throwable {
 		return xu(e, false);
 	}
-
-	// /** Updates inner HTML of elements e... */
-	// public xwriter xu(final a...es) throws Throwable{
-	// for(final a e:es){
-	// e.to(xub(e,true,false));
-	// xube();
-	// }
-	// return this;
-	// }
 
 	/**
 	 * Updates inner HTML of element.
@@ -901,14 +895,6 @@ public final class xwriter {
 		e.to(xub(e, true, escltgt));
 		return xube();
 	}
-
-	// public xwriter xu(final a e,final String s){
-	// return xu(e.id(),s);
-	// }
-
-	// public xwriter xu(final String id,final String s){
-	// return p("$s('").p(id).p("','").jsstr(s).pl("');");
-	// }
 
 	/**
 	 * Begin an update inner or outer element call.
