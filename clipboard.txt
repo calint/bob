@@ -11,10 +11,8 @@ ssh root@ journalctl -u bob -e | grep http404 | cut -b 79-180 | sort -u | less
 
 SHOW VARIABLES WHERE Variable_Name IN ('connect_timeout', 'interactive_timeout', 'wait_timeout');
 -------------------------------------------------------------------------------------------------
-TAG=2023-04-19--1 && git tag $TAG && git push origin $TAG
-
 TAG=$(date "+%Y-%m-%d--%H-%M") && git tag $TAG && git push origin $TAG
-
+-------------------------------------------------------------------------------------------------
 git reset --hard HEAD
 ----------------------------------------------------------------------------------
 To enable Hot Code Replace (HCR) in Visual Studio Code for Java development, you need to make sure that the VS Code Java extension is installed and configured.
