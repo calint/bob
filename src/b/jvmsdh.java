@@ -2,6 +2,7 @@ package b;
 
 import db.Db;
 
+/** Java hook for shutdown. */
 final class jvmsdh extends Thread {
 	@Override
 	public void run() {

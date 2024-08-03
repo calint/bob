@@ -30,6 +30,7 @@ import java.util.LinkedList;
 import java.util.TimeZone;
 import db.Db;
 
+/** Web application server Bee. */
 final public class b {
 	public final static String strenc = "utf-8";
 	public final static String q = " ڀ ";

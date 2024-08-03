@@ -6,8 +6,8 @@ import java.nio.channels.SocketChannel;
 import java.security.MessageDigest;
 
 /**
- * Use case is request response chain with one send for each on_message. Full
- * duplex not supported.
+ * Websocket implementation of half duplex mode. Use case is request response
+ * chain with one send for each on_message.
  */
 public abstract class websock {
 	private enum state {

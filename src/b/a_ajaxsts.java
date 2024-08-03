@@ -2,6 +2,7 @@ package b;
 
 import b.b.conf;
 
+/** AJAX driven status field. */
 public class a_ajaxsts extends a {
 	@Override
 	public void to(final xwriter x) throws Throwable {

@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 
+/** Low-level printer of HTML and JavaScript stream. */
 public final class xwriter {
 	public static String enc_js_in_attr(final String text) {
 		if (text == null)
@@ -872,7 +873,7 @@ public final class xwriter {
 	}
 
 	/** Scrolls page to top */
-	public xwriter xscrollToTop() {
+	public xwriter xscroll_to_top() {
 		return pl("ui.scrollToTop();");
 	}
 

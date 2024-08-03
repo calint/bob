@@ -3,6 +3,7 @@ package b;
 import java.io.IOException;
 import java.io.OutputStream;
 
+/** Output stream that escapes the writes for a JavaScript string. */
 public final class osjsstr extends OutputStream {
 	private static final byte[] b_jsstr_sq = "\\'".getBytes();
 	private static final byte[] b_jsstr_cr = "\\r".getBytes();

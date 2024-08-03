@@ -8,6 +8,7 @@ import db.FldSerializable;
 import db.FldStr;
 import db.Index;
 
+/** Serialized persistent session object bound to a path. */
 public final class sessionobj extends DbObject {
 	public final static FldStr path = new FldStr(250, "");
 	public final static FldSerializable object = new FldSerializable();

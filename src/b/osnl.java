@@ -3,6 +3,7 @@ package b;
 import java.io.IOException;
 import java.io.OutputStream;
 
+/** Output stream with callbacks at newline. */
 public class osnl extends OutputStream {// ? refactor
 	private final StringBuilder line = new StringBuilder(256);
 
@@ -22,7 +23,7 @@ public class osnl extends OutputStream {// ? refactor
 			final byte b = c[off + n];
 			if (b == '\n') {
 				try {
-					onnewline(line.toString());
+					on_newline(line.toString());
 				} catch (final Throwable e) {
 					throw new Error(e);
 				}
@@ -33,7 +34,7 @@ public class osnl extends OutputStream {// ? refactor
 		}
 	}
 
-	public void onnewline(final String line) throws Throwable {
+	public void on_newline(final String line) throws Throwable {
 		System.out.println(line);
 	}
 }

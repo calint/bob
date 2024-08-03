@@ -3,6 +3,10 @@ package b;
 import java.io.IOException;
 import java.io.OutputStream;
 
+/**
+ * Output stream that escapes lesser and greater than characters to HTML
+ * encoding.
+ */
 public final class osltgt extends OutputStream {
 	private static final byte[] ba_html_gt = "&gt;".getBytes();
 	private static final byte[] ba_html_lt = "&lt;".getBytes();

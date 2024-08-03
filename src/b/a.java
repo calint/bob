@@ -9,6 +9,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Field;
 
+/** A HTML element. */
 public class a implements Serializable {
 	public final static String id_path_separator = "-";
 	private a parent;

@@ -3,6 +3,7 @@ package b;
 import java.nio.channels.SelectionKey;
 import java.util.LinkedList;
 
+/** Request running thread. */
 final class thdreq extends Thread {
 	static final LinkedList<thdreq> all_request_threads = new LinkedList<thdreq>();
 	private static int seq;

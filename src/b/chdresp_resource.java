@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 
+/** Cached resource. */
 final class chdresp_resource extends chdresp {
 	/** Caches a resource. */
 	public chdresp_resource(final InputStream is, final byte[] content_type) throws Throwable {

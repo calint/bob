@@ -24,6 +24,7 @@ import db.DbObject;
 import db.DbTransaction;
 import db.Query;
 
+/** HTTP request. */
 public final class req {
 	void process() throws Throwable {
 		while (true) {

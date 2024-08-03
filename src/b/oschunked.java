@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 
+/** Chunked output stream. */
 final class oschunked extends OutputStream {
 	private static final ByteBuffer bb_eochunk = ByteBuffer.wrap("0\r\n\r\n".getBytes());
 	private static final ByteBuffer bb_crnl = ByteBuffer.wrap("\r\n".getBytes());

@@ -7,6 +7,7 @@ import java.util.Map;
 
 import db.Db;
 
+/** Websocket that implements the framework. */
 public class bob extends websock {
 	private final static String axfld = "$";
 	protected a controller;

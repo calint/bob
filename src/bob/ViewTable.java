@@ -56,7 +56,7 @@ public abstract class ViewTable extends View {
 			x.divh(ac, "ac").nl();
 		}
 		if ((enabledViewBits & BIT_SEARCH) != 0) {
-//			x.inp(q, null, "query", null, null, this, "new", this, "q");
+			// x.inp(q, null, "query", null, null, this, "new", this, "q");
 			x.tago("input").default_attrs_for_element(q, "query", null);
 			final String eid = id();
 			if ((enabledViewBits & BIT_CREATE) != 0) {
@@ -129,7 +129,7 @@ public abstract class ViewTable extends View {
 			x.xu(p); // update paging
 		}
 		x.xfocus(q);
-		x.xscrollToTop(); // scroll to top of page
+		x.xscroll_to_top(); // scroll to top of page
 	}
 
 	/** Callback for change in query field. */
@@ -363,14 +363,14 @@ public abstract class ViewTable extends View {
 			super.bubble_event(x);
 		}
 
-//
-//		public int getCurrentPage() {
-//			return currentPage;
-//		}
-//
-//		public int getObjectsPerPageCount() {
-//			return getObjectsPerPageCount();
-//		}
+		//
+		// public int getCurrentPage() {
+		// return currentPage;
+		// }
+		//
+		// public int getObjectsPerPageCount() {
+		// return getObjectsPerPageCount();
+		// }
 
 		public int getLimitStart() {
 			return currentPage * objectsPerPage;

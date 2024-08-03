@@ -2,6 +2,7 @@ package b;
 
 import java.nio.ByteBuffer;
 
+/** Cached file. */
 final class chdresp_file extends chdresp {
 	private final path path;
 	private long lastModified;

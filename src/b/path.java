@@ -18,6 +18,7 @@ import java.io.Writer;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
+/** A filesystem path. */
 public final class path implements Serializable {
 	static final long serialVersionUID = 1;
 

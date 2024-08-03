@@ -2,6 +2,7 @@ package b;
 
 import java.nio.ByteBuffer;
 
+/** Cached response. */
 abstract class chdresp {
 	static final int hdrlencap = 8 * 64;
 	String etag;
