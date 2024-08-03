@@ -11,12 +11,8 @@ public class RAM extends a {
 
 	@Override
 	public void to(xwriter x) throws Throwable {
-		// x.p("RAM").br();
 		int i = 0;
-		// x.p("RAM ").p(String.format("%04X", base_addr)).p("h to
-		// ").p(String.format("%04X", base_addr + 8 * 4 * 4 - 1)).pl("h")
-		// .br();
-		for (int s = 0; s < 8; s++) {
+		for (int s = 0; s < 16; s++) {
 			for (int r = 0; r < 4; r++) {
 				for (int c = 0; c < 4; c++) {
 					x.p(String.format("%04x", ram[base_addr + i] & 0xffff)).p(' ');
@@ -28,8 +24,7 @@ public class RAM extends a {
 		}
 	}
 
-	public final void x_c(final xwriter x, final String param)
-			throws Throwable {
+	public final void x_c(final xwriter x, final String param) throws Throwable {
 		x.xalert("compile");
 	}
 }

@@ -6,6 +6,6 @@ import b.bob;
 public class WebSock extends bob {
 	@Override
 	protected Class<? extends a> rootClass() {
-		return One.class;
+		return UI.class;
 	}
 }

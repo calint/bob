@@ -10,22 +10,22 @@ import b.xwriter;
 import zen.emu.SoC;
 import zen.zasm.Zasm;
 
-public class One extends a {
+public class UI extends a {
 	private static final long serialVersionUID = 1L;
 
 	final private SoC soc = new SoC();
 	private Zasm zasm;
 
 	public RAM r;
-	public CoreUI c;
-	public LineNums l;
-	public a s;
+	public Panel p;
 	public Terminal t;
+	public LineNums l;
+	public a s; // source
 
-	public One() throws Throwable {
+	public UI() throws Throwable {
 		r.ram = soc.ram;
-		c.core = soc.core;
-		c.init();
+		p.core = soc.core;
+		p.init();
 		final String src = readResourceAsString("/zen/emu/tests/input-print.zasm");
 		s.set(src);
 	}
@@ -33,8 +33,6 @@ public class One extends a {
 	@Override
 	public void to(xwriter x) throws Throwable {
 		x.tago("div").attr("class", "topmenu").tagoe();
-		// x.ax(this, "s", "save");
-		// x.p(" ");
 		x.ax(this, "c", "compile");
 		x.p(" ");
 		x.a("javascript:zen_run_start()", "run");
@@ -52,15 +50,15 @@ public class One extends a {
 		x.br().br();
 
 		x.divh(t, "term");
+		x.script().p("$('").p(t.id()).p("').spellcheck=false;").script_();
 
 		x.p("type here -&gt; ").tago("input").attr("class", "nbr")
-				.attr("onkeydown", "this.value='';zen_tx_buf.push(event.keyCode)")
-				.tagoe();
+				.attr("onkeydown", "this.value='';zen_tx_buf.push(event.keyCode)").tagoe();
 
 		x.br().br();
 		x.tago("div").attr("class", "row").tagoe();
 		x.divo(this, "row", null).tagoe();
-		x.divh(c, "col1");
+		x.divh(p, "col1");
 		x.divh(r, "col2");
 		x.divh(l, "col3");
 		x.inptxtarea(s, "col4");
@@ -73,9 +71,8 @@ public class One extends a {
 		zasm = new Zasm();
 		zasm.compile(s.toString(), soc.ram);
 		x.xu(r);
-		x.xu(c);
+		x.xu(p);
 		x.xu(t);
-		// selectSourceRange(x);
 	}
 
 	private boolean selectActiveInstruction = true;
@@ -95,7 +92,7 @@ public class One extends a {
 			// System.out.println("uart out: " + soc.utx.dataImm8);
 		}
 		x.xu(r);
-		x.xu(c);
+		x.xu(p);
 		selectSourceRange(x);
 	}
 
@@ -112,14 +109,14 @@ public class One extends a {
 			x.xp(t, String.valueOf((char) soc.utx.dataImm8));
 			soc.utx.go = false;
 		}
-		x.xu(c);
+		x.xu(p);
 		x.xu(r);
 	}
 
 	/** reset */
 	public final void x_rst(final xwriter x, final String param) throws Throwable {
 		soc.reset();
-		x.xu(c);
+		x.xu(p);
 		x.xu(r);
 		x.xu(t);
 	}
@@ -133,21 +130,13 @@ public class One extends a {
 			return;
 		final int[] rng = zasm.getInstructionSourceRange(soc.core.pc);
 		final String sid = s.id();
-		x.xfocus(sid).p("$('" + sid + "').setSelectionRange(" + rng[0] + "," + rng[1]
-				+ ");");
+		x.xfocus(sid).p("$('" + sid + "').setSelectionRange(" + rng[0] + "," + rng[1] + ");");
 	}
-
-	// public final void x_key(final xwriter x, final String param) throws Throwable
-	// {
-	// System.out.println(param);
-	// soc.urx.data = Integer.parseInt(param);
-	// soc.urx.dr = true;
-	// }
 
 	public static String readResourceAsString(String resourceName) throws IOException {
 		StringBuilder sb = new StringBuilder();
 
-		InputStream is = One.class.getResourceAsStream(resourceName);
+		InputStream is = UI.class.getResourceAsStream(resourceName);
 		InputStreamReader isr = new InputStreamReader(is, "utf8");
 		BufferedReader br = new BufferedReader(isr);
 		String line;
