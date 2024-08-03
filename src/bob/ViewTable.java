@@ -69,7 +69,7 @@ public abstract class ViewTable extends View {
 			x.script().xfocus(q).script_();
 			if (hasMoreSearchSection()) {
 				x.spc();
-				x.ax(this, "more");
+				x.ax(this, "more", "more");
 				x.spc();
 				x.tago("div").default_attrs_for_element(ms, "more-search", null);
 				if (!ms_display) {

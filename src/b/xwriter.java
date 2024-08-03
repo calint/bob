@@ -10,22 +10,40 @@ import java.util.List;
 
 /** Low-level printer of HTML and JavaScript stream. */
 public final class xwriter {
+	/**
+	 * Encodes double quotes to HTML encoding and single quote JavaScript string.
+	 * 
+	 * @param str string
+	 * @return encoded string
+	 */
 	public static String enc_js_in_attr(final String text) {
 		if (text == null)
 			return "";
 		return text.replace("'", "\\'").replace("\"", "&quot;");
 	}
 
-	public static String enc_js_str(final String text) {
-		if (text == null)
+	/**
+	 * Encodes string for single quote JavaScript string.
+	 * 
+	 * @param str string
+	 * @return encoded string
+	 */
+	public static String enc_js_str(final String str) {
+		if (str == null)
 			return "";
-		return text.replace("'", "\\'");
+		return str.replace("'", "\\'");
 	}
 
-	public static String enc_quot(final String text) {
-		if (text == null)
+	/**
+	 * Encodes string for double quote HTML string.
+	 * 
+	 * @param str string
+	 * @return encoded string
+	 */
+	public static String enc_quot(final String str) {
+		if (str == null)
 			return "";
-		return text.replace("\"", "&quot;");
+		return str.replace("\"", "&quot;");
 	}
 
 	private boolean is_xu_open; // if xu is open then it needs to be closed at error messaging to client
@@ -70,30 +88,56 @@ public final class xwriter {
 		return a(href).p(html).a_();
 	}
 
+	/**
+	 * Closes 'a' tag.
+	 * 
+	 * @return this
+	 */
 	public xwriter a_() {
 		return tage("a");
 	}
 
+	/**
+	 * Renders HTML tag attribute without value.
+	 * 
+	 * @param name
+	 * @return this
+	 */
 	public xwriter attr(final String name) {
 		return p(" ").p(name);
 	}
 
+	/**
+	 * Renders HTML tag attribute with value.
+	 * 
+	 * @param name  attribute name
+	 * @param value attribute value
+	 * @return this
+	 */
 	public xwriter attr(final String name, final int value) {
 		return p(" ").p(name).p("=").p(value);
 	}
 
+	/**
+	 * Renders HTML tag attribute with double quotes escaped value.
+	 * 
+	 * @param name  attribute name
+	 * @param value attribute value
+	 * @return this
+	 */
 	public xwriter attr(final String name, final String value) {
 		return p(" ").p(name).p("=\"").p(enc_quot(value)).p("\"");
 	}
 
-	public xwriter ax(final a e) {
-		return ax(e, "", "::");
-	}
-
-	public xwriter ax(final a e, final String callback) {
-		return ax(e, callback, callback);
-	}
-
+	/**
+	 * Generates a href tag with JavaScript code for a callback.
+	 * 
+	 * @param e        element
+	 * @param callback callback function name without prefix 'x_' and the rest is
+	 *                 parameter
+	 * @param html     a href tag HTML
+	 * @return this
+	 */
 	public xwriter ax(final a e, final String callback, final String html) {
 		p("<a href=\"javascript:");
 		js_x(e, callback, true);
