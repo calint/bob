@@ -1,7 +1,10 @@
 # bob
-experimental web applications built using server 'b' and object persistence framework 'dbo'
 
-can be compiled and run by legacy java 1.5
+a journey two decades back in time to Java 1.5
+
+experimental web applications using server 'bee' and object persistence framework 'dbo'
+
+can be compiled and run by legacy Java 1.5
 
 contains
 * a performant and compact web application server (package b)
