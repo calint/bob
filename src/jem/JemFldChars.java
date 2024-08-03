@@ -3,7 +3,6 @@ package jem;
 import java.io.PrintWriter;
 
 import db.FldChars;
-import db.FldStr;
 
 public final class JemFldChars extends JemFld {
 	public JemFldChars(final FldChars fld) {
