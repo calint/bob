@@ -1,6 +1,8 @@
 # bob
 experimental web applications built using server 'b' and object persistence framework 'dbo'
 
+can be compiled and run by legacy java 1.5
+
 contains
 * a performant and compact web application server (package b)
 * a framework for composing web applications with re-usable user interface components focused on back-end development
@@ -13,5 +15,3 @@ explored digitalocean.com and linode.com services
 * load balancing using service provider
 * ssl enabled using load balancer
 * mysql cluster implemented in package 'db'
-
-can be compiled and run by legacy java 1.5
