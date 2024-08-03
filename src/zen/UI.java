@@ -87,7 +87,7 @@ public class UI extends a {
 		}
 		soc.tick();
 		if (soc.utx.go) {
-			x.xp(t, String.valueOf((char) soc.utx.dataImm8));
+			x.xp(t, String.valueOf((char) soc.utx.data));
 			soc.utx.go = false;
 			// System.out.println("uart out: " + soc.utx.dataImm8);
 		}
@@ -106,7 +106,7 @@ public class UI extends a {
 		}
 		soc.tick();
 		if (soc.utx.go) {
-			x.xp(t, String.valueOf((char) soc.utx.dataImm8));
+			x.xp(t, String.valueOf((char) soc.utx.data));
 			soc.utx.go = false;
 		}
 		x.xu(p);

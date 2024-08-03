@@ -35,9 +35,9 @@ public final class Core {
 	private static final int OP_IO_LED = 0x7;
 	private static final int OP_IO_LEDI = 0xf;
 
-	public Core(final int regs_addr_width, final int calls_addr_width,
-			final short[] ram, final UartTx utx, final UartRx urx) {
-		this.regs = new short[(int) Math.pow(2, regs_addr_width)];
+	public Core(final int regs_addr_width, final int calls_addr_width, final short[] ram, final UartTx utx,
+			final UartRx urx) {
+		regs = new short[(int) Math.pow(2, regs_addr_width)];
 		cs = new Calls(calls_addr_width);
 		this.ram = ram;
 		this.utx = utx;
@@ -69,8 +69,7 @@ public final class Core {
 		final int regb = (instr & 0xf000) >> 12;
 		final int imm12 = (instr & 0xfff0) >> 4;
 
-		final boolean is_do_op = ((instr_z && instr_n)
-				|| (instr_z == zf && instr_n == nf));
+		final boolean is_do_op = ((instr_z && instr_n) || (instr_z == zf && instr_n == nf));
 
 		if (!is_do_op) {
 			pc++;
@@ -103,102 +102,99 @@ public final class Core {
 
 		if (op == OP_LDI && rega != 0) { // is I/O ?
 			switch (rega) {
-				case OP_IO_WL:
-					utx.send(regs[regb] & 0x00ff);
-					break;
-				case OP_IO_WH:
-					utx.send(((regs[regb] & 0xff00) >> 8) & 0xff);
-					break;
-				case OP_IO_RL:
-					if (urx.dr) {
-						regs[regb] = (short) ((regs[regb] & 0xff00) | urx.data);
-						urx.dr = false;
-					} else {
-						is_stall = true;
-					}
-					break;
-				case OP_IO_RH:
-					if (urx.dr) {
-						regs[regb] = (short) ((regs[regb] & 0x00ff)
-								| urx.data << 8);
-						urx.dr = false;
-					} else {
-						is_stall = true;
-					}
-					break;
-				case OP_IO_LED:
-					leds = regs[regb] & 0x000f;
-					break;
-				case OP_IO_LEDI:
-					leds = regb;
-					break;
+			case OP_IO_WL:
+				utx.send(regs[regb] & 0x00ff);
+				break;
+			case OP_IO_WH:
+				utx.send(((regs[regb] & 0xff00) >> 8) & 0xff);
+				break;
+			case OP_IO_RL:
+				if (urx.dr) {
+					regs[regb] = (short) ((regs[regb] & 0xff00) | urx.data);
+					urx.dr = false;
+				} else {
+					is_stall = true;
+				}
+				break;
+			case OP_IO_RH:
+				if (urx.dr) {
+					regs[regb] = (short) ((regs[regb] & 0x00ff) | urx.data << 8);
+					urx.dr = false;
+				} else {
+					is_stall = true;
+				}
+				break;
+			case OP_IO_LED:
+				leds = regs[regb] & 0x000f;
+				break;
+			case OP_IO_LEDI:
+				leds = regb;
+				break;
 			}
 		} else {
 			short res;
 			switch (op) {
-				case OP_ADD:
-					res = (short) (regs[regb] + regs[rega]);
-					zn(res);
-					regs[regb] = res;
-					break;
-				case OP_SUB:
-					res = (short) (regs[regb] - regs[rega]);
-					zn(res);
-					regs[regb] = res;
-					break;
-				case OP_OR:
-					res = (short) (regs[regb] | regs[rega]);
-					zn(res);
-					regs[regb] = res;
-					break;
-				case OP_XOR:
-					res = (short) (regs[regb] ^ regs[rega]);
-					zn(res);
-					regs[regb] = res;
-					break;
-				case OP_AND:
-					res = (short) (regs[regb] & regs[rega]);
-					zn(res);
-					regs[regb] = res;
-					break;
-				case OP_NOT:
-					res = (short) ~regs[rega];
-					zn(res);
-					regs[regb] = res;
-					break;
-				case OP_CP:
-					res = regs[rega];
-					zn(res);
-					regs[regb] = res;
-					break;
-				case OP_SHF:
-					final int nbits = signedImm4PosIncInt(rega);
-					res = (short) (nbits < 0
-							? regs[regb] << nbits
-							: regs[regb] >> nbits);
-					zn(res);
-					regs[regb] = res;
-					break;
-				case OP_ADDI:
-					res = (short) (regs[regb] + signedImm4PosIncInt(rega));
-					zn(res);
-					regs[regb] = res;
-					break;
-				case OP_LDI:
-					pc++;
-					regs[regb] = ram[pc];
-					tick++; // skipped cycle
-					break;
-				case OP_LD: {
-					regs[regb] = ram[shortToUnsignedInt(regs[rega])];
-					break;
-				}
-				case OP_ST: {
-					ram[shortToUnsignedInt(regs[rega])] = regs[regb];
-					break;
-				}
-				default:
-					assert (false);
+			case OP_ADD:
+				res = (short) (regs[regb] + regs[rega]);
+				zn(res);
+				regs[regb] = res;
+				break;
+			case OP_SUB:
+				res = (short) (regs[regb] - regs[rega]);
+				zn(res);
+				regs[regb] = res;
+				break;
+			case OP_OR:
+				res = (short) (regs[regb] | regs[rega]);
+				zn(res);
+				regs[regb] = res;
+				break;
+			case OP_XOR:
+				res = (short) (regs[regb] ^ regs[rega]);
+				zn(res);
+				regs[regb] = res;
+				break;
+			case OP_AND:
+				res = (short) (regs[regb] & regs[rega]);
+				zn(res);
+				regs[regb] = res;
+				break;
+			case OP_NOT:
+				res = (short) ~regs[rega];
+				zn(res);
+				regs[regb] = res;
+				break;
+			case OP_CP:
+				res = regs[rega];
+				zn(res);
+				regs[regb] = res;
+				break;
+			case OP_SHF:
+				final int nbits = signedImm4PosIncInt(rega);
+				res = (short) (nbits < 0 ? regs[regb] << nbits : regs[regb] >> nbits);
+				zn(res);
+				regs[regb] = res;
+				break;
+			case OP_ADDI:
+				res = (short) (regs[regb] + signedImm4PosIncInt(rega));
+				zn(res);
+				regs[regb] = res;
+				break;
+			case OP_LDI:
+				pc++;
+				regs[regb] = ram[pc];
+				tick++; // skipped cycle
+				break;
+			case OP_LD: {
+				regs[regb] = ram[shortToUnsignedInt(regs[rega])];
+				break;
+			}
+			case OP_ST: {
+				ram[shortToUnsignedInt(regs[rega])] = regs[regb];
+				break;
+			}
+			default:
+				assert (false);
 			}
 		}
 
