@@ -1,5 +1,4 @@
 #!/bin/bash
-
 set -e
 
 echo "#!/usr/bin/java --source 11" > zasm
