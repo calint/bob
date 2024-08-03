@@ -47,7 +47,8 @@ public abstract class TestCase implements Runnable {
 		if (use_current_transaction) {
 			tn = Db.currentTransaction();
 		} else {
-			tn = Db.initCurrentTransaction(); // ! this can leak a transaction if the page running is not @stateless
+			tn = Db.initCurrentTransaction();
+			// ! this can leak a transaction if the page running is not @stateless
 		}
 		final String cachests = cacheon ? " on" : "off";
 		tn.cache_enabled = cacheon;

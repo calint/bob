@@ -1166,16 +1166,6 @@ public final class req {
 		}
 		return k;
 	}
-	// public static long cacheu_size(){
-	// if(cacheu==null)return 0;
-	// //? sync(cacheu)
-	// long k=0;
-	// for(final chdresp e:cacheu.values()){
-	// if(e.byte_buffer()==null)continue;
-	// k+=e.byte_buffer().capacity();
-	// }
-	// return k;
-	// }
 
 	public String session_id() {
 		return session_id;

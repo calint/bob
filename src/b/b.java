@@ -521,20 +521,6 @@ final public class b {
 		return s == null || s.length() == 0;
 	}
 
-	// public static String isempty(final String s,final String def){
-	// if(isempty(s)){
-	// if(def==null)
-	// return "";
-	// return def;
-	// }
-	// return s;
-	// }
-	// public static long get_session_bits_for_sessionid(final String sesid){// ?
-	// dubious function
-	// //? file(system){sha1(sessionid),bits}
-	// if("".equals(sesid))return 0;
-	// return 1;
-	// }
 	public static void class_printopts(final Class<?> cls) throws IllegalArgumentException, IllegalAccessException {
 		for (final Field f : cls.getFields()) {
 			final Object o = f.get(null);

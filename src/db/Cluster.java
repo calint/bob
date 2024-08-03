@@ -22,11 +22,11 @@ import java.util.Iterator;
 /** Experimental cluster hub. */
 public final class Cluster {
 	/** true if sql statements to cluster nodes are executed in parallel */
-//	public static boolean execute_in_parallel = false;
+	// public static boolean execute_in_parallel = false;
 	public static boolean execute_in_parallel = true;
 	public static long connection_refresh_intervall_ms = 60 * 60 * 1000;
 	public static boolean enable_log = true;
-//	public static boolean enable_log_sql = true;
+	// public static boolean enable_log_sql = true;
 	public static boolean enable_log_sql = false;
 	public static int server_port = 8889;
 	private static final ArrayList<Client> clients = new ArrayList<Client>();
@@ -64,8 +64,8 @@ public final class Cluster {
 	}
 
 	public static void main(final String[] args) throws Throwable {
-		final Driver driver = (Driver) Class.forName("com.mysql.jdbc.Driver").getConstructor().newInstance(); // ! java
-																												// 1.5
+		final Driver driver = (Driver) Class.forName("com.mysql.jdbc.Driver").getConstructor().newInstance();
+		// ! necessary in java 1.5
 		DriverManager.registerDriver(driver);
 
 		if (args.length < 4) {
@@ -303,7 +303,7 @@ public final class Cluster {
 		final long dt = t1 - connections_last_refresh_ms;
 		if (dt < connection_refresh_intervall_ms)
 			return;
-//		log("refreshing connections.");
+		// log("refreshing connections.");
 		connections_last_refresh_ms = t1;
 		ArrayList<Client> brokenClients = null;
 		for (final Client ct : clients) {
@@ -367,9 +367,9 @@ public final class Cluster {
 			while (true) {
 				try {
 					connection = DriverManager.getConnection(cs);
-//					connection = jdbcDriver.connect(cs, null);
+					// connection = jdbcDriver.connect(cs, null);
 					statement = connection.createStatement();
-//					log("connected to database at " + address);
+					// log("connected to database at " + address);
 					break;
 				} catch (final Throwable t) {
 					try {
@@ -419,7 +419,7 @@ public final class Cluster {
 			}
 			final String cs = Db.getJdbcConnectionString(address, dbname, user, password);
 			connection = DriverManager.getConnection(cs);
-//			connection = jdbcDriver.connect(cs, null);
+			// connection = jdbcDriver.connect(cs, null);
 			statement = connection.createStatement();
 		}
 	}
