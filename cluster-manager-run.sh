@@ -1,6 +1,5 @@
 #!/bin/sh
 # run on cluster manager node by the service manager
-
 set -e
 DIR=$(dirname "$0")
 cd $DIR
