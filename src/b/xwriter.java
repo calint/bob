@@ -560,10 +560,24 @@ public final class xwriter {
 		return tage("pre");
 	}
 
+	/**
+	 * Renders element.
+	 * 
+	 * @param e element
+	 * @return this
+	 * @throws Throwable
+	 */
 	public xwriter r(final a e) throws Throwable {
 		return render(e);
 	}
 
+	/**
+	 * Renders element.
+	 * 
+	 * @param e element
+	 * @return this
+	 * @throws Throwable
+	 */
 	public xwriter render(final a e) throws Throwable {
 		if (e == null)
 			return this;
@@ -571,14 +585,34 @@ public final class xwriter {
 		return this;
 	}
 
+	/**
+	 * Opens 'script' tag.
+	 * 
+	 * @return this
+	 */
 	public xwriter script() {
 		return tag("script");
 	}
 
+	/**
+	 * Closes 'script' tag.
+	 * 
+	 * @return this
+	 */
 	public xwriter script_() {
 		return tage("script");
 	}
 
+	/**
+	 * Renders 'select' block.
+	 *
+	 * @param e       element.
+	 * @param cls     style class or null/empty string if none
+	 * @param style   style or null/empty string if none
+	 * @param options text and value separated by |. Value is optional. If none
+	 *                provided text is used.
+	 * @return this
+	 */
 	public xwriter select(final a e, final String cls, final String style, final List<String> options) {
 		selecto(e, cls, style).tagoe();
 		select_options(e, options);
@@ -607,19 +641,43 @@ public final class xwriter {
 		return this;
 	}
 
+	/**
+	 * Opens 'select' tag.
+	 * 
+	 * @param cls   style class or null/empty string if none
+	 * @param style style or null/empty string if none
+	 * @return this
+	 */
 	public xwriter selecto(final a e, final String cls, final String style) {
 		return tago("select").default_attrs_for_element(e, cls, style);
 	}
 
+	/**
+	 * Renders a complete 'span' with HTML escaped value of 'e'.
+	 * 
+	 * @return this
+	 */
 	public xwriter span(final a e) {
 		return span(e, null, null);
 	}
 
+	/**
+	 * Renders a complete 'span' with HTML escaped value of 'e'.
+	 * 
+	 * @param cls style class or null/empty string if none
+	 * @return this
+	 */
 	public xwriter span(final a e, final String cls) {
 		return span(e, cls, null);
 	}
 
-	/** Renders a complete span with HTML escaped element output. */
+	/**
+	 * Renders a complete 'span' with HTML escaped value of 'e'.
+	 * 
+	 * @param cls   style class or null/empty string if none
+	 * @param style style or null/empty string if none
+	 * @return this
+	 */
 	public xwriter span(final a e, final String cls, final String style) {
 		spano(e, cls, style).tagoe();
 		try {
@@ -630,12 +688,23 @@ public final class xwriter {
 		return span_();
 	}
 
-	/** Closes span tag. */
+	/**
+	 * Closes 'span' tag.
+	 * 
+	 * @return this
+	 */
 	public xwriter span_() {
 		return tage("span");
 	}
 
-	/** Renders a complete span with unescaped value. */
+	/**
+	 * Renders a complete 'span' with unescaped value of 'e'.
+	 * 
+	 * @param e     element
+	 * @param cls   style class or null/empty string if none
+	 * @param style style or null/empty string if none
+	 * @return this
+	 */
 	public xwriter span_html(final a e, final String cls, final String style) {
 		spano(e, cls, style).tagoe();
 		try {
@@ -646,73 +715,114 @@ public final class xwriter {
 		return span_();
 	}
 
+	/**
+	 * Alias for 'span_html(...)'.
+	 * 
+	 * @param e element
+	 * @return this
+	 */
 	public xwriter spanh(final a e) {
 		return span_html(e, null, null);
 	}
 
+	/**
+	 * Alias for 'span_html(...)'.
+	 * 
+	 * @param e   element
+	 * @param cls style class or null/empty string if none
+	 * @return this
+	 */
 	public xwriter spanh(final a e, final String cls) {
 		return span_html(e, cls, null);
 	}
 
-	// public xwriter spano(final a e){
-	// spanot(e,null,null);
-	// return tagoe();
-	// }
-	//
-	// public xwriter spano(final a e,final String cls){
-	// spanot(e,cls,null);
-	// return tagoe();
-	// }
-
-	// public xwriter spanot(final a e){
-	// return spanot(e,null,null);
-	// }
-	//
-	// public xwriter spanot(final a e,final String cls){
-	// return spanot(e,cls,null);
-	// }
-
-	/** Alias for span_html(...). */
+	/**
+	 * Alias for 'span_html(...)'.
+	 * 
+	 * @param e     element
+	 * @param cls   style class or null/empty string if none
+	 * @param style style or null/empty string if none
+	 * @return this
+	 */
 	public xwriter spanh(final a e, final String cls, final String style) {
 		return span_html(e, cls, style);
 	}
 
 	/**
-	 * Opens a span tag with id, class and style allowing the appending of
-	 * additional attributes. Must be closed with tagoe().
+	 * Opens a 'span' tag with id of element, class and style allowing the appending
+	 * of additional attributes. Must be closed with 'tagoe()'.
 	 *
-	 * @param e     the element
-	 * @param cls   the class attribute
-	 * @param style the style attribute
+	 * @param e     element
+	 * @param cls   style class or null/empty string if none
+	 * @param style style or null/empty string if none
+	 * @return this
 	 */
 	public xwriter spano(final a e, final String cls, final String style) {
 		return tago("span").default_attrs_for_element(e, cls, style);
 	}
 
+	/**
+	 * Outputs a space character.
+	 * 
+	 * @return this
+	 */
 	public xwriter spc() {
 		return p(' ');
 	}
 
+	/**
+	 * Opens 'style' tag.
+	 * 
+	 * @return this
+	 */
 	public xwriter style() {
 		return p("<style>");
 	}
 
+	/**
+	 * Closes 'style' tag.
+	 * 
+	 * @return this
+	 */
 	public xwriter style_() {
 		return tage("style");
 	}
 
+	/**
+	 * Outputs a tab character.
+	 * 
+	 * @return this
+	 */
 	public xwriter tab() {
 		return p('\t');
 	}
 
+	/**
+	 * Open 'table' tag.
+	 * 
+	 * @return this
+	 */
 	public xwriter table() {
 		return table(null, null);
 	}
 
+	/**
+	 * Open 'table' tag.
+	 * 
+	 * @param cls style class or null/empty string if none
+	 * @return this
+	 */
 	public xwriter table(final String cls) {
 		return table(cls, null);
 	}
 
+	/**
+	 * Open 'table' tag.
+	 * 
+	 * @param cls   style class or null/empty string if none
+	 * @param style style or null/empty string if none
+	 * @return this
+	 */
 	public xwriter table(final String cls, final String style) {
 		tago("table");
 		if (!isempty(cls)) {
@@ -725,40 +835,80 @@ public final class xwriter {
 		return this;
 	}
 
+	/**
+	 * Closes 'table' tag.
+	 * 
+	 * @return this
+	 */
 	public xwriter table_() {
 		return tage("table");
 	}
 
+	/**
+	 * Open tag. Example 'tag("a")' outputs "<a>".
+	 * 
+	 * @param name tag name
+	 * @return this
+	 */
 	public xwriter tag(final String name) {
 		return p("<").p(name).p(">");
 	}
 
-	/** End tag. Example tage("a") outputs </a> */
+	/**
+	 * End tag. Example 'tage("a")' outputs '</a>'.
+	 * 
+	 * @param name tag name
+	 * @return this
+	 */
 	public xwriter tage(final String name) {
 		return p("</").p(name).p(">");
 	}
 
-	// public xwriter tag(final String name,final String id){
-	// return p("<").p(name).p(" id=").p(id).p(">");
-	// }
-	/** Opens a tag. Example tago("a") outputs "<a" */
+	/**
+	 * Opens a tag. Example 'tago("a")' outputs '<a'.
+	 * 
+	 * @param name tag name
+	 * @return this
+	 */
 	public xwriter tago(final String name) {
 		return p("<").p(name);
 	}
 
-	/** Outputs '>'. Called after a tago(...) to close the tag. */
+	/**
+	 * Outputs '>'. Called after a tago(...) to close the tag.
+	 * 
+	 * @return this
+	 */
 	public xwriter tagoe() {
 		return p(">");
 	}
 
+	/**
+	 * Opens 'td' tag.
+	 * 
+	 * @return this
+	 */
 	public xwriter td() {
 		return td(null, null);
 	}
 
+	/**
+	 * Opens 'td' tag.
+	 * 
+	 * @param colspan column span
+	 * @return this
+	 */
 	public xwriter td(final int colspan) {
 		return td(colspan, null);
 	}
 
+	/**
+	 * Opens 'td' tag.
+	 * 
+	 * @param colspan column span
+	 * @param cls     style class or null/empty string if none
+	 * @return this
+	 */
 	public xwriter td(final int colspan, final String cls) {
 		tago("td").attr("colspan", colspan);
 		if (!isempty(cls)) {
@@ -767,10 +917,23 @@ public final class xwriter {
 		return tagoe();
 	}
 
+	/**
+	 * Opens 'td' tag.
+	 * 
+	 * @param cls style class or null/empty string if none
+	 * @return this
+	 */
 	public xwriter td(final String cls) {
 		return td(cls, null);
 	}
 
+	/**
+	 * Opens 'td' tag.
+	 * 
+	 * @param cls   style class or null/empty string if none
+	 * @param style style or null/empty string if none
+	 * @return this
+	 */
 	public xwriter td(final String cls, final String style) {
 		tago("td");
 		if (!isempty(cls)) {
@@ -782,18 +945,40 @@ public final class xwriter {
 		return tagoe();
 	}
 
+	/**
+	 * Closes 'td' tag.
+	 * 
+	 * @return this
+	 */
 	public xwriter td_() {
 		return tage("td");
 	}
 
+	/**
+	 * Opens 'th' tag.
+	 * 
+	 * @return this
+	 */
 	public xwriter th() {
 		return th(null);
 	}
 
+	/**
+	 * Opens 'th' tag.
+	 * 
+	 * @param colspan column span
+	 * @return this
+	 */
 	public xwriter th(final int colspan) {
 		return tago("th").attr("colspan", colspan).tagoe();
 	}
 
+	/**
+	 * Opens 'tr' tag.
+	 * 
+	 * @param cls style class or null/empty string if none
+	 * @return this
+	 */
 	public xwriter th(final String cls) {
 		tago("th");
 		if (!isempty(cls)) {
@@ -806,19 +991,31 @@ public final class xwriter {
 		return tage("th");
 	}
 
+	/**
+	 * Renders 'title' tag.
+	 * 
+	 * @param title
+	 * @return this
+	 */
 	public xwriter title(final String title) {
 		return tag("title").p(title).tage("title");
 	}
 
-	@Override
-	public String toString() {
-		return os.toString();
-	}
-
+	/**
+	 * Opens 'tr'.
+	 * 
+	 * @return this
+	 */
 	public xwriter tr() {
 		return tr(null);
 	}
 
+	/**
+	 * Opens 'tr' tag.
+	 * 
+	 * @param cls style class or null/empty string if none
+	 * @return this
+	 */
 	public xwriter tr(final String cls) {
 		tago("tr");
 		if (!isempty(cls)) {
@@ -827,14 +1024,30 @@ public final class xwriter {
 		return tagoe();
 	}
 
+	/**
+	 * Opens 'tr' tag.
+	 * 
+	 * @return this
+	 */
 	public xwriter tr_() {
 		return tage("tr");
 	}
 
+	/**
+	 * Opens 'ul' tag.
+	 * 
+	 * @return this
+	 */
 	public xwriter ul() {
 		return ul(null);
 	}
 
+	/**
+	 * Opens 'ul' tag.
+	 * 
+	 * @param cls style class or null/empty string if none
+	 * @return this
+	 */
 	public xwriter ul(final String cls) {
 		tago("ul");
 		if (!isempty(cls)) {
@@ -843,45 +1056,89 @@ public final class xwriter {
 		return tagoe();
 	}
 
+	/**
+	 * Closes 'ul' tag.
+	 * 
+	 * @return this
+	 */
 	public xwriter ul_() {
 		return tage("ul");
 	}
 
+	/**
+	 * Display alert.
+	 * 
+	 * @param s text
+	 * @return this
+	 */
 	public xwriter xalert(final String s) {
 		return p("ui.alert('").jsstr(s).pl("');");
 	}
 
-	/** Focuses on element 'e'. */
+	/**
+	 * Focus on element.
+	 * 
+	 * @param e element
+	 * @return this
+	 */
 	public xwriter xfocus(final a e) {
 		return p("$f('").p(e.id()).pl("');");
 	}
 
-	/** Focuses on field identified by 'id'. */
+	/**
+	 * Focus on field.
+	 * 
+	 * @param id field id
+	 * @return this
+	 */
 	public xwriter xfocus(final String id) {
 		return p("$f('").p(id).pl("');");
 	}
 
-	/** Prints to element content. */
+	/**
+	 * Prints to element content.
+	 * 
+	 * @return this
+	 */
 	public xwriter xp(final a e, final String s) {
 		return p("$p('").p(e.id()).p("','").jsstr(s).pl("');");
 	}
 
-	/** Requests page reload. */
+	/**
+	 * Requests page reload.
+	 * 
+	 * @return this
+	 */
 	public xwriter xreload() {
 		xreload_requested = true;
 		return this;
 	}
 
-	/** Scrolls page to top */
+	/**
+	 * Scrolls page to top.
+	 * 
+	 * @return this
+	 */
 	public xwriter xscroll_to_top() {
 		return pl("ui.scrollToTop();");
 	}
 
+	/**
+	 * Sets page title.
+	 * 
+	 * @param s string
+	 * @return this
+	 */
 	public xwriter xtitle(final String s) {
 		return p("$t('").jsstr(s).pl("');");
 	}
 
-	/** Updates inner HTML of element 'e'. */
+	/**
+	 * Updates inner HTML of element.
+	 * 
+	 * @param e element
+	 * @return this
+	 */
 	public xwriter xu(final a e) throws Throwable {
 		return xu(e, false);
 	}
@@ -890,7 +1147,8 @@ public final class xwriter {
 	 * Updates inner HTML of element.
 	 *
 	 * @param e       element
-	 * @param escltgt true to escape lt and gt.
+	 * @param escltgt true to escape 'lt' and 'gt'
+	 * @return this
 	 */
 	public xwriter xu(final a e, final boolean escltgt) throws Throwable {
 		e.to(xub(e, true, escltgt));
@@ -898,13 +1156,13 @@ public final class xwriter {
 	}
 
 	/**
-	 * Begin an update inner or outer element call.
+	 * Begin an update of inner or outer HTML of an element.
 	 *
 	 * @param e       element
-	 * @param inner   true if update inner HTML, false if update outer element.
-	 * @param escltgt true to escape lt and gt.
-	 * @return xwriter that will generate a set call. Will replace element inner or
-	 *         outer HTML code. Must be closed with xube().
+	 * @param inner   true if update inner HTML otherwise update outer HTML
+	 * @param escltgt true to escape 'lt' and 'gt'
+	 * @return xwriter that will write a JavaScript string that updates the inner or
+	 *         outer HTML. Must be closed with 'xube()'
 	 */
 	public xwriter xub(final a e, final boolean inner, final boolean escltgt) {
 		is_xu_open = true;
@@ -918,14 +1176,21 @@ public final class xwriter {
 		return new xwriter(new osjsstr(os));
 	}
 
-	/** Completes an xub(...) call. */
+	/**
+	 * Completes an xub(...) call by closing the JavaScript string.
+	 * 
+	 * @return this
+	 */
 	public xwriter xube() {
 		is_xu_open = false;
 		return pl("');");
 	}
 
 	/**
-	 * Updates the rendered checkbox for element.
+	 * Updates the value of rendered checkbox.
+	 * 
+	 * @param e element
+	 * @return this
 	 */
 	public xwriter xucb(final a e) {
 		p("$s('").p(e.id()).p("','").p(enc_js_str(e.str())).p("');");
@@ -938,7 +1203,12 @@ public final class xwriter {
 		return pl(";");
 	}
 
-	/** Updates element outer HTML. */
+	/**
+	 * Updates element outer HTML.
+	 * 
+	 * @param e element
+	 * @return this
+	 */
 	public xwriter xuo(final a e) throws Throwable {
 		e.to(xub(e, false, false));
 		return xube();
@@ -947,8 +1217,16 @@ public final class xwriter {
 	/**
 	 * Updates value attribute of the HTML rendered by element. If HTML element does
 	 * not have value attribute it replaces the inner HTML.
+	 * 
+	 * @param e element
+	 * @return this
 	 */
 	public xwriter xuv(final a e) {
 		return p("$s('").p(e.id()).p("','").p(enc_js_str(e.str())).pl("');");
+	}
+
+	@Override
+	public String toString() {
+		return os.toString();
 	}
 }
