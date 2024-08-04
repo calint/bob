@@ -42,7 +42,6 @@ final public class b {
 	public final static long P = K * T;
 	public final static String pathsep = "/";
 	public static @conf String hello = "public domain server #1";
-	public static String id = "" + Integer.toHexString((int) Math.floor(Math.random() * Short.MAX_VALUE));
 	public static @conf String root_dir = ".";
 	public static @conf(reboot = true) String server_port = "8888";
 	public static @conf boolean try_file = true;
@@ -97,7 +96,6 @@ final public class b {
 	public static void main(final String[] args) throws Throwable {
 		out.println(hello);
 		out.println("java: " + System.getProperty("java.version"));
-		id = InetAddress.getLocalHost().getHostName();
 		if (!class_init(b.class, args)) {
 			return;
 		}
@@ -376,7 +374,6 @@ final public class b {
 		}
 		final PrintStream ps = new PrintStream(out);
 		ps.println(hello);
-		ps.println("               id: " + id);
 		ps.println("             time: " + tolastmodstr(t_ms));
 		ps.println("             port: " + server_port);
 		ps.println("            input: " + (thdwatch.input >> 10) + " KB");

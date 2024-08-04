@@ -146,9 +146,6 @@ final public class thdwatch extends Thread {
 
 	public static void print_fields3_to(final OutputStream os) throws Throwable {
 		final byte[] nl = "\n".getBytes();
-		os.write("id: ".getBytes());
-		os.write(b.id.getBytes());
-		os.write(nl);
 		for (final Field f : _fields) {
 			String s = f.getName();
 			if (s.startsWith("_")) {

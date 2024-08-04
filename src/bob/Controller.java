@@ -25,7 +25,7 @@ public class Controller extends a {
 	}
 
 	private void updateServerInfo() {
-		si.set(b.id + " " + req.get().ip().getHostAddress());
+		si.set(req.get().ip().getHostAddress());
 	}
 
 	@Override
