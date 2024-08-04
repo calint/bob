@@ -41,8 +41,10 @@ public class bob extends websock {
 
 	@Override
 	final protected void on_message(final ByteBuffer bb) throws Throwable {
-		if (bb.remaining() == 0) // a keep-alive message from bob.js
+		if (bb.remaining() == 0) {
+			// a keep-alive message from bob.js
 			return;
+		}
 		try {
 			Db.initCurrentTransaction();
 
@@ -58,13 +60,15 @@ public class bob extends websock {
 				a e = controller;
 				for (int n = 1; n < paths.length; n++) {
 					e = e.child(paths[n]);
-					if (e == null)
+					if (e == null) {
 						throw new RuntimeException("not found: " + me.getKey());
+					}
 				}
 				e.set(me.getValue());
 			}
-			if (ajax_command_string.length() == 0)
+			if (ajax_command_string.length() == 0) {
 				throw new RuntimeException("expectedax");
+			}
 
 			// decode the field id, method name and parameters parameters
 			final String target_elem_id, target_elem_method, target_elem_method_args;
