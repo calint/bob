@@ -88,15 +88,16 @@ public abstract class websock {
 		while (true) {
 			if (is_sending()) {
 				write();
-				if (is_sending())
+				if (is_sending()) {
+					// not done sending
 					return;
+				}
 			}
 			if (bb.remaining() == 0) {
+				// done parsing incoming buffer
 				bb.clear();
 				final int n = socket_channel.read(bb);
 				bb.flip();
-				// System.out.println("websock "+Integer.toHexString(hashCode())+": sock_read:
-				// "+n+" bytes");
 				if (n == 0) {
 					rq.selection_key.interestOps(SelectionKey.OP_READ);
 					rq.selection_key.selector().wakeup();
@@ -106,16 +107,19 @@ public abstract class websock {
 					st = state.closed;
 					rq.close();
 					thdwatch.socks--;
-					return; // on_connection_lost called when request is closed
+					return; // todo: on_connection_lost called when request is closed
 				}
 				thdwatch.input += n;
 			}
+			// parse incoming buffer
 			while (bb.remaining() != 0) {
 				switch (st) {
 				default:
 					throw new RuntimeException();
-				case parse_next_frame: // ? assuming the header is buffered. breaking up into states for header would
-										// handle the input buffer of 1 B
+				case parse_next_frame:
+					// note: assuming the complete header is buffered. breaking up into states for
+					// header would handle the input buffer of 1 B
+
 					// rfc6455#section-5.2
 					// Base Framing Protocol
 					final int b0 = bb.get();
@@ -123,11 +127,13 @@ public abstract class websock {
 					if (fin) {
 						// to remove warning of unused variable
 					}
-					final int resv = b0 >> 4 & 7;
-					if (resv != 0)
+					final int resv = (b0 >> 4) & 7;
+					if (resv != 0) {
 						throw new Error("reserved bits are not 0");
+					}
 					final int opcode = b0 & 0xf;
-					if (opcode == 8) {// rfc6455#section-5.5.1
+					if (opcode == 8) {
+						// rfc6455#section-5.5.1
 						st = state.closed;
 						rq.close();
 						thdwatch.socks--;
@@ -146,7 +152,7 @@ public abstract class websock {
 						final int by1 = bb.get() & 0xff;
 						payload_remaining = by2 | by1;
 					} else if (payload_remaining == 127) {
-						bb.get();// skip the bytes that encode a length >4G
+						bb.get(); // skip the bytes that encode a length > 4 GB
 						bb.get();
 						bb.get();
 						bb.get();
@@ -165,8 +171,9 @@ public abstract class websock {
 					final byte[] bbia = bb.array();
 					final int pos = bb.position();
 					final int limit = bb.remaining() > payload_remaining ? pos + payload_remaining : bb.limit();
-					if (is_masked && mask_key[0] == 0 && mask_key[1] == 0 && mask_key[2] == 0 && mask_key[3] == 0)
+					if (is_masked && mask_key[0] == 0 && mask_key[1] == 0 && mask_key[2] == 0 && mask_key[3] == 0) {
 						throw new RuntimeException();
+					}
 					// unmask
 					for (int i = pos; i < limit; i++) {
 						final byte b = (byte) (bbia[i] ^ mask_key[mask_i]);
@@ -180,16 +187,18 @@ public abstract class websock {
 
 					final int read_length = limit - pos; // number of bytes read from the buffer
 					payload_remaining -= read_length;
-					if (payload_remaining == 0) { // data has been fully read
+					if (payload_remaining == 0) {
+						// data has been fully read
 						st = state.parse_next_frame;
 					}
-					final ByteBuffer bbii = ByteBuffer.wrap(bbia, pos, read_length);// bbia position is start of data,
-																					// limit is
-																					// the data unmasked
+					final ByteBuffer bbii = ByteBuffer.wrap(bbia, pos, read_length);
+					// note: bbia position is start of data, limit is the data unmasked
 					on_payload(bbii);
 					is_first_packet = false;
-					if (is_sending())
+					if (is_sending()) {
+						// on_payload -> on_message triggered sending
 						return;
+					}
 					break;
 				}
 			}
@@ -221,8 +230,10 @@ public abstract class websock {
 	private void write() throws Throwable {
 		final long n = socket_channel.write(send_bba);
 		thdwatch.output += n;
-		for (final ByteBuffer b : send_bba) { // check if the write is complete.
+		// check if the write is complete.
+		for (final ByteBuffer b : send_bba) {
 			if (b.hasRemaining()) {
+				// buffer not fully send, request read
 				rq.selection_key.interestOps(SelectionKey.OP_WRITE);
 				rq.selection_key.selector().wakeup();
 				return;
@@ -252,10 +263,11 @@ public abstract class websock {
 	}
 
 	final protected void send(final ByteBuffer[] bba, final boolean textmode) throws Throwable {
-		if (is_sending())
+		if (is_sending()) {
 			throw new RuntimeException("Trying to send while busy sending. Only one send per on_message.");
-		// note. before the request is closed by the exception handler there might be
-		// attempted reads which throw closed channel exception. ok?
+			// note. before the request is closed by the exception handler there might be
+			// attempted reads which throw closed channel exception. ok?
+		}
 		int nbytes_to_send = 0;
 		for (final ByteBuffer b : bba) {
 			nbytes_to_send += b.remaining();
@@ -287,7 +299,7 @@ public abstract class websock {
 			nhdr = 4;
 		} else {
 			hdr[1] = 127;
-			// hdr[2]=(byte)((ndata>>56)&255); // ignore size bigger than 4G
+			// hdr[2]=(byte)((ndata>>56)&255); // ignore size bigger than 4 GB
 			// hdr[3]=(byte)((ndata>>48)&255);
 			// hdr[4]=(byte)((ndata>>40)&255);
 			// hdr[5]=(byte)((ndata>>32)&255);
