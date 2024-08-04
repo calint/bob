@@ -220,8 +220,6 @@ public abstract class websock {
 
 	private void write() throws Throwable {
 		final long n = socket_channel.write(send_bba);
-		// System.out.println("websock "+Integer.toHexString(hashCode())+": sock_write:
-		// "+n+" bytes");
 		thdwatch.output += n;
 		for (final ByteBuffer b : send_bba) { // check if the write is complete.
 			if (b.hasRemaining()) {

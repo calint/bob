@@ -23,8 +23,6 @@ public class bob extends websock {
 
 	@Override
 	final protected void on_opened() throws Throwable {
-		// System.out.println("websocket "+Integer.toHexString(hashCode())+":
-		// on_opened");
 		try {
 			Db.initCurrentTransaction();
 			// todo load root from db or create new
@@ -131,8 +129,6 @@ public class bob extends websock {
 
 	@Override
 	final protected void on_closed() throws Throwable {
-		// System.out.println("websocket "+Integer.toHexString(hashCode())+":
-		// on_closed");
 		// todo store root in db
 	}
 
@@ -141,7 +137,6 @@ public class bob extends websock {
 		final byte[] ba = bb.array();
 		int i = bb.position();
 		final int n = bb.limit();
-		// System.out.println(new String(ba,i,n-i));
 		String name = "";
 		int s = 0;
 		int j = i;

@@ -2,10 +2,7 @@ package bob.app;
 
 import bob.Controller;
 
-/**
- * The main element in this bapp. The static field
- * websock_bob.controller_class_name is set to this class name.
- */
+/** main element in this bapp */
 public final class Ctrl extends Controller {
 	private static final long serialVersionUID = 3L;
 
