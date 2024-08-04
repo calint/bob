@@ -16,5 +16,5 @@ contains
 
 explored digitalocean.com and linode.com services
 * load balancing using service provider
-* ssl enabled using load balancer
-* mysql cluster implemented in package 'db'
+* SSL enabled using load balancer
+* MySQL cluster implemented in package 'db'
