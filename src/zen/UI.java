@@ -18,7 +18,7 @@ public class UI extends a {
 
 	public RAM r;
 	public Panel p;
-	public Terminal t;
+	public a t; // terminal
 	public LineNums l;
 	public a s; // source
 
@@ -50,7 +50,6 @@ public class UI extends a {
 		x.br().br();
 
 		x.divh(t, "term");
-		x.script().p("$('").p(t.id()).p("').spellcheck=false;").script_();
 
 		x.p("type here -&gt; ").tago("input").attr("class", "nbr")
 				.attr("onkeydown", "this.value='';zen_tx_buf.push(event.keyCode)").tagoe();
@@ -62,6 +61,7 @@ public class UI extends a {
 		x.divh(r, "col2");
 		x.divh(l, "col3");
 		x.inptxtarea(s, "col4");
+		x.script().p("$('").p(s.id()).p("').spellcheck=false;").script_();
 		x.div_();
 	}
 
@@ -83,13 +83,11 @@ public class UI extends a {
 		if (key != 0) {
 			soc.urx.data = key;
 			soc.urx.dr = true;
-			// System.out.println("Tick key in: " + key);
 		}
 		soc.tick();
 		if (soc.utx.go) {
 			x.xp(t, String.valueOf((char) soc.utx.data));
 			soc.utx.go = false;
-			// System.out.println("uart out: " + soc.utx.dataImm8);
 		}
 		x.xu(r);
 		x.xu(p);
@@ -102,7 +100,6 @@ public class UI extends a {
 		if (key != 0) {
 			soc.urx.data = key;
 			soc.urx.dr = true;
-			// System.out.println("Tick key in: " + key);
 		}
 		soc.tick();
 		if (soc.utx.go) {
