@@ -138,7 +138,7 @@ public class bob extends websock {
 		int i = bb.position();
 		final int n = bb.limit();
 		String name = "";
-		int s = 0;
+		int state = 0;
 		int j = i;
 		int ba_i = i;
 		while (true) {
@@ -146,14 +146,14 @@ public class bob extends websock {
 				break;
 			}
 			final byte c = ba[ba_i];
-			switch (s) {
+			switch (state) {
 			default:
 				throw new RuntimeException();
 			case 0:
 				if (c == '=') {
 					name = new String(ba, i, j - i, b.strenc);
 					i = j + 1;
-					s = 1;
+					state = 1;
 				}
 				break;
 
@@ -162,7 +162,7 @@ public class bob extends websock {
 					final String value = new String(ba, i, j - i, b.strenc);
 					content.put(name, value);
 					i = j + 1;
-					s = 0;
+					state = 0;
 				}
 				break;
 			}
