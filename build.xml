@@ -6,7 +6,7 @@
 		<mkdir dir="bin"/>
 		<javac includeantruntime="false" srcdir="src" destdir="bin" classpathref="classpath" encoding="utf-8" debug="true" debuglevel="source,lines,vars" />
 		<copy todir="bin">
-			<fileset dir="src" excludes="**/*.java" />
+			<fileset dir="src" excludes="**/*.java, **/README.md" />
 		</copy>
     </target>
 </project>
