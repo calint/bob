@@ -17,7 +17,6 @@ public class Controller extends a {
 	public BreadCrumbs bc;
 	public a ae; // active element
 	public Menu m;
-	// public a test;
 
 	public Controller() {
 		updateSerializedSize();
