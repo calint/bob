@@ -38,20 +38,14 @@ public class a implements Serializable {
 			if (b.firewall_on) {
 				b.firewall_assert_access(this);
 			}
-			// if(b.acl_on)b.acl_ensure_create(this);
 			for (final Field f : getClass().getFields()) {
 				if (!a.class.isAssignableFrom(f.getType())) {
 					continue;
 				}
-				// if(f.getName().startsWith("$"))
-				// continue;
-				a a = (a) f.get(this);
-				if (a == null) {
-					a = (a) f.getType().getConstructor().newInstance();
-					f.set(this, a);
-				}
-				a.name = f.getName();
-				a.parent = this;
+				a e = (a) f.getType().getConstructor().newInstance();
+				e.name = f.getName();
+				e.parent = this;
+				f.set(this, e);
 			}
 		} catch (final Throwable e) {
 			throw new Error(e);
@@ -70,28 +64,9 @@ public class a implements Serializable {
 		return name;
 	}
 
-	// public final a nm(final String nm){this.nm=nm;return this;}
 	public final a parent() {
 		return parent;
 	}
-
-	// public final a parent(final Class<? extends a> cls){
-	// if(parent==null)
-	// return null;
-	// if(cls.isAssignableFrom(parent.getClass()))
-	// return parent;
-	// return parent.parent(cls);
-	// }
-	// public final a pt(final a a){pt=a;return this;}
-	// public final void attach(final a e,final String field_name){
-	// e.parent=this;
-	// e.name=field_name;
-	// try{
-	// getClass().getField(field_name).set(this,e);
-	// }catch(final Throwable t){
-	// throw new Error(t);
-	// }
-	// }
 
 	/**
 	 * Override this if element contains children that are not defined in fields.
@@ -103,10 +78,6 @@ public class a implements Serializable {
 		}
 		return null;
 	}
-
-	// protected a find_child(final String nm) {
-	// return null;
-	// }
 
 	/** Bubbles event to parent. Override this to receive events from children. */
 	protected void bubble_event(final xwriter x, final a from, final Object o) throws Throwable {
@@ -159,9 +130,6 @@ public class a implements Serializable {
 		return this;
 	}
 
-	// public final a clear(){
-	// return set((String)null);
-	// }
 	public final boolean is_empty() {
 		return value == null || value.length() == 0;
 	}
@@ -198,39 +166,7 @@ public class a implements Serializable {
 	final public void to(final OutputStream os) throws IOException {
 		os.write(tobytes(tostr(value, "")));
 	}
-	//
-	// final public void to(final path p,final boolean append) throws IOException{
-	// final OutputStream os=p.outputstream(append);
-	// to(os);
-	// os.close();
-	// }
 
-	// final public void to(final path p) throws IOException{
-	// to(p,false);
-	// }
-	// final public a from(final path p) throws Throwable{// ? impl
-	// final ByteArrayOutputStream baos=new ByteArrayOutputStream((int)p.size());
-	// p.to(baos);
-	// baos.close();
-	// set(baos.toString(strenc));
-	// return this;
-	// }
-	// final public a from(final InputStream in) throws Throwable{
-	// final InputStreamReader isr=new InputStreamReader(in,b.strenc);
-	// final StringWriter sw=new StringWriter();
-	// b.cp(isr,sw,null);
-	// final String s=sw.toString();
-	// set(s);
-	// return this;
-	// }
-	// final public a from(final InputStream in,final String defaultIfError){
-	// try{
-	// from(in);
-	// }catch(final Throwable t){
-	// set(defaultIfError);
-	// }
-	// return this;
-	// }
 	public final a parent(final a e) {
 		parent = e;
 		// ? if parent on_detach(a)?
@@ -241,27 +177,6 @@ public class a implements Serializable {
 		name = s;
 		return this;
 	}
-	// final public void xrfsh(final xwriter x) throws Throwable{
-	// to(x.xub(this,true,false));
-	// x.xube();
-	// }
-	/** implement to provide custom html document title */
-	// public interface titled{void title_to(xwriter x);}
-	// final public Reader reader(){
-	// return new StringReader(value==null?"":value);
-	// }
-
-	// final public static String html_escape(String name){
-	// final String escaped=name.replace('+','§').replace(' ','+');
-	//// final String escaped=name.replaceAll("\\+","%2b").replace(' ','+'); // ?
-	// cannot replace with %2b because browser unescapes it in links
-	// return escaped;
-	// }
-	//
-	// final public static String html_unescape(String name){
-	// final String unescaped=name.replace('+',' ').replace('§','+');
-	// return unescaped;
-	// }
 
 	/**
 	 * Element will not initiate DbTransaction or read and write the state to the
@@ -273,8 +188,8 @@ public class a implements Serializable {
 	private static final long serialVersionUID = 1;
 
 	/**
-	 * Replaces the element element_to_replace with this by setting parent to
-	 * new_parent and name to the name of element_to_replace.
+	 * Replaces the element 'element_to_replace' with this by setting parent to
+	 * 'new_parent' and name to the name of 'element_to_replace'.
 	 *
 	 * @param new_parent         the new parent of this element.
 	 * @param element_to_replace the element to replace which must be a public
