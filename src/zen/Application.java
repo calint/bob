@@ -3,15 +3,7 @@ package zen;
 import b.bapp;
 
 public final class Application implements bapp {
-	private static Application inst;
-
-	public static Application instance() {
-		return inst;
-	}
-
-	public Application() {
-		inst = this;
-	}
+	public final static Application instance = new Application();
 
 	/** called by b at startup */
 	public void init() throws Throwable {
