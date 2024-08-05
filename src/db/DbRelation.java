@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package db;
 
 import java.sql.DatabaseMetaData;
@@ -6,24 +7,26 @@ import java.sql.Statement;
 /** Abstract relation. */
 public abstract class DbRelation {
 	/**
-	 * the class where the relation was declared. initiated by db after all classes
-	 * have been loaded
+	 * the class where the relation was declared. Initiated by db after all classes
+	 * have been loaded.
 	 */
 	protected Class<? extends DbObject> cls;
 
-	/** the table name of cls. initiated by db after all classes have been loaded */
+	/**
+	 * The table name of 'cls'. Initiated by db after all classes have been loaded.
+	 */
 	protected String tableName;
 
 	/**
-	 * the name of the field that declared it. initiated by db after all classes
-	 * have been loaded
+	 * The name of the field that declared it. Initiated by db after all classes
+	 * have been loaded.
 	 */
 	protected String name;
 
-	/** the class that the relations refers to */
+	/** The class that the relations refers to. */
 	final protected Class<? extends DbObject> toCls;
 
-	/** the table name of toCls */
+	/** The table name of 'toCls'. */
 	final protected String toTableName;
 
 	/**
@@ -42,7 +45,7 @@ public abstract class DbRelation {
 	 * Called after all DbClasses have been created. Relation can here add fields
 	 * and indexes.
 	 */
-	void init(final DbClass c) {
+	protected void init(final DbClass c) {
 	}
 
 	/**

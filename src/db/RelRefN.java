@@ -14,7 +14,7 @@ public final class RelRefN extends DbRelation {
 	}
 
 	@Override
-	void init(final DbClass c) {
+	protected void init(final DbClass c) {
 		rrm = new RelRefNMeta(c.javaClass, name, toCls);
 		Db.relRefNMeta.add(rrm);
 		final DbClass todbcls = Db.dbClassForJavaClass(toCls);

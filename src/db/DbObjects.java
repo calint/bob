@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package db;
 
 import java.util.List;
@@ -11,8 +12,9 @@ public final class DbObjects {
 	public DbObjects(final DbObjects dbobjects, final Class<? extends DbObject> select, final Query query,
 			final Order order) {
 		this.dbobjects = dbobjects;
-		if (select == null && dbobjects == null)
+		if (dbobjects == null && select == null) {
 			throw new RuntimeException("'select' must be specified if this DbObjects does not wrap a DbObjects.");
+		}
 		if (select == null) {
 			this.select = dbobjects.select;
 		} else {
@@ -28,8 +30,9 @@ public final class DbObjects {
 
 	public DbObject first() {
 		final List<DbObject> ls = toList(select, new Limit(0, 1));
-		if (ls.isEmpty())
+		if (ls.isEmpty()) {
 			return null;
+		}
 		return ls.get(0);
 	}
 
@@ -72,8 +75,9 @@ public final class DbObjects {
 		buildQuery(qry, null);
 		qry.and(new Query(select, id));
 		final List<? extends DbObject> ls = Db.currentTransaction().get(select, qry, null, null);
-		if (ls.isEmpty())
+		if (ls.isEmpty()) {
 			return null;
+		}
 		return ls.get(0);
 	}
 
@@ -83,8 +87,9 @@ public final class DbObjects {
 	 * @return null if id is null otherwise get(id).
 	 */
 	public DbObject get(final String id) {
-		if (id == null)
+		if (id == null) {
 			return null;
+		}
 		return get(Integer.parseInt(id));
 	}
 
@@ -101,8 +106,10 @@ public final class DbObjects {
 		if (query != null) {
 			qry.and(query);
 		}
-		if (ord == null) // ignore order if irrelevant
+		if (ord == null) {
+			// ignore order if irrelevant
 			return;
+		}
 		if (order != null) {
 			ord.append(order);
 		}

@@ -7,7 +7,7 @@ public final class RelAgg extends DbRelation {
 	}
 
 	@Override
-	void init(final DbClass dbcls) {
+	protected void init(final DbClass dbcls) {
 		relFld = new FldRel();
 		relFld.cls = cls;
 		final DbClass dbc = Db.getDbClassForJavaClass(cls);
@@ -36,9 +36,11 @@ public final class RelAgg extends DbRelation {
 			return null;
 		}
 
-//		if (o == null) // ? Db setting for this but it may not be able to delete parent object.
-//			throw new RuntimeException(ths.getClass().getName() + "[" + ths.id() + "] relation [" + name + "] has id ["
-//					+ id + "] but object cannot be found.");
+		// if (o == null) // ? Db setting for this but it may not be able to delete
+		// parent object.
+		// throw new RuntimeException(ths.getClass().getName() + "[" + ths.id() + "]
+		// relation [" + name + "] has id ["
+		// + id + "] but object cannot be found.");
 		return tn.get(toCls, id);
 	}
 

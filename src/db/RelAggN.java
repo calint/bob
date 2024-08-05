@@ -9,7 +9,7 @@ public final class RelAggN extends DbRelation {
 	}
 
 	@Override
-	void init(final DbClass dbcls) {
+	protected void init(final DbClass dbcls) {
 		relFld = new FldRel();
 		relFld.cls = toCls;
 		relFld.name = dbcls.tableName + "_" + name;

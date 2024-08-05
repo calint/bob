@@ -7,7 +7,7 @@ public final class RelRef extends DbRelation {
 	}
 
 	@Override
-	void init(final DbClass c) {
+	protected void init(final DbClass c) {
 		relFld = new FldRel();
 		relFld.cls = cls;
 		final DbClass dbc = Db.getDbClassForJavaClass(cls);
@@ -40,9 +40,9 @@ public final class RelRef extends DbRelation {
 		relFld.setId(ths, trg == null ? 0 : trg.id());
 	}
 
-//	public void remove(final DbObject ths) {
-//		set(ths, 0);
-//	}
+	// public void remove(final DbObject ths) {
+	// set(ths, 0);
+	// }
 
 	/** @returns 0 if id is null. */
 	public int getId(final DbObject ths) {
@@ -57,9 +57,10 @@ public final class RelRef extends DbRelation {
 		if (id == 0)
 			return null;
 
-//		if (o == null) // ? setting in Db for this case
-//			throw new RuntimeException(ths.getClass().getName() + "[" + ths.id() + "] relation [" + name + "] has id ["
-//					+ id + "] but object cannot be found.");
+		// if (o == null) // ? setting in Db for this case
+		// throw new RuntimeException(ths.getClass().getName() + "[" + ths.id() + "]
+		// relation [" + name + "] has id ["
+		// + id + "] but object cannot be found.");
 		return Db.currentTransaction().get(toCls, id);
 	}
 
