@@ -32,8 +32,8 @@ public final class TableAuthor extends ViewTable {
 	}
 
 	public String getTitle() {
-		final Author bc = (Author) Db.currentTransaction().get(Author.class, authorId);
-		return bc.getName();
+		final Author o = (Author) Db.currentTransaction().get(Author.class, authorId);
+		return o.getName();
 	}
 
 	@Override

@@ -33,8 +33,8 @@ public final class TableCategory extends ViewTable {
 	}
 
 	public String getTitle() {
-		final Category bc = (Category) Db.currentTransaction().get(Category.class, categoryId);
-		return bc.getName();
+		final Category o = (Category) Db.currentTransaction().get(Category.class, categoryId);
+		return o.getName();
 	}
 
 	@Override

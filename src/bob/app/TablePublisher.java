@@ -33,8 +33,8 @@ public final class TablePublisher extends ViewTable {
 	}
 
 	public String getTitle() {
-		final Publisher bc = (Publisher) Db.currentTransaction().get(Publisher.class, publisherId);
-		return bc.getName();
+		final Publisher o = (Publisher) Db.currentTransaction().get(Publisher.class, publisherId);
+		return o.getName();
 	}
 
 	@Override
