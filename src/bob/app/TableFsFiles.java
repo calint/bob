@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package bob.app;
 
 import java.text.SimpleDateFormat;
@@ -15,13 +16,13 @@ import bob.Util;
 import bob.ViewTable;
 
 public final class TableFsFiles extends ViewTable {
-	static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 1;
 
 	public static String icon_file_uri = "/bob/file.png";
 	public static String icon_folder_uri = "/bob/folder.png";
 
 	private final path pth;
-	private transient SimpleDateFormat sdf; // serialized is ~30 KB
+	private transient SimpleDateFormat sdf; // note: serialized is ~30 KB
 
 	private String formatDateTime(final long ms) {
 		if (sdf == null) {
@@ -41,25 +42,11 @@ public final class TableFsFiles extends ViewTable {
 
 	public String getTitle() {
 		final String nm = pth.name();
-		if (".".equals(nm))
+		if (".".equals(nm)) {
 			return pth.fullpath();
+		}
 		return nm;
 	}
-
-//	@Override
-//	protected TypeInfo getTypeInfo() {
-//		return new TypeInfo("file", "files");
-//	}
-//
-//	@Override
-//	protected int getObjectsPerPageCount() {
-//		return 20;
-//	}
-//
-//	@Override
-//	protected int getObjectsCount() {
-//		return getResultList().size();
-//	}
 
 	@Override
 	protected List<?> getObjectsList() {
@@ -134,7 +121,6 @@ public final class TableFsFiles extends ViewTable {
 		renderLink(x, o, img);
 		x.td();
 		x.p(p.name());
-//		renderLinkedName(x, o);
 		x.td().p(formatDateTime(p.lastmod()));
 		x.td("nbr").p(Util.formatSizeInBytes(p.size()));
 	}

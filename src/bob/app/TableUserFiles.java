@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package bob.app;
 
 import java.util.List;
@@ -15,7 +16,8 @@ import db.test.File;
 import db.test.User;
 
 public final class TableUserFiles extends ViewTable {
-	static final long serialVersionUID = 2;
+	private static final long serialVersionUID = 1;
+
 	private final int userId;
 
 	public TableUserFiles(final int userId) {
@@ -41,9 +43,10 @@ public final class TableUserFiles extends ViewTable {
 	@Override
 	protected List<?> getObjectsList() {
 		final DbObjects dbo = getResults();
-		if (!p.isEnabled()) // if no paging
+		if (!p.isEnabled()) {
+			// if no paging
 			return dbo.toList();
-
+		}
 		return dbo.toList(p.getLimit());
 	}
 

@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package bob.app;
 
 import java.util.List;
@@ -8,7 +9,7 @@ import db.DbTransaction;
 import db.test.User;
 
 public final class FormUserFile extends FormFileAbstract {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1;
 
 	public FormUserFile() {
 		this(null, null, null);
@@ -29,8 +30,9 @@ public final class FormUserFile extends FormFileAbstract {
 	@Override
 	protected DbObject getObject() {
 		final String oid = getObjectId();
-		if (oid == null)
+		if (oid == null) {
 			return null;
+		}
 		final List<String> idPath = getIdPath();
 		final DbTransaction tn = Db.currentTransaction();
 		final User u = (User) tn.get(User.class, idPath.get(0));

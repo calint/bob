@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package bob.app;
 
 import java.util.List;
@@ -9,7 +10,7 @@ import db.DbObject;
 import db.test.File;
 
 public abstract class FormFileAbstract extends FormDbo {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1;
 
 	public FormFileAbstract() {
 		this(null, null, null);

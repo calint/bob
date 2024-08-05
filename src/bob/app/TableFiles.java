@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package bob.app;
 
 import java.util.List;
@@ -38,9 +39,10 @@ public final class TableFiles extends ViewTable {
 	@Override
 	protected List<?> getObjectsList() {
 		final DbObjects dbo = getResults();
-		if (!p.isEnabled()) // if no paging
+		if (!p.isEnabled()) {
+			// if no paging
 			return dbo.toList();
-
+		}
 		return dbo.toList(p.getLimit());
 	}
 

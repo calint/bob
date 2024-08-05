@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package bob.app;
 
 import b.xwriter;
@@ -32,7 +33,5 @@ public final class FormAuthor extends FormDbo {
 
 	@Override
 	protected void writeToObject(final xwriter x, final DbObject obj) throws Throwable {
-//		final Author o = (Author) obj;
-//		o.setName(getStr(Author.name));
 	}
 }

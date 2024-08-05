@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package bob.app;
 
 import java.util.List;
@@ -12,7 +13,7 @@ import db.test.Game;
 import db.test.User;
 
 public final class FormUserGame extends FormDbo {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1;
 
 	public FormUserGame() {
 		this(null, null, null);

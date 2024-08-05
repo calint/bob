@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package bob.app;
 
 import java.sql.Timestamp;
@@ -13,7 +14,7 @@ import db.DbObject;
 import db.test.User;
 
 public final class FormUser extends FormDbo implements FormDbo.CreateObjectAtInit {
-	private static final long serialVersionUID = 3L;
+	private static final long serialVersionUID = 1;
 
 	public FormUser() {
 		this(null, null);
@@ -73,7 +74,8 @@ public final class FormUser extends FormDbo implements FormDbo.CreateObjectAtIni
 
 	@Override
 	protected void writeToObject(final xwriter x, final DbObject obj) throws Throwable {
-		// fields written to object by FormDbo
+		// FormDbo writes the input fields to the DbObject
+
 		final User o = (User) obj;
 		if (Util.isEmpty(o.getName())) {
 			xfocus(x, User.name);

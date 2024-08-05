@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package bob.app;
 
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ import db.test.Publisher;
 import db.test.User;
 
 public final class FormBook2 extends FormDbo {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1;
 
 	public FormBook2() {
 		this(null, null);
@@ -37,10 +38,6 @@ public final class FormBook2 extends FormDbo {
 		beginForm(x);
 		inputText(x, "Title", o, Book.name, getInitStr(), "long");
 		focus(x, Book.name);
-//		Set<String>init=new HashSet<String>();
-//		init.add("1");
-//		init.add("2");
-//		inputRefN(x, "Authors", o, Book.authors, init, TableAuthors.class, FormAuthor.class);
 		inputRefN(x, "Authors", o, Book.authors, null, TableAuthors.class, FormAuthor.class);
 		inputRef(x, "Publisher", o, Book.publisher, 0, TablePublishers.class, FormPublisher.class);
 		inputDate(x, "Published date", o, Book.publishedDate, null);

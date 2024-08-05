@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package bob.app;
 
 import java.util.List;
@@ -14,7 +15,8 @@ import db.test.Game;
 import db.test.User;
 
 public final class TableUserGames extends ViewTable {
-	static final long serialVersionUID = 2;
+	private static final long serialVersionUID = 1;
+
 	private final int userId;
 
 	public TableUserGames(final int userId) {
@@ -40,9 +42,10 @@ public final class TableUserGames extends ViewTable {
 	@Override
 	protected List<?> getObjectsList() {
 		final DbObjects dbo = getResults();
-		if (!p.isEnabled()) // if no paging
+		if (!p.isEnabled()) {
+			// if no paging
 			return dbo.toList();
-
+		}
 		return dbo.toList(p.getLimit());
 	}
 
@@ -84,10 +87,6 @@ public final class TableUserGames extends ViewTable {
 
 	@Override
 	protected void onActionCreate(final xwriter x, final String initStr) throws Throwable {
-//		final DbTransaction tn = Db.currentTransaction();
-//		final User u = (User) tn.get(User.class, userId);
-//		final Game o = u.createGame();
-//		o.setName(initStr);
 		final Form f = new FormUserGame(makeExtendedIdPath(Integer.toString(userId)), null, initStr).init();
 		super.bubble_event(x, this, f);
 	}
@@ -102,5 +101,4 @@ public final class TableUserGames extends ViewTable {
 		}
 		sel.clear();
 	}
-
 }

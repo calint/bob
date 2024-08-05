@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package bob.app;
 
 import b.xwriter;
@@ -6,7 +7,7 @@ import db.DbObject;
 import db.test.Category;
 
 public final class FormCategory extends FormDbo {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1;
 
 	public FormCategory() {
 		this(null, null);
@@ -32,7 +33,5 @@ public final class FormCategory extends FormDbo {
 
 	@Override
 	protected void writeToObject(final xwriter x, final DbObject obj) throws Throwable {
-//		final Category o = (Category) obj;
-//		o.setName(getStr(Category.name));
 	}
 }

@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package bob.app;
 
 import b.a;
@@ -5,7 +6,7 @@ import b.a_ajaxsts;
 import b.xwriter;
 
 public final class ControllerPostback extends a {
-	private static final long serialVersionUID = 3L;
+	private static final long serialVersionUID = 1;
 
 	public Ctrl c;
 	public a_ajaxsts ajaxsts;

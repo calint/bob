@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package bob.app;
 
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ import db.Query;
 import db.test.User;
 
 public final class TableUsers extends ViewTable {
-	static final long serialVersionUID = 2;
+	private static final long serialVersionUID = 1;
 
 	public TableUsers() {
 		super(null, BIT_SEARCH | BIT_CREATE | BIT_DELETE | BIT_SELECT, BIT_CLICK_ITEM, new TypeInfo("user", "users"));
@@ -40,9 +41,10 @@ public final class TableUsers extends ViewTable {
 	@Override
 	protected List<?> getObjectsList() {
 		final DbObjects dbo = getResults();
-		if (!p.isEnabled()) // if no paging
+		if (!p.isEnabled()) {
+			// if no paging
 			return dbo.toList();
-
+		}
 		return dbo.toList(p.getLimit());
 	}
 
@@ -122,6 +124,7 @@ public final class TableUsers extends ViewTable {
 	@Override
 	protected void onAction(final xwriter x, final Action act) throws Throwable {
 		if ("da".equals(act.code())) {
+			// delete all
 			final DbTransaction tn = Db.currentTransaction();
 			for (final DbObject o : tn.get(User.class, null, null, null)) {
 				tn.delete(o);
@@ -130,5 +133,4 @@ public final class TableUsers extends ViewTable {
 		}
 		super.onAction(x, act);
 	}
-
 }

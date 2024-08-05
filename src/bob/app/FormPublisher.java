@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package bob.app;
 
 import b.xwriter;
@@ -32,7 +33,6 @@ public final class FormPublisher extends FormDbo {
 
 	@Override
 	protected void writeToObject(final xwriter x, final DbObject obj) throws Throwable {
-//		final Publisher o = (Publisher) obj;
-//		o.setName(getStr(Publisher.name));
+		// FormDbo writes the input fields to the DbObject
 	}
 }

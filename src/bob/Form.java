@@ -99,6 +99,7 @@ public abstract class Form extends Elem {
 		return objectId;
 	}
 
+	/** @return the initializer string supplied at create */
 	public final String getInitStr() {
 		return initStr;
 	}

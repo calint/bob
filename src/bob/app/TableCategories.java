@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package bob.app;
 
 import java.util.List;
@@ -14,7 +15,7 @@ import db.Query;
 import db.test.Category;
 
 public final class TableCategories extends ViewTable {
-	static final long serialVersionUID = 2;
+	private static final long serialVersionUID = 1;
 
 	public TableCategories() {
 		super(null, BIT_SEARCH | BIT_SELECT | BIT_CREATE | BIT_DELETE, BIT_CLICK_ITEM,
@@ -38,9 +39,10 @@ public final class TableCategories extends ViewTable {
 	@Override
 	protected List<?> getObjectsList() {
 		final DbObjects dbo = getResults();
-		if (!p.isEnabled()) // if no paging
+		if (!p.isEnabled()) {
+			// if no paging
 			return dbo.toList();
-
+		}
 		return dbo.toList(p.getLimit());
 	}
 

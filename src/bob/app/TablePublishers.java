@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package bob.app;
 
 import java.util.List;
@@ -14,7 +15,7 @@ import db.Query;
 import db.test.Publisher;
 
 public final class TablePublishers extends ViewTable {
-	static final long serialVersionUID = 2;
+	private static final long serialVersionUID = 1;
 
 	public TablePublishers() {
 		super(null, BIT_SEARCH | BIT_CREATE | BIT_DELETE | BIT_SELECT, BIT_CLICK_ITEM,
@@ -38,9 +39,10 @@ public final class TablePublishers extends ViewTable {
 	@Override
 	protected List<?> getObjectsList() {
 		final DbObjects dbo = getResults();
-		if (!p.isEnabled()) // if no paging
+		if (!p.isEnabled()) {
+			// if no paging
 			return dbo.toList();
-
+		}
 		return dbo.toList(p.getLimit());
 	}
 
@@ -68,7 +70,6 @@ public final class TablePublishers extends ViewTable {
 		final Publisher po = (Publisher) o;
 		x.td();
 		renderLink(x, po, po.getName());
-//		x.p(po.getName());
 		x.td("icn");
 		renderLink(x, Integer.toString(po.id()), "b", "<img src=/bob/link.png>");
 	}

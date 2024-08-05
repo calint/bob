@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package bob.app;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import db.DbClass;
 import db.DbObject;
 
 public final class TableDbClasses extends ViewTable {
-	static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 1;
 
 	public TableDbClasses() {
 		super(null, BIT_SEARCH, BIT_CLICK_ITEM, new TypeInfo("class", "classes"));

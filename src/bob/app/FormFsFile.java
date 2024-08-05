@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package bob.app;
 
 import b.osltgt;
@@ -6,7 +7,7 @@ import b.xwriter;
 import bob.Form;
 
 public final class FormFsFile extends Form {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1;
 
 	private final path pth;
 

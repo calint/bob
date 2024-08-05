@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package bob.app;
 
 import b.osltgt;
@@ -6,7 +7,7 @@ import bob.Form;
 import db.DbClass;
 
 public final class FormDbClass extends Form {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1;
 
 	private final String javaClassName;
 

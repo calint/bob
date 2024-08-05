@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package bob.app;
 
 import java.util.List;
@@ -19,7 +20,8 @@ import db.test.DataText;
 import db.test.Publisher;
 
 public final class TablePublisher extends ViewTable {
-	static final long serialVersionUID = 2;
+	private static final long serialVersionUID = 1;
+
 	public a title;
 	public a id;
 
@@ -64,16 +66,17 @@ public final class TablePublisher extends ViewTable {
 	@Override
 	protected List<?> getObjectsList() {
 		final DbObjects dbo = getResults();
-		if (!p.isEnabled()) // if no paging
+		if (!p.isEnabled()) {
+			// if no paging
 			return dbo.toList();
-
+		}
 		return dbo.toList(p.getLimit());
 	}
 
 	protected DbObjects getResults() {
 		final Query qry = new Query();
 		if (!q.is_empty()) {
-			qry.and(DataText.ft, q.str()).and(Book.data);
+			qry.and(Book.data).and(DataText.ft, q.str());
 		}
 		if (!title.is_empty()) {
 			qry.and(Book.name, Query.EQ, title.str());
@@ -143,12 +146,12 @@ public final class TablePublisher extends ViewTable {
 	@Override
 	protected void onRowClick(final xwriter x, final String id, final String cmd) throws Throwable {
 		if (cmd == null) {
-//			final FormBook f = new FormBook(id, q.str());
 			final Form f = new FormBook2(id, q.str()).init();
 			super.bubble_event(x, this, f);
 			return;
 		}
-		if ("a".equals(cmd)) { // category link
+		if ("a".equals(cmd)) {
+			// author link
 			final Author o = (Author) Db.currentTransaction()
 					.get(Author.class, new Query(Author.name, Query.EQ, id), null, null).get(0);
 			final TableAuthor t = new TableAuthor(o.id());

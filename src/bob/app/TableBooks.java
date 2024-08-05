@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package bob.app;
 
 import java.util.List;
@@ -19,7 +20,8 @@ import db.test.Category;
 import db.test.DataText;
 
 public final class TableBooks extends ViewTable {
-	static final long serialVersionUID = 2;
+	private static final long serialVersionUID = 1;
+
 	public a title;
 	public a id;
 
@@ -60,9 +62,10 @@ public final class TableBooks extends ViewTable {
 	@Override
 	protected List<?> getObjectsList() {
 		final DbObjects dbo = getResults();
-		if (!p.isEnabled()) // if no paging
+		if (!p.isEnabled()) {
+			// if no paging
 			return dbo.toList();
-
+		}
 		return dbo.toList(p.getLimit());
 	}
 
@@ -133,7 +136,6 @@ public final class TableBooks extends ViewTable {
 				}
 			}
 		}
-
 		x.td();
 		final String c = b.getCategoriesStr();
 		if (!Util.isEmpty(c)) {
@@ -152,24 +154,24 @@ public final class TableBooks extends ViewTable {
 	@Override
 	protected void onRowClick(final xwriter x, final String id, final String cmd) throws Throwable {
 		if (cmd == null) {
-//			final FormBook f = new FormBook(id, q.str());
 			final Form f = new FormBook2(id, q.str()).init();
 			super.bubble_event(x, this, f);
 			return;
 		}
-		if ("c".equals(cmd)) { // category link
+		if ("c".equals(cmd)) {
+			// category link
 			final Category o = (Category) Db.currentTransaction()
 					.get(Category.class, new Query(Category.name, Query.EQ, id), null, null).get(0);
 			final TableCategory t = new TableCategory(o.id());
 			super.bubble_event(x, this, t);
 			return;
 		}
-		if ("a".equals(cmd)) { // category link
+		if ("a".equals(cmd)) {
+			// author link
 			final Author o = (Author) Db.currentTransaction()
 					.get(Author.class, new Query(Author.name, Query.EQ, id), null, null).get(0);
 			final TableAuthor t = new TableAuthor(o.id());
 			super.bubble_event(x, this, t);
 		}
-
 	}
 }
