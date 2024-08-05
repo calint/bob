@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package b;
 
 import java.nio.ByteBuffer;
@@ -5,7 +6,7 @@ import java.nio.ByteBuffer;
 /** Cached file. */
 final class chdresp_file extends chdresp {
 	private final path path;
-	private long lastModified;
+	private long last_modified;
 	private long last_validation_time;
 
 	/** Caches a file. */
@@ -28,8 +29,8 @@ final class chdresp_file extends chdresp {
 			// file is gone
 			return false;
 		}
-		final long path_lastModified = path.lastmod();
-		if (path_lastModified == lastModified) {
+		final long path_last_modified = path.lastmod();
+		if (path_last_modified == last_modified) {
 			// file is up to date
 			return true;
 		}
@@ -38,16 +39,17 @@ final class chdresp_file extends chdresp {
 			// file has changed and is now to big
 			return false;
 		}
-		content_length_in_bytes = (int) path.size();
+		content_length = (int) path.size();
+		// note: assumes less than 4 GB
 		// build cached buffers
-		bb = ByteBuffer.allocateDirect(hdrlencap + content_length_in_bytes);
+		bb = ByteBuffer.allocateDirect(hdrlencap + content_length);
 		bb.put(req.h_http200);
-		bb.put(req.h_content_length).put(Long.toString(content_length_in_bytes).getBytes());
+		bb.put(req.h_content_length).put(Long.toString(content_length).getBytes());
 		if (content_type != null) {
 			bb.put(req.h_content_type).put(content_type);
 		}
+		etag = "\"" + (path_last_modified / 1000) * 1000 + "\"";
 		// note. java 21 uses millis in timestamp while java 5 in seconds
-		etag = "\"" + (path_lastModified / 1000) * 1000 + "\"";
 		bb.put(req.h_etag).put(etag.getBytes());
 		bb.put(req.hkp_connection_keep_alive);
 		additional_headers_insertion_position = bb.position();
@@ -55,7 +57,7 @@ final class chdresp_file extends chdresp {
 		content_position = bb.position();
 		path.to(bb);
 		bb.flip();
-		lastModified = path_lastModified;
+		last_modified = path_last_modified;
 		return true;
 	}
 }

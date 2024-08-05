@@ -1,11 +1,11 @@
+// reviewed: 2024-08-05
 package b;
 
 import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * Output stream that escapes lesser and greater than characters to HTML
- * encoding.
+ * Output stream that HTML encodes lesser and greater than characters.
  */
 public final class osltgt extends OutputStream {
 	private static final byte[] ba_html_gt = "&gt;".getBytes();
@@ -32,24 +32,24 @@ public final class osltgt extends OutputStream {
 		for (int n = 0; n < len; n++) {
 			final byte b = c[off + n];
 			if (b == '<') {
-				final int l = n - i;
-				if (l != 0) {
-					os.write(c, off + i, l);
+				final int k = n - i;
+				if (k != 0) {
+					os.write(c, off + i, k);
 				}
 				os.write(ba_html_lt);
 				i = n + 1;
 			} else if (b == '>') {
-				final int l = n - i;
-				if (l != 0) {
-					os.write(c, off + i, l);
+				final int k = n - i;
+				if (k != 0) {
+					os.write(c, off + i, k);
 				}
 				os.write(ba_html_gt);
 				i = n + 1;
 			}
 		}
-		final int l = len - i;
-		if (l != 0) {
-			os.write(c, off + i, l);
+		final int k = len - i;
+		if (k != 0) {
+			os.write(c, off + i, k);
 		}
 	}
 

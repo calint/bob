@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package b;
 
 import java.io.IOException;
@@ -10,7 +11,7 @@ final class oschunked extends OutputStream {
 	private static final ByteBuffer bb_eochunk = ByteBuffer.wrap("0\r\n\r\n".getBytes());
 	private static final ByteBuffer bb_crnl = ByteBuffer.wrap("\r\n".getBytes());
 	private final req r;
-	private final int chunk_size_bytes;
+	private final int chunk_size;
 	private final byte[] chunkhx;
 	private final byte[] buf;
 	private int bufi;
@@ -18,13 +19,13 @@ final class oschunked extends OutputStream {
 	private final int headers_bb_len;
 	private boolean first_send = true;
 
-	oschunked(final req r, final ByteBuffer[] headers_bb, final int headers_bb_len, final int chunk_size_bytes) {
+	oschunked(final req r, final ByteBuffer[] headers_bb, final int headers_bb_len, final int chunk_size) {
 		this.r = r;
 		this.headers_bb = headers_bb;
 		this.headers_bb_len = headers_bb_len;
-		this.chunk_size_bytes = chunk_size_bytes;
-		chunkhx = (Integer.toHexString(chunk_size_bytes) + "\r\n").getBytes();
-		buf = new byte[chunk_size_bytes];
+		this.chunk_size = chunk_size;
+		chunkhx = (Integer.toHexString(chunk_size) + "\r\n").getBytes();
+		buf = new byte[chunk_size];
 	}
 
 	@Override
@@ -56,12 +57,12 @@ final class oschunked extends OutputStream {
 		len -= remain;
 		final ByteBuffer[] bba = { ByteBuffer.wrap(chunkhx), ByteBuffer.wrap(buf, 0, bufi), bb_crnl.slice() };
 		write_blocking(bba);
-		while (len > chunk_size_bytes) {
-			final ByteBuffer[] bba2 = { ByteBuffer.wrap(chunkhx), ByteBuffer.wrap(c, off, chunk_size_bytes),
+		while (len > chunk_size) {
+			final ByteBuffer[] bba2 = { ByteBuffer.wrap(chunkhx), ByteBuffer.wrap(c, off, chunk_size),
 					bb_crnl.slice() };
 			write_blocking(bba2);
-			off += chunk_size_bytes;
-			len -= chunk_size_bytes;
+			off += chunk_size;
+			len -= chunk_size;
 		}
 		if (len > 0) {
 			System.arraycopy(c, off, buf, 0, len);
@@ -91,7 +92,6 @@ final class oschunked extends OutputStream {
 		while (remaining != 0) {
 			final long c = r.socket_channel.write(send_buffers, 0, send_buffers.length);
 			if (c == 0) {
-				// System.out.println("oschunked blocked rem:"+remaining);
 				synchronized (r) {
 					r.oschunked_waiting_write(true);
 					r.selection_key.interestOps(SelectionKey.OP_WRITE);
@@ -110,8 +110,9 @@ final class oschunked extends OutputStream {
 
 	@Override
 	public void flush() throws IOException {
-		if (bufi == 0)
+		if (bufi == 0) {
 			return;
+		}
 		final ByteBuffer[] bba = { ByteBuffer.wrap(Integer.toHexString(bufi).getBytes()), bb_crnl.slice(),
 				ByteBuffer.wrap(buf, 0, bufi), bb_crnl.slice() };
 		write_blocking(bba);

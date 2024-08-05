@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package b;
 
 import java.nio.ByteBuffer;
@@ -7,13 +8,13 @@ abstract class chdresp {
 	static final int hdrlencap = 8 * 64;
 	String etag;
 	byte[] content_type;
-	int content_length_in_bytes;
+	int content_length;
 	ByteBuffer bb;
 	int additional_headers_insertion_position;
 	int content_position;
 
-	final boolean etag_matches(final String clientetag) {
-		return etag.equals(clientetag);
+	final boolean etag_matches(final String clientEtag) {
+		return etag.equals(clientEtag);
 	}
 
 	final ByteBuffer byte_buffer() {
@@ -25,16 +26,16 @@ abstract class chdresp {
 		return additional_headers_insertion_position;
 	}
 
-	/** @return where in the buffer start of content is. */
+	/** @return where in the buffer the start of content is. */
 	final int content_position() {
 		return content_position;
 	}
 
-	final int content_length_in_bytes() {
-		return content_length_in_bytes;
+	final int content_length() {
+		return content_length;
 	}
 
-	byte[] content_type() {
+	final byte[] content_type() {
 		return content_type;
 	}
 

@@ -538,12 +538,13 @@ public final class req {
 	/** @return true if resource was cached and sent. */
 	private boolean try_resource() throws Throwable {
 		final String resource_path = b.get_resource_for_path(path_str);
-		if (resource_path == null)
+		if (resource_path == null) {
 			return false;
-
+		}
 		final InputStream is = req.class.getResourceAsStream(resource_path);
-		if (is == null)
+		if (is == null) {
 			return false;
+		}
 		final String suffix = path_str.substring(path_str.lastIndexOf('.') + 1);
 		final byte[] content_type = b.get_content_type_for_file_suffix(suffix);
 		final chdresp c = new chdresp_resource(is, content_type);
@@ -561,7 +562,7 @@ public final class req {
 		}
 		final String range_s = headers.get("range");
 		if (range_s != null) {
-			final long len = c.content_length_in_bytes();
+			final long len = c.content_length();
 			long range_from;
 			long range_to;
 			final String[] s = range_s.split(s_equals);

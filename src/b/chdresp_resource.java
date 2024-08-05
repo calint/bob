@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package b;
 
 import java.io.ByteArrayOutputStream;
@@ -12,11 +13,11 @@ final class chdresp_resource extends chdresp {
 		final ByteArrayOutputStream os = new ByteArrayOutputStream();
 		b.cp(is, os, null);
 		final byte[] ba = os.toByteArray();
-		content_length_in_bytes = ba.length;
+		content_length = ba.length;
 		// prepare the cached buffer
-		bb = ByteBuffer.allocateDirect(hdrlencap + content_length_in_bytes);
+		bb = ByteBuffer.allocateDirect(hdrlencap + content_length);
 		bb.put(req.h_http200);
-		bb.put(req.h_content_length).put(Integer.toString(content_length_in_bytes).getBytes());
+		bb.put(req.h_content_length).put(Integer.toString(content_length).getBytes());
 		etag = b.resources_etag;
 		bb.put(req.h_etag).put(etag.getBytes());
 		bb.put(req.hkp_connection_keep_alive);
@@ -34,6 +35,7 @@ final class chdresp_resource extends chdresp {
 	/** @return true if path is valid, false to evict it from the cache */
 	@Override
 	boolean validate(final long now) throws Throwable {
-		return true; // resources are always up to date
+		// resources are always up to date
+		return true;
 	}
 }
