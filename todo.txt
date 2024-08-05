@@ -1,3 +1,5 @@
+[ ] user with credentials
+[ ] firewall
 [ ] b: fix for client that makes many threaded requests and then stalls them to starve server of threads or create too many. ddos.
 [ ]   slowhttptest
 [ ] ViewTable: Element.scrollIntoView() instead of scroll to top considering included views
