@@ -7,7 +7,7 @@ import java.io.PrintStream;
 import java.lang.reflect.Field;
 
 /** Makes output of server stats. */
-final public class thdwatch extends Thread {
+public final class thdwatch extends Thread {
 	public static long ms;
 	public static long mem;
 	public static long input;
