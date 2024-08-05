@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package db;
 
 import java.sql.DatabaseMetaData;
@@ -7,16 +8,21 @@ import java.sql.ResultSet;
 public abstract class DbField {
 	/** The field name where this field was created. */
 	protected String name;
+
 	/** The class where this field was created. */
 	protected Class<? extends DbObject> cls;
+
 	protected String tableName;
+
 	/**
 	 * the SQL type as returned by TYPE_NAME
 	 * {@link DatabaseMetaData}.getColumns(...).
 	 */
 	final protected String type;
+
 	/** The size of the SQL column where applicable (varchar, char) otherwise 0. */
 	final protected int size;
+
 	/**
 	 * Default value as returned by COLUMN_DEF from
 	 * {@link DatabaseMetaData}.getColumns(...).
@@ -25,9 +31,11 @@ public abstract class DbField {
 
 	/** Default value of type returned by {@link ResultSet}. */
 	final protected Object defVal;
+
 	final protected boolean allowsNull;
+
 	/**
-	 * true if default value is to be enclosed by quotes and escaped at column
+	 * True if default value is to be enclosed by quotes and escaped at column
 	 * definition and update.
 	 */
 	final protected boolean isStringType;
