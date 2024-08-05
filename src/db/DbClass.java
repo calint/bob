@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package db;
 
 import java.lang.reflect.Field;
@@ -147,7 +148,7 @@ public final class DbClass {
 		}
 		arrangeColumns(stmt, dbm);
 		ensureColumnTypesAndSize(stmt, dbm);
-//		ensureColumnDefaultValues(stmt, dbm);
+		// ensureColumnDefaultValues(stmt, dbm);
 	}
 
 	private void deleteUnusedColumns(final Statement stmt, final DatabaseMetaData dbm) throws Throwable {
@@ -155,9 +156,9 @@ public final class DbClass {
 		for (final DbField f : allFields) {
 			columns_removeColumn(columns, f.name);
 		}
-		if (columns.isEmpty())
+		if (columns.isEmpty()) {
 			return;
-
+		}
 		for (final Column c : columns) {
 			final StringBuilder sb = new StringBuilder(128);
 			sb.append("alter table ").append(tableName).append(" drop column ").append(c.name);
@@ -188,8 +189,6 @@ public final class DbClass {
 				final String fv = f.sqlDefVal;
 				final String cv = c.column_def;
 				defval_ok = fv != null && fv.equals(cv);
-//				if (!defval_ok)
-//					System.out.println(fv + " " + cv);
 			}
 			final boolean is_nullable_ok;
 			if (f.allowsNull) {
@@ -197,11 +196,9 @@ public final class DbClass {
 			} else {
 				is_nullable_ok = "NO".equals(c.is_nullable);
 			}
-
 			if (type_ok && size_ok && defval_ok && is_nullable_ok) {
 				continue;
 			}
-
 			final StringBuilder sb = new StringBuilder(128);
 			sb.append("alter table ").append(tableName).append(" modify ");
 			f.sql_columnDefinition(sb);
@@ -268,9 +265,7 @@ public final class DbClass {
 				prevField = f;
 				continue;
 			}
-
 			addColumn(stmt, f, prevField);
-
 			prevField = f;
 		}
 	}
@@ -318,8 +313,9 @@ public final class DbClass {
 
 	private boolean columns_containsColumn(final List<Column> columns, final String name) {
 		for (final Column c : columns) {
-			if (c.name.equals(name))
+			if (c.name.equals(name)) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -376,7 +372,8 @@ public final class DbClass {
 		final ResultSet rs = dbm.getIndexInfo(null, null, tableName, false, false);
 		while (rs.next()) {
 			final String indexName = rs.getString("INDEX_NAME");
-			if ("PRIMARY".equals(indexName)) { // mysql added index on id
+			if ("PRIMARY".equals(indexName)) {
+				// mysql added index on id
 				continue;
 			}
 			indexes.add(indexName);
@@ -387,8 +384,9 @@ public final class DbClass {
 			indexes.remove(ix.name);
 		}
 
-		if (indexes.isEmpty())
+		if (indexes.isEmpty()) {
 			return;
+		}
 
 		for (final String s : indexes) {
 			final StringBuilder sb = new StringBuilder(128);
@@ -398,5 +396,4 @@ public final class DbClass {
 			stmt.execute(sql);
 		}
 	}
-
 }
