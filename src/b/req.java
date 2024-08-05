@@ -31,14 +31,16 @@ public final class req {
 			// check if there are ongoing writes
 			if (is_transfer()) {
 				do_transfer();
-				if (is_transfer())
+				if (is_transfer()) {
 					return;
+				}
 				if (!is_connection_keepalive()) {
 					close();
 					return;
 				}
 			}
-			if (is_oschunked_waiting_write()) {// ? is..waiting not synchronized on request ok? spurious notify...
+			if (is_oschunked_waiting_write()) {
+				// ? is..waiting not synchronized on request ok? spurious notify...
 				synchronized (this) {
 					notify();
 				}
@@ -60,7 +62,6 @@ public final class req {
 					close();
 					return;
 				}
-				// System.out.println(toString());
 				thdwatch.input += n;
 			}
 			while (ba_rem > 0) {
@@ -84,13 +85,11 @@ public final class req {
 					parse_header_name();
 					// parse_header_name()->do_after_header() might have changed the state and
 					// started transfer
-					if (is_transfer())
+					if (is_transfer()) {
 						return;
+					}
 					if (is_waiting_run_page()) {
-						// System.out.println("interest ops: "+selection_key.interestOps());
 						b.thread(this);
-						// break; // more requests might be in buffer but if more threads are spawned
-						// using the same socket channel then writes would not be in sequence
 						return; // ! will hang client on chained requests
 					}
 					break;
@@ -102,8 +101,6 @@ public final class req {
 					// state might have changed
 					if (is_waiting_run_page()) {
 						b.thread(this);
-						// break; // more requests might be in buffer but if more threads are spawned
-						// using the same socket channel then writes might not be in sequence
 						return; // ! will hang client on chained requests
 					}
 					break;
@@ -200,7 +197,8 @@ public final class req {
 				continue;
 			}
 			if (ba_pos >= 3 && ba[ba_pos - 3] == '1' || ba_pos >= 2 && ba[ba_pos - 2] == '1') {
-				connection_keep_alive = true;// ? cheapo to set keepalive for http/1.1\r\n
+				// cheapo to set keepalive for http/1.1\r\n
+				connection_keep_alive = true;
 			}
 			do_after_prot();
 			break;

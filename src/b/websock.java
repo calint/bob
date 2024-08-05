@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package b;
 
 import java.nio.ByteBuffer;
@@ -124,10 +125,7 @@ public abstract class websock {
 					// rfc6455#section-5.2
 					// Base Framing Protocol
 					final int b0 = bb.get();
-					final boolean fin = (b0 & 128) == 128;
-					if (fin) {
-						// to remove warning of unused variable
-					}
+					// final boolean fin = (b0 & 128) == 128;
 					final int resv = (b0 >> 4) & 7;
 					if (resv != 0) {
 						throw new Error("reserved bits are not 0");
@@ -267,19 +265,17 @@ public abstract class websock {
 		if (is_sending()) {
 			throw new RuntimeException("Trying to send while busy sending. Only one send per on_message.");
 			// note. before the request is closed by the exception handler there might be
-			// attempted reads which throw closed channel exception. ok?
+			// attempted reads which throw closed channel exception.
 		}
 		int nbytes_to_send = 0;
 		for (final ByteBuffer b : bba) {
 			nbytes_to_send += b.remaining();
 		}
-
 		send_bba = new ByteBuffer[bba.length + 1];
 		send_bba[0] = make_header(nbytes_to_send, textmode);
 		for (int i = 1; i < send_bba.length; i++) {
 			send_bba[i] = bba[i - 1];
 		}
-
 		st = state.sending;
 		write();
 	}

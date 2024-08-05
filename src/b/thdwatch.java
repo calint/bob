@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package b;
 
 import java.io.IOException;
@@ -53,7 +54,7 @@ final public class thdwatch extends Thread {
 				}
 				sleep(b.thd_watch_sleep_in_ms);
 				ms = System.currentTimeMillis() - _t0;
-				if (ms - _t > b.thd_watch_report_every_ms) {
+				if (b.thd_watch_report_every_ms != 0 && (ms - _t) > b.thd_watch_report_every_ms) {
 					_t = ms;
 					_out.println("\n\n");
 					b.stats_to(_out);
@@ -71,7 +72,7 @@ final public class thdwatch extends Thread {
 	public static void update() {
 		final Runtime rt = Runtime.getRuntime();
 		_memfree = rt.freeMemory();
-		mem = rt.totalMemory() - _memfree;// ? doesnotmatchjprofiler
+		mem = rt.totalMemory() - _memfree;
 		que = b.pending_requests_list().size();
 		_threads = thdreq.all_request_threads.size();
 	}
@@ -92,7 +93,7 @@ final public class thdwatch extends Thread {
 		os.write(eol.getBytes());
 	}
 
-	public static void reset() {// ? freethdsgetsderanged
+	public static void reset() {
 		for (final Field f : _fields) {
 			final String s = f.getName();
 			if (s.startsWith("_") || f.getType() != long.class) {

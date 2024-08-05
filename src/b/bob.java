@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package b;
 
 import java.lang.reflect.InvocationTargetException;
@@ -21,7 +22,7 @@ public class bob extends websock {
 	 * 
 	 * @return root element class
 	 */
-	protected Class<? extends a> rootClass() {
+	protected Class<? extends a> root_class() {
 		return a.class;
 	}
 
@@ -30,7 +31,7 @@ public class bob extends websock {
 		try {
 			Db.initCurrentTransaction();
 			// todo load root from db or create new
-			controller = (a) rootClass().getConstructor().newInstance();
+			controller = (a) root_class().getConstructor().newInstance();
 
 			final xwriter js = new xwriter();
 			final xwriter x = js.xub(controller, true, false);
@@ -59,7 +60,6 @@ public class bob extends websock {
 					ajax_command_string = me.getValue();
 					continue;
 				}
-				// ? indexofloop
 				final String[] paths = me.getKey().split(a.id_path_separator);
 				a e = controller;
 				for (int n = 1; n < paths.length; n++) {
@@ -92,7 +92,7 @@ public class bob extends websock {
 				}
 			}
 			// navigate to the target element
-			final String[] path = target_elem_id.split(a.id_path_separator);// ? indexofloop
+			final String[] path = target_elem_id.split(a.id_path_separator);
 			a target_elem = controller;
 			for (int n = 1; n < path.length; n++) {
 				target_elem = target_elem.child(path[n]);
@@ -100,7 +100,7 @@ public class bob extends websock {
 					break;
 				}
 			}
-
+			// invoke method on target element with arguments
 			final xwriter x = new xwriter();
 			if (target_elem == null) {
 				x.xalert("element not found:\n" + target_elem_id);
@@ -109,7 +109,6 @@ public class bob extends websock {
 				send(msg);
 				return;
 			}
-			// invoke method on target element with arguments
 			try {
 				target_elem.getClass().getMethod("x_" + target_elem_method, xwriter.class, String.class)
 						.invoke(target_elem, x, target_elem_method_args);
@@ -127,7 +126,6 @@ public class bob extends websock {
 						+ target_elem.getClass().getName() + " or it's super classes.");
 			}
 			x.finish();
-
 			final String msg = x.toString();
 			send(msg);
 		} finally {
