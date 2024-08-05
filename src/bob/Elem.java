@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package bob;
 
 import java.util.ArrayList;
@@ -7,29 +8,33 @@ import java.util.List;
 import b.a;
 
 public abstract class Elem extends a implements Titled {
-	static final long serialVersionUID = 2;
+	private static final long serialVersionUID = 1;
 
-	final private List<String> idPath; // a list of identifiers to be able to navigate to the parent object in context
+	/**
+	 * List of identifiers to be able to navigate to the parent object in context.
+	 */
+	final private List<String> idPath;
 
 	/**
 	 * @param idPath a list of strings representing the object identifiers to
-	 *               navigate an object hierarchy.
+	 *               navigate an object hierarchy
 	 */
 	public Elem(final List<String> idPath) {
 		this.idPath = idPath;
 	}
 
 	final public List<String> getIdPath() {
-		if (idPath == null)
+		if (idPath == null) {
 			return Collections.<String>emptyList();
+		}
 		return idPath;
 	}
 
 	/**
 	 * Extends the id path with a new id.
 	 *
-	 * @param id a new id to add to the copy of the path.
-	 * @return a new id path.
+	 * @param id new id to add to the copy of the path
+	 * @return a new id path
 	 */
 	final public List<String> makeExtendedIdPath(final String id) {
 		final ArrayList<String> ls = new ArrayList<String>();
@@ -40,7 +45,7 @@ public abstract class Elem extends a implements Titled {
 		return ls;
 	}
 
-	/** Convenience for a integer id. */
+	/** Convenience for an integer id. */
 	final public List<String> makeExtendedIdPath(final int id) {
 		return makeExtendedIdPath(Integer.toString(id));
 	}

@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package bob;
 
 import java.util.List;
@@ -7,22 +8,38 @@ import b.xwriter;
 import bob.View.SelectReceiverSingle;
 
 public abstract class Form extends Elem {
-	static final long serialVersionUID = 2;
+	private static final long serialVersionUID = 1;
 
 	public final static int BIT_SAVE_CLOSE = 1;
 	public final static int BIT_SAVE = 2;
 	public final static int BIT_CLOSE = 4;
 	public final static int BIT_CANCEL = 8;
-	protected final int enabledFormBits;
-	public Container ans; // actions container
-	public Container scc; // "save and close", "save", "close" actions container
-	public Tabs t; // the attached views of aggregated objects
-	protected String objectId; // an id that represents the resource this form is rendering
-	private SelectReceiverSingle selectReceiverSingle; // when select mode this interface will receive the created
-														// object id
-	final private String initStr; // the initiation string passed by the view from the query field
-	private boolean hasBeenSaved; // true if the form has been saved
 
+	/** Actions enabled on this form. */
+	protected final int enabledFormBits;
+
+	/** Actions container. */
+	public Container ans;
+
+	/** "save and close", "save", "close" actions container */
+	public Container scc;
+
+	/** The attached views of aggregated objects */
+	public Tabs t;
+
+	/** Id that represents the resource this form is rendering */
+	protected String objectId;
+
+	/** When select mode this interface will receive the created object id. */
+	private SelectReceiverSingle selectReceiverSingle;
+
+	/** Initiation string passed by the view from the query field. */
+	final private String initStr;
+
+	/** True if the form has been saved. */
+	private boolean hasBeenSaved;
+
+	/** True if editing new object. */
 	protected final boolean isNewObject;
 
 	/**
@@ -94,13 +111,16 @@ public abstract class Form extends Elem {
 	public final void to(final xwriter x) throws Throwable {
 		x.script().p("window.onscroll=null;").script_().nl(); // disable infinite scroll event
 		if (!ans.isEmpty()) {
+			// render actions container
 			x.divh(ans, "ac").nl();
 		}
 		render(x);
 		if (!scc.isEmpty()) {
+			// render form actions
 			x.divh(scc, "sc").nl();
 		}
 		if (!t.isEmpty()) {
+			// render tabs
 			x.divh(t, "tabs").nl();
 		}
 	}
@@ -111,8 +131,6 @@ public abstract class Form extends Elem {
 			final String code = ((Action) from).code();
 			if ("sc".equals(code) && (enabledFormBits & BIT_SAVE_CLOSE) != 0) {
 				saveAndClose(x);
-//				save(x);
-//				super.bubble_event(x, this, "close");
 				return;
 			}
 			if ("s".equals(code) && (enabledFormBits & BIT_SAVE) != 0) {
@@ -190,7 +208,7 @@ public abstract class Form extends Elem {
 	}
 
 	/**
-	 * Form calls onSelect on interface at save after object has been created.
+	 * Set the receiver for form to call at save after object has been created.
 	 */
 	public final void setSelectMode(final SelectReceiverSingle srs) {
 		selectReceiverSingle = srs;

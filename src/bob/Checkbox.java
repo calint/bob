@@ -1,17 +1,19 @@
+// reviewed: 2024-08-05
 package bob;
 
 import b.a;
 import b.xwriter;
 
 public final class Checkbox extends a {
-	static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 1;
+
 	final private static String off = "0";
 	final private static String on = "1";
 	final private String id;
 
 	public Checkbox(final String id, final boolean checked) {
-		set(checked ? on : off);
 		this.id = id;
+		set(checked ? on : off);
 	}
 
 	public String getId() {
@@ -24,7 +26,6 @@ public final class Checkbox extends a {
 	}
 
 	public void x_(final xwriter x, final String param) throws Throwable {
-		bubble_event(x, this, on.equals(str()) ? "checked" : "unchecked"); // bubble event
-//		x.xucb(this); // update checkbox
+		bubble_event(x, this, on.equals(str()) ? "checked" : "unchecked");
 	}
 }

@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package bob;
 
 import java.util.ArrayList;
@@ -6,11 +7,13 @@ import b.a;
 import b.xwriter;
 
 public final class Menu extends a {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1;
+
 	private int selectedIndex;
 
 	private final static class Item extends a {
-		private static final long serialVersionUID = 1L;
+		private static final long serialVersionUID = 1;
+
 		Class<? extends a> cls;
 		String title;
 
@@ -26,6 +29,7 @@ public final class Menu extends a {
 	@Override
 	public void to(final xwriter x) throws Throwable {
 		final String id = id();
+		// callback to 'x_s'
 		x.selecto(this, null, null).attr("onchange", "$x('" + id + " s '+this.selectedIndex)").tagoe();
 		int i = 0;
 		for (final Item im : items) {

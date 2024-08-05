@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package bob;
 
 import java.util.ArrayList;
@@ -10,7 +11,8 @@ import b.xwriter;
  * created elements.
  */
 public final class BreadCrumbs extends a {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1;
+
 	private final ArrayList<a> elements = new ArrayList<a>();
 
 	@Override
@@ -21,7 +23,7 @@ public final class BreadCrumbs extends a {
 			final a e = elements.get(i);
 			x.p(" &raquo; ");
 			final String nm;
-			if (e instanceof Titled) { // ? oop
+			if (e instanceof Titled) { // ? oop?
 				nm = ((Titled) e).getTitle();
 			} else { // ? oop
 				nm = getClass().getName();
@@ -51,16 +53,18 @@ public final class BreadCrumbs extends a {
 	}
 
 	public a getActive() {
-		if (elements.isEmpty())
+		if (elements.isEmpty()) {
 			return null;
+		}
 		return elements.get(elements.size() - 1);
 	}
 
 	@Override
 	public a child(final String nm) {
 		final a e = super.child(nm);
-		if (e != null)
+		if (e != null) {
 			return e;
+		}
 		return elements.get(Integer.parseInt(nm));
 	}
 

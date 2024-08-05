@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package bob;
 
 import java.io.Serializable;
@@ -7,20 +8,30 @@ import java.util.Set;
 import b.xwriter;
 
 public abstract class View extends Elem {
-	static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 1;
 
 	public final static int BIT_CREATE = 1;
 	public final static int BIT_DELETE = 2;
 	public final static int BIT_SEARCH = 4;
 	public final static int BIT_SELECT = 8;
+
 	/** The actions that are enabled in the view. */
 	final protected int enabledViewBits;
 
-	private boolean isSelectMode; // if true view renders to select item(s)
-	private boolean isSelectModeMulti; // if true view renders to select multiple items
+	/** True if view renders to select item(s) */
+	private boolean isSelectMode;
+
+	/** True if view renders for selection of multiple items. */
+	private boolean isSelectModeMulti;
+
+	/** Receiver of selection of multiple items. */
 	private SelectReceiverMulti selectReceiverMulti;
+
+	/** Receiver of selection of single item. */
 	private SelectReceiverSingle selectReceiverSingle;
-	final private View.TypeInfo typeInfo; // the name and plural of the object type
+
+	/** Name and plural of the object type. */
+	final private View.TypeInfo typeInfo;
 
 	public View(final List<String> idPath, final int enabledBits, final TypeInfo ti) {
 		super(idPath);
@@ -48,19 +59,6 @@ public abstract class View extends Elem {
 		return selectReceiverSingle;
 	}
 
-//
-//	protected final void enable(int bit) {
-//		enabled_bits |= bit;
-//	}
-//
-//	protected final void disable(int bit) {
-//		enabled_bits &= ~bit;
-//	}
-
-//	protected final boolean isEnabled(int bit) {
-//		return (enabled_bits & bit) == bit;
-//	}
-
 	protected List<Action> getActionsList() {
 		return null;
 	}
@@ -72,9 +70,14 @@ public abstract class View extends Elem {
 	 */
 	protected abstract int getObjectsPerPageCount();
 
-	/** If paging is enabled this will be called before getObjectsList(). */
+	/**
+	 * If paging is enabled this will be called before getObjectsList().
+	 * 
+	 * @return number of objects in the list
+	 */
 	protected abstract int getObjectsCount();
 
+	/** @return objects in this list */
 	protected abstract List<?> getObjectsList();
 
 	/**
@@ -92,7 +95,8 @@ public abstract class View extends Elem {
 	protected abstract void onAction(xwriter x, Action act) throws Throwable;
 
 	public final static class TypeInfo implements Serializable {
-		private static final long serialVersionUID = 1L;
+		private static final long serialVersionUID = 1;
+
 		protected final String name;
 		protected final String namePlural;
 

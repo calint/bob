@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package bob;
 
 import java.util.ArrayList;
@@ -6,10 +7,11 @@ import b.a;
 import b.xwriter;
 
 public final class Tabs extends a {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1;
 
 	public final static class Tab extends a {
-		private static final long serialVersionUID = 1L;
+		private static final long serialVersionUID = 1;
+
 		private final a elem;
 
 		public Tab(final String title, final a elem) {
@@ -22,10 +24,12 @@ public final class Tabs extends a {
 		@Override
 		public a child(final String id) {
 			final a e = super.child(id);
-			if (e != null)
+			if (e != null) {
 				return e;
-			if ("e".equals(id))
+			}
+			if ("e".equals(id)) {
 				return elem;
+			}
 			return null;
 		}
 
@@ -52,7 +56,8 @@ public final class Tabs extends a {
 	public void add(final Tab t) {
 		t.parent(this);
 		t.name(Integer.toString(tabs.size()));
-		if (tabs.isEmpty()) { // if first element replace active element with the element in the tab
+		if (tabs.isEmpty()) {
+			// if first element added replace active element with the element in the tab
 			t.elem.replace(ae);
 		}
 		tabs.add(t);
@@ -61,8 +66,9 @@ public final class Tabs extends a {
 	@Override
 	public a child(final String id) {
 		final a e = super.child(id);
-		if (e != null)
+		if (e != null) {
 			return e;
+		}
 		return tabs.get(Integer.parseInt(id));
 	}
 
@@ -80,7 +86,8 @@ public final class Tabs extends a {
 
 	@Override
 	protected void bubble_event(final xwriter x, final a from, final Object o) throws Throwable {
-		if (from instanceof Tab) { // activated tab
+		if (from instanceof Tab) {
+			// activated tab
 			final Tab t = (Tab) from;
 			t.elem.replace(ae);
 			x.xu(this);

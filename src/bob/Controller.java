@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package bob;
 
 import java.io.ByteArrayOutputStream;
@@ -9,7 +10,8 @@ import b.req;
 import b.xwriter;
 
 public class Controller extends a {
-	static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 1;
+
 	public a s; // serialized size
 	public a sg; // serialized size, gziped
 	public a si; // server info
@@ -41,7 +43,8 @@ public class Controller extends a {
 
 	@Override
 	protected void bubble_event(final xwriter x, final a from, final Object o) throws Throwable {
-		if (from == m) { // event from the menu
+		if (from == m) {
+			// event from the menu
 			final a e = (a) ((Class<?>) o).getConstructor().newInstance();
 			bc.clear();
 			bc.add(e); // add to bread crumb
@@ -51,14 +54,16 @@ public class Controller extends a {
 			x.xscroll_to_top();
 			return;
 		}
-		if (from == bc) { // event from bread crumb
+		if (from == bc) {
+			// event from bread crumbs
 			final a e = ((BreadCrumbs) from).getActive();
 			e.replace(ae); // replace active element
 			x.xu(ae); // update active element
 			x.xscroll_to_top();
 			return;
 		}
-		if (from instanceof Form) { // event from a form
+		if (from instanceof Form) {
+			// event from a form
 			if ("close".equals(o)) {
 				bc.removeLast(); // remove last element in bread crumbs
 				final a e = bc.getActive(); // get current element
@@ -82,7 +87,8 @@ public class Controller extends a {
 			x.xscroll_to_top();
 			return;
 		}
-		if (o instanceof Form || o instanceof View) { // open view
+		if (o instanceof Form || o instanceof View) {
+			// open form or view
 			final a e = (a) o;
 			bc.add(e); // add to bread crumb
 			e.replace(ae); // replace active element
@@ -96,7 +102,6 @@ public class Controller extends a {
 	}
 
 	public void x_s(final xwriter x, final String param) throws Throwable {
-		// System.out.println("*** param:{"+param+"}");
 		updateSerializedSize();
 		updateServerInfo();
 		x.xu(s);

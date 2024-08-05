@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package bob;
 
 public final class Util {
@@ -20,8 +21,9 @@ public final class Util {
 	}
 
 	public static String toStr(final Object o, final String defaultStr) {
-		if (o == null || o.toString().length() == 0)
+		if (o == null || o.toString().length() == 0) {
 			return defaultStr;
+		}
 		return o.toString();
 	}
 

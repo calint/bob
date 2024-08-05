@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package bob;
 
 import java.util.LinkedHashSet;
@@ -9,15 +10,19 @@ import b.xwriter;
 import db.Limit;
 
 public abstract class ViewTable extends View {
-	private static final long serialVersionUID = 3L;
+	private static final long serialVersionUID = 1;
 
 	public final static int BIT_CLICK_ITEM = 1;
+
 	public Container ac; // actions
 	public a q; // query field
 	public Table t;
 	public Paging p;
 	public a ms; // more search section
-	private boolean ms_display; // true to display more search section
+
+	/** True to display more search section. */
+	private boolean ms_display;
+
 	/** The actions that are enabled in the table. */
 	final protected int enabledTableBits;
 
@@ -56,7 +61,6 @@ public abstract class ViewTable extends View {
 			x.divh(ac, "ac").nl();
 		}
 		if ((enabledViewBits & BIT_SEARCH) != 0) {
-			// x.inp(q, null, "query", null, null, this, "new", this, "q");
 			x.tago("input").default_attrs_for_element(q, "query", null);
 			final String eid = id();
 			if ((enabledViewBits & BIT_CREATE) != 0) {
@@ -109,13 +113,13 @@ public abstract class ViewTable extends View {
 				onActionDelete(x);
 				refresh(x);
 				return;
-
 			}
 			onAction(x, (Action) from);
 			refresh(x);
 			return;
 		}
-		if (from == p) { // event from pager
+		if (from == p) {
+			// event from pager
 			refresh(x);
 			return;
 		}
@@ -126,10 +130,11 @@ public abstract class ViewTable extends View {
 	private void refresh(final xwriter x) throws Throwable {
 		x.xu(t); // update table
 		if (p.isEnabled() && !isInifiniteScroll()) {
-			x.xu(p); // update paging
+			// update paging
+			x.xu(p);
 		}
 		x.xfocus(q);
-		x.xscroll_to_top(); // scroll to top of page
+		x.xscroll_to_top();
 	}
 
 	/** Callback for change in query field. */
@@ -179,7 +184,7 @@ public abstract class ViewTable extends View {
 	}
 
 	/**
-	 * Renders a link with id and command that call onRowClick(...) with specified
+	 * Renders a link with id and command that calls onRowClick(...) with specified
 	 * command.
 	 *
 	 * @param x
@@ -219,7 +224,7 @@ public abstract class ViewTable extends View {
 	}
 
 	// -----------------------------------------------------------------------------------
-	// override these in to specialize table
+	// override these to specialize table
 
 	protected boolean hasMoreSearchSection() {
 		return false;
@@ -268,8 +273,11 @@ public abstract class ViewTable extends View {
 	protected void onRowClick(final xwriter x, final String id, final String cmd) throws Throwable {
 	}
 
+	// -----------------------------------------------------------------------------------
+
 	public final static class Paging extends a {
-		private static final long serialVersionUID = 1L;
+		private static final long serialVersionUID = 1;
+
 		private int currentPage; // page starting at 0
 		private int objectsPerPage;
 		private int objectsCount; // objects in view
@@ -294,8 +302,9 @@ public abstract class ViewTable extends View {
 		@Override
 		public void to(final xwriter x) throws Throwable {
 			upd();
-			if (objectsCount == 0)
+			if (objectsCount == 0) {
 				return;
+			}
 			x.p(objectsCount);
 			x.p(' ');
 			if (objectsCount == 1) {
@@ -363,15 +372,6 @@ public abstract class ViewTable extends View {
 			super.bubble_event(x);
 		}
 
-		//
-		// public int getCurrentPage() {
-		// return currentPage;
-		// }
-		//
-		// public int getObjectsPerPageCount() {
-		// return getObjectsPerPageCount();
-		// }
-
 		public int getLimitStart() {
 			return currentPage * objectsPerPage;
 		}
@@ -416,7 +416,8 @@ public abstract class ViewTable extends View {
 			if (!ls.isEmpty()) {
 				x.table("t").nl();
 				x.tr();
-				if ((tv.enabledViewBits & View.BIT_SELECT) != 0 || tv.isSelectModeMulti()) { // header for the checkbox
+				if ((tv.enabledViewBits & View.BIT_SELECT) != 0 || tv.isSelectModeMulti()) {
+					// header for the checkbox
 					x.th();
 				}
 				tv.renderHeaders(x);
@@ -429,7 +430,8 @@ public abstract class ViewTable extends View {
 					x.p("window.onscroll=(e)=>{if((window.innerHeight+window.scrollY)>=document.body.offsetHeight){$x('"
 							+ id() + " is');}}");
 				} else {
-					x.p("window.onscroll=null;"); // disable infinite scroll event
+					// disable infinite scroll event
+					x.p("window.onscroll=null;");
 				}
 				x.script_();
 			}
@@ -438,7 +440,8 @@ public abstract class ViewTable extends View {
 		private void renderRows(final xwriter x, final List<?> ls) throws Throwable {
 			for (final Object o : ls) {
 				x.tr();
-				if ((tv.enabledViewBits & View.BIT_SELECT) != 0 || tv.isSelectModeMulti()) { // render checkbox
+				if ((tv.enabledViewBits & View.BIT_SELECT) != 0 || tv.isSelectModeMulti()) {
+					// render checkbox
 					final String id = tv.getIdFrom(o);
 					x.td();
 					final Checkbox cb = new Checkbox(id, selectedIds.contains(id));
@@ -451,7 +454,8 @@ public abstract class ViewTable extends View {
 				tv.renderRowCells(x, o);
 				x.nl();
 			}
-			if (tv.isInifiniteScroll()) { // insertion point for more rows
+			if (tv.isInifiniteScroll()) {
+				// insertion point for more rows
 				x.p("<tr id=" + is.id() + ">");
 			}
 		}
@@ -476,8 +480,10 @@ public abstract class ViewTable extends View {
 
 		/** Callback for infinite scroll. */
 		public void x_is(final xwriter y, final String s) throws Throwable {
-			if (!tv.p.nextPage()) // if there are no more pages
+			if (!tv.p.nextPage()) {
+				// if there are no more pages
 				return;
+			}
 
 			final xwriter x = y.xub(is, false, false); // render more rows at the insertion tag
 			renderRows(x, tv.getObjectsList());

@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package bob;
 
 import java.util.ArrayList;
@@ -10,7 +11,8 @@ import b.xwriter;
  * created elements.
  */
 public final class Container extends a {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1;
+
 	private final ArrayList<a> elements = new ArrayList<a>();
 
 	@Override
@@ -43,8 +45,9 @@ public final class Container extends a {
 	@Override
 	public a child(final String nm) {
 		final a e = super.child(nm);
-		if (e != null)
+		if (e != null) {
 			return e;
+		}
 		return elements.get(Integer.parseInt(nm));
 	}
 }
