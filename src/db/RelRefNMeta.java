@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package db;
 
 import java.sql.DatabaseMetaData;
@@ -25,13 +26,10 @@ final class RelRefNMeta {
 		final ResultSet rs = dbm.getTables(null, null, tableName, new String[] { "TABLE" });
 		if (rs.next()) {
 			rs.close();
-			return;// ? check columns
+			// ? check columns
+			return;
 		}
 		rs.close();
-
-//		final StringBuilder sb = new StringBuilder(256);
-//		sb.append("create table ").append(tableName).append('(').append(fromColName).append(" int,").append(toColName)
-//				.append(" int)");
 
 		// note primary key added due to warning from mysql regarding replication
 		// performance in cluster

@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package db;
 
 import java.sql.DatabaseMetaData;
@@ -18,9 +19,10 @@ public final class RelRefN extends DbRelation {
 		rrm = new RelRefNMeta(c.javaClass, name, toCls);
 		Db.relRefNMeta.add(rrm);
 		final DbClass todbcls = Db.dbClassForJavaClass(toCls);
-		if (todbcls == null)
+		if (todbcls == null) {
 			throw new RuntimeException(
 					"class " + toCls + " not found. Has Db.register(" + toCls.getName() + ".class) been called?");
+		}
 		todbcls.referingRefN.add(this);
 	}
 
@@ -113,8 +115,9 @@ public final class RelRefN extends DbRelation {
 		}
 		rs.close();
 
-		if (lookingForIndexNames.isEmpty())
+		if (lookingForIndexNames.isEmpty()) {
 			return;
+		}
 
 		if (lookingForIndexNames.contains(fromIxName)) {
 			final StringBuilder sb = new StringBuilder(128);

@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package db;
 
 import java.sql.SQLException;
@@ -18,7 +19,6 @@ public final class IndexFt extends Index {
 		}
 		sb.setLength(sb.length() - 1);
 		sb.append(')');
-
 		final String sql = sb.toString();
 		Db.log_sql(sql);
 		stmt.execute(sql);

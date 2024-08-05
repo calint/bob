@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package db;
 
 public final class FldChars extends DbField {

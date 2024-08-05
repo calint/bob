@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package db;
 
 /** Index of relation column. */
@@ -10,12 +11,14 @@ public class IndexRel extends Index {
 
 	@Override
 	protected void init(final DbClass c) {
-		if (rel.relFld == null)
+		if (rel.relFld == null) {
 			throw new RuntimeException("Relation " + rel.name + " in class " + cls.getName()
 					+ " can not be indexed. Is relation type RefN?");
-		if (!rel.relFld.cls.equals(cls))
+		}
+		if (!rel.relFld.cls.equals(cls)) {
 			throw new RuntimeException("Relation " + rel.name + " in class " + cls.getName()
 					+ " can not be indexed because the relation creates the column in a different table. Is relation type AggN? In that case the column is already indexed.");
+		}
 		fields.add(rel.relFld);
 	}
 }

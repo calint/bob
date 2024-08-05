@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package db;
 
 /** Association One-to-One. */
@@ -40,27 +41,20 @@ public final class RelRef extends DbRelation {
 		relFld.setId(ths, trg == null ? 0 : trg.id());
 	}
 
-	// public void remove(final DbObject ths) {
-	// set(ths, 0);
-	// }
-
 	/** @returns 0 if id is null. */
 	public int getId(final DbObject ths) {
 		final Object objId = relFld.getObj(ths);
-		if (objId == null)
+		if (objId == null) {
 			return 0;
+		}
 		return (Integer) objId;
 	}
 
 	public DbObject get(final DbObject ths) {
 		final int id = getId(ths);
-		if (id == 0)
+		if (id == 0) {
 			return null;
-
-		// if (o == null) // ? setting in Db for this case
-		// throw new RuntimeException(ths.getClass().getName() + "[" + ths.id() + "]
-		// relation [" + name + "] has id ["
-		// + id + "] but object cannot be found.");
+		}
 		return Db.currentTransaction().get(toCls, id);
 	}
 
@@ -68,5 +62,4 @@ public final class RelRef extends DbRelation {
 	protected boolean cascadeDeleteNeeded() {
 		return false;
 	}
-
 }

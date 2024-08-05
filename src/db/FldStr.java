@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package db;
 
 /** String field. */
@@ -22,8 +23,9 @@ public final class FldStr extends DbField {
 
 	public FldStr(final int size, final String defVal, final boolean allowNull) {
 		super("varchar", size, defVal, defVal, allowNull, true);
-		if (size > MAX_SIZE)
+		if (size > MAX_SIZE) {
 			throw new RuntimeException("size " + size + " exceeds maximum of " + MAX_SIZE);
+		}
 	}
 
 	public void setStr(final DbObject ths, final String v) {

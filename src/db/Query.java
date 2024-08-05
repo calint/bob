@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package db;
 
 import java.sql.Timestamp;
@@ -23,7 +24,7 @@ public final class Query {
 	final private static class Elem {
 		private Query query;// if not null then this is a sub query
 		private IndexFt ftix;// if not null then this is a full text query
-		private int elemOp; // and, or or nop
+		private int elemOp; // 'and', 'or' or 'nop'
 		private String lhtbl;// left hand table name
 		private String lh; // left hand field name
 		private int op; // EQ, NEQ etc
@@ -133,8 +134,9 @@ public final class Query {
 		}
 
 		void sql_appendSelectFromTables(final StringBuilder sb) {
-			if (tblToAlias.isEmpty())
+			if (tblToAlias.isEmpty()) {
 				return;
+			}
 			for (final Map.Entry<String, String> kv : tblToAlias.entrySet()) {
 				sb.append(kv.getKey()).append(" ").append(kv.getValue()).append(",");
 			}
@@ -180,7 +182,7 @@ public final class Query {
 	}
 
 	public Query(final DbField lh, final int op, final Timestamp ts) {
-//		append(NOP, lh.tableName, lh.columnName, op, null, ts.toString());
+		// append(NOP, lh.tableName, lh.columnName, op, null, ts.toString());
 		append(NOP, lh.tableName, lh.name, op, null, "'" + ts.toString() + "'");
 	}
 
@@ -242,7 +244,8 @@ public final class Query {
 	private Query append(final int elemOp, final String lhtbl, final String lh, final int op, final String rhtbl,
 			final String rh) {
 		final Elem e = new Elem();
-		if (elems.isEmpty()) { // first elem is always NOP
+		if (elems.isEmpty()) {
+			// first elem is always NOP
 			e.elemOp = NOP;
 		} else {
 			e.elemOp = elemOp;
@@ -258,7 +261,8 @@ public final class Query {
 
 	private Query append(final int elemOp, final Query q) {
 		final Elem e = new Elem();
-		if (elems.isEmpty()) { // first elem is always NOP
+		if (elems.isEmpty()) {
+			// first elem is always NOP
 			e.elemOp = NOP;
 		} else {
 			e.elemOp = elemOp;
@@ -320,7 +324,8 @@ public final class Query {
 
 	public Query and(final IndexFt ix, final String ftquery) {
 		final Elem e = new Elem();
-		if (elems.isEmpty()) { // first elem is always NOP
+		if (elems.isEmpty()) {
+			// first elem is always NOP
 			e.elemOp = NOP;
 		} else {
 			e.elemOp = AND;
@@ -383,7 +388,8 @@ public final class Query {
 
 	public Query or(final IndexFt ix, final String ftquery) {
 		final Elem e = new Elem();
-		if (elems.isEmpty()) { // first elem is always NOP
+		if (elems.isEmpty()) {
+			// first elem is always NOP
 			e.elemOp = NOP;
 		} else {
 			e.elemOp = OR;

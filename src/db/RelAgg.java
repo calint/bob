@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package db;
 
 /** Aggregation One-to-One. */
@@ -19,8 +20,9 @@ public final class RelAgg extends DbRelation {
 	/** @returns 0 if id is null */
 	public int getId(final DbObject ths) {
 		final Object objId = ths.fieldValues[relFld.slotNbr];
-		if (objId == null)
+		if (objId == null) {
 			return 0;
+		}
 		return (Integer) objId;
 	}
 
@@ -35,12 +37,6 @@ public final class RelAgg extends DbRelation {
 			}
 			return null;
 		}
-
-		// if (o == null) // ? Db setting for this but it may not be able to delete
-		// parent object.
-		// throw new RuntimeException(ths.getClass().getName() + "[" + ths.id() + "]
-		// relation [" + name + "] has id ["
-		// + id + "] but object cannot be found.");
 		return tn.get(toCls, id);
 	}
 
@@ -52,14 +48,15 @@ public final class RelAgg extends DbRelation {
 	@Override
 	protected void cascadeDelete(final DbObject ths) {
 		final int toId = getId(ths);
-		if (toId == 0)
+		if (toId == 0) {
 			return;
-
+		}
 		final DbTransaction tn = Db.currentTransaction();
 		final DbClass dbClsTo = Db.dbClassForJavaClass(toCls);
 		if (dbClsTo.cascadeDelete) {
 			final DbObject o = get(ths, false);
-			if (o != null) { // ? how to handle dangling ref
+			if (o != null) {
+				// ? how to handle dangling ref
 				tn.delete(o);
 			}
 			return;

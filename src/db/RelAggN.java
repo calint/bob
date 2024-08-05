@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package db;
 
 import java.util.List;
@@ -84,10 +85,10 @@ public final class RelAggN extends DbRelation {
 
 	/** @param thsId source object id. */
 	public void delete(final int thsId, final DbObject o) {
-		if (relFld.getId(o) != thsId)
+		if (relFld.getId(o) != thsId) {
 			throw new RuntimeException(cls.getName() + "[" + thsId + "] does not contain " + toCls.getName() + "["
 					+ o.id() + "] in relation '" + name + "'");
-
+		}
 		Db.currentTransaction().delete(o);
 	}
 
@@ -109,7 +110,7 @@ public final class RelAggN extends DbRelation {
 		final DbTransaction tn = Db.currentTransaction();
 		final DbClass dbClsTo = Db.dbClassForJavaClass(toCls);
 		if (dbClsTo.cascadeDelete || !dbClsTo.referingRefN.isEmpty()
-				|| Db.enable_update_referring_tables && !dbClsTo.referingRef.isEmpty()) {
+				|| (Db.enable_update_referring_tables && !dbClsTo.referingRef.isEmpty())) {
 			final List<DbObject> ls = get(thsId).toList();
 			for (final DbObject o : ls) {
 				tn.delete(o);
@@ -129,7 +130,7 @@ public final class RelAggN extends DbRelation {
 			Db.execClusterSql(sb.toString());
 		}
 
-		// ? objects are potentially in the cache but are not removed. not a problem
-		// because those objects will not be accessed.
+		// note: objects are potentially in the cache but are not removed because those
+		// objects will not be accessed.
 	}
 }

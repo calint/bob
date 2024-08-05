@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package db;
 
 import java.sql.DatabaseMetaData;
@@ -11,10 +12,13 @@ import java.util.Collections;
 public class Index {
 	/** The class that declared the index. */
 	protected Class<? extends DbObject> cls;
+
 	/** The name of the field that declared the index. */
 	protected String name;
+
 	/** The table name for the declaring class. */
 	protected String tableName;
+
 	/** The fields in this index. */
 	final protected ArrayList<DbField> fields = new ArrayList<DbField>();
 
@@ -39,8 +43,9 @@ public class Index {
 			break;
 		}
 		rs.close();
-		if (found)
+		if (found) {
 			return;
+		}
 
 		createIndex(stmt);
 	}
@@ -68,8 +73,9 @@ public class Index {
 			}
 			cols.remove(f.name);
 		}
-		if (cols.isEmpty() && done)
+		if (cols.isEmpty() && done) {
 			return;
+		}
 
 		// declared index does not match index in db. recreate index
 		dropIndex(stmt);
@@ -84,17 +90,14 @@ public class Index {
 		}
 		sb.setLength(sb.length() - 1);
 		sb.append(')');
-
 		final String sql = sb.toString();
 		Db.log_sql(sql);
 		stmt.execute(sql);
 	}
 
 	protected void dropIndex(final Statement stmt) throws SQLException {
-		// columns in index do not match declaration, delete and create
 		final StringBuilder sb = new StringBuilder(128);
 		sb.append("drop index ").append(name).append(" on ").append(tableName);
-
 		final String sql = sb.toString();
 		Db.log_sql(sql);
 		stmt.execute(sql);
