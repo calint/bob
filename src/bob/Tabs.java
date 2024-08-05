@@ -53,7 +53,7 @@ public final class Tabs extends a {
 		t.parent(this);
 		t.name(Integer.toString(tabs.size()));
 		if (tabs.isEmpty()) { // if first element replace active element with the element in the tab
-			t.elem.replace(this, ae);
+			t.elem.replace(ae);
 		}
 		tabs.add(t);
 	}
@@ -82,7 +82,7 @@ public final class Tabs extends a {
 	protected void bubble_event(final xwriter x, final a from, final Object o) throws Throwable {
 		if (from instanceof Tab) { // activated tab
 			final Tab t = (Tab) from;
-			t.elem.replace(this, ae);
+			t.elem.replace(ae);
 			x.xu(this);
 			return;
 		}

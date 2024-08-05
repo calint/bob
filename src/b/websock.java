@@ -66,13 +66,14 @@ public abstract class websock {
 		bbo.put("\r\n\r\n".getBytes());
 		bbo.flip();
 		while (bbo.hasRemaining() && socket_channel.write(bbo) != 0) {
-
 		}
-		if (bbo.hasRemaining())
+		if (bbo.hasRemaining()) {
 			throw new RuntimeException("initiation packet not fully sent");
+		}
 		on_opened();
-		if (is_sending())
+		if (is_sending()) {
 			return;
+		}
 		st = state.parse_next_frame;
 		// response sent, wait for packet (assumes client hasn't sent anything yet)
 		r.selection_key.interestOps(SelectionKey.OP_READ);

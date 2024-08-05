@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package b;
 
 import java.io.File;
@@ -50,7 +51,7 @@ final public class b {
 	public static @conf @unit(name = "ms") int thd_watch_report_every_ms = 60000;
 	public static @conf(reboot = true) boolean thread_pool = true;
 	public static @conf int thread_pool_size = 16;
-	public static @conf @unit(name = "ms") long thread_pool_lftm = 60 * 1000;
+	public static @conf @unit(name = "ms") long thread_pool_lifetime_ms = 60 * 1000;
 	public static @conf boolean cache_files = true;
 	public static @conf(reboot = true) int cache_files_hashlen = K;
 	public static @conf @unit(name = "B") int cache_files_maxsize = 64 * K;
@@ -61,7 +62,7 @@ final public class b {
 	public static @conf @unit(name = "B") int reqinbuf_B = 16 * K;
 	public static @conf String default_directory_file = "index.html";
 	public static @conf boolean gc_before_stats = false;
-	public static @conf String datetimefmtstr = "yyyy-MM-dd HH:mm:ss.sss";
+	public static @conf String datetime_format = "yyyy-MM-dd HH:mm:ss.sss";
 	public static @conf String resources_etag = "\"2023-01-13--2\"";
 	public static @conf boolean enable_upload = true;
 	public static @conf int max_pending_connections = 20000;// when overrun causes SYN flood warning
@@ -134,6 +135,8 @@ final public class b {
 		Db.init(bapp_jdbc_host, bapp_jdbc_db, bapp_jdbc_user, bapp_jdbc_password, bapp_jdbc_ncons, bapp_cluster_ip,
 				bapp_cluster_port);
 
+		Runtime.getRuntime().addShutdownHook(new jvmsdh());
+
 		final ServerSocketChannel ssc = ServerSocketChannel.open();
 		ssc.configureBlocking(false);
 		final InetSocketAddress isa = new InetSocketAddress(Integer.parseInt(server_port));
@@ -146,7 +149,6 @@ final public class b {
 		b.pl("port open: " + b.server_port);
 		final Selector sel = Selector.open();
 		ssc.register(sel, SelectionKey.OP_ACCEPT);
-		Runtime.getRuntime().addShutdownHook(new jvmsdh());
 		while (true) {
 			try {
 				// sel.select(1000);
@@ -502,12 +504,12 @@ final public class b {
 				fld.set(null, val);
 			} else if (fldcls.isAssignableFrom(int.class)) {
 				fld.set(null, Integer.parseInt(val));
+			} else if (fldcls.isAssignableFrom(long.class)) {
+				fld.set(null, Long.parseLong(val));
 			} else if (fldcls.isAssignableFrom(boolean.class)) {
 				fld.set(null,
 						"1".equals(val) || "true".equals(val) || "yes".equals(val) || "y".equals(val) ? Boolean.TRUE
 								: Boolean.FALSE);
-			} else if (fldcls.isAssignableFrom(long.class)) {
-				fld.set(null, Long.parseLong(val));
 			}
 		}
 		return true;

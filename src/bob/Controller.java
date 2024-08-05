@@ -31,7 +31,7 @@ public class Controller extends a {
 		x.divh(m, "menu").nl();
 		x.divh(bc, "bc").nl();
 		final a active_elem = bc.getActive();
-		active_elem.replace(this, ae);
+		active_elem.replace(ae);
 		x.divh(ae, "ae").nl();
 		x.tago("div").attr("class", "ser").tagoe();
 		x.p("serialized: ").span(s).p(" B,  gziped: ").span(sg).p(" B, server: ").span(si).spc().ax(this, "s",
@@ -45,7 +45,7 @@ public class Controller extends a {
 			final a e = (a) ((Class<?>) o).getConstructor().newInstance();
 			bc.clear();
 			bc.add(e); // add to bread crumb
-			e.replace(this, ae); // replace active element
+			e.replace(ae); // replace active element
 			x.xu(ae); // update active element
 			x.xu(bc); // update bread crumbs
 			x.xscroll_to_top();
@@ -53,7 +53,7 @@ public class Controller extends a {
 		}
 		if (from == bc) { // event from bread crumb
 			final a e = ((BreadCrumbs) from).getActive();
-			e.replace(this, ae); // replace active element
+			e.replace(ae); // replace active element
 			x.xu(ae); // update active element
 			x.xscroll_to_top();
 			return;
@@ -62,7 +62,7 @@ public class Controller extends a {
 			if ("close".equals(o)) {
 				bc.removeLast(); // remove last element in bread crumbs
 				final a e = bc.getActive(); // get current element
-				e.replace(this, ae); // replace active element
+				e.replace(ae); // replace active element
 				x.xu(ae); // update active element
 				x.xu(bc); // update bread crumbs
 				x.xscroll_to_top();
@@ -76,7 +76,7 @@ public class Controller extends a {
 		if (from instanceof View && "close".equals(o)) {
 			bc.removeLast(); // remove last element in bread crumbs
 			final a e = bc.getActive(); // get current element
-			e.replace(this, ae); // replace active element
+			e.replace(ae); // replace active element
 			x.xu(ae); // update active element
 			x.xu(bc); // update bread crumbs
 			x.xscroll_to_top();
@@ -85,7 +85,7 @@ public class Controller extends a {
 		if (o instanceof Form || o instanceof View) { // open view
 			final a e = (a) o;
 			bc.add(e); // add to bread crumb
-			e.replace(this, ae); // replace active element
+			e.replace(ae); // replace active element
 			x.xu(ae); // update active element
 			x.xu(bc); // update bread crumbs
 			x.xscroll_to_top();

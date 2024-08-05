@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package b;
 
 import static b.b.tobytes;
@@ -69,7 +70,10 @@ public class a implements Serializable {
 	}
 
 	/**
-	 * Override this if element contains children that are not defined in fields.
+	 * Override if element contains children that are not defined in fields.
+	 * 
+	 * @param id id of element in context
+	 * @return the element with id
 	 */
 	public a child(final String id) {
 		try {
@@ -95,8 +99,9 @@ public class a implements Serializable {
 	}
 
 	public void to(final xwriter x) throws Throwable {
-		if (value == null)
+		if (value == null) {
 			return;
+		}
 		x.p(value);
 	}
 
@@ -140,7 +145,7 @@ public class a implements Serializable {
 	}
 
 	public final String str() {
-		return value == null ? "" : value;
+		return toString();
 	}
 
 	public final int toint() {
@@ -188,18 +193,17 @@ public class a implements Serializable {
 	private static final long serialVersionUID = 1;
 
 	/**
-	 * Replaces the element 'element_to_replace' with this by setting parent to
-	 * 'new_parent' and name to the name of 'element_to_replace'.
+	 * Replaces the element 'element_to_replace' with this by setting parent and
+	 * name of the replaced element.
 	 *
-	 * @param new_parent         the new parent of this element.
 	 * @param element_to_replace the element to replace which must be a public
 	 *                           field.
 	 */
-	public void replace(final a new_parent, final a element_to_replace) {
-		parent = new_parent;
+	public void replace(final a element_to_replace) {
+		parent = element_to_replace.parent;
 		name = element_to_replace.name;
 		try {
-			new_parent.getClass().getField(element_to_replace.name).set(new_parent, this);
+			parent.getClass().getField(name).set(parent, this);
 		} catch (final Throwable t) {
 			throw new RuntimeException(t);
 		}

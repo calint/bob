@@ -37,7 +37,7 @@ final class thdreq extends Thread {
 			process_request();
 			// if thread is older than dt let it finish
 			final long dt = System.currentTimeMillis() - t0;
-			if (dt > b.thread_pool_lftm) {
+			if (dt > b.thread_pool_lifetime_ms) {
 				break;
 				// if(all.size()>htp.thread_pool_size)break;
 			}

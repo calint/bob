@@ -16,7 +16,11 @@ public class bob extends websock {
 		super(true);
 	}
 
-	/** override to provide the root class */
+	/**
+	 * Override to provide the root class.
+	 * 
+	 * @return root element class
+	 */
 	protected Class<? extends a> rootClass() {
 		return a.class;
 	}
