@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package bob;
 
 import java.util.ArrayList;
@@ -15,7 +16,8 @@ import db.DbTransaction;
 import db.RelRefN;
 
 public final class InputRelRefN extends a {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1;
+
 	final Class<? extends DbObject> objCls;
 	final String relationName;
 	final private Class<? extends View> selectViewClass; // the view to use when selecting
@@ -43,8 +45,9 @@ public final class InputRelRefN extends a {
 			}
 			return;
 		}
-		if (defaultValues == null)
+		if (defaultValues == null) {
 			return;
+		}
 		selectedIds.addAll(defaultValues);
 	}
 
@@ -93,7 +96,7 @@ public final class InputRelRefN extends a {
 	public void x_s(final xwriter x, final String param) throws Throwable {
 		final View t = selectViewClass.getConstructor().newInstance();
 		t.setSelectMode(selectedIds, new SelectReceiverMulti() {
-			private static final long serialVersionUID = 1L;
+			private static final long serialVersionUID = 1;
 
 			public void onSelect(final Set<String> selected) {
 				selectedIds.clear();
@@ -107,7 +110,7 @@ public final class InputRelRefN extends a {
 	public void x_c(final xwriter x, final String param) throws Throwable {
 		final Form f = createFormCls.getConstructor().newInstance().init();
 		f.setSelectMode(new SelectReceiverSingle() {
-			private static final long serialVersionUID = 1L;
+			private static final long serialVersionUID = 1;
 
 			public void onSelect(final String selected) {
 				selectedIds.add(selected);
@@ -148,5 +151,4 @@ public final class InputRelRefN extends a {
 	public Set<String> getSelectedIds() {
 		return selectedIds;
 	}
-
 }

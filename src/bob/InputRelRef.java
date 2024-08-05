@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package bob;
 
 import b.a;
@@ -9,7 +10,8 @@ import db.DbTransaction;
 import db.RelRef;
 
 public final class InputRelRef extends a {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1;
+
 	final Class<? extends DbObject> objCls;
 	final String relationName;
 	final private Class<? extends View> selectViewClass; // the view to use when selecting
@@ -65,7 +67,7 @@ public final class InputRelRef extends a {
 	public void x_s(final xwriter x, final String param) throws Throwable {
 		final View v = selectViewClass.getConstructor().newInstance();
 		v.setSelectMode(Integer.toString(selectedId), new SelectReceiverSingle() {
-			private static final long serialVersionUID = 1L;
+			private static final long serialVersionUID = 1;
 
 			public void onSelect(final String selected) {
 				selectedId = Integer.parseInt(selected);
@@ -78,7 +80,7 @@ public final class InputRelRef extends a {
 	public void x_c(final xwriter x, final String param) throws Throwable {
 		final Form f = createFormCls.getConstructor().newInstance().init();
 		f.setSelectMode(new SelectReceiverSingle() {
-			private static final long serialVersionUID = 1L;
+			private static final long serialVersionUID = 1;
 
 			public void onSelect(final String selected) {
 				selectedId = Integer.parseInt(selected);

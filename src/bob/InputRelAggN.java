@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package bob;
 
 import java.util.List;
@@ -9,7 +10,8 @@ import db.DbObjects;
 import db.RelAggN;
 
 public final class InputRelAggN extends a {
-	private static final long serialVersionUID = 2L;
+	private static final long serialVersionUID = 1;
+
 	final private Class<? extends Form> createFormCls;
 	final Class<? extends DbObject> objCls;
 	final int objId;
@@ -18,9 +20,10 @@ public final class InputRelAggN extends a {
 
 	public InputRelAggN(final List<String> idPath, final DbObject obj, final RelAggN rel,
 			final Class<? extends Form> createFormCls) {
-		if (obj == null)
+		if (obj == null) {
 			throw new RuntimeException(
 					"Element cannot be created with object being null. Try 'create at init' pattern to initiate the object before creating this element.");
+		}
 		objCls = obj.getClass();
 		objId = obj.id();
 		this.idPath = idPath;
