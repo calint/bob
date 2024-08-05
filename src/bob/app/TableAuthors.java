@@ -83,6 +83,7 @@ public final class TableAuthors extends ViewTable {
 			return;
 		}
 		if ("b".equals(cmd)) {
+			// author books link
 			final TableAuthor t = new TableAuthor(Integer.parseInt(id));
 			super.bubble_event(x, this, t);
 		}

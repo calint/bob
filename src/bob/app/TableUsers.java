@@ -88,10 +88,12 @@ public final class TableUsers extends ViewTable {
 			return;
 		}
 		if ("f".equals(cmd)) {
+			// user files link
 			final TableUserFiles t = new TableUserFiles(Integer.parseInt(id));
 			super.bubble_event(x, this, t);
 		}
 		if ("g".equals(cmd)) {
+			// user games link
 			final TableUserGames t = new TableUserGames(Integer.parseInt(id));
 			super.bubble_event(x, this, t);
 		}

@@ -82,6 +82,7 @@ public final class TablePublishers extends ViewTable {
 			return;
 		}
 		if ("b".equals(cmd)) {
+			// publisher books link
 			final TablePublisher tp = new TablePublisher(Integer.parseInt(id));
 			super.bubble_event(x, this, tp);
 		}

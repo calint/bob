@@ -82,6 +82,7 @@ public final class TableCategories extends ViewTable {
 			return;
 		}
 		if ("b".equals(cmd)) {
+			// category books link
 			final TableCategory tbc = new TableCategory(Integer.parseInt(id));
 			super.bubble_event(x, this, tbc);
 		}
