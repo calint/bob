@@ -12,27 +12,33 @@ final class chdresp_file extends chdresp {
 	chdresp_file(final path p, final byte[] content_type) throws Throwable {
 		path = p;
 		this.content_type = content_type;
-		if (!validate(System.currentTimeMillis()))
+		if (!validate(System.currentTimeMillis())) {
 			throw new RuntimeException();
+		}
 	}
 
 	/** @return true if path is valid, false to evict it from the cache */
 	@Override
 	boolean validate(final long now) throws Throwable {
-		if (now - last_validation_time < b.cache_files_validate_dt)
+		if (now - last_validation_time < b.cache_files_validate_dt) {
 			return true;
-
+		}
 		last_validation_time = now;
-		if (!path.exists())
-			return false;// file is gone
+		if (!path.exists()) {
+			// file is gone
+			return false;
+		}
 		final long path_lastModified = path.lastmod();
-		if (path_lastModified == lastModified)
-			return true;// file is up to date
+		if (path_lastModified == lastModified) {
+			// file is up to date
+			return true;
+		}
 		// file needs to be refreshed
+		if (path.size() > b.cache_files_maxsize) {
+			// file has changed and is now to big
+			return false;
+		}
 		content_length_in_bytes = (int) path.size();
-		if (content_length_in_bytes > b.cache_files_maxsize)
-			return false;// file has changed and is now to big
-
 		// build cached buffers
 		bb = ByteBuffer.allocateDirect(hdrlencap + content_length_in_bytes);
 		bb.put(req.h_http200);
@@ -40,8 +46,7 @@ final class chdresp_file extends chdresp {
 		if (content_type != null) {
 			bb.put(req.h_content_type).put(content_type);
 		}
-		// note. java 21 uses millis in timestamp
-		// java 5 seconds
+		// note. java 21 uses millis in timestamp while java 5 in seconds
 		etag = "\"" + (path_lastModified / 1000) * 1000 + "\"";
 		bb.put(req.h_etag).put(etag.getBytes());
 		bb.put(req.hkp_connection_keep_alive);

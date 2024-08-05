@@ -330,7 +330,7 @@ public final class xwriter {
 	}
 
 	/**
-	 * Renders a 'div' with HTML output of by the element.
+	 * Renders a 'div' with HTML output of the element.
 	 * 
 	 * @param e     element
 	 * @param cls   style class or null/empty string if none

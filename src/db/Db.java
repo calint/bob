@@ -32,11 +32,11 @@ public final class Db {
 	public static int cluster_port = 8889;
 
 	/** null is default (InnoDB) */
-//	public static String engine = null;
+	// public static String engine = null;
 	public static String engine = "myisam";
 
 	/** default is false */
-//	public static boolean autocommit = false;
+	// public static boolean autocommit = false;
 	public static boolean autocommit = true;
 
 	/** Enables the log(...) method. */
@@ -58,17 +58,17 @@ public final class Db {
 			return;
 		System.out.println(s);
 	}
-//	private static Db inst;
+	// private static Db inst;
 
 	public static long pooled_connection_max_age_in_ms = 10 * 60 * 1000;
-//	public static long pooled_connection_max_age_in_ms = 10 * 1000;
+	// public static long pooled_connection_max_age_in_ms = 10 * 1000;
 
 	/** Called once to create the singleton instance. */
-//	public static void initInstance() throws Throwable{
-//		Db.log("dbo: init instance");
-//		inst=new Db();
-//		inst.register(DbObject.class);
-//	}
+	// public static void initInstance() throws Throwable{
+	// Db.log("dbo: init instance");
+	// inst=new Db();
+	// inst.register(DbObject.class);
+	// }
 
 	/** Called once to create the singleton instance. */
 	public static void initInstance() throws Throwable {
@@ -77,14 +77,14 @@ public final class Db {
 		DriverManager.registerDriver(driver);
 
 		Db.log("dbo: init instance");
-//		inst=new Db();
+		// inst=new Db();
 		register(DbObject.class);
 	}
 
 	/** @return instance created at initInstance(). */
-//	public static Db instance(){
-//		return inst;
-//	}
+	// public static Db instance(){
+	// return inst;
+	// }
 
 	/**
 	 * Initiates thread local for currentTransaction(). The transaction can be
@@ -95,7 +95,7 @@ public final class Db {
 	public static DbTransaction initCurrentTransaction() { // ? so ugly
 		if (tn.get() != null)
 			throw new RuntimeException("transaction already initiated on this thread.");
-//		Db.log("dbo: init transaction on "+Thread.currentThread());
+		// Db.log("dbo: init transaction on "+Thread.currentThread());
 		PooledConnection pc;
 		// get pooled connection
 		synchronized (conpool) {
@@ -110,7 +110,8 @@ public final class Db {
 		}
 		if (pc.getAgeInMs() > Db.pooled_connection_max_age_in_ms) {
 			// connection exceeded life time. create a new connection.
-//			Db.log("dbo: connection " + Integer.toHexString(pc.hashCode()) + " exceeded life time. Creating new.");
+			// Db.log("dbo: connection " + Integer.toHexString(pc.hashCode()) + " exceeded
+			// life time. Creating new.");
 			try {
 				pc.getConnection().close();
 			} catch (final Throwable t) {
@@ -156,7 +157,7 @@ public final class Db {
 	 *         initCurrentTransaction().
 	 */
 	public static DbTransaction currentTransaction() {
-//		Db.log("dbo: get current transaction on " + Thread.currentThread());
+		// Db.log("dbo: get current transaction on " + Thread.currentThread());
 		final DbTransaction t = tn.get();
 		if (t == null)
 			throw new RuntimeException("No transaction in the thread. Has Db.initCurrentTransaction() been done?");
@@ -169,8 +170,10 @@ public final class Db {
 	 */
 	public static void deinitCurrentTransaction() { // ? so ugly
 		final DbTransaction tx = tn.get();
-		if (tx == null) // ? return instead of exception?
+		if (tx == null) {
+			// ? return instead of exception?
 			throw new RuntimeException("transaction not initiated on this thread.");
+		}
 		boolean connection_is_ok = true;
 		if (!tx.rollbacked) {
 			try {
@@ -180,12 +183,6 @@ public final class Db {
 				log(t);
 			}
 		}
-//		try {
-//			tx.stmt.close(); // ? what happens when transaction is recycled?
-//		} catch (final Throwable t) {
-//			connection_is_ok = false;
-//			log(t);
-//		}
 		tn.remove();
 		if (connection_is_ok) {
 			synchronized (conpool) {
@@ -275,8 +272,8 @@ public final class Db {
 		Db.log("--- - - - ---- - - - - - -- -- --- -- --- ---- -- -- - - -");
 		Db.log("   cluster: " + cluster_on);
 		Db.log("connection: " + jdbc_connection_string);
-//		Db.log("      user: " + user);
-//		Db.log("  password: " + (password == null ? "[none]" : "[not displayed]"));
+		// Db.log(" user: " + user);
+		// Db.log(" password: " + (password == null ? "[none]" : "[not displayed]"));
 		final Connection con = createJdbcConnection();
 
 		final DatabaseMetaData dbm = con.getMetaData();
@@ -575,8 +572,8 @@ public final class Db {
 
 	static String tableNameForJavaClass(final Class<? extends DbObject> cls) {
 		return cls.getName().replace('.', '_');
-//		final String tblnm = cls.getName();
-//		return cls.getName().substring(cls.getName().lastIndexOf('.') + 1);
+		// final String tblnm = cls.getName();
+		// return cls.getName().substring(cls.getName().lastIndexOf('.') + 1);
 	}
 
 	static DbClass dbClassForJavaClass(final Class<?> c) {

@@ -166,8 +166,9 @@ public final class DbTransaction {
 	/** Get object by id. */
 	public DbObject get(final Class<? extends DbObject> cls, final int id) {
 		final List<DbObject> ls = get(cls, new Query(cls, id), null, null);
-		if (ls.isEmpty())
+		if (ls.isEmpty()) {
 			return null;
+		}
 		return ls.get(0);
 	}
 
@@ -178,8 +179,9 @@ public final class DbTransaction {
 	 * @return null if id is null or object of type cls with id parsed to integer.
 	 */
 	public DbObject get(final Class<? extends DbObject> cls, final String id) {
-		if (id == null)
+		if (id == null) {
 			return null;
+		}
 		return get(cls, Integer.parseInt(id));
 	}
 
@@ -398,8 +400,9 @@ public final class DbTransaction {
 		if (cache_enabled) { // will keep memory usage down at batch imports
 			cache.clear();
 		}
-		if (Db.cluster_on || Db.autocommit)
+		if (Db.cluster_on || Db.autocommit) {
 			return;
+		}
 		con.commit();
 	}
 
@@ -408,8 +411,9 @@ public final class DbTransaction {
 		if (cache_enabled) {
 			cache.clear();
 		}
-		if (Db.cluster_on || Db.autocommit)
+		if (Db.cluster_on || Db.autocommit) {
 			return;
+		}
 		try {
 			con.rollback();
 		} catch (final Throwable t) {
@@ -417,18 +421,11 @@ public final class DbTransaction {
 		}
 	}
 
-//	/** called when done with the transaction */
-//	public void finishTransaction() throws Throwable {
-//		if (!rollbacked) {
-//			commit();
-//		}
-//		stmt.close();
-//	}
-
 	/** writes changed objects to database */
 	public void flush() {
-		if (dirtyObjects.isEmpty())
+		if (dirtyObjects.isEmpty()) {
 			return;
+		}
 		try {
 			for (final DbObject o : dirtyObjects) {
 				updateDbFromDbObject(o);
