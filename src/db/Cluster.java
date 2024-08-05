@@ -225,6 +225,7 @@ public final class Cluster {
 			return execSql_serial(sql);
 		}
 
+		// set new SQL to execute, notify all clients and wait for all to be done
 		synchronized (monitor) {
 			current_sql = sql;
 			active_threads = clients.size();
