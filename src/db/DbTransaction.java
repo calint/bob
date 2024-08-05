@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package db;
 
 import java.lang.reflect.Constructor;
@@ -33,8 +34,9 @@ public final class DbTransaction {
 
 		DbObject get(final Class<?> cls, final int id) {
 			final HashMap<Integer, DbObject> idToObjMap = clsToIdObjMap.get(cls);
-			if (idToObjMap == null)
+			if (idToObjMap == null) {
 				return null;
+			}
 			return idToObjMap.get(id);
 		}
 
@@ -44,8 +46,9 @@ public final class DbTransaction {
 
 		void remove(final Class<? extends DbObject> cls, final int id) {
 			final HashMap<Integer, DbObject> idToObjMap = clsToIdObjMap.get(cls);
-			if (idToObjMap == null)
+			if (idToObjMap == null) {
 				return;
+			}
 			idToObjMap.remove(id);
 		}
 
@@ -89,8 +92,9 @@ public final class DbTransaction {
 				Db.log_sql(sql);
 				stmt.execute(sql, Statement.RETURN_GENERATED_KEYS);
 				final ResultSet rs = stmt.getGeneratedKeys();
-				if (!rs.next())
+				if (!rs.next()) {
 					throw new RuntimeException("expected generated id");
+				}
 				final int id = rs.getInt(1);
 				o.fieldValues[DbObject.id.slotNbr] = id;
 				rs.close();
@@ -163,7 +167,11 @@ public final class DbTransaction {
 		}
 	}
 
-	/** Get object by id. */
+	/**
+	 * Get object by id.
+	 * 
+	 * @return the object or null if not found
+	 */
 	public DbObject get(final Class<? extends DbObject> cls, final int id) {
 		final List<DbObject> ls = get(cls, new Query(cls, id), null, null);
 		if (ls.isEmpty()) {
@@ -185,8 +193,8 @@ public final class DbTransaction {
 		return get(cls, Integer.parseInt(id));
 	}
 
-	public List<DbObject> get(final Class<?> cls, final Query qry, final Order ord, final Limit lmt) { // ? call get(new
-																										// Class[]..)?
+	public List<DbObject> get(final Class<?> cls, final Query qry, final Order ord, final Limit lmt) {
+		// ? call get(new Class[]..)?
 		flush(); // update database before query
 
 		final Query.TableAliasMap tam = new Query.TableAliasMap();
@@ -258,8 +266,9 @@ public final class DbTransaction {
 		}
 
 		final int n = classes.length;
-		if (n < 1)
+		if (n < 1) {
 			throw new RuntimeException("classes array is empty");
+		}
 		final DbClass[] dbclasses = new DbClass[n];
 		for (int i = 0; i < n; i++) {
 			dbclasses[i] = Db.dbClassForJavaClass(classes[i]);
@@ -386,8 +395,9 @@ public final class DbTransaction {
 		Db.log_sql(sql);
 		try {
 			final ResultSet rs = stmt.executeQuery(sql);
-			if (!rs.next())
+			if (!rs.next()) {
 				throw new RuntimeException("expected result from " + sql);
+			}
 			return rs.getInt(1);
 		} catch (final Throwable t) {
 			throw new RuntimeException(t);
