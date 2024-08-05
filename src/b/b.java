@@ -117,7 +117,7 @@ public final class b {
 		set_file_suffix_to_content_type("js", "application/javascript");
 
 		// initiate db
-		Db.initInstance();
+		Db.init();
 		Db.cluster_on = bapp_cluster_mode;
 		Db.register(session.class);
 		Db.register(sessionobj.class);
@@ -132,7 +132,7 @@ public final class b {
 				bapps[i].init();
 			}
 		}
-		Db.init(bapp_jdbc_host, bapp_jdbc_db, bapp_jdbc_user, bapp_jdbc_password, bapp_jdbc_ncons, bapp_cluster_ip,
+		Db.start(bapp_jdbc_host, bapp_jdbc_db, bapp_jdbc_user, bapp_jdbc_password, bapp_jdbc_ncons, bapp_cluster_ip,
 				bapp_cluster_port);
 
 		Runtime.getRuntime().addShutdownHook(new jvmsdh());
