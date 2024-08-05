@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package b;
 
 import static b.b.tobytes;
@@ -197,7 +198,8 @@ public final class req {
 				continue;
 			}
 			if (ba_pos >= 3 && ba[ba_pos - 3] == '1' || ba_pos >= 2 && ba[ba_pos - 2] == '1') {
-				// cheapo to set keepalive for http/1.1\r\n
+				// cheapo to set keepalive for http/1.1
+				// note: handles "http/1.1\n" and "http/1.1\r\n"
 				connection_keep_alive = true;
 			}
 			do_after_prot();
@@ -291,18 +293,21 @@ public final class req {
 		content_type = headers.get(hk_content_type);
 		if (content_type != null) {
 			if (content_type.startsWith("dir;") || "dir".equals(content_type)) {
-				if (!b.enable_upload)
+				if (!b.enable_upload) {
 					throw new RuntimeException("uploadsdisabled");
-				if (!set_session_id_from_cookie())
+				}
+				if (!set_session_id_from_cookie()) {
 					throw new RuntimeException("nocookie at create dir. path:" + uri_sb);
+				}
 				final String[] q = content_type.split(";");
 				final String lastmod_s = q[1];
 				final path p = b.path(b.sessions_dir).get(session_id).get(path_str);
 				if (!p.exists()) {
 					p.mkdirs();
 				}
-				if (!p.isdir())
+				if (!p.isdir()) {
 					throw new RuntimeException("isnotdir: " + p);
+				}
 				final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd--HH:mm:ss.SSS");
 				try {
 					p.lastmod(df.parse(lastmod_s).getTime());
@@ -313,12 +318,12 @@ public final class req {
 				return;
 			}
 			if (content_type.startsWith("file;") || "file".equals(content_type)) {
-				if (!b.enable_upload)
+				if (!b.enable_upload) {
 					throw new RuntimeException("uploadsdisabled");
-				// System.out.println(path_s);
-				if (!set_session_id_from_cookie())
+				}
+				if (!set_session_id_from_cookie()) {
 					throw new RuntimeException("nocookie at create file from upload. path:" + uri_sb);
-				// final String contentLength_s=hdrs.get(hk_content_length);
+				}
 				content_remaining_to_read = Long.parseLong(headers.get(hk_content_length));
 				if (content_remaining_to_read > abuse_upload_len) {
 					close();
@@ -347,8 +352,9 @@ public final class req {
 		// assumes content type "text/plain; charset=utf-8" from an ajax post
 		final String contentLength_s = headers.get(hk_content_length);
 		if (contentLength_s != null && !"0".equals(contentLength_s)) {
-			if (!set_session_id_from_cookie())
+			if (!set_session_id_from_cookie()) {
 				throw new RuntimeException("nocookie in request with content. path:" + uri_sb);
+			}
 			content_remaining_to_read = Long.parseLong(contentLength_s);
 			if (content_remaining_to_read > abuse_content_len) {
 				close();
@@ -366,24 +372,27 @@ public final class req {
 			close();
 			throw t;
 		}
-		if (b.cache_files && try_cache() || b.try_file && try_file())
+		if (b.cache_files && try_cache() || b.try_file && try_file()) {
 			return;
-		if (b.try_rc && try_resource())
+		}
+		if (b.try_rc && try_resource()) {
 			return;
-
+		}
 		// try creating an instance of 'a' on a separate thread
 		st = state.waiting_run_page;
 	}
 
 	public static String get_session_id_from_headers(final Map<String, String> headers) {
 		final String cookie = headers.get(req.hk_cookie);
-		if (cookie == null)
+		if (cookie == null) {
 			return null;
+		}
 		final String[] c1 = cookie.split(";");
 		for (String cc : c1) {
 			cc = cc.trim();
-			if (cc.startsWith("i="))
+			if (cc.startsWith("i=")) {
 				return cc.substring("i=".length());
+			}
 		}
 		return null;
 	}
@@ -404,12 +413,14 @@ public final class req {
 	}
 
 	private boolean try_file() throws Throwable {
-		if (!path.exists())
+		if (!path.exists()) {
 			return false;
+		}
 		if (path.isdir()) {
 			final path p = path.get(b.default_directory_file);
-			if (!p.exists() || !p.isfile())
+			if (!p.exists() || !p.isfile()) {
 				return false;
+			}
 			path = p;
 		}
 		thdwatch.files++;
@@ -441,9 +452,9 @@ public final class req {
 		final String suffix = path_str.substring(path_str.lastIndexOf('.') + 1);
 		final byte[] content_type = b.get_content_type_for_file_suffix(suffix);
 		if (range_s != null) {
+			// Range: bytes=0-1023
 			final String[] s = range_s.split(s_equals);
 			final String[] ss = s[1].split(s_minus);
-
 			try {
 				range_from = Long.parseLong(ss[0]);
 			} catch (final NumberFormatException e) {
@@ -452,7 +463,6 @@ public final class req {
 			if (range_from == -1) { // invalid or not specified
 				range_from = 0;
 			}
-
 			if (ss.length > 1) {
 				try {
 					range_to = Long.parseLong(ss[1]);
@@ -469,13 +479,11 @@ public final class req {
 			if (range_to == -1) { // invalid or not specified
 				bb[i++] = ByteBuffer.wrap(Long.toString(len - range_from).getBytes());
 				bb[i++] = ByteBuffer.wrap(hk_content_range_bytes);
-				bb[i++] = ByteBuffer.wrap((range_from + s_minus + (len - 1) + s_slash + len).getBytes());// zero index
-																											// and
-																											// inclusive
-																											// adjustment
+				bb[i++] = ByteBuffer.wrap((range_from + s_minus + (len - 1) + s_slash + len).getBytes());
+				// note: zero index and inclusive adjustment
 			} else { // range_to specified
-				bb[i++] = ByteBuffer.wrap(Long.toString(range_to - range_from + 1).getBytes());// zero index inclusive
-																								// adjustment
+				bb[i++] = ByteBuffer.wrap(Long.toString(range_to - range_from + 1).getBytes());
+				// note: zero index inclusive adjustment
 				bb[i++] = ByteBuffer.wrap(hk_content_range_bytes);
 				bb[i++] = ByteBuffer.wrap((range_from + s_minus + range_to + s_slash + len).getBytes());
 			}
@@ -497,20 +505,22 @@ public final class req {
 			bb[i++] = ByteBuffer.wrap(hk_set_cookie);
 			bb[i++] = ByteBuffer.wrap(session_id.getBytes());
 			bb[i++] = ByteBuffer.wrap(hkv_set_cookie_append);
-			// session_id_set=false;
+			// note: session_id_set is set to false before next request
 		}
 		if (connection_keep_alive) {
 			bb[i++] = ByteBuffer.wrap(hkp_connection_keep_alive);
 		}
 		bb[i++] = ByteBuffer.wrap(ba_crlf2);
-		final long n = send_packet(bb, i); // ? is send complete?
+		final long n = send_packet(bb, i);
 		thdwatch.output += n;
 		transfer_file_channel = path.fileinputstream().getChannel();
 		transfer_file_position = range_from;
-		if (range_to == -1) { // unspecified, use content_length
+		if (range_to == -1) {
+			// unspecified, use content_length
 			transfer_file_remaining = len - range_from;
-		} else { // unspecified, use content_length
-			transfer_file_remaining = range_to - range_from + 1; // zero indexed inclusive adjustment
+		} else {
+			transfer_file_remaining = range_to - range_from + 1;
+			// note: zero indexed inclusive adjustment
 		}
 
 		st = state.transfer_file;
@@ -521,8 +531,9 @@ public final class req {
 	/** @return true if the file or resource has been cached. */
 	private boolean try_cache() throws Throwable {
 		final chdresp cachedresp = file_and_resource_cache.get(path_str);
-		if (cachedresp == null)
+		if (cachedresp == null) {
 			return false;
+		}
 		// validate that the cached response is up to date
 		if (!cachedresp.validate(System.currentTimeMillis())) {
 			file_and_resource_cache.remove(path_str);
@@ -560,6 +571,7 @@ public final class req {
 		}
 		final String range_s = headers.get("range");
 		if (range_s != null) {
+			// Range: bytes=0-1023
 			final long len = c.content_length();
 			long range_from;
 			long range_to;
@@ -586,6 +598,7 @@ public final class req {
 			}
 
 			int bb_len = session_id_set ? 10 : 7;
+			// note: 10 : 7 is the byte buffers used to assemble the reply
 			final byte[] content_type = c.content_type();
 			if (content_type != null) {
 				bb_len += 2;
@@ -594,16 +607,16 @@ public final class req {
 			int i = 0;
 			bb[i++] = ByteBuffer.wrap(h_http206);
 			bb[i++] = ByteBuffer.wrap(h_content_length);
-			if (range_to == -1) { // invalid or not specified
+			if (range_to == -1) {
+				// invalid or not specified
 				bb[i++] = ByteBuffer.wrap(Long.toString(len - range_from).getBytes());
 				bb[i++] = ByteBuffer.wrap(hk_content_range_bytes);
-				bb[i++] = ByteBuffer.wrap((range_from + s_minus + (len - 1) + s_slash + len).getBytes());// zero index
-																											// and
-																											// inclusive
-																											// adjustment
-			} else { // range_to specified
-				bb[i++] = ByteBuffer.wrap(Long.toString(range_to - range_from + 1).getBytes());// zero index inclusive
-																								// adjustment
+				bb[i++] = ByteBuffer.wrap((range_from + s_minus + (len - 1) + s_slash + len).getBytes());
+				// note: zero index and inclusive adjustment
+			} else {
+				// range_to specified
+				bb[i++] = ByteBuffer.wrap(Long.toString(range_to - range_from + 1).getBytes());
+				// note: zero index inclusive adjustment
 				bb[i++] = ByteBuffer.wrap(hk_content_range_bytes);
 				bb[i++] = ByteBuffer.wrap((range_from + s_minus + range_to + s_slash + len).getBytes());
 			}
@@ -611,9 +624,10 @@ public final class req {
 				bb[i++] = ByteBuffer.wrap(hk_set_cookie);
 				bb[i++] = ByteBuffer.wrap(session_id.getBytes());
 				bb[i++] = ByteBuffer.wrap(hkv_set_cookie_append);
-				// session_id_set=false;// cookie will be set
+				// note: session_id_set is set to false before next request
 			}
-			if (content_type != null) { // ? is it necessary in ranged requests?
+			if (content_type != null) {
+				// ? is it necessary in ranged requests?
 				bb[i++] = ByteBuffer.wrap(h_content_type);
 				bb[i++] = ByteBuffer.wrap(content_type);
 			}
@@ -624,12 +638,14 @@ public final class req {
 						.limit((int) (from_position + len));
 			} else {
 				bb[i++] = (ByteBuffer) c.byte_buffer().slice().position((int) (from_position + range_from))
-						.limit((int) (from_position + range_to + 1)); // 0 indexed and inclusive
+						.limit((int) (from_position + range_to + 1));
+				// note: +1 because 0 indexed and inclusive
 			}
 			transfer_buffers(bb);
 			return;
 		}
-		if (!session_id_set) {// no cookie to set
+		if (!session_id_set) {
+			// no cookie to set
 			transfer_buffers(new ByteBuffer[] { c.byte_buffer().slice() });
 			return;
 		}
@@ -637,11 +653,12 @@ public final class req {
 		final ByteBuffer[] bba = { c.byte_buffer().slice(), ByteBuffer.wrap(hk_set_cookie),
 				ByteBuffer.wrap(session_id.getBytes()), ByteBuffer.wrap(hkv_set_cookie_append),
 				c.byte_buffer().slice() };
-		bba[0].limit(c.additional_headers_insertion_position()); // limit the first slice to the location where
-																	// additional headers can be inserted
-		bba[4].position(c.additional_headers_insertion_position()); // position the buffer (same as bb[0]) to the start
-																	// of the remaining data, which is
-																	// additional_headers_insertion_position
+		bba[0].limit(c.additional_headers_insertion_position());
+		// limit the first slice to the location where additional headers can be
+		// inserted
+		bba[4].position(c.additional_headers_insertion_position());
+		// position the buffer (same as bb[0]) to the start of the remaining data, which
+		// is additional_headers_insertion_position
 		transfer_buffers(bba);
 		// session_id_set=false;
 	}
@@ -655,7 +672,7 @@ public final class req {
 			bb[bi++] = ByteBuffer.wrap(hk_set_cookie);
 			bb[bi++] = ByteBuffer.wrap(session_id.getBytes());
 			bb[bi++] = ByteBuffer.wrap(hkv_set_cookie_append);
-			// session_id_set=false;
+			// note: session_id_set is set to false before next request
 		}
 		if (lastMod != null) {
 			bb[bi++] = ByteBuffer.wrap(h_last_modified);
@@ -686,7 +703,7 @@ public final class req {
 		for (int i = 0; i < n; i++) {
 			tosend += bba[i].remaining();
 		}
-		final long c = socket_channel.write(bba, 0, n);// ? while
+		final long c = socket_channel.write(bba, 0, n);
 		if (c != tosend) {
 			b.log(new RuntimeException("sent " + c + " of " + tosend + " bytes"));// ? throwerror
 		}
@@ -710,16 +727,18 @@ public final class req {
 			do_transfer_file();
 		} else if (st == state.transfer_buffers) {
 			do_transfer_buffers();
-		} else
+		} else {
 			throw new IllegalStateException();
+		}
 	}
 
 	/** @return true if if transfer is done, more writes are needed. */
 	private void do_transfer_buffers() throws Throwable {
 		while (transfer_buffers_remaining != 0) {
 			final long c = socket_channel.write(transfer_buffers);
-			if (c == 0)
+			if (c == 0) {
 				return;
+			}
 			transfer_buffers_remaining -= c;
 			thdwatch.output += c;
 		}
@@ -743,15 +762,9 @@ public final class req {
 			} catch (final IOException e) {
 				final String msg = e.getMessage();
 				if (e instanceof IOException && (msg.startsWith("Broken pipe")
-						|| msg.startsWith("Connection reset by peer") || msg.startsWith("sendfile failed") || // ?
-																												// android
-																												// (when
-																												// closing
-																												// browser
-																												// while
-																												// transfering
-																												// file)
-						msg.startsWith("An existing connection was forcibly closed by the remote host"))) {
+						|| msg.startsWith("Connection reset by peer") || msg.startsWith("sendfile failed")
+						|| msg.startsWith("An existing connection was forcibly closed by the remote host"))) {
+					// ? android (when closing browser while transfering file)
 					close();
 					return;
 				}
@@ -781,8 +794,10 @@ public final class req {
 		final int c;
 		if (diff < 0) {
 			final int lim = bb.limit();
+			// temporary set limit to the end of upload
 			bb.limit(ba_pos + (int) content_remaining_to_read);
 			c = upload_channel.write(bb);
+			// restore limit, position has moved
 			bb.limit(lim);
 		} else {
 			c = upload_channel.write(bb);
@@ -791,8 +806,9 @@ public final class req {
 		ba_pos += c;
 		ba_rem -= c;
 		thdwatch.input += c;
-		if (content_remaining_to_read < 0)
+		if (content_remaining_to_read < 0) {
 			throw new RuntimeException();
+		}
 		if (content_remaining_to_read == 0) {
 			upload_channel.close();
 			final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd--HH:mm:ss.SSS");
@@ -802,7 +818,8 @@ public final class req {
 				throw new RuntimeException(e);
 			} catch (final Throwable ignored) {
 				b.log(ignored);
-			} // ? forandroid
+			}
+			// ? handle android
 			reply(h_http204, null, null, null);
 		}
 	}
@@ -828,8 +845,9 @@ public final class req {
 		final DbTransaction tn = Db.currentTransaction();
 		final List<DbObject> ls = tn.get(sessionobj.class, new Query(session.sessionId, Query.EQ, session_id)
 				.and(session.objects).and(sessionobj.path, Query.EQ, p), null, null);
-		if (ls.isEmpty())
+		if (ls.isEmpty()) {
 			return get_session().object(p);
+		}
 		if (ls.size() > 1) {
 			b.log(new RuntimeException("found " + ls.size() + " paths for session " + session_id + " path " + p));
 		}
@@ -851,17 +869,16 @@ public final class req {
 		if (!set_session_id_from_cookie()) {
 			session_id = make_new_session_id();
 			session_id_set = true;
-			// pl("new session "+session_id);
 			thdwatch.sessions++;
 		}
 
-		if (websock.class.isAssignableFrom(cls)) {// start a socket
-			// System.out.println("request "+Integer.toHexString(hashCode())+": socket at
-			// "+path_str);
+		if (websock.class.isAssignableFrom(cls)) {
+			// start a socket
 			st = state.sock;
 			websock = (websock) cls.getConstructor().newInstance();
-			bb.position(ba_pos); // set the position to the end of processed data. the buffer will be used by
-									// websock.
+			bb.position(ba_pos);
+			// note: sets the position to the end of processed data and the buffer will be
+			// used by websock
 			websock.init(this);
 			thdwatch.socks++;
 			return;
@@ -874,8 +891,6 @@ public final class req {
 		final boolean is_stateless = cls.getAnnotation(stateless.class) != null;
 
 		final DbTransaction tn = is_stateless ? null : Db.initCurrentTransaction();
-		// System.out.println("dbo: connection pool:
-		// "+Db.instance().getConnectionPoolSize());
 		try {
 			run_page_do(tn, cls);
 		} catch (Throwable t) {
@@ -885,8 +900,9 @@ public final class req {
 			while (t.getCause() != null) {
 				t = t.getCause();
 			}
-			if (t instanceof RuntimeException)
+			if (t instanceof RuntimeException) {
 				throw (RuntimeException) t;
+			}
 			throw new RuntimeException(t);
 		} finally {
 			if (!is_stateless) {
@@ -919,18 +935,19 @@ public final class req {
 					ajax_command_string = me.getValue();
 					continue;
 				}
-				// ? indexofloop
 				final String[] paths = me.getKey().split(a.id_path_separator);
 				a e = root_elem;
 				for (int n = 1; n < paths.length; n++) {
 					e = e.child(paths[n]);
-					if (e == null)
+					if (e == null) {
 						throw new RuntimeException("not found: " + me.getKey());
+					}
 				}
 				e.set(me.getValue());
 			}
-			if (ajax_command_string.length() == 0)
+			if (ajax_command_string.length() == 0) {
 				throw new RuntimeException("expectedax");
+			}
 
 			// decode the field id, method name and parameters parameters
 			final String target_elem_id, target_elem_method, target_elem_method_args;
@@ -950,7 +967,7 @@ public final class req {
 				}
 			}
 			// navigate to the target element
-			final String[] path = target_elem_id.split(a.id_path_separator);// ? indexofloop
+			final String[] path = target_elem_id.split(a.id_path_separator);
 			a target_elem = root_elem;
 			for (int n = 1; n < path.length; n++) {
 				target_elem = target_elem.child(path[n]);
@@ -966,7 +983,6 @@ public final class req {
 				return;
 			}
 			// invoke method on target element with arguments
-			// ! try to find method recursively
 			try {
 				target_elem.getClass().getMethod("x_" + target_elem_method, xwriter.class, String.class)
 						.invoke(target_elem, x, target_elem_method_args);
@@ -979,7 +995,8 @@ public final class req {
 						+ "(xwriter,String)");
 			}
 			if (tn != null) {
-				dbo_root_elem.object(root_elem);// dbo element is now dirty
+				dbo_root_elem.object(root_elem);
+				// dbo element is now dirty
 				tn.flush();
 			}
 			x.finish();
@@ -1017,7 +1034,7 @@ public final class req {
 			bb_reply[bbi++] = ByteBuffer.wrap(hk_set_cookie);
 			bb_reply[bbi++] = ByteBuffer.wrap(session_id.getBytes());
 			bb_reply[bbi++] = ByteBuffer.wrap(hkv_set_cookie_append);
-			// session_id_set=false;
+			// note: session_id_set is set to false before next request
 		}
 		if (connection_keep_alive) {
 			bb_reply[bbi++] = ByteBuffer.wrap(hkp_connection_keep_alive);
@@ -1028,16 +1045,15 @@ public final class req {
 		}
 		bb_reply[bbi++] = ByteBuffer.wrap(hkp_transfer_encoding_chunked);
 		bb_reply[bbi++] = ByteBuffer.wrap(ba_crlf2);
-		// thdwatch.output+=send_packet(bb_reply,bbi);// ? sends 2 packets. initiate
-		// oschuncked with reply buffers to send header at first write
-		return new oschunked(this, bb_reply, bbi, b.chunk_B); // ?
+		// note: oschuncked with reply buffers to send at first write instead of 2
+		// packets
+		return new oschunked(this, bb_reply, bbi, b.chunk_B);
 	}
 
 	private void populate_content_map_from_buffer() throws Throwable {
-		// System.out.println("*** content type: "+content_type);
-		// System.out.println(new String(content_bb.array(),0,content_bb.limit()));
-		if (content_type != null && !content_type.startsWith(text_plain))
+		if (content_type != null && !content_type.startsWith(text_plain)) {
 			throw new RuntimeException("postedcontent only " + text_plain + " allowed");
+		}
 		final byte[] ba = content_bb.array();
 		int i = 0;
 		String name = "";
@@ -1068,7 +1084,6 @@ public final class req {
 		}
 	}
 
-	// ? separation of concerns, this request is a sock or a 'a'
 	boolean is_sock() {
 		return st == state.sock;
 	}
@@ -1123,12 +1138,12 @@ public final class req {
 		return ha[0];
 	}
 
-	// ? default is port 80?
 	public int port() {
 		final String h = headers.get("host");
 		final String[] ha = h.split(":");
-		if (ha.length < 2)
+		if (ha.length < 2) {
 			return 80; // ? SSL?
+		}
 		return Integer.parseInt(ha[1]);
 	}
 
@@ -1147,8 +1162,6 @@ public final class req {
 	@Override
 	public String toString() {
 		return hashCode() + "\n" + new String(bb.array(), bb.position(), bb.remaining());
-		// return new String(ba,ba_pos,ba_rem)+(content_bb==null?"":new
-		// String(content_bb.slice().array()));
 	}
 
 	public static req get() {
@@ -1156,10 +1169,11 @@ public final class req {
 	}
 
 	public static long file_and_resource_cache_size_B() {
-		if (file_and_resource_cache == null)
+		if (file_and_resource_cache == null) {
 			return 0;
+		}
 		long k = 0;
-		// ? sync(cachef)
+		// ? synchronize
 		for (final chdresp e : file_and_resource_cache.values()) {
 			k += e.byte_buffer().capacity();
 		}
@@ -1218,13 +1232,10 @@ public final class req {
 
 	private static Map<String, chdresp> file_and_resource_cache;
 
-	// private static Map<String,chdresp>cacheu;
 	static void init_static() {
 		if (b.cache_files) {
 			file_and_resource_cache = Collections
 					.synchronizedMap(new LinkedHashMap<String, chdresp>(b.cache_files_hashlen));
-			// if(b.cache_uris)cacheu=Collections.synchronizedMap(new
-			// LinkedHashMap<String,chdresp>());
 		}
 	}
 
