@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package bob;
 
 import java.sql.Timestamp;
@@ -32,7 +33,7 @@ import db.RelRefN;
  * write to object.
  */
 public abstract class FormDbo extends Form {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1;
 
 	/** Marker interface to trigger creation of object prior to rendering. */
 	public interface CreateObjectAtInit {
@@ -68,8 +69,9 @@ public abstract class FormDbo extends Form {
 	@Override
 	public a child(final String id) {
 		final a e = super.child(id);
-		if (e != null)
+		if (e != null) {
 			return e;
+		}
 		return fields.get(id);
 	}
 
@@ -96,8 +98,9 @@ public abstract class FormDbo extends Form {
 	}
 
 	final protected String formatDate(final Timestamp ts) {
-		if (ts == null)
+		if (ts == null) {
 			return "";
+		}
 		if (fmtDate == null) {
 			fmtDate = new SimpleDateFormat("yyyy-MM-dd"); // ISO 8601
 		}
@@ -105,8 +108,9 @@ public abstract class FormDbo extends Form {
 	}
 
 	final protected String formatDateTime(final Timestamp ts) {
-		if (ts == null)
+		if (ts == null) {
 			return "";
+		}
 		if (fmtDateTime == null) {
 			fmtDateTime = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm"); // format of input type datetime-local
 		}
@@ -245,8 +249,9 @@ public abstract class FormDbo extends Form {
 			fields.put(field, view);
 			view.to(x);
 		} else {
-			if (view != e)
+			if (view != e) {
 				throw new RuntimeException("expected same element");
+			}
 			e.to(x);
 		}
 	}
@@ -311,11 +316,6 @@ public abstract class FormDbo extends Form {
 		x.nl();
 	}
 
-//	final protected void inputElem(final xwriter x, final String label, final DbField f, final a elem)
-//			throws Throwable {
-//		inputElem(x, label, f.getName(), elem);
-//	}
-
 	final protected void inputElem(final xwriter x, final String field, final a elem) throws Throwable {
 		final a e = fields.get(field);
 		x.tr().td(2, "val");
@@ -325,8 +325,9 @@ public abstract class FormDbo extends Form {
 			fields.put(field, elem);
 			elem.to(x);
 		} else {
-			if (elem != e)
+			if (elem != e) {
 				throw new RuntimeException("expected same element");
+			}
 			e.to(x);
 		}
 	}
@@ -341,8 +342,9 @@ public abstract class FormDbo extends Form {
 			fields.put(field, elem);
 			elem.to(x);
 		} else {
-			if (elem != e)
+			if (elem != e) {
 				throw new RuntimeException("expected same element");
+			}
 			e.to(x);
 		}
 	}
@@ -477,12 +479,8 @@ public abstract class FormDbo extends Form {
 
 	final protected void inputText(final xwriter x, final String label, final String field, final String value,
 			final String styleClass) {
-//		x.tr().td("lbl").p(label).p(": ").td_().td("val").inptxt(e, styleClass, null, this, "sc").td_().tr_().nl();
 		x.tr().td("lbl").p(label).p(":").td("val");
 		x.inp(elemFor(field, value), null, styleClass, null, null, this, "sc", null, null).nl();
-//		x.tr().td("lbl").p(label).p(": ").td("val").inptxt(e, null, null, this, "sc").nl();
-//		x.inptxt(e, null, null, this, "sc");
-//		x.inptxt(e, styleClass, null, this, "sc");
 	}
 
 	final protected void inputTextArea(final xwriter x, final String label, final DbObject o, final FldStr f,
@@ -514,8 +512,9 @@ public abstract class FormDbo extends Form {
 	}
 
 	final protected Timestamp parseDate(final String s) throws ParseException {
-		if (Util.isEmpty(s))
+		if (Util.isEmpty(s)) {
 			return null;
+		}
 		if (fmtDate == null) {
 			fmtDate = new SimpleDateFormat("yyyy-MM-dd"); // ISO 8601
 		}
@@ -523,8 +522,9 @@ public abstract class FormDbo extends Form {
 	}
 
 	final protected Timestamp parseDateTime(final String s) throws ParseException {
-		if (Util.isEmpty(s))
+		if (Util.isEmpty(s)) {
 			return null;
+		}
 		if (fmtDateTime == null) {
 			fmtDateTime = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm"); // format of input type datetime-local
 		}
@@ -570,7 +570,8 @@ public abstract class FormDbo extends Form {
 	@Override
 	protected final void save(final xwriter x) throws Throwable {
 		final DbObject o;
-		if (objectId == null) { // create new
+		if (objectId == null) {
+			// create new
 			o = createObject();
 			objectId = Integer.toString(o.id());
 		} else {
@@ -670,12 +671,12 @@ public abstract class FormDbo extends Form {
 		x.xfocus(getElem(field));
 	}
 
-	private a elemFor(final String nm, final Object value) {
-		a e = fields.get(nm);
+	private a elemFor(final String name, final Object value) {
+		a e = fields.get(name);
 		if (e == null) {
-			e = new a(this, nm);
+			e = new a(this, name);
 			e.set(Util.toStr(value, null));
-			fields.put(nm, e);
+			fields.put(name, e);
 		}
 		return e;
 	}
