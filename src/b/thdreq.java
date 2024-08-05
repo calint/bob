@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package b;
 
 import java.nio.channels.SelectionKey;
@@ -14,13 +15,12 @@ final class thdreq extends Thread {
 		this.r = r;
 		synchronized (all_request_threads) {
 			all_request_threads.add(this);
-		} // ?!
+		}
 		start();
 	}
 
 	@Override
 	public void run() {
-		// synchronized(all){all.add(this);}//?!
 		final long t0 = System.currentTimeMillis();
 		process_request();
 		while (b.thread_pool) {
@@ -39,7 +39,6 @@ final class thdreq extends Thread {
 			final long dt = System.currentTimeMillis() - t0;
 			if (dt > b.thread_pool_lifetime_ms) {
 				break;
-				// if(all.size()>htp.thread_pool_size)break;
 			}
 		}
 		synchronized (all_request_threads) {
@@ -54,12 +53,14 @@ final class thdreq extends Thread {
 				return;
 			}
 			thdwatch.pages++;
-			if (!r.is_waiting_run_page())
+			if (!r.is_waiting_run_page()) {
 				throw new IllegalStateException();
+			}
 			r.run_page();
 			// the state of the page may have changed to socket
-			if (r.is_sock())
+			if (r.is_sock()) {
 				return;
+			}
 			if (r.is_transfer()) { // ? can the state of a threaded request be this?
 				r.selection_key.interestOps(SelectionKey.OP_WRITE);
 				r.selection_key.selector().wakeup();
@@ -69,8 +70,6 @@ final class thdreq extends Thread {
 				r.close();
 				return;
 			}
-			// ? this is dubious. what if req has ba_rem left to do. does not support
-			// request chaining of pages.
 			r.selection_key.interestOps(SelectionKey.OP_READ);
 			r.selection_key.selector().wakeup();
 		} catch (final Throwable e) {

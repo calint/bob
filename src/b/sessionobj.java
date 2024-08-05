@@ -1,3 +1,4 @@
+// reviewed: 2024-08-05
 package b;
 
 import java.io.ByteArrayInputStream;
@@ -24,13 +25,13 @@ public final class sessionobj extends DbObject {
 
 	public Object object() {
 		final Object v = object.getObj(this);
-		if (v == null)
+		if (v == null) {
 			return null;
-
-		if (!(v instanceof byte[]))
+		}
+		if (!(v instanceof byte[])) {
 			return v;
-
-		// convert from sql representation
+		}
+		// object has not been deserialized
 		final byte[] ba = (byte[]) v;
 		try {
 			final ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(ba));
@@ -46,5 +47,4 @@ public final class sessionobj extends DbObject {
 	public void object(final Serializable v) {
 		object.setObj(this, v);
 	}
-
 }
