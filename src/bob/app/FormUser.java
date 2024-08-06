@@ -25,7 +25,7 @@ public final class FormUser extends FormDbo {
 	}
 
 	@Override
-	protected boolean createObjectAtInit() {
+	protected boolean isCreateObjectAtInit() {
 		return true;
 	}
 

@@ -55,7 +55,7 @@ public abstract class FormDbo extends Form {
 
 	@Override
 	public Form init() {
-		if (objectId == null && createObjectAtInit()) {
+		if (objectId == null && isCreateObjectAtInit()) {
 			final DbObject o = createObject();
 			objectId = Integer.toString(o.id());
 		}
@@ -658,7 +658,7 @@ public abstract class FormDbo extends Form {
 	protected abstract void writeToObject(final xwriter x, final DbObject obj) throws Throwable;
 
 	/** Override and return true to create the object at form initiation. */
-	protected boolean createObjectAtInit() {
+	protected boolean isCreateObjectAtInit() {
 		return false;
 	}
 
