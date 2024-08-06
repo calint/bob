@@ -7,23 +7,23 @@ import b.xwriter;
 import bob.Form;
 
 public final class FormFsFile extends Form {
-	private static final long serialVersionUID = 1;
+    private static final long serialVersionUID = 1;
 
-	private final path pth;
+    private final path pth;
 
-	public FormFsFile(final path pth) {
-		super(null, pth.name(), null, BIT_CLOSE);
-		this.pth = pth;
-	}
+    public FormFsFile(final path pth) {
+        super(null, pth.name(), null, BIT_CLOSE);
+        this.pth = pth;
+    }
 
-	public String getTitle() {
-		return pth.name();
-	}
+    public String getTitle() {
+        return pth.name();
+    }
 
-	@Override
-	protected void render(final xwriter x) throws Throwable {
-		x.tago("div").attr("class", "output").tagoe();
-		pth.to(new osltgt(x.outputstream()));
-		x.div_();
-	}
+    @Override
+    protected void render(final xwriter x) throws Throwable {
+        x.tago("div").attr("class", "output").tagoe();
+        pth.to(new osltgt(x.outputstream()));
+        x.div_();
+    }
 }

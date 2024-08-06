@@ -6,5 +6,5 @@ package b;
  * generates raw content.
  */
 public interface bin {
-	String content_type();
+    String content_type();
 }

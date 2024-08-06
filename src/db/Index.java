@@ -10,101 +10,103 @@ import java.util.Collections;
 
 /** Index of column(s). */
 public class Index {
-	/** The class that declared the index. */
-	protected Class<? extends DbObject> cls;
 
-	/** The name of the field that declared the index. */
-	protected String name;
+    /** The class that declared the index. */
+    protected Class<? extends DbObject> cls;
 
-	/** The table name for the declaring class. */
-	protected String tableName;
+    /** The name of the field that declared the index. */
+    protected String name;
 
-	/** The fields in this index. */
-	final protected ArrayList<DbField> fields = new ArrayList<DbField>();
+    /** The table name for the declaring class. */
+    protected String tableName;
 
-	public Index(final DbField... flds) {
-		Collections.addAll(fields, flds);
-	}
+    /** The fields in this index. */
+    protected final ArrayList<DbField> fields = new ArrayList<DbField>();
 
-	/** Called after DbClasses and DbRelations have been initialized. */
-	protected void init(final DbClass c) {
-	}
+    public Index(final DbField... flds) {
+        Collections.addAll(fields, flds);
+    }
 
-	protected void ensureIndex(final Statement stmt, final DatabaseMetaData dbm) throws Throwable {
-		final ResultSet rs = dbm.getIndexInfo(null, null, tableName, false, false);
-		boolean found = false;
-		while (rs.next()) {
-			final String indexName = rs.getString("INDEX_NAME");
-			if (!indexName.equals(name)) {
-				continue;
-			}
-			found = true;
-			ensureColumnsInIndex(stmt, dbm);
-			break;
-		}
-		rs.close();
-		if (found) {
-			return;
-		}
+    /** Called after DbClasses and DbRelations have been initialized. */
+    protected void init(final DbClass c) {
+    }
 
-		createIndex(stmt);
-	}
+    protected void ensureIndex(final Statement stmt, final DatabaseMetaData dbm) throws Throwable {
+        final ResultSet rs = dbm.getIndexInfo(null, null, tableName, false, false);
+        boolean found = false;
+        while (rs.next()) {
+            final String indexName = rs.getString("INDEX_NAME");
+            if (!indexName.equals(name)) {
+                continue;
+            }
+            found = true;
+            ensureColumnsInIndex(stmt, dbm);
+            break;
+        }
+        rs.close();
+        if (found) {
+            return;
+        }
 
-	protected void ensureColumnsInIndex(final Statement stmt, final DatabaseMetaData dbm) throws Throwable {
-		// get columns in index
-		final ResultSet rs = dbm.getIndexInfo(null, null, tableName, false, false);
-		final ArrayList<String> cols = new ArrayList<String>();
-		while (rs.next()) {
-			final String indexName = rs.getString("INDEX_NAME");
-			if (!indexName.equals(name)) {
-				continue;
-			}
-			final String columnName = rs.getString("COLUMN_NAME");
-			cols.add(columnName);
-		}
-		rs.close();
+        createIndex(stmt);
+    }
 
-		// check if declared columns match existing columns
-		boolean done = true;
-		for (final DbField f : fields) {
-			if (!cols.contains(f.name)) {
-				done = false;
-				break;
-			}
-			cols.remove(f.name);
-		}
-		if (cols.isEmpty() && done) {
-			return;
-		}
+    protected void ensureColumnsInIndex(final Statement stmt, final DatabaseMetaData dbm) throws Throwable {
+        // get columns in index
+        final ResultSet rs = dbm.getIndexInfo(null, null, tableName, false, false);
+        final ArrayList<String> cols = new ArrayList<String>();
+        while (rs.next()) {
+            final String indexName = rs.getString("INDEX_NAME");
+            if (!indexName.equals(name)) {
+                continue;
+            }
+            final String columnName = rs.getString("COLUMN_NAME");
+            cols.add(columnName);
+        }
+        rs.close();
 
-		// declared index does not match index in db. recreate index
-		dropIndex(stmt);
-		createIndex(stmt);
-	}
+        // check if declared columns match existing columns
+        boolean done = true;
+        for (final DbField f : fields) {
+            if (!cols.contains(f.name)) {
+                done = false;
+                break;
+            }
+            cols.remove(f.name);
+        }
+        if (cols.isEmpty() && done) {
+            return;
+        }
 
-	protected void createIndex(final Statement stmt) throws SQLException {
-		final StringBuilder sb = new StringBuilder(128);
-		sb.append("create index ").append(name).append(" on ").append(tableName).append('(');
-		for (final DbField f : fields) {
-			sb.append(f.name).append(',');
-		}
-		sb.setLength(sb.length() - 1);
-		sb.append(')');
-		final String sql = sb.toString();
-		Db.log_sql(sql);
-		stmt.execute(sql);
-	}
+        // declared index does not match index in db. recreate index
+        dropIndex(stmt);
+        createIndex(stmt);
+    }
 
-	protected void dropIndex(final Statement stmt) throws SQLException {
-		final StringBuilder sb = new StringBuilder(128);
-		sb.append("drop index ").append(name).append(" on ").append(tableName);
-		final String sql = sb.toString();
-		Db.log_sql(sql);
-		stmt.execute(sql);
-	}
+    protected void createIndex(final Statement stmt) throws SQLException {
+        final StringBuilder sb = new StringBuilder(128);
+        sb.append("create index ").append(name).append(" on ").append(tableName).append('(');
+        for (final DbField f : fields) {
+            sb.append(f.name).append(',');
+        }
+        sb.setLength(sb.length() - 1);
+        sb.append(')');
+        final String sql = sb.toString();
+        Db.log_sql(sql);
+        stmt.execute(sql);
+    }
 
-	@Override
-	public String toString() {
-		return name;
-	}
+    protected void dropIndex(final Statement stmt) throws SQLException {
+        final StringBuilder sb = new StringBuilder(128);
+        sb.append("drop index ").append(name).append(" on ").append(tableName);
+        final String sql = sb.toString();
+        Db.log_sql(sql);
+        stmt.execute(sql);
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+
 }

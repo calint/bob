@@ -12,60 +12,60 @@ import db.FldSerializable;
 import db.FldStr;
 
 public final class TestObj extends DbObject {
-	public final static FldSerializable list = new FldSerializable();
-	public final static FldChars md5 = new FldChars(32, "abc");
-	public final static FldStr subject = new FldStr(200, "no 'subject'");
-	public final static FldDateTime dateTime = new FldDateTime(Timestamp.valueOf("2022-11-28 03:28:00"));
+    public final static FldSerializable list = new FldSerializable();
+    public final static FldChars md5 = new FldChars(32, "abc");
+    public final static FldStr subject = new FldStr(200, "no 'subject'");
+    public final static FldDateTime dateTime = new FldDateTime(Timestamp.valueOf("2022-11-28 03:28:00"));
 
-	@SuppressWarnings("unchecked")
-	public List<String> getList() {
-		final Object v = list.getObj(this);
-		if (v == null)
-			return null;
+    @SuppressWarnings("unchecked")
+    public List<String> getList() {
+        final Object v = list.getObj(this);
+        if (v == null)
+            return null;
 
-		if (v instanceof List<?>)
-			return (List<String>) v;
+        if (v instanceof List<?>)
+            return (List<String>) v;
 
-		// convert from sql representation
-		final byte[] ba = (byte[]) list.getObj(this);
-		try {
-			final ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(ba));
-			final List<String> ls = (List<String>) ois.readObject();
-			ois.close();
-			list.putObj(this, ls); // put without marking field dirty
-			return ls;
-		} catch (final Throwable t) {
-			throw new RuntimeException(t);
-		}
-	}
+        // convert from sql representation
+        final byte[] ba = (byte[]) list.getObj(this);
+        try {
+            final ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(ba));
+            final List<String> ls = (List<String>) ois.readObject();
+            ois.close();
+            list.putObj(this, ls); // put without marking field dirty
+            return ls;
+        } catch (final Throwable t) {
+            throw new RuntimeException(t);
+        }
+    }
 
-	public void setList(final List<String> v) {
-		list.setObj(this, v);
-	}
+    public void setList(final List<String> v) {
+        list.setObj(this, v);
+    }
 
-	public String getMd5() {
-		return md5.getChars(this);
-	}
+    public String getMd5() {
+        return md5.getChars(this);
+    }
 
-	public void setMd5(final String v) {
-		md5.setChars(this, v);
-	}
+    public void setMd5(final String v) {
+        md5.setChars(this, v);
+    }
 
-	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
-	public String getSubject() {
-		return subject.getStr(this);
-	}
+    // ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
+    public String getSubject() {
+        return subject.getStr(this);
+    }
 
-	public void setSubject(final String v) {
-		subject.setStr(this, v);
-	}
+    public void setSubject(final String v) {
+        subject.setStr(this, v);
+    }
 
-	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
-	public Timestamp getDateTime() {
-		return dateTime.getDateTime(this);
-	}
+    // ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
+    public Timestamp getDateTime() {
+        return dateTime.getDateTime(this);
+    }
 
-	public void setDateTime(final Timestamp v) {
-		dateTime.setDateTime(this, v);
-	}
+    public void setDateTime(final Timestamp v) {
+        dateTime.setDateTime(this, v);
+    }
 }

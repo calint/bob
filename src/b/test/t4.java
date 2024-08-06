@@ -5,11 +5,11 @@ import b.xwriter;
 
 /** hello world */
 public class t4 extends a {
-	static final long serialVersionUID = 3;
+    private static final long serialVersionUID = 1;
 
-	@Override
-	public void to(final xwriter x) throws Throwable {
-		x.title(getClass().getName());
-		x.pl("hello world statefull");
-	}
+    @Override
+    public void to(final xwriter x) throws Throwable {
+        x.title(getClass().getName());
+        x.pl("hello world statefull");
+    }
 }

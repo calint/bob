@@ -2,5 +2,5 @@
 package bob;
 
 public interface Titled {
-	String getTitle();
+    String getTitle();
 }

@@ -5,33 +5,25 @@ import java.io.PrintWriter;
 import db.FldId;
 
 public final class JemFldId extends JemFld {
-	public JemFldId(final FldId fld) {
-		super(fld);
-	}
 
-//	// ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
-//	final public int id() {
-//		return getInt(id);
-//	}
-//
-//	final public int getId() {
-//		return id();
-//	}
+    public JemFldId(final FldId fld) {
+        super(fld);
+    }
 
-	@Override
-	public void emit(final PrintWriter out) {
-		final String fldName = fld.getName();
-		final String acc = getAccessorName();
+    @Override
+    public void emit(final PrintWriter out) {
+        final String fldName = fld.getName();
+        final String acc = getAccessorName();
 
-		out.println(HR);
-		out.println("public int id(){");
-		out.println("\treturn " + fldName + ".getId(this);");
-		out.println("}");
-		out.println();
-		out.println("public int get" + acc + "(){");
-		out.println("\treturn " + fldName + ".getId(this);");
-		out.println("}");
-		out.println();
+        out.println(HR);
+        out.println("public int id(){");
+        out.println("\treturn " + fldName + ".getId(this);");
+        out.println("}");
+        out.println();
+        out.println("public int get" + acc + "(){");
+        out.println("\treturn " + fldName + ".getId(this);");
+        out.println("}");
+        out.println();
+    }
 
-	}
 }

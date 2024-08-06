@@ -3,7 +3,7 @@ package b;
 
 /** Bee server web application interface. */
 public interface bapp {
-	void init() throws Throwable;
+    void init() throws Throwable;
 
-	void shutdown() throws Throwable;
+    void shutdown() throws Throwable;
 }

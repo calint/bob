@@ -5,132 +5,134 @@ import java.util.List;
 
 /** Aggregation One-to-Many. */
 public final class RelAggN extends DbRelation {
-	public RelAggN(final Class<? extends DbObject> toCls) {
-		super(toCls);
-	}
 
-	@Override
-	protected void init(final DbClass dbcls) {
-		relFld = new FldRel();
-		relFld.cls = toCls;
-		relFld.name = dbcls.tableName + "_" + name;
-		final DbClass toDbCls = Db.dbClassForJavaClass(toCls);
-		relFld.tableName = toDbCls.tableName;
-		toDbCls.allFields.add(relFld);
+    public RelAggN(final Class<? extends DbObject> toCls) {
+        super(toCls);
+    }
 
-		// add an index to target class
-		final Index ix = new Index(relFld);
-		ix.cls = toCls;
-		ix.name = relFld.name;
-		ix.tableName = relFld.tableName;
-		toDbCls.allIndexes.add(ix);
-	}
+    @Override
+    protected void init(final DbClass dbcls) {
+        relFld = new FldRel();
+        relFld.cls = toCls;
+        relFld.name = dbcls.tableName + "_" + name;
+        final DbClass toDbCls = Db.dbClassForJavaClass(toCls);
+        relFld.tableName = toDbCls.tableName;
+        toDbCls.allFields.add(relFld);
 
-	/** @param thsId source object id. */
-	public DbObject create(final int thsId) {
-		final DbObject o = Db.currentTransaction().create(toCls);
-		relFld.setId(o, thsId);
-		return o;
-	}
+        // add an index to target class
+        final Index ix = new Index(relFld);
+        ix.cls = toCls;
+        ix.name = relFld.name;
+        ix.tableName = relFld.tableName;
+        toDbCls.allIndexes.add(ix);
+    }
 
-	public DbObject create(final DbObject ths) {
-		return create(ths.id());
-	}
+    /** @param thsId source object id. */
+    public DbObject create(final int thsId) {
+        final DbObject o = Db.currentTransaction().create(toCls);
+        relFld.setId(o, thsId);
+        return o;
+    }
 
-	/** @param thsId source object id. */
-	public DbObjects get(final int thsId) {
-		final Query q = new Query(cls, thsId).and(this);
-		return new DbObjects(null, toCls, q, null);
-	}
+    public DbObject create(final DbObject ths) {
+        return create(ths.id());
+    }
 
-	public DbObjects get(final DbObject ths) {
-		return get(ths.id());
-	}
+    /** @param thsId source object id. */
+    public DbObjects get(final int thsId) {
+        final Query q = new Query(cls, thsId).and(this);
+        return new DbObjects(null, toCls, q, null);
+    }
 
-	public void delete(final DbObject ths, final int toId) {
-		delete(ths.id(), toId);
-	}
+    public DbObjects get(final DbObject ths) {
+        return get(ths.id());
+    }
 
-	/** @param thsId source object id. */
-	public void delete(final int thsId, final int toId) {
-		final DbTransaction tn = Db.currentTransaction();
-		final DbClass dbClsTo = Db.dbClassForJavaClass(toCls);
-		if (dbClsTo.cascadeDelete) {
-			final DbObject o = tn.get(toCls, toId);
-			delete(thsId, o);
-			return;
-		}
+    public void delete(final DbObject ths, final int toId) {
+        delete(ths.id(), toId);
+    }
 
-		tn.flush();
-		tn.removeReferencesToObject(dbClsTo, toId);
+    /** @param thsId source object id. */
+    public void delete(final int thsId, final int toId) {
+        final DbTransaction tn = Db.currentTransaction();
+        final DbClass dbClsTo = Db.dbClassForJavaClass(toCls);
+        if (dbClsTo.cascadeDelete) {
+            final DbObject o = tn.get(toCls, toId);
+            delete(thsId, o);
+            return;
+        }
 
-		final StringBuilder sb = new StringBuilder(128);
-		sb.append("delete from ").append(dbClsTo.tableName).append(" where ").append(DbObject.id.name).append("=")
-				.append(toId).append(" and ").append(relFld.name).append("=").append(thsId);
+        tn.flush();
+        tn.removeReferencesToObject(dbClsTo, toId);
 
-		if (!Db.cluster_on) {
-			tn.execSql(sb.toString());
-		} else {
-			Db.execClusterSql(sb.toString());
-		}
+        final StringBuilder sb = new StringBuilder(128);
+        sb.append("delete from ").append(dbClsTo.tableName).append(" where ").append(DbObject.id.name).append("=")
+                .append(toId).append(" and ").append(relFld.name).append("=").append(thsId);
 
-		if (tn.cache_enabled) {
-			tn.cache.remove(toCls, toId);
-		}
-	}
+        if (!Db.cluster_on) {
+            tn.execSql(sb.toString());
+        } else {
+            Db.execClusterSql(sb.toString());
+        }
 
-	public void delete(final DbObject ths, final DbObject o) {
-		delete(ths.id(), o);
-	}
+        if (tn.cache_enabled) {
+            tn.cache.remove(toCls, toId);
+        }
+    }
 
-	/** @param thsId source object id. */
-	public void delete(final int thsId, final DbObject o) {
-		if (relFld.getId(o) != thsId) {
-			throw new RuntimeException(cls.getName() + "[" + thsId + "] does not contain " + toCls.getName() + "["
-					+ o.id() + "] in relation '" + name + "'");
-		}
-		Db.currentTransaction().delete(o);
-	}
+    public void delete(final DbObject ths, final DbObject o) {
+        delete(ths.id(), o);
+    }
 
-	public void deleteAll(final DbObject ths) {
-		deleteAll(ths.id());
-	}
+    /** @param thsId source object id. */
+    public void delete(final int thsId, final DbObject o) {
+        if (relFld.getId(o) != thsId) {
+            throw new RuntimeException(cls.getName() + "[" + thsId + "] does not contain " + toCls.getName() + "["
+                    + o.id() + "] in relation '" + name + "'");
+        }
+        Db.currentTransaction().delete(o);
+    }
 
-	/** @param thsId source object id. */
-	public void deleteAll(final int thsId) {
-		cascadeDelete(thsId);
-	}
+    public void deleteAll(final DbObject ths) {
+        deleteAll(ths.id());
+    }
 
-	@Override
-	protected void cascadeDelete(final DbObject ths) {
-		cascadeDelete(ths.id());
-	}
+    /** @param thsId source object id. */
+    public void deleteAll(final int thsId) {
+        cascadeDelete(thsId);
+    }
 
-	private void cascadeDelete(final int thsId) {
-		final DbTransaction tn = Db.currentTransaction();
-		final DbClass dbClsTo = Db.dbClassForJavaClass(toCls);
-		if (dbClsTo.cascadeDelete || !dbClsTo.referingRefN.isEmpty()
-				|| (Db.enable_update_referring_tables && !dbClsTo.referingRef.isEmpty())) {
-			final List<DbObject> ls = get(thsId).toList();
-			for (final DbObject o : ls) {
-				tn.delete(o);
-			}
-			return;
-		}
+    @Override
+    protected void cascadeDelete(final DbObject ths) {
+        cascadeDelete(ths.id());
+    }
 
-		tn.flush();
+    private void cascadeDelete(final int thsId) {
+        final DbTransaction tn = Db.currentTransaction();
+        final DbClass dbClsTo = Db.dbClassForJavaClass(toCls);
+        if (dbClsTo.cascadeDelete || !dbClsTo.referingRefN.isEmpty()
+                || (Db.enable_update_referring_tables && !dbClsTo.referingRef.isEmpty())) {
+            final List<DbObject> ls = get(thsId).toList();
+            for (final DbObject o : ls) {
+                tn.delete(o);
+            }
+            return;
+        }
 
-		final StringBuilder sb = new StringBuilder(128);
-		sb.append("delete from ").append(dbClsTo.tableName).append(" where ").append(relFld.name).append("=")
-				.append(thsId);
+        tn.flush();
 
-		if (!Db.cluster_on) {
-			tn.execSql(sb.toString());
-		} else {
-			Db.execClusterSql(sb.toString());
-		}
+        final StringBuilder sb = new StringBuilder(128);
+        sb.append("delete from ").append(dbClsTo.tableName).append(" where ").append(relFld.name).append("=")
+                .append(thsId);
 
-		// note: objects are potentially in the cache but are not removed because those
-		// objects will not be accessed.
-	}
+        if (!Db.cluster_on) {
+            tn.execSql(sb.toString());
+        } else {
+            Db.execClusterSql(sb.toString());
+        }
+
+        // note: objects are potentially in the cache but are not removed because those
+        // objects will not be accessed.
+    }
+
 }

@@ -10,78 +10,80 @@ import db.DbObject;
 import db.DbRelation;
 
 public final class JavaCodeEmitter {
-	final ArrayList<JavaCodeElem> elems = new ArrayList<JavaCodeElem>();
 
-	private void add(final JavaCodeElem el) {
-		elems.add(el);
-	}
+    final ArrayList<JavaCodeElem> elems = new ArrayList<JavaCodeElem>();
 
-	public static String getPackageNameForClass(final Class<?> cls) {
-		final String nm = cls.getName();
-		return nm.substring(0, nm.lastIndexOf('.'));
-	}
+    private void add(final JavaCodeElem el) {
+        elems.add(el);
+    }
 
-	public static String getClassNameAfterPackageForClass(final Class<?> cls) {
-		final String nm = cls.getName();
-		return nm.substring(nm.lastIndexOf('.') + 1);
-	}
+    public static String getPackageNameForClass(final Class<?> cls) {
+        final String nm = cls.getName();
+        return nm.substring(0, nm.lastIndexOf('.'));
+    }
 
-	public void emit(final PrintWriter out, final Class<? extends DbObject> cls) throws Throwable {
-		final DbClass dbc = Db.getDbClassForJavaClass(cls);
-		for (final DbField dbf : dbc.getDeclaredFields()) {
-			final StringBuilder sb = new StringBuilder();
-			sb.append(getPackageNameForClass(getClass())).append('.');
-			sb.append("Jem").append(getClassNameAfterPackageForClass(dbf.getClass()));
-			final String elemClsName = sb.toString();
-			// ? list of package names to be tried with Class.forName
-			try {
-				final JavaCodeElem jce = (JavaCodeElem) Class.forName(elemClsName).getConstructor(dbf.getClass())
-						.newInstance(dbf);
-				add(jce);
-			} catch (final Throwable t) {
-				out.println("// cannot create JavaCodeElem of class '" + elemClsName + "' for java class '"
-						+ cls.getName() + "' field '" + dbf.getName() + "' type '" + dbf.getClass().getName() + "'");
-			}
-		}
-		for (final DbRelation dbr : dbc.getDeclaredRelations()) {
-			final StringBuilder sb = new StringBuilder();
-			sb.append(getPackageNameForClass(getClass())).append('.');
-			sb.append("Jem").append(getClassNameAfterPackageForClass(dbr.getClass()));
-			final String elemClsName = sb.toString();
+    public static String getClassNameAfterPackageForClass(final Class<?> cls) {
+        final String nm = cls.getName();
+        return nm.substring(nm.lastIndexOf('.') + 1);
+    }
 
-			try {
-				final JavaCodeElem jce = (JavaCodeElem) Class.forName(elemClsName).getConstructor(dbr.getClass())
-						.newInstance(dbr);
-				add(jce);
-			} catch (final Throwable t) {
-				out.println("// cannot create JavaCodeElem of class '" + elemClsName + "' for java class '"
-						+ cls.getName() + "' relation '" + dbr.getName() + "' type '" + dbr.getClass().getName() + "'");
-			}
-		}
+    public void emit(final PrintWriter out, final Class<? extends DbObject> cls) throws Throwable {
+        final DbClass dbc = Db.getDbClassForJavaClass(cls);
+        for (final DbField dbf : dbc.getDeclaredFields()) {
+            final StringBuilder sb = new StringBuilder();
+            sb.append(getPackageNameForClass(getClass())).append('.');
+            sb.append("Jem").append(getClassNameAfterPackageForClass(dbf.getClass()));
+            final String elemClsName = sb.toString();
+            // ? list of package names to be tried with Class.forName
+            try {
+                final JavaCodeElem jce = (JavaCodeElem) Class.forName(elemClsName).getConstructor(dbf.getClass())
+                        .newInstance(dbf);
+                add(jce);
+            } catch (final Throwable t) {
+                out.println("// cannot create JavaCodeElem of class '" + elemClsName + "' for java class '"
+                        + cls.getName() + "' field '" + dbf.getName() + "' type '" + dbf.getClass().getName() + "'");
+            }
+        }
+        for (final DbRelation dbr : dbc.getDeclaredRelations()) {
+            final StringBuilder sb = new StringBuilder();
+            sb.append(getPackageNameForClass(getClass())).append('.');
+            sb.append("Jem").append(getClassNameAfterPackageForClass(dbr.getClass()));
+            final String elemClsName = sb.toString();
 
-		out.println("//****************************************************");
-		out.println("//** generated code");
-		out.println("//**   " + cls.getName());
-		out.println("//****************************************************");
-		for (final JavaCodeElem e : elems) {
-			e.emit(out);
-			out.flush();
-		}
-		out.println("//****************************************************");
-		out.flush();
-	}
+            try {
+                final JavaCodeElem jce = (JavaCodeElem) Class.forName(elemClsName).getConstructor(dbr.getClass())
+                        .newInstance(dbr);
+                add(jce);
+            } catch (final Throwable t) {
+                out.println("// cannot create JavaCodeElem of class '" + elemClsName + "' for java class '"
+                        + cls.getName() + "' relation '" + dbr.getName() + "' type '" + dbr.getClass().getName() + "'");
+            }
+        }
 
-	public static String getSingulariesForPlurar(final String s) {
-		final StringBuilder sb = new StringBuilder();
-		sb.append(s);
-		if (s.endsWith("ies")) {
-			sb.setLength(sb.length() - 3);
-			sb.append('y');
-			return sb.toString();
-		}
-		if (s.endsWith("s")) {
-			sb.setLength(sb.length() - 1);
-		}
-		return sb.toString(); // ? lookup in dictionary?
-	}
+        out.println("//****************************************************");
+        out.println("//** generated code");
+        out.println("//**   " + cls.getName());
+        out.println("//****************************************************");
+        for (final JavaCodeElem e : elems) {
+            e.emit(out);
+            out.flush();
+        }
+        out.println("//****************************************************");
+        out.flush();
+    }
+
+    public static String getSingulariesForPlurar(final String s) {
+        final StringBuilder sb = new StringBuilder();
+        sb.append(s);
+        if (s.endsWith("ies")) {
+            sb.setLength(sb.length() - 3);
+            sb.append('y');
+            return sb.toString();
+        }
+        if (s.endsWith("s")) {
+            sb.setLength(sb.length() - 1);
+        }
+        return sb.toString(); // ? lookup in dictionary?
+    }
+
 }
