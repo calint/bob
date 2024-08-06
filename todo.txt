@@ -1,11 +1,19 @@
+step 1
+[ ] bob: Form: upload file
+[ ] bob: authentication framework
 [ ] user with credentials
+[ ]   b.user: email, password hash, credentials. b.session: ref user
 [ ] firewall
+step 2
+[ ] ViewTable: Element.scrollIntoView() instead of scroll to top considering included views
+[ ]   include a form as a field for aggregation 1 to 1?
+[ ]   make it right. DboField, DboRel, save etc
+[ ]   FormRenderer wrapping xwriter and "this"? cookie.eat() or eat(cookie)
+[ ]   input clob
+[ ]   input blob
+step 3
 [ ] b: fix for client that makes many threaded requests and then stalls them to starve server of threads or create too many. ddos.
 [ ]   slowhttptest
-[ ] ViewTable: Element.scrollIntoView() instead of scroll to top considering included views
-[ ] b.user: email, password hash, security bits. b.session: ref user
-[ ] bob: login framework
-[ ] bob: Form: upload file
 [ ] b: in memory session with transfer between cluster members
 [ ]   in session (updated at every request) store current server ip
 [ ]   if ip changes transfer in memory session from previous ip to current ip
@@ -15,7 +23,7 @@
 [x] db: DbObject.onCreate().
 [x] b.session: created time stamp
 [ ] class_init extended to set statics on any class
-[ ] db: when delete check if object is aggregated
+[ ] db: at delete check if object is aggregated
 [-] bob: Form idPath, objectId etc moved to FormDbo to reduce context of Form.
 [ ] db: RelAgg, RelRef how to handle dangling references. Exception mode in Db settings?
 [ ] bob: InputRelX: use reflection and jem naming conventions instead of accessing relation objects?
@@ -54,11 +62,6 @@
 [x]     annotation interface CreateObjectAtInit? ok.
 [x]     delete object at close in case no save has happened. action "cancel". onCancel(boolean saved).
 [x]        protected void cancel(xwriter).
-[ ]   include a form as a field for aggregation 1 to 1?
-[ ]   make it right. DboField, DboRel, save etc
-[ ]   FormRenderer wrapping xwriter and "this"? cookie.eat() or eat(cookie)
-[ ]   input clob
-[ ]   input blob
 [x] ViewTable: Query: throttle queries to one every nth milliseconds.
 [x] bob.js: server is busy message box when typing fast.
 [ ]   server busy ui element
