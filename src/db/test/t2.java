@@ -17,7 +17,6 @@ public @stateless class t2 extends a {
     private void runTest(final xwriter x, final int nruns, final TestCase c) throws Throwable {
         c.out = new PrintStream(x.outputstream(), true);
         c.number_of_runs = nruns;
-        // c.data_points_output = true;
         c.out.println("<pre>");
         c.run();
     }

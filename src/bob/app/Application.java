@@ -44,9 +44,10 @@ public final class Application implements bapp {
         b.b.set_path_to_class("/b/test/t3", b.test.t3.class);
         b.b.set_path_to_class("/b/test/t4", b.test.t4.class);
 
-        b.b.set_path_to_class("/db/test/t1", db.test.t1.class);
+        b.b.set_path_to_class("/db/test/t1", db.test.t4.class);
         b.b.set_path_to_class("/db/test/t2", db.test.t2.class);
         b.b.set_path_to_class("/db/test/t3", db.test.t3.class);
+        b.b.set_path_to_class("/db/test/t4", db.test.t4.class);
     }
 
     /** called by b at shutdown */

@@ -6,18 +6,21 @@ import db.Db;
 import db.DbTransaction;
 
 public abstract class TestCase implements Runnable {
+
     public PrintStream out = System.out;
-    public boolean use_current_transaction;
+    public boolean use_current_transaction = false;
     public int number_of_runs = 1;
-    public boolean data_points_output;
+    public boolean data_points_output = false;
+    public boolean time_output = true;
     public boolean run_with_cache = true;
-    public boolean run_without_cache;
-    public boolean reset_database;
+    public boolean run_without_cache = false;
+    public boolean reset_database = false;
 
     public final void run() {
         if (reset_database) {
             try {
-                Db.currentTransaction().commit(); // note Db.reset hangs mysql on drop "table session" otherwise.
+                Db.currentTransaction().commit();
+                // note Db.reset hangs mysql on drop "table session" otherwise.
                 // possibly because session was updated but not committed
             } catch (final Throwable e) {
                 throw new RuntimeException(e);
@@ -73,8 +76,10 @@ public abstract class TestCase implements Runnable {
                 final long t3 = System.currentTimeMillis();
                 if (data_points_output) {
                     out.println(t3 - t2);
-                } else {
+                } else if (time_output) {
                     out.println(" " + (t3 - t2) + " ms");
+                } else {
+                    out.println("");
                 }
                 out.flush();
                 tn.commit();
@@ -82,7 +87,12 @@ public abstract class TestCase implements Runnable {
             final long t1 = System.currentTimeMillis();
             final long dt = t1 - t0;
             if (!data_points_output) {
-                out.println(getTestName() + " [cache " + cachests + "]: passed (" + dt + " ms)");
+                out.print(getTestName() + " [cache " + cachests + "]: passed");
+                if (time_output) {
+                    out.println(" (" + dt + " ms)");
+                } else {
+                    out.println("");
+                }
                 out.flush();
             }
         } catch (final Throwable t1) {

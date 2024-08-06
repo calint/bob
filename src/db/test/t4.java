@@ -4,20 +4,25 @@ import java.io.PrintStream;
 
 import b.a;
 import b.a.stateless;
+import b.bin;
 import b.xwriter;
 
-public @stateless class t3 extends a {
+public @stateless class t4 extends a implements bin {
     static final long serialVersionUID = 1;
+
+    public String content_type() {
+        return "text/plain";
+    }
 
     @Override
     public void to(final xwriter x) throws Throwable {
-        runTest(x, 1, new import_books("/home/c/Downloads/csv-samples/books_data_200k.csv"));
+        runTest(x, 1, new test1());
     }
 
     private void runTest(final xwriter x, final int nruns, final TestCase c) throws Throwable {
         c.out = new PrintStream(x.outputstream(), true);
         c.number_of_runs = nruns;
-        c.out.println("<pre>");
+        c.time_output = false;
         c.run();
     }
 }
