@@ -78,4 +78,5 @@ public final class InputRelAggN extends a {
         f.init();
         super.bubble_event(x, this, f); // display the form
     }
+
 }

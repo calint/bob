@@ -136,4 +136,5 @@ public abstract class View extends Elem {
         isSelectModeMulti = false;
         selectReceiverSingle = sr;
     }
+
 }

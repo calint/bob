@@ -30,4 +30,5 @@ public class Action extends a {
     public final void x_(final xwriter x, final String param) throws Throwable {
         super.bubble_event(x);
     }
+
 }

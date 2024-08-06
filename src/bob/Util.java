@@ -2,6 +2,7 @@
 package bob;
 
 public final class Util {
+
     public static String formatSizeInBytes(final long size_B) {
         // ! one decimal point precision. example 4.1 KB instead of 4 K
         long b = size_B;
@@ -30,4 +31,5 @@ public final class Util {
     public static boolean isEmpty(final String s) {
         return s == null || s.length() == 0;
     }
+
 }

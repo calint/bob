@@ -51,4 +51,5 @@ public final class Menu extends a {
         selectedIndex = Integer.parseInt(param);
         super.bubble_event(x, this, items.get(selectedIndex).cls);
     }
+
 }
