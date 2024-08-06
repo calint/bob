@@ -12,10 +12,10 @@ import db.FldSerializable;
 import db.FldStr;
 
 public final class TestObj extends DbObject {
-    public final static FldSerializable list = new FldSerializable();
-    public final static FldChars md5 = new FldChars(32, "abc");
-    public final static FldStr subject = new FldStr(200, "no 'subject'");
-    public final static FldDateTime dateTime = new FldDateTime(Timestamp.valueOf("2022-11-28 03:28:00"));
+    public static final FldSerializable list = new FldSerializable();
+    public static final FldChars md5 = new FldChars(32, "abc");
+    public static final FldStr subject = new FldStr(200, "no 'subject'");
+    public static final FldDateTime dateTime = new FldDateTime(Timestamp.valueOf("2022-11-28 03:28:00"));
 
     @SuppressWarnings("unchecked")
     public List<String> getList() {

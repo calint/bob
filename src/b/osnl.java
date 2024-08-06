@@ -9,17 +9,17 @@ public class osnl extends OutputStream {
     private final StringBuilder line = new StringBuilder(256);
 
     @Override
-    final public void write(final int c) throws IOException {
+    public final void write(final int c) throws IOException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    final public void write(final byte[] c) throws IOException {
+    public final void write(final byte[] c) throws IOException {
         write(c, 0, c.length);
     }
 
     @Override
-    final public void write(final byte[] c, final int off, final int len) throws IOException {
+    public final void write(final byte[] c, final int off, final int len) throws IOException {
         for (int i = 0; i < len; i++) {
             final byte b = c[off + i];
             if (b == '\n') {

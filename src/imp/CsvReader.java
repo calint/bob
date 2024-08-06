@@ -9,10 +9,10 @@ import java.util.List;
 /** reads CSV file */
 public final class CsvReader {
 
-    final private BufferedReader reader;
-    final private char columnSeparator;
-    final private char stringDelim;
-    final private StringBuilder sb = new StringBuilder(1024);
+    private final BufferedReader reader;
+    private final char columnSeparator;
+    private final char stringDelim;
+    private final StringBuilder sb = new StringBuilder(1024);
 
     public CsvReader(final Reader reader) {
         this(reader, ',', '"');

@@ -12,7 +12,7 @@ import db.Limit;
 public abstract class ViewTable extends View {
     private static final long serialVersionUID = 1;
 
-    public final static int BIT_CLICK_ITEM = 1;
+    public static final int BIT_CLICK_ITEM = 1;
 
     public Container ac; // actions
     public a q; // query field
@@ -24,7 +24,7 @@ public abstract class ViewTable extends View {
     private boolean ms_display;
 
     /** The actions that are enabled in the table. */
-    final protected int enabledTableBits;
+    protected final int enabledTableBits;
 
     public ViewTable(final List<String> idPath, final int viewBits, final int tableBits, final TypeInfo typeInfo) {
         super(idPath, viewBits, typeInfo);
@@ -275,7 +275,7 @@ public abstract class ViewTable extends View {
 
     // -----------------------------------------------------------------------------------
 
-    public final static class Paging extends a {
+    public static final class Paging extends a {
         private static final long serialVersionUID = 1;
 
         private int currentPage; // page starting at 0
@@ -394,7 +394,7 @@ public abstract class ViewTable extends View {
         }
     }
 
-    public final static class Table extends a {
+    public static final class Table extends a {
         static final long serialVersionUID = 1;
         public Container cbs; // checkboxes
         public a is; // infinite scroll marker

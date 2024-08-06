@@ -4,7 +4,7 @@ import db.DbField;
 
 public abstract class JemFld extends JavaCodeElem {
 
-    final protected DbField fld;
+    protected final DbField fld;
 
     public JemFld(final DbField fld) {
         this.fld = fld;

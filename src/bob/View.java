@@ -10,13 +10,13 @@ import b.xwriter;
 public abstract class View extends Elem {
     private static final long serialVersionUID = 1;
 
-    public final static int BIT_CREATE = 1;
-    public final static int BIT_DELETE = 2;
-    public final static int BIT_SEARCH = 4;
-    public final static int BIT_SELECT = 8;
+    public static final int BIT_CREATE = 1;
+    public static final int BIT_DELETE = 2;
+    public static final int BIT_SEARCH = 4;
+    public static final int BIT_SELECT = 8;
 
     /** The actions that are enabled in the view. */
-    final protected int enabledViewBits;
+    protected final int enabledViewBits;
 
     /** True if view renders to select item(s) */
     private boolean isSelectMode;
@@ -31,7 +31,7 @@ public abstract class View extends Elem {
     private SelectReceiverSingle selectReceiverSingle;
 
     /** Name and plural of the object type. */
-    final private View.TypeInfo typeInfo;
+    private final View.TypeInfo typeInfo;
 
     public View(final List<String> idPath, final int enabledBits, final TypeInfo ti) {
         super(idPath);
@@ -39,23 +39,23 @@ public abstract class View extends Elem {
         typeInfo = ti == null ? new TypeInfo("object", "objects") : ti;
     }
 
-    final public TypeInfo getTypeInfo() {
+    public final TypeInfo getTypeInfo() {
         return typeInfo;
     }
 
-    final public boolean isSelectMode() {
+    public final boolean isSelectMode() {
         return isSelectMode;
     }
 
-    final public boolean isSelectModeMulti() {
+    public final boolean isSelectModeMulti() {
         return isSelectModeMulti;
     }
 
-    final public SelectReceiverMulti getSelectReceiverMulti() {
+    public final SelectReceiverMulti getSelectReceiverMulti() {
         return selectReceiverMulti;
     }
 
-    final public SelectReceiverSingle getSelectReceiverSingle() {
+    public final SelectReceiverSingle getSelectReceiverSingle() {
         return selectReceiverSingle;
     }
 
@@ -94,7 +94,7 @@ public abstract class View extends Elem {
 
     protected abstract void onAction(xwriter x, Action act) throws Throwable;
 
-    public final static class TypeInfo implements Serializable {
+    public static final class TypeInfo implements Serializable {
         private static final long serialVersionUID = 1;
 
         protected final String name;

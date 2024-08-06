@@ -13,10 +13,10 @@ import db.RelAggN;
 
 /** Persistent session. */
 public final class session extends DbObject {
-    public final static FldChars sessionId = new FldChars(32, "");
-    public final static FldTs createdTs = new FldTs();
-    public final static RelAggN objects = new RelAggN(sessionobj.class);
-    public final static Index ixSessionId = new Index(sessionId);
+    public static final FldChars sessionId = new FldChars(32, "");
+    public static final FldTs createdTs = new FldTs();
+    public static final RelAggN objects = new RelAggN(sessionobj.class);
+    public static final Index ixSessionId = new Index(sessionId);
 
     @Override
     protected void onCreate() {

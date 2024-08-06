@@ -14,8 +14,8 @@ public final class InputRelRef extends a {
 
     final Class<? extends DbObject> objCls;
     final String relationName;
-    final private Class<? extends View> selectViewClass; // the view to use when selecting
-    final private Class<? extends Form> createFormCls;
+    private final Class<? extends View> selectViewClass; // the view to use when selecting
+    private final Class<? extends Form> createFormCls;
     private int selectedId;
 
     public InputRelRef(final DbObject obj, final RelRef rel, final int defaultValue,

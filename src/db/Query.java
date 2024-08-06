@@ -12,17 +12,17 @@ import java.util.Map;
  */
 public final class Query {
 
-    public final static int EQ = 1;
-    public final static int NEQ = 2;
-    public final static int GT = 3;
-    public final static int GTE = 4;
-    public final static int LT = 5;
-    public final static int LTE = 6;
-    public final static int LIKE = 7;
+    public static final int EQ = 1;
+    public static final int NEQ = 2;
+    public static final int GT = 3;
+    public static final int GTE = 4;
+    public static final int LT = 5;
+    public static final int LTE = 6;
+    public static final int LIKE = 7;
     /** Full text query. */
-    public final static int FTQ = 8;
+    public static final int FTQ = 8;
 
-    final private static class Elem {
+    private static final class Elem {
         private Query query;// if not null then this is a sub query
         private IndexFt ftix;// if not null then this is a full text query
         private int elemOp; // 'and', 'or' or 'nop'
@@ -120,9 +120,9 @@ public final class Query {
         }
     }
 
-    final static class TableAliasMap {
+    static final class TableAliasMap {
         private int seq;
-        final private HashMap<String, String> tblToAlias = new HashMap<String, String>();
+        private final HashMap<String, String> tblToAlias = new HashMap<String, String>();
 
         String getAliasForTableName(final String tblname) {
             String tblalias = tblToAlias.get(tblname);
@@ -147,9 +147,9 @@ public final class Query {
 
     private final ArrayList<Elem> elems = new ArrayList<Elem>();
 
-    public final static int NOP = 0;
-    public final static int AND = 1;
-    public final static int OR = 2;
+    public static final int NOP = 0;
+    public static final int AND = 1;
+    public static final int OR = 2;
 
     private static String sqlStr(final String s) {
         final StringBuilder sb = new StringBuilder(s.length() + 10); // ? magic number

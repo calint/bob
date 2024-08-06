@@ -4,7 +4,7 @@ import db.DbRelation;
 
 public abstract class JemRel extends JavaCodeElem {
 
-    final protected DbRelation rel;
+    protected final DbRelation rel;
 
     public JemRel(final DbRelation rel) {
         this.rel = rel;

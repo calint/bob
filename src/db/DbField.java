@@ -19,27 +19,27 @@ public abstract class DbField {
      * the SQL type as returned by TYPE_NAME
      * {@link DatabaseMetaData}.getColumns(...).
      */
-    final protected String type;
+    protected final String type;
 
     /** The size of the SQL column where applicable (varchar, char) otherwise 0. */
-    final protected int size;
+    protected final int size;
 
     /**
      * Default value as returned by COLUMN_DEF from
      * {@link DatabaseMetaData}.getColumns(...).
      */
-    final protected String sqlDefVal;
+    protected final String sqlDefVal;
 
     /** Default value of type returned by {@link ResultSet}. */
-    final protected Object defVal;
+    protected final Object defVal;
 
-    final protected boolean allowsNull;
+    protected final boolean allowsNull;
 
     /**
      * True if default value is to be enclosed by quotes and escaped at column
      * definition and update.
      */
-    final protected boolean isStringType;
+    protected final boolean isStringType;
 
     /** Index in the data array of object. */
     protected int slotNbr;

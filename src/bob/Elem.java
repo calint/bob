@@ -13,7 +13,7 @@ public abstract class Elem extends a implements Titled {
     /**
      * List of identifiers to be able to navigate to the parent object in context.
      */
-    final private List<String> idPath;
+    private final List<String> idPath;
 
     /**
      * @param idPath a list of strings representing the object identifiers to
@@ -23,7 +23,7 @@ public abstract class Elem extends a implements Titled {
         this.idPath = idPath;
     }
 
-    final public List<String> getIdPath() {
+    public final List<String> getIdPath() {
         if (idPath == null) {
             return Collections.<String>emptyList();
         }
@@ -36,7 +36,7 @@ public abstract class Elem extends a implements Titled {
      * @param id new id to add to the copy of the path
      * @return a new id path
      */
-    final public List<String> makeExtendedIdPath(final String id) {
+    public final List<String> makeExtendedIdPath(final String id) {
         final ArrayList<String> ls = new ArrayList<String>();
         if (idPath != null) {
             ls.addAll(idPath);
@@ -46,7 +46,7 @@ public abstract class Elem extends a implements Titled {
     }
 
     /** Convenience for an integer id. */
-    final public List<String> makeExtendedIdPath(final int id) {
+    public final List<String> makeExtendedIdPath(final int id) {
         return makeExtendedIdPath(Integer.toString(id));
     }
 

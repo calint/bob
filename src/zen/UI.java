@@ -13,7 +13,7 @@ import zen.zasm.Zasm;
 public class UI extends a {
     private static final long serialVersionUID = 1L;
 
-    final private SoC soc = new SoC();
+    private final SoC soc = new SoC();
     private Zasm zasm;
 
     public RAM r;

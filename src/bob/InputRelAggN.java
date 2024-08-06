@@ -12,7 +12,7 @@ import db.RelAggN;
 public final class InputRelAggN extends a {
     private static final long serialVersionUID = 1;
 
-    final private Class<? extends Form> createFormCls;
+    private final Class<? extends Form> createFormCls;
     final Class<? extends DbObject> objCls;
     final int objId;
     final String relationName;

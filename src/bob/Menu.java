@@ -11,7 +11,7 @@ public final class Menu extends a {
 
     private int selectedIndex;
 
-    private final static class Item extends a {
+    private static final class Item extends a {
         private static final long serialVersionUID = 1;
 
         Class<? extends a> cls;

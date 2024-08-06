@@ -13,11 +13,11 @@ import db.Index;
 import db.RelAgg;
 
 public final class File extends DbObject implements Titled {
-    public final static FldStr name = new FldStr(250);
-    public final static FldLng size_B = new FldLng();
-    public final static FldTs created_ts = new FldTs();
-    public final static RelAgg data = new RelAgg(DataBinary.class);
-    public final static Index ixName = new Index(name);
+    public static final FldStr name = new FldStr(250);
+    public static final FldLng size_B = new FldLng();
+    public static final FldTs created_ts = new FldTs();
+    public static final RelAgg data = new RelAgg(DataBinary.class);
+    public static final Index ixName = new Index(name);
 
     public void loadFile(final String path) throws Throwable {
         final DataBinary d = getData(true);

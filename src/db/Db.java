@@ -23,7 +23,7 @@ import java.util.List;
 /** The database. */
 public final class Db {
 
-    private final static ThreadLocal<DbTransaction> tn = new ThreadLocal<DbTransaction>();
+    private static final ThreadLocal<DbTransaction> tn = new ThreadLocal<DbTransaction>();
 
     /** true if in cluster */
     public static boolean cluster_on = false;

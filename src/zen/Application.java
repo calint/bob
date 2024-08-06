@@ -4,7 +4,7 @@ import b.bapp;
 
 public final class Application implements bapp {
 
-    public final static Application instance = new Application();
+    public static final Application instance = new Application();
 
     /** called by b at startup */
     public void init() throws Throwable {

@@ -6,7 +6,7 @@ import java.util.HashSet;
 /** Abstract database object. */
 public abstract class DbObject {
 
-    public final static FldId id = new FldId();
+    public static final FldId id = new FldId();
 
     Object[] fieldValues;
     HashSet<DbField> dirtyFields;

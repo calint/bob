@@ -12,7 +12,7 @@ import java.lang.reflect.Field;
 
 /** A HTML element. */
 public class a implements Serializable {
-    public final static String id_path_separator = "-";
+    public static final String id_path_separator = "-";
     private a parent;
     private String name;
     private String value;
@@ -90,11 +90,11 @@ public class a implements Serializable {
         }
     }
 
-    final protected void bubble_event(final xwriter x, final a from) throws Throwable {
+    protected final void bubble_event(final xwriter x, final a from) throws Throwable {
         bubble_event(x, from, null);
     }
 
-    final protected void bubble_event(final xwriter x) throws Throwable {
+    protected final void bubble_event(final xwriter x) throws Throwable {
         bubble_event(x, this, null);
     }
 
@@ -168,7 +168,7 @@ public class a implements Serializable {
         return is_empty() ? 0 : Double.parseDouble(toString());
     }
 
-    final public void to(final OutputStream os) throws IOException {
+    public final void to(final OutputStream os) throws IOException {
         os.write(tobytes(tostr(value, "")));
     }
 

@@ -35,9 +35,9 @@ import db.RelRefN;
 public abstract class FormDbo extends Form {
     private static final long serialVersionUID = 1;
 
-    final private Class<? extends DbObject> objCls;
-    final private ArrayList<String> dbfields = new ArrayList<String>();
-    final private LinkedHashMap<String, a> fields = new LinkedHashMap<String, a>();
+    private final Class<? extends DbObject> objCls;
+    private final ArrayList<String> dbfields = new ArrayList<String>();
+    private final LinkedHashMap<String, a> fields = new LinkedHashMap<String, a>();
     private transient SimpleDateFormat fmtDate;
     private transient SimpleDateFormat fmtDateTime;
     private transient NumberFormat fmtNbr;

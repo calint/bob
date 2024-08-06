@@ -6,8 +6,8 @@ import db.FldStr;
 import db.Index;
 
 public final class Publisher extends DbObject implements Titled {
-    public final static FldStr name = new FldStr(250);
-    public final static Index ixName = new Index(name);
+    public static final FldStr name = new FldStr(250);
+    public static final Index ixName = new Index(name);
 
     public String getTitle() {
         return getName();

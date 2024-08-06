@@ -8,7 +8,7 @@ import java.sql.Statement;
 /** Represents the relation table for RelRefN. */
 final class RelRefNMeta {
 
-    private final static String TABLE_NAME_PREFIX = "Refs_";
+    private static final String TABLE_NAME_PREFIX = "Refs_";
 
     final String tableName; // the table name for this association NN table
     final String fromTableName; // the table name of the source class

@@ -1239,39 +1239,39 @@ public final class req {
         }
     }
 
-    final static byte[] h_http200 = "HTTP/1.1 200 OK".getBytes();
-    final static byte[] h_content_length = "\r\nContent-Length: ".getBytes();
-    final static byte[] h_last_modified = "\r\nLast-Modified: ".getBytes();
-    final static byte[] h_etag = "\r\nETag: ".getBytes();
-    final static byte[] h_content_type = "\r\nContent-Type: ".getBytes();
-    final static byte[] hkp_connection_keep_alive = "\r\nConnection: Keep-Alive".getBytes();
-    final static byte[] ba_crlf2 = "\r\n\r\n".getBytes();
-    private final static String axfld = "$";
-    private final static byte[] h_http204 = "HTTP/1.1 204 No Content".getBytes();
-    private final static byte[] h_http206 = "HTTP/1.1 206 Partial Content".getBytes();
-    private final static byte[] h_http304 = "HTTP/1.1 304 Not Modified".getBytes();
-    final static byte[] h_http403 = "HTTP/1.1 403 Forbidden".getBytes();
-    private final static byte[] h_http404 = "HTTP/1.1 404 Not Found".getBytes();
-    final static byte[] hk_set_cookie = "\r\nSet-Cookie: i=".getBytes();
-    final static byte[] hkv_set_cookie_append = ";path=/;expires=Thu, 31-Dec-2099 00:00:00 GMT;SameSite=Lax".getBytes();
-    private final static byte[] hkp_transfer_encoding_chunked = "\r\nTransfer-Encoding: chunked".getBytes();
-    private final static byte[] hkp_accept_ranges_byte = "\r\nAccept-Ranges: bytes".getBytes();
-    private final static byte[] hk_content_range_bytes = "\r\nContent-Range: bytes ".getBytes();
-    private final static String hk_connection = "connection";
-    private final static String hk_content_length = "content-length";
-    private final static String hk_content_type = "content-type";
-    private final static String hk_cookie = "cookie";
-    private final static String hk_if_none_match = "if-none-match";
-    private final static String hv_keep_alive = "keep-alive";
-    private final static String s_equals = "=";
-    private final static String s_minus = "-";
-    private final static String s_range = "range";
-    private final static String s_slash = "/";
-    private final static byte[] ba_page_header_pre_title = "<!doctype html><meta name=viewport content=\"width=device-width,initial-scale=1\"><meta charset=utf-8><link rel=stylesheet href=/x.css><script src=/x.js></script>"
+    static final byte[] h_http200 = "HTTP/1.1 200 OK".getBytes();
+    static final byte[] h_content_length = "\r\nContent-Length: ".getBytes();
+    static final byte[] h_last_modified = "\r\nLast-Modified: ".getBytes();
+    static final byte[] h_etag = "\r\nETag: ".getBytes();
+    static final byte[] h_content_type = "\r\nContent-Type: ".getBytes();
+    static final byte[] hkp_connection_keep_alive = "\r\nConnection: Keep-Alive".getBytes();
+    static final byte[] ba_crlf2 = "\r\n\r\n".getBytes();
+    private static final String axfld = "$";
+    private static final byte[] h_http204 = "HTTP/1.1 204 No Content".getBytes();
+    private static final byte[] h_http206 = "HTTP/1.1 206 Partial Content".getBytes();
+    private static final byte[] h_http304 = "HTTP/1.1 304 Not Modified".getBytes();
+    static final byte[] h_http403 = "HTTP/1.1 403 Forbidden".getBytes();
+    private static final byte[] h_http404 = "HTTP/1.1 404 Not Found".getBytes();
+    static final byte[] hk_set_cookie = "\r\nSet-Cookie: i=".getBytes();
+    static final byte[] hkv_set_cookie_append = ";path=/;expires=Thu, 31-Dec-2099 00:00:00 GMT;SameSite=Lax".getBytes();
+    private static final byte[] hkp_transfer_encoding_chunked = "\r\nTransfer-Encoding: chunked".getBytes();
+    private static final byte[] hkp_accept_ranges_byte = "\r\nAccept-Ranges: bytes".getBytes();
+    private static final byte[] hk_content_range_bytes = "\r\nContent-Range: bytes ".getBytes();
+    private static final String hk_connection = "connection";
+    private static final String hk_content_length = "content-length";
+    private static final String hk_content_type = "content-type";
+    private static final String hk_cookie = "cookie";
+    private static final String hk_if_none_match = "if-none-match";
+    private static final String hv_keep_alive = "keep-alive";
+    private static final String s_equals = "=";
+    private static final String s_minus = "-";
+    private static final String s_range = "range";
+    private static final String s_slash = "/";
+    private static final byte[] ba_page_header_pre_title = "<!doctype html><meta name=viewport content=\"width=device-width,initial-scale=1\"><meta charset=utf-8><link rel=stylesheet href=/x.css><script src=/x.js></script>"
             .getBytes();
-    private final static String text_html_utf8 = "text/html;charset=utf-8";
-    private final static String text_plain = "text/plain";// ? utf8 encoding?
-    // private final static String text_plain_utf8="text/plain;charset=utf-8";
+    private static final String text_html_utf8 = "text/html;charset=utf-8";
+    private static final String text_plain = "text/plain";// ? utf8 encoding?
+    // private static final String text_plain_utf8="text/plain;charset=utf-8";
 
     enum state {
         next_request, method, uri, prot, header_name, header_value, content_read, transfer_file, transfer_buffers,

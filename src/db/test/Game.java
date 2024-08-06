@@ -4,8 +4,8 @@ import db.DbObject;
 import db.FldStr;
 
 public final class Game extends DbObject {
-    public final static FldStr name = new FldStr();
-    public final static FldStr description = new FldStr(8000);
+    public static final FldStr name = new FldStr();
+    public static final FldStr description = new FldStr(8000);
 
     // ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
     public String getName() {

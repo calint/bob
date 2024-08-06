@@ -37,13 +37,13 @@ public final class thdwatch extends Thread {
     private static PrintStream _out = System.out;
     private long _t;
     static boolean _stop;
-    final static Field[] _fields = thdwatch.class.getDeclaredFields();
+    static final Field[] _fields = thdwatch.class.getDeclaredFields();
 
     public thdwatch() {
         super("watch");
     }
 
-    final static String _pad = "       ";
+    static final String _pad = "       ";
 
     @Override
     public void run() {

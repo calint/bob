@@ -32,15 +32,15 @@ import db.Db;
 
 /** Web application server Bee. */
 public final class b {
-    public final static String strenc = "utf-8";
-    public final static String q = " ڀ ";
-    public final static String a = " ํ ";
-    public final static int K = 1024;
-    public final static int M = K * K;
-    public final static long G = K * M;
-    public final static long T = K * G;
-    public final static long P = K * T;
-    public final static String pathsep = "/";
+    public static final String strenc = "utf-8";
+    public static final String q = " ڀ ";
+    public static final String a = " ํ ";
+    public static final int K = 1024;
+    public static final int M = K * K;
+    public static final long G = K * M;
+    public static final long T = K * G;
+    public static final long P = K * T;
+    public static final String pathsep = "/";
     public static @conf String hello = "public domain server #1";
     public static @conf String root_dir = ".";
     public static @conf(reboot = true) String server_port = "8888";
@@ -88,10 +88,10 @@ public final class b {
     public static int bapp_cluster_port = 8889;
     public static bapp[] bapps = null;
 
-    private final static HashMap<String, Class<?>> path_to_class_map = new HashMap<String, Class<?>>();
-    private final static HashMap<String, String> path_to_resource_map = new HashMap<String, String>();
-    private final static LinkedList<req> pending_req = new LinkedList<req>();
-    private final static HashMap<String, byte[]> file_suffix_to_content_type_map = new HashMap<String, byte[]>();
+    private static final HashMap<String, Class<?>> path_to_class_map = new HashMap<String, Class<?>>();
+    private static final HashMap<String, String> path_to_resource_map = new HashMap<String, String>();
+    private static final LinkedList<req> pending_req = new LinkedList<req>();
+    private static final HashMap<String, byte[]> file_suffix_to_content_type_map = new HashMap<String, byte[]>();
 
     public static void main(final String[] args) throws Throwable {
         out.println(hello);

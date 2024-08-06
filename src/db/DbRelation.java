@@ -25,10 +25,10 @@ public abstract class DbRelation {
     protected String name;
 
     /** The class that the relations refers to. */
-    final protected Class<? extends DbObject> toCls;
+    protected final Class<? extends DbObject> toCls;
 
     /** The table name of 'toCls'. */
-    final protected String toTableName;
+    protected final String toTableName;
 
     /**
      * Field used by relations {@link RelAgg} and {@link RelRef}. May be null in

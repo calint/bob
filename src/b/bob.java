@@ -10,7 +10,7 @@ import db.Db;
 
 /** Websocket that implements the framework. */
 public class bob extends websock {
-    private final static String axfld = "$";
+    private static final String axfld = "$";
     protected a controller;
 
     public bob() {
@@ -27,7 +27,7 @@ public class bob extends websock {
     }
 
     @Override
-    final protected void on_opened() throws Throwable {
+    protected final void on_opened() throws Throwable {
         try {
             Db.initCurrentTransaction();
             // todo load root from db or create new
@@ -45,7 +45,7 @@ public class bob extends websock {
     }
 
     @Override
-    final protected void on_message(final ByteBuffer bb) throws Throwable {
+    protected final void on_message(final ByteBuffer bb) throws Throwable {
         if (bb.remaining() == 0) {
             // a keep-alive message from bob.js
             return;
@@ -134,7 +134,7 @@ public class bob extends websock {
     }
 
     @Override
-    final protected void on_closed() throws Throwable {
+    protected final void on_closed() throws Throwable {
         // todo store root in db
     }
 

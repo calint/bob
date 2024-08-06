@@ -10,10 +10,10 @@ import bob.View.SelectReceiverSingle;
 public abstract class Form extends Elem {
     private static final long serialVersionUID = 1;
 
-    public final static int BIT_SAVE_CLOSE = 1;
-    public final static int BIT_SAVE = 2;
-    public final static int BIT_CLOSE = 4;
-    public final static int BIT_CANCEL = 8;
+    public static final int BIT_SAVE_CLOSE = 1;
+    public static final int BIT_SAVE = 2;
+    public static final int BIT_CLOSE = 4;
+    public static final int BIT_CANCEL = 8;
 
     /** Actions enabled on this form. */
     protected final int enabledFormBits;
@@ -34,7 +34,7 @@ public abstract class Form extends Elem {
     private SelectReceiverSingle selectReceiverSingle;
 
     /** Initiation string passed by the view from the query field. */
-    final private String initStr;
+    private final String initStr;
 
     /** True if the form has been saved. */
     private boolean hasBeenSaved;

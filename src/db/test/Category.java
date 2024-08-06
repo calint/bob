@@ -5,8 +5,8 @@ import db.DbObject;
 import db.FldStr;
 
 public final class Category extends DbObject implements Titled {
-    public final static FldStr name = new FldStr(800); // ? field length is too big for one case, truncate at import
-    // public final static Index ixName=new Index(name); // ? key length is max 250
+    public static final FldStr name = new FldStr(800); // ? field length is too big for one case, truncate at import
+    // public static final Index ixName=new Index(name); // ? key length is max 250
     // in mysam tables
 
     public String getTitle() {

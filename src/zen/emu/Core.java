@@ -234,8 +234,8 @@ public final class Core {
         return imm4 + 1;
     }
 
-    public final static class Calls {
-        final public int[] mem;
+    public static final class Calls {
+        public final int[] mem;
         public int idx = -1;
 
         public Calls(final int addr_width) {

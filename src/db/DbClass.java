@@ -333,7 +333,7 @@ public final class DbClass {
         throw new RuntimeException("expected to find column " + name + " in " + columns);
     }
 
-    private final static class Column {
+    private static final class Column {
         String name;
         int ordinal_position;
         String type_name;

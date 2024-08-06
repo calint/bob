@@ -18,7 +18,7 @@ import imp.Util;
 // import-200k-book
 //   download csv at https://www.kaggle.com/datasets/mohamedbakhet/amazon-books-reviews
 public class import_books extends TestCase {
-    final private String filePath;
+    private final String filePath;
 
     public import_books() {
         this("csv/books_data_sample.csv");

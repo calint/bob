@@ -253,15 +253,15 @@ public abstract class websock {
      */
     abstract protected void on_message(ByteBuffer bb) throws Throwable;
 
-    final protected void send(final String s) throws Throwable {
+    protected final void send(final String s) throws Throwable {
         send(new ByteBuffer[] { ByteBuffer.wrap(s.getBytes()) }, true);
     }
 
-    final protected void send(final ByteBuffer bb, final boolean textmode) throws Throwable {
+    protected final void send(final ByteBuffer bb, final boolean textmode) throws Throwable {
         send(new ByteBuffer[] { bb }, textmode);
     }
 
-    final protected void send(final ByteBuffer[] bba, final boolean textmode) throws Throwable {
+    protected final void send(final ByteBuffer[] bba, final boolean textmode) throws Throwable {
         if (is_sending()) {
             throw new RuntimeException("Trying to send while busy sending. Only one send per on_message.");
             // note. before the request is closed by the exception handler there might be
@@ -309,7 +309,7 @@ public abstract class websock {
         return ByteBuffer.wrap(hdr, 0, nhdr);
     }
 
-    final protected req req() {
+    protected final req req() {
         return rq;
     }
 

@@ -19,27 +19,27 @@ import db.RelRef;
 import db.RelRefN;
 
 public final class User extends DbObject {
-    public final static FldStr name = new FldStr();
-    public final static FldStr description = new FldStr();
-    public final static FldStr passhash = new FldStr(32);
-    public final static FldInt nlogins = new FldInt();
-    public final static FldLng lng = new FldLng();
-    public final static FldFlt flt = new FldFlt();
-    public final static FldDbl dbl = new FldDbl();
-    public final static FldBool bool = new FldBool(true);
+    public static final FldStr name = new FldStr();
+    public static final FldStr description = new FldStr();
+    public static final FldStr passhash = new FldStr(32);
+    public static final FldInt nlogins = new FldInt();
+    public static final FldLng lng = new FldLng();
+    public static final FldFlt flt = new FldFlt();
+    public static final FldDbl dbl = new FldDbl();
+    public static final FldBool bool = new FldBool(true);
 
-    public final static FldTs birthTime = new FldTs();
-    public final static FldDateTime date = new FldDateTime();
-    public final static FldDateTime dateTime = new FldDateTime();
+    public static final FldTs birthTime = new FldTs();
+    public static final FldDateTime date = new FldDateTime();
+    public static final FldDateTime dateTime = new FldDateTime();
 
-    public final static RelAgg profilePic = new RelAgg(File.class);
-    public final static RelRef groupPic = new RelRef(File.class);
-    public final static RelAggN files = new RelAggN(File.class);
-    public final static RelRefN refFiles = new RelRefN(File.class);
-    public final static RelAggN games = new RelAggN(Game.class);
+    public static final RelAgg profilePic = new RelAgg(File.class);
+    public static final RelRef groupPic = new RelRef(File.class);
+    public static final RelAggN files = new RelAggN(File.class);
+    public static final RelRefN refFiles = new RelRefN(File.class);
+    public static final RelAggN games = new RelAggN(Game.class);
 
-    // public final static Index ixName = new Index(name);
-    public final static IndexFt ixFt = new IndexFt(name);
+    // public static final Index ixName = new Index(name);
+    public static final IndexFt ixFt = new IndexFt(name);
 
     // ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
     public String getName() {

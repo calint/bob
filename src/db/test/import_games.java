@@ -9,7 +9,7 @@ import imp.CsvReader;
 
 // import games
 public class import_games extends TestCase {
-    final private String filePath;
+    private final String filePath;
 
     public import_games() {
         this("csv/steam_games_sample.csv");

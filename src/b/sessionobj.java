@@ -11,9 +11,9 @@ import db.Index;
 
 /** Serialized persistent session object bound to a path. */
 public final class sessionobj extends DbObject {
-    public final static FldStr path = new FldStr(250, "");
-    public final static FldSerializable object = new FldSerializable();
-    public final static Index ixPath = new Index(path);
+    public static final FldStr path = new FldStr(250, "");
+    public static final FldSerializable object = new FldSerializable();
+    public static final Index ixPath = new Index(path);
 
     public String path() {
         return path.getStr(this);

@@ -4,7 +4,7 @@ package db;
 /** BLOB field. */
 public final class FldBlob extends DbField {
 
-    private final static char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
+    private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
 
     public FldBlob() {
         super("longblob", 0, null, null, true, false);
