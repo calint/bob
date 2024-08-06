@@ -13,7 +13,7 @@ import db.Db;
 import db.DbObject;
 import db.test.User;
 
-public final class FormUser extends FormDbo implements FormDbo.CreateObjectAtInit {
+public final class FormUser extends FormDbo {
 	private static final long serialVersionUID = 1;
 
 	public FormUser() {
@@ -22,6 +22,11 @@ public final class FormUser extends FormDbo implements FormDbo.CreateObjectAtIni
 
 	public FormUser(final String id, final String initStr) {
 		super(null, User.class, id, initStr, BIT_SAVE_CLOSE | BIT_SAVE | BIT_CANCEL);
+	}
+
+	@Override
+	protected boolean createObjectAtInit() {
+		return true;
 	}
 
 	@Override

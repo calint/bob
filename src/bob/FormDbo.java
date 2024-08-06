@@ -35,10 +35,6 @@ import db.RelRefN;
 public abstract class FormDbo extends Form {
 	private static final long serialVersionUID = 1;
 
-	/** Marker interface to trigger creation of object prior to rendering. */
-	public interface CreateObjectAtInit {
-	}
-
 	final private Class<? extends DbObject> objCls;
 	final private ArrayList<String> dbfields = new ArrayList<String>();
 	final private LinkedHashMap<String, a> fields = new LinkedHashMap<String, a>();
@@ -59,7 +55,7 @@ public abstract class FormDbo extends Form {
 
 	@Override
 	public Form init() {
-		if (objectId == null && this instanceof CreateObjectAtInit) {
+		if (objectId == null && createObjectAtInit()) {
 			final DbObject o = createObject();
 			objectId = Integer.toString(o.id());
 		}
@@ -660,6 +656,11 @@ public abstract class FormDbo extends Form {
 	}
 
 	protected abstract void writeToObject(final xwriter x, final DbObject obj) throws Throwable;
+
+	/** Override and return true to create the object at form initiation. */
+	protected boolean createObjectAtInit() {
+		return false;
+	}
 
 	/** Focuses on field from "save" when for example validation failed. */
 	final protected void xfocus(final xwriter x, final DbField f) {
