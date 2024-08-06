@@ -3,6 +3,7 @@ set -e
 
 . ./qa.cfg
 
+echo
 date
 echo Host: $QA_BASE_URL
 
@@ -111,3 +112,6 @@ echo " ok"
 #--------------------------------------------------------
 rm res
 date
+echo
+echo All tests passed
+echo
