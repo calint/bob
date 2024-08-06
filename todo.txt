@@ -1,8 +1,8 @@
 step 1
-[ ] bob: Form: upload file
-[ ]   b.file: parent, name + unique, created, modified, owner, credentials
-[ ]   create unique file name, upload, postback the unique file name, create file with blob
 [ ] db: stream blob and clob to outputstream, from inputstream
+[ ] bob: Form: upload file
+[ ]   b.file: parent, name + unique, created, modified, owner, credentials, size, content type
+[ ]   create unique file name, upload, postback the unique file name, create file with blob
 [ ] bob: authentication framework
 [ ] user with credentials
 [ ]   b.user: email, password hash, credentials. b.session: ref user
