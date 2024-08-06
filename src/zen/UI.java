@@ -20,7 +20,7 @@ public class UI extends a {
     public Panel p;
     public a t; // terminal
     public LineNums l;
-    public a s; // source
+    public a s; // source editor
 
     public UI() throws Throwable {
         r.ram = soc.ram;

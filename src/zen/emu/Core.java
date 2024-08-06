@@ -199,8 +199,9 @@ public final class Core {
             }
         }
 
-        if (is_stall)
+        if (is_stall) {
             return;
+        }
 
         if (is_do_op && !instr_c && instr_r) { // ret
             zf = cs.getZf();

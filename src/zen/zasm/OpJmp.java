@@ -1,20 +1,24 @@
 package zen.zasm;
 
-class OpJmp extends Statement {
-	private Token lbl;
+final class OpJmp extends Statement {
 
-	public OpJmp(Token zn, Token tk, Tokenizer tz) {
-		super(zn, tk);
-		lbl = tz.nextToken();
-	}
+    private final Token lbl;
 
-	public void compile(Toc toc) throws Throwable {
-		short instr = getZnr();
-		instr |= 0xc;
-		toc.write(this, instr, Toc.LinkType.JMP, lbl.id(), lbl);
-	}
+    public OpJmp(Token zn, Token tk, Tokenizer tz) {
+        super(zn, tk);
+        lbl = tz.nextToken();
+    }
 
-	public String toSource() {
-		return super.toSource() + lbl.toSource();
-	}
+    @Override
+    public String toSource() {
+        return super.toSource() + lbl.toSource();
+    }
+
+    @Override
+    public void compile(Toc toc) throws Throwable {
+        short instr = getZnr();
+        instr |= 0xc;
+        toc.write(this, instr, Toc.LinkType.JMP, lbl.id(), lbl);
+    }
+
 }

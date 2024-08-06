@@ -24,8 +24,4 @@ public class RAM extends a {
         }
     }
 
-    public final void x_c(final xwriter x, final String param) throws Throwable {
-        x.xalert("compile");
-    }
-
 }

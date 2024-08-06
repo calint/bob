@@ -1,26 +1,30 @@
 package zen.zasm;
 
-class OpAdd extends Statement {
-	private Token rega;
-	private Token regb;
+final class OpAdd extends Statement {
 
-	public OpAdd(Token zn, Token tk, Tokenizer tz) {
-		super(zn, tk);
-		rega = tz.nextToken();
-		regb = tz.nextToken();
-		readOptionalRet(tz);
-	}
+    private final Token rega;
+    private final Token regb;
 
-	public void compile(Toc toc) throws Throwable {
-		short instr = getZnr();
-		short a = registerAddressFromToken(rega);
-		short b = registerAddressFromToken(regb);
-		instr |= a << 8;
-		instr |= b << 12;
-		toc.write(this, instr);
-	}
+    public OpAdd(Token zn, Token tk, Tokenizer tz) {
+        super(zn, tk);
+        rega = tz.nextToken();
+        regb = tz.nextToken();
+        readOptionalRet(tz);
+    }
 
-	public String toSource() {
-		return super.toSource() + rega.toSource() + regb.toSource() + toSourceRet();
-	}
+    @Override
+    public String toSource() {
+        return super.toSource() + rega.toSource() + regb.toSource() + toSourceRet();
+    }
+
+    @Override
+    public void compile(Toc toc) throws Throwable {
+        short instr = getZnr();
+        short a = registerAddressFromToken(rega);
+        short b = registerAddressFromToken(regb);
+        instr |= a << 8;
+        instr |= b << 12;
+        toc.write(this, instr);
+    }
+
 }

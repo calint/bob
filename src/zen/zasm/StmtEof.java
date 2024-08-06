@@ -1,8 +1,9 @@
 package zen.zasm;
 
-class StmtEof extends Statement {
+final class StmtEof extends Statement {
 
-	public StmtEof(Token tk) {
-		super(null, tk);
-	}
+    public StmtEof(Token tk) {
+        super(null, tk);
+    }
+
 }

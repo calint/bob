@@ -1,11 +1,14 @@
 package zen.zasm;
 
-class StmtEndFunc extends Statement {
-	public StmtEndFunc(Token tk) {
-		super(null, tk);
-	}
+final class StmtEndFunc extends Statement {
 
-	public void compile(Toc toc) throws Throwable {
-		toc.exitFunc(token());
-	}
+    public StmtEndFunc(Token tk) {
+        super(null, tk);
+    }
+
+    @Override
+    public void compile(Toc toc) throws Throwable {
+        toc.exitFunc(token());
+    }
+
 }

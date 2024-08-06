@@ -1,14 +1,16 @@
 package zen.zasm;
 
-class StmtComment extends Statement {
-	private String txt;
+final class StmtComment extends Statement {
 
-	public StmtComment(Token tk, Tokenizer tz) {
-		super(null, tk);
-		txt = tz.readComment();
-	}
+    private final String txt;
 
-	public String toSource() {
-		return super.toSource() + txt;
-	}
+    public StmtComment(Token tk, Tokenizer tz) {
+        super(null, tk);
+        txt = tz.readComment();
+    }
+
+    @Override
+    public String toSource() {
+        return super.toSource() + txt;
+    }
 }
