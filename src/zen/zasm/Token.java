@@ -2,15 +2,15 @@ package zen.zasm;
 
 final class Token {
 
-    private String ws_lft;
-    private String id;
-    private String ws_rht;
-    private int pos_ws_lft;
-    private int pos_strt;
-    private int pos_end;
-    private int pos_ws_rht;
-    private int linenm;
-    private int charnm;
+    private final String ws_lft;
+    private final String id;
+    private final String ws_rht;
+    private final int pos_ws_lft;
+    private final int pos_strt;
+    private final int pos_end;
+    private final int pos_ws_rht;
+    private final int linenm;
+    private final int charnm;
 
     public Token(String id, String ws_lft, String ws_rht, int pos_ws_lft, int pos_strt, int pos_end, int pos_ws_rht,
             int linenm, int charnm) {
