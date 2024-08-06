@@ -137,10 +137,7 @@ public final class Zasm {
         // compile
         int i = 0;
         final int n = stmts.size();
-        while (true) {
-            if (i == n) {
-                break;
-            }
+        while (i != n) {
             Statement st = stmts.get(i);
             String src = st.toSource();
             tc.addComment(src);
