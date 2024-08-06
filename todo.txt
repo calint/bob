@@ -1,10 +1,13 @@
 step 1
 [ ] bob: Form: upload file
+[ ]   b.file: parent, name + unique, created, modified, owner, credentials
+[ ]   create unique file name, upload, postback the unique file name, create file with blob
 [ ] bob: authentication framework
 [ ] user with credentials
 [ ]   b.user: email, password hash, credentials. b.session: ref user
 [ ] firewall
 step 2
+[ ] db: stream blob and clob to outputstream
 [ ] ViewTable: Element.scrollIntoView() instead of scroll to top considering included views
 [ ]   include a form as a field for aggregation 1 to 1?
 [ ]   make it right. DboField, DboRel, save etc
