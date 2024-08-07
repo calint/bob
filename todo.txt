@@ -22,6 +22,7 @@ step 3
 [ ]   in session (updated at every request) store current server ip
 [ ]   if ip changes transfer in memory session from previous ip to current ip
 [ ]   load balancer mode sticky session
+[ ] b: use LinkedBlockingQueue<E> for requests
 [x] db: DbField.defaultValue to avoid boxing.
 [ ] db.test: test default values
 [x] db: DbObject.onCreate().
