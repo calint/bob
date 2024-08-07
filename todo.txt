@@ -15,6 +15,7 @@ step 2
 [ ]   input clob
 [ ]   input blob
 step 3
+[ ] cluster: client: multithreaded, multiple connections to db, sql statements queue
 [ ] b: fix for client that makes many threaded requests and then stalls them to starve server of threads or create too many. ddos.
 [ ]   slowhttptest
 [ ] b: in memory session with transfer between cluster members
