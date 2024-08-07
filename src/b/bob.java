@@ -153,8 +153,6 @@ public class bob extends websock {
             }
             final byte c = ba[ba_i];
             switch (state) {
-            default:
-                throw new RuntimeException();
             case 0:
                 if (c == '=') {
                     name = new String(ba, i, j - i, b.strenc);
@@ -162,7 +160,6 @@ public class bob extends websock {
                     state = 1;
                 }
                 break;
-
             case 1:
                 if (c == '\r') {
                     final String value = new String(ba, i, j - i, b.strenc);
@@ -171,6 +168,8 @@ public class bob extends websock {
                     state = 0;
                 }
                 break;
+            default:
+                throw new RuntimeException();
             }
             ba_i++;
             j++;

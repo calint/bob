@@ -1061,8 +1061,6 @@ public final class req {
         int k = 0;
         for (final byte c : ba) {
             switch (s) {
-            default:
-                throw new RuntimeException();
             case 0:
                 if (c == '=') {
                     name = new String(ba, i, k - i, b.strenc);
@@ -1070,7 +1068,6 @@ public final class req {
                     s = 1;
                 }
                 break;
-
             case 1:
                 if (c == '\r') {
                     final String value = new String(ba, i, k - i, b.strenc);
@@ -1079,6 +1076,8 @@ public final class req {
                     s = 0;
                 }
                 break;
+            default:
+                throw new RuntimeException();
             }
             k++;
         }
