@@ -147,11 +147,9 @@ public class bob extends websock {
         int state = 0;
         int j = i;
         int ba_i = i;
-        while (true) {
-            if (i == n) {
-                break;
-            }
+        while (i != n) {
             final byte c = ba[ba_i];
+            // todo: can be done without a state switch at every character
             switch (state) {
             case 0:
                 if (c == '=') {

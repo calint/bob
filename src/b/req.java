@@ -1055,31 +1055,32 @@ public final class req {
             throw new RuntimeException("postedcontent only " + text_plain + " allowed");
         }
         final byte[] ba = content_bb.array();
+        int state = 0;
+        int j = 0;
         int i = 0;
         String name = "";
-        int s = 0;
-        int k = 0;
+        // todo: can be done without a state switch at every character
         for (final byte c : ba) {
-            switch (s) {
+            switch (state) {
             case 0:
                 if (c == '=') {
-                    name = new String(ba, i, k - i, b.strenc);
-                    i = k + 1;
-                    s = 1;
+                    name = new String(ba, i, j - i, b.strenc);
+                    i = j + 1;
+                    state = 1;
                 }
                 break;
             case 1:
                 if (c == '\r') {
-                    final String value = new String(ba, i, k - i, b.strenc);
+                    final String value = new String(ba, i, j - i, b.strenc);
                     content.put(name, value);
-                    i = k + 1;
-                    s = 0;
+                    i = j + 1;
+                    state = 0;
                 }
                 break;
             default:
                 throw new RuntimeException();
             }
-            k++;
+            j++;
         }
     }
 
