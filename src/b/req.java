@@ -1056,31 +1056,31 @@ public final class req {
         }
         final byte[] ba = content_bb.array();
         int state = 0;
-        int j = 0;
-        int i = 0;
+        int start = 0;
+        int end = 0;
         String name = "";
         // todo: can be done without a state switch at every character
         for (final byte c : ba) {
             switch (state) {
             case 0:
                 if (c == '=') {
-                    name = new String(ba, i, j - i, b.strenc);
-                    i = j + 1;
+                    name = new String(ba, start, end - start, b.strenc);
+                    start = end + 1;
                     state = 1;
                 }
                 break;
             case 1:
                 if (c == '\r') {
-                    final String value = new String(ba, i, j - i, b.strenc);
+                    final String value = new String(ba, start, end - start, b.strenc);
                     content.put(name, value);
-                    i = j + 1;
+                    start = end + 1;
                     state = 0;
                 }
                 break;
             default:
                 throw new RuntimeException();
             }
-            j++;
+            end++;
         }
     }
 

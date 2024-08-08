@@ -141,36 +141,36 @@ public class bob extends websock {
     private static HashMap<String, String> populateContentMapFromBuffer(final ByteBuffer bb) throws Throwable {
         final HashMap<String, String> content = new HashMap<String, String>();
         final byte[] ba = bb.array();
-        int i = bb.position();
-        int j = i;
-        int ba_i = i;
-        final int n = bb.limit();
+        int start = bb.position();
+        int end = start;
+        int i = start;
+        final int lim = bb.limit();
         String name = "";
         int state = 0;
-        while (i != n) {
-            final byte c = ba[ba_i];
+        while (start != lim) {
+            final byte c = ba[i];
             // todo: can be done without a state switch at every character
             switch (state) {
             case 0:
                 if (c == '=') {
-                    name = new String(ba, i, j - i, b.strenc);
-                    i = j + 1;
+                    name = new String(ba, start, end - start, b.strenc);
+                    start = end + 1;
                     state = 1;
                 }
                 break;
             case 1:
                 if (c == '\r') {
-                    final String value = new String(ba, i, j - i, b.strenc);
+                    final String value = new String(ba, start, end - start, b.strenc);
                     content.put(name, value);
-                    i = j + 1;
+                    start = end + 1;
                     state = 0;
                 }
                 break;
             default:
                 throw new RuntimeException();
             }
-            ba_i++;
-            j++;
+            i++;
+            end++;
         }
         return content;
     }
