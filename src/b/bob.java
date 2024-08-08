@@ -142,11 +142,11 @@ public class bob extends websock {
         final HashMap<String, String> content = new HashMap<String, String>();
         final byte[] ba = bb.array();
         int i = bb.position();
+        int j = i;
+        int ba_i = i;
         final int n = bb.limit();
         String name = "";
         int state = 0;
-        int j = i;
-        int ba_i = i;
         while (i != n) {
             final byte c = ba[ba_i];
             // todo: can be done without a state switch at every character

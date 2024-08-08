@@ -1052,7 +1052,7 @@ public final class req {
 
     private void populate_content_map_from_buffer() throws Throwable {
         if (content_type != null && !content_type.startsWith(text_plain)) {
-            throw new RuntimeException("postedcontent only " + text_plain + " allowed");
+            throw new RuntimeException("posted content only " + text_plain + " allowed");
         }
         final byte[] ba = content_bb.array();
         int state = 0;
