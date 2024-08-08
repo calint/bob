@@ -148,18 +148,18 @@ public class bob extends websock {
         String name = "";
         int state = 0;
         while (start != lim) {
-            final byte c = ba[i];
+            final byte ch = ba[i];
             // todo: can be done without a state switch at every character
             switch (state) {
             case 0:
-                if (c == '=') {
+                if (ch == '=') {
                     name = new String(ba, start, end - start, b.strenc);
                     start = end + 1;
                     state = 1;
                 }
                 break;
             case 1:
-                if (c == '\r') {
+                if (ch == '\r') {
                     final String value = new String(ba, start, end - start, b.strenc);
                     content.put(name, value);
                     start = end + 1;

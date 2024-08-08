@@ -1060,17 +1060,17 @@ public final class req {
         int end = 0;
         String name = "";
         // todo: can be done without a state switch at every character
-        for (final byte c : ba) {
+        for (final byte ch : ba) {
             switch (state) {
             case 0:
-                if (c == '=') {
+                if (ch == '=') {
                     name = new String(ba, start, end - start, b.strenc);
                     start = end + 1;
                     state = 1;
                 }
                 break;
             case 1:
-                if (c == '\r') {
+                if (ch == '\r') {
                     final String value = new String(ba, start, end - start, b.strenc);
                     content.put(name, value);
                     start = end + 1;
