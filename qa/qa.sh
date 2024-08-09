@@ -28,6 +28,32 @@ curl -s $QA_BASE_URL/$URI_FILES/$FILE > res
 if ! cmp -s $DIR_FILES/$FILE res; then exit 1; fi
 echo " ok"
 #--------------------------------------------------------
+TEST_NAME="etag from cache: "
+FILE=small.txt
+echo -n $TEST_NAME
+HEADER=$(\
+    printf "If-None-Match: "
+    curl -si $QA_BASE_URL/$URI_FILES/$FILE \
+    | grep ^ETag: | awk '{printf $2}'
+)
+curl -s --include --header "$HEADER" \
+    $QA_BASE_URL/$URI_FILES/$FILE > res
+if ! cmp -s $DIR_CMP/12 res; then exit 1; fi
+echo " ok"
+#--------------------------------------------------------
+TEST_NAME="etag from medium file: "
+FILE=sample.txt
+echo -n $TEST_NAME
+HEADER=$(\
+    printf "If-None-Match: "
+    curl -si $QA_BASE_URL/$URI_FILES/$FILE \
+    | grep ^ETag: | awk '{printf $2}'
+)
+curl -s --include --header "$HEADER" \
+    $QA_BASE_URL/$URI_FILES/$FILE > res
+if ! cmp -s $DIR_CMP/13 res; then exit 1; fi
+echo " ok"
+#--------------------------------------------------------
 TEST_NAME="get ranged from cache (range 1-): "
 FILE=small.js
 echo -n $TEST_NAME
