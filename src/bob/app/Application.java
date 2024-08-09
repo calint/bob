@@ -43,6 +43,7 @@ public final class Application implements bapp {
         b.b.set_path_to_class("/b/test/t2", b.test.t2.class);
         b.b.set_path_to_class("/b/test/t3", b.test.t3.class);
         b.b.set_path_to_class("/b/test/t4", b.test.t4.class);
+        b.b.set_path_to_class("/b/test/t5", b.test.t5.class);
 
         b.b.set_path_to_class("/db/test/t1", db.test.t4.class);
         b.b.set_path_to_class("/db/test/t2", db.test.t2.class);

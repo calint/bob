@@ -132,6 +132,16 @@ curl -s $QA_BASE_URL/b/test/t4 > res
 if ! cmp -s $DIR_CMP/10 res; then exit 1; fi
 echo " ok"
 #--------------------------------------------------------
+TEST_NAME="postback small: "
+echo -n $TEST_NAME
+curl -s \
+    --header "Content-Type:text/plain;charset=utf-8" \
+    --header "Cookie: i=20240809--1607-abcdef" \
+    --data-binary @cmp/post/t5.txt \
+    $QA_BASE_URL/b/test/t5 > res 
+if ! cmp -s cmp/14 res; then exit 1; fi
+echo " ok"
+#--------------------------------------------------------
 TEST_NAME="db test1: "
 echo -n $TEST_NAME
 curl -s $QA_BASE_URL/db/test/t4 > res
