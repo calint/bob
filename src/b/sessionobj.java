@@ -44,7 +44,7 @@ public final class sessionobj extends DbObject {
         }
     }
 
-    public void object(final Serializable v) {
+    public void set_object(final Serializable v) {
         object.setObj(this, v);
     }
 }

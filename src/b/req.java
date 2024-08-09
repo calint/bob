@@ -372,17 +372,14 @@ public final class req {
             close();
             throw t;
         }
-        if (b.cache_files && try_cache() || b.try_file && try_file()) {
-            return;
-        }
-        if (b.try_rc && try_resource()) {
+        if (b.cache_files && try_cache() || b.try_file && try_file() || b.try_rc && try_resource()) {
             return;
         }
         // try creating an instance of 'a' on a separate thread
         st = state.waiting_run_page;
     }
 
-    public static String get_session_id_from_headers(final Map<String, String> headers) {
+    public String get_session_id_from_headers() {
         final String cookie = headers.get(req.hk_cookie);
         if (cookie == null) {
             return null;
@@ -398,7 +395,7 @@ public final class req {
     }
 
     private boolean set_session_id_from_cookie() {
-        session_id = get_session_id_from_headers(headers);
+        session_id = get_session_id_from_headers();
         return session_id != null;
     }
 
@@ -448,7 +445,7 @@ public final class req {
         long range_from;
         long range_to;
         final ByteBuffer[] bb = new ByteBuffer[16];
-        int i = 0;
+        int bb_i = 0;
         final String suffix = path_str.substring(path_str.lastIndexOf('.') + 1);
         final byte[] content_type = b.get_content_type_for_file_suffix(suffix);
         if (range_s != null) {
@@ -458,9 +455,6 @@ public final class req {
             try {
                 range_from = Long.parseLong(ss[0]);
             } catch (final NumberFormatException e) {
-                range_from = -1;
-            }
-            if (range_from == -1) { // invalid or not specified
                 range_from = 0;
             }
             if (ss.length > 1) {
@@ -473,45 +467,45 @@ public final class req {
                 range_to = -1;
             }
 
-            bb[i++] = ByteBuffer.wrap(h_http206);
-            bb[i++] = ByteBuffer.wrap(h_content_length);
+            bb[bb_i++] = ByteBuffer.wrap(h_http206);
+            bb[bb_i++] = ByteBuffer.wrap(h_content_length);
 
             if (range_to == -1) { // invalid or not specified
-                bb[i++] = ByteBuffer.wrap(Long.toString(len - range_from).getBytes());
-                bb[i++] = ByteBuffer.wrap(hk_content_range_bytes);
-                bb[i++] = ByteBuffer.wrap((range_from + s_minus + (len - 1) + s_slash + len).getBytes());
+                bb[bb_i++] = ByteBuffer.wrap(Long.toString(len - range_from).getBytes());
+                bb[bb_i++] = ByteBuffer.wrap(hk_content_range_bytes);
+                bb[bb_i++] = ByteBuffer.wrap((range_from + s_minus + (len - 1) + s_slash + len).getBytes());
                 // note: zero index and inclusive adjustment
             } else { // range_to specified
-                bb[i++] = ByteBuffer.wrap(Long.toString(range_to - range_from + 1).getBytes());
-                // note: zero index inclusive adjustment
-                bb[i++] = ByteBuffer.wrap(hk_content_range_bytes);
-                bb[i++] = ByteBuffer.wrap((range_from + s_minus + range_to + s_slash + len).getBytes());
+                bb[bb_i++] = ByteBuffer.wrap(Long.toString(range_to - range_from + 1).getBytes());
+                // note: zero index and inclusive adjustment
+                bb[bb_i++] = ByteBuffer.wrap(hk_content_range_bytes);
+                bb[bb_i++] = ByteBuffer.wrap((range_from + s_minus + range_to + s_slash + len).getBytes());
             }
         } else {
             range_from = 0;
             range_to = -1;
-            bb[i++] = ByteBuffer.wrap(h_http200);
-            bb[i++] = ByteBuffer.wrap(h_content_length);
-            bb[i++] = ByteBuffer.wrap(Long.toString(len).getBytes());
+            bb[bb_i++] = ByteBuffer.wrap(h_http200);
+            bb[bb_i++] = ByteBuffer.wrap(h_content_length);
+            bb[bb_i++] = ByteBuffer.wrap(Long.toString(len).getBytes());
         }
         if (content_type != null) {
-            bb[i++] = ByteBuffer.wrap(h_content_type);
-            bb[i++] = ByteBuffer.wrap(content_type);
+            bb[bb_i++] = ByteBuffer.wrap(h_content_type);
+            bb[bb_i++] = ByteBuffer.wrap(content_type);
         }
-        bb[i++] = ByteBuffer.wrap(h_etag);
-        bb[i++] = ByteBuffer.wrap(etag.getBytes());
-        bb[i++] = ByteBuffer.wrap(hkp_accept_ranges_byte);
+        bb[bb_i++] = ByteBuffer.wrap(h_etag);
+        bb[bb_i++] = ByteBuffer.wrap(etag.getBytes());
+        bb[bb_i++] = ByteBuffer.wrap(hkp_accept_ranges_byte);
         if (session_id_set) {
-            bb[i++] = ByteBuffer.wrap(hk_set_cookie);
-            bb[i++] = ByteBuffer.wrap(session_id.getBytes());
-            bb[i++] = ByteBuffer.wrap(hkv_set_cookie_append);
+            bb[bb_i++] = ByteBuffer.wrap(hk_set_cookie);
+            bb[bb_i++] = ByteBuffer.wrap(session_id.getBytes());
+            bb[bb_i++] = ByteBuffer.wrap(hkv_set_cookie_append);
             // note: session_id_set is set to false before next request
         }
         if (connection_keep_alive) {
-            bb[i++] = ByteBuffer.wrap(hkp_connection_keep_alive);
+            bb[bb_i++] = ByteBuffer.wrap(hkp_connection_keep_alive);
         }
-        bb[i++] = ByteBuffer.wrap(ba_crlf2);
-        final long n = send_packet(bb, i);
+        bb[bb_i++] = ByteBuffer.wrap(ba_crlf2);
+        final long n = send_packet(bb, bb_i);
         thdwatch.output += n;
         transfer_file_channel = path.fileinputstream().getChannel();
         transfer_file_position = range_from;
@@ -524,7 +518,7 @@ public final class req {
         }
 
         st = state.transfer_file;
-        do_transfer_file(); // ? return value ignored
+        do_transfer_file();
         return true;
     }
 
@@ -577,16 +571,11 @@ public final class req {
             long range_to;
             final String[] s = range_s.split(s_equals);
             final String[] ss = s[1].split(s_minus);
-
             try {
                 range_from = Long.parseLong(ss[0]);
             } catch (final NumberFormatException e) {
-                range_from = -1;
-            }
-            if (range_from == -1) { // invalid or not specified
                 range_from = 0;
             }
-
             if (ss.length > 1) {
                 try {
                     range_to = Long.parseLong(ss[1]);
@@ -596,7 +585,6 @@ public final class req {
             } else {
                 range_to = -1;
             }
-
             int bb_len = session_id_set ? 10 : 7;
             // note: 10 : 7 is the byte buffers used to assemble the reply
             final byte[] content_type = c.content_type();
@@ -604,40 +592,40 @@ public final class req {
                 bb_len += 2;
             }
             final ByteBuffer[] bb = new ByteBuffer[bb_len];
-            int i = 0;
-            bb[i++] = ByteBuffer.wrap(h_http206);
-            bb[i++] = ByteBuffer.wrap(h_content_length);
+            int bb_i = 0;
+            bb[bb_i++] = ByteBuffer.wrap(h_http206);
+            bb[bb_i++] = ByteBuffer.wrap(h_content_length);
             if (range_to == -1) {
                 // invalid or not specified
-                bb[i++] = ByteBuffer.wrap(Long.toString(len - range_from).getBytes());
-                bb[i++] = ByteBuffer.wrap(hk_content_range_bytes);
-                bb[i++] = ByteBuffer.wrap((range_from + s_minus + (len - 1) + s_slash + len).getBytes());
-                // note: zero index and inclusive adjustment
+                bb[bb_i++] = ByteBuffer.wrap(Long.toString(len - range_from).getBytes());
+                bb[bb_i++] = ByteBuffer.wrap(hk_content_range_bytes);
+                bb[bb_i++] = ByteBuffer.wrap((range_from + s_minus + (len - 1) + s_slash + len).getBytes());
+                // note: zero index inclusive adjustment
             } else {
                 // range_to specified
-                bb[i++] = ByteBuffer.wrap(Long.toString(range_to - range_from + 1).getBytes());
+                bb[bb_i++] = ByteBuffer.wrap(Long.toString(range_to - range_from + 1).getBytes());
                 // note: zero index inclusive adjustment
-                bb[i++] = ByteBuffer.wrap(hk_content_range_bytes);
-                bb[i++] = ByteBuffer.wrap((range_from + s_minus + range_to + s_slash + len).getBytes());
+                bb[bb_i++] = ByteBuffer.wrap(hk_content_range_bytes);
+                bb[bb_i++] = ByteBuffer.wrap((range_from + s_minus + range_to + s_slash + len).getBytes());
             }
             if (session_id_set) {
-                bb[i++] = ByteBuffer.wrap(hk_set_cookie);
-                bb[i++] = ByteBuffer.wrap(session_id.getBytes());
-                bb[i++] = ByteBuffer.wrap(hkv_set_cookie_append);
+                bb[bb_i++] = ByteBuffer.wrap(hk_set_cookie);
+                bb[bb_i++] = ByteBuffer.wrap(session_id.getBytes());
+                bb[bb_i++] = ByteBuffer.wrap(hkv_set_cookie_append);
                 // note: session_id_set is set to false before next request
             }
             if (content_type != null) {
                 // ? is it necessary in ranged requests?
-                bb[i++] = ByteBuffer.wrap(h_content_type);
-                bb[i++] = ByteBuffer.wrap(content_type);
+                bb[bb_i++] = ByteBuffer.wrap(h_content_type);
+                bb[bb_i++] = ByteBuffer.wrap(content_type);
             }
-            bb[i++] = ByteBuffer.wrap(ba_crlf2);
+            bb[bb_i++] = ByteBuffer.wrap(ba_crlf2);
             final long from_position = c.content_position();
             if (range_to == -1) {
-                bb[i++] = (ByteBuffer) c.byte_buffer().slice().position((int) (from_position + range_from))
+                bb[bb_i++] = (ByteBuffer) c.byte_buffer().slice().position((int) (from_position + range_from))
                         .limit((int) (from_position + len));
             } else {
-                bb[i++] = (ByteBuffer) c.byte_buffer().slice().position((int) (from_position + range_from))
+                bb[bb_i++] = (ByteBuffer) c.byte_buffer().slice().position((int) (from_position + range_from))
                         .limit((int) (from_position + range_to + 1));
                 // note: +1 because 0 indexed and inclusive
             }
@@ -660,40 +648,39 @@ public final class req {
         // position the buffer (same as bb[0]) to the start of the remaining data, which
         // is additional_headers_insertion_position
         transfer_buffers(bba);
-        // session_id_set=false;
     }
 
     private void reply(final byte[] firstline, final byte[] lastMod, final byte[] content_type, final byte[] content)
             throws Throwable {
         final ByteBuffer[] bb = new ByteBuffer[16];
-        int bi = 0;
-        bb[bi++] = ByteBuffer.wrap(firstline);
+        int bb_i = 0;
+        bb[bb_i++] = ByteBuffer.wrap(firstline);
         if (session_id_set) {
-            bb[bi++] = ByteBuffer.wrap(hk_set_cookie);
-            bb[bi++] = ByteBuffer.wrap(session_id.getBytes());
-            bb[bi++] = ByteBuffer.wrap(hkv_set_cookie_append);
+            bb[bb_i++] = ByteBuffer.wrap(hk_set_cookie);
+            bb[bb_i++] = ByteBuffer.wrap(session_id.getBytes());
+            bb[bb_i++] = ByteBuffer.wrap(hkv_set_cookie_append);
             // note: session_id_set is set to false before next request
         }
         if (lastMod != null) {
-            bb[bi++] = ByteBuffer.wrap(h_last_modified);
-            bb[bi++] = ByteBuffer.wrap(lastMod);
+            bb[bb_i++] = ByteBuffer.wrap(h_last_modified);
+            bb[bb_i++] = ByteBuffer.wrap(lastMod);
         }
         if (content_type != null) {
-            bb[bi++] = ByteBuffer.wrap(h_content_type);
-            bb[bi++] = ByteBuffer.wrap(content_type);
+            bb[bb_i++] = ByteBuffer.wrap(h_content_type);
+            bb[bb_i++] = ByteBuffer.wrap(content_type);
         }
         if (content != null) {
-            bb[bi++] = ByteBuffer.wrap(h_content_length);
-            bb[bi++] = ByteBuffer.wrap(Long.toString(content.length).getBytes());
+            bb[bb_i++] = ByteBuffer.wrap(h_content_length);
+            bb[bb_i++] = ByteBuffer.wrap(Long.toString(content.length).getBytes());
         }
         if (connection_keep_alive) {
-            bb[bi++] = ByteBuffer.wrap(hkp_connection_keep_alive);
+            bb[bb_i++] = ByteBuffer.wrap(hkp_connection_keep_alive);
         }
-        bb[bi++] = ByteBuffer.wrap(ba_crlf2);
+        bb[bb_i++] = ByteBuffer.wrap(ba_crlf2);
         if (content != null) {
-            bb[bi++] = ByteBuffer.wrap(content);
+            bb[bb_i++] = ByteBuffer.wrap(content);
         }
-        final long n = send_packet(bb, bi);
+        final long n = send_packet(bb, bb_i);
         thdwatch.output += n;
         st = state.next_request;
     }
@@ -703,9 +690,9 @@ public final class req {
         for (int i = 0; i < n; i++) {
             tosend += bba[i].remaining();
         }
-        final long c = socket_channel.write(bba, 0, n);
-        if (c != tosend) {
-            b.log(new RuntimeException("sent " + c + " of " + tosend + " bytes"));// ? throwerror
+        final long sent = socket_channel.write(bba, 0, n);
+        if (sent != tosend) {
+            b.log(new RuntimeException("sent " + sent + " of " + tosend + " bytes"));// ? throwerror
         }
         return n;
     }
@@ -735,12 +722,12 @@ public final class req {
     /** @return true if if transfer is done, more writes are needed. */
     private void do_transfer_buffers() throws Throwable {
         while (transfer_buffers_remaining != 0) {
-            final long c = socket_channel.write(transfer_buffers);
-            if (c == 0) {
+            final long sent = socket_channel.write(transfer_buffers);
+            if (sent == 0) {
                 return;
             }
-            transfer_buffers_remaining -= c;
-            thdwatch.output += c;
+            transfer_buffers_remaining -= sent;
+            thdwatch.output += sent;
         }
         st = state.next_request;
     }
@@ -751,14 +738,14 @@ public final class req {
         while (transfer_file_remaining != 0) {
             try {
                 final long n = transfer_file_remaining > buf_size ? buf_size : transfer_file_remaining;
-                final long c = transfer_file_channel.transferTo(transfer_file_position, n, socket_channel);
-                if (c == 0) {
+                final long sent = transfer_file_channel.transferTo(transfer_file_position, n, socket_channel);
+                if (sent == 0) {
                     selection_key.interestOps(SelectionKey.OP_WRITE);
                     return;
                 }
-                transfer_file_position += c;
-                transfer_file_remaining -= c;
-                thdwatch.output += c;
+                transfer_file_position += sent;
+                transfer_file_remaining -= sent;
+                thdwatch.output += sent;
             } catch (final IOException e) {
                 final String msg = e.getMessage();
                 if (e instanceof IOException && (msg.startsWith("Broken pipe")
@@ -778,11 +765,11 @@ public final class req {
 
     private void parse_content_read() {
         // content might span over several buffer reads
-        final int c = (int) (ba_rem > content_remaining_to_read ? content_remaining_to_read : ba_rem);
-        content_bb.put(ba, ba_pos, c);
-        content_remaining_to_read -= c;
-        ba_pos += c;
-        ba_rem -= c;
+        final int n = (int) (ba_rem > content_remaining_to_read ? content_remaining_to_read : ba_rem);
+        content_bb.put(ba, ba_pos, n);
+        content_remaining_to_read -= n;
+        ba_pos += n;
+        ba_rem -= n;
         if (content_remaining_to_read == 0) {
             content_bb.flip();
             st = state.waiting_run_page;
@@ -995,7 +982,7 @@ public final class req {
                         + "(xwriter,String)");
             }
             if (tn != null) {
-                dbo_root_elem.object(root_elem);
+                dbo_root_elem.set_object(root_elem);
                 // dbo element is now dirty
                 tn.flush();
             }
@@ -1019,7 +1006,7 @@ public final class req {
             x.pre().p(b.stacktrace(t));
         }
         if (tn != null) {
-            dbo_root_elem.object(root_elem);
+            dbo_root_elem.set_object(root_elem);
             tn.flush();
         }
         x.finish();
@@ -1028,26 +1015,26 @@ public final class req {
 
     private oschunked reply_chunked(final byte[] hdr, final String content_type) throws Throwable {
         final ByteBuffer[] bb_reply = new ByteBuffer[11];
-        int bbi = 0;
-        bb_reply[bbi++] = ByteBuffer.wrap(hdr);
+        int bb_i = 0;
+        bb_reply[bb_i++] = ByteBuffer.wrap(hdr);
         if (session_id_set) {
-            bb_reply[bbi++] = ByteBuffer.wrap(hk_set_cookie);
-            bb_reply[bbi++] = ByteBuffer.wrap(session_id.getBytes());
-            bb_reply[bbi++] = ByteBuffer.wrap(hkv_set_cookie_append);
+            bb_reply[bb_i++] = ByteBuffer.wrap(hk_set_cookie);
+            bb_reply[bb_i++] = ByteBuffer.wrap(session_id.getBytes());
+            bb_reply[bb_i++] = ByteBuffer.wrap(hkv_set_cookie_append);
             // note: session_id_set is set to false before next request
         }
         if (connection_keep_alive) {
-            bb_reply[bbi++] = ByteBuffer.wrap(hkp_connection_keep_alive);
+            bb_reply[bb_i++] = ByteBuffer.wrap(hkp_connection_keep_alive);
         }
         if (content_type != null) {
-            bb_reply[bbi++] = ByteBuffer.wrap(h_content_type);
-            bb_reply[bbi++] = ByteBuffer.wrap(content_type.getBytes());
+            bb_reply[bb_i++] = ByteBuffer.wrap(h_content_type);
+            bb_reply[bb_i++] = ByteBuffer.wrap(content_type.getBytes());
         }
-        bb_reply[bbi++] = ByteBuffer.wrap(hkp_transfer_encoding_chunked);
-        bb_reply[bbi++] = ByteBuffer.wrap(ba_crlf2);
-        // note: oschuncked with reply buffers to send at first write instead of 2
+        bb_reply[bb_i++] = ByteBuffer.wrap(hkp_transfer_encoding_chunked);
+        bb_reply[bb_i++] = ByteBuffer.wrap(ba_crlf2);
+        // note: oschunked with reply buffers to send at first write instead of 2
         // packets
-        return new oschunked(this, bb_reply, bbi, b.chunk_B);
+        return new oschunked(this, bb_reply, bb_i, b.chunk_B);
     }
 
     private void populate_content_map_from_buffer() throws Throwable {
@@ -1116,7 +1103,6 @@ public final class req {
                 b.log(t);
             }
         }
-
         try {
             socket_channel.close();
         } catch (final Throwable t) {
@@ -1172,12 +1158,12 @@ public final class req {
         if (file_and_resource_cache == null) {
             return 0;
         }
-        long k = 0;
+        long n = 0;
         // ? synchronize
         for (final chdresp e : file_and_resource_cache.values()) {
-            k += e.byte_buffer().capacity();
+            n += e.byte_buffer().capacity();
         }
-        return k;
+        return n;
     }
 
     public String session_id() {
@@ -1234,8 +1220,7 @@ public final class req {
 
     static void init_static() {
         if (b.cache_files) {
-            file_and_resource_cache = Collections
-                    .synchronizedMap(new LinkedHashMap<String, chdresp>(b.cache_files_hashlen));
+            file_and_resource_cache = Collections.synchronizedMap(new HashMap<String, chdresp>(b.cache_files_hashlen));
         }
     }
 
