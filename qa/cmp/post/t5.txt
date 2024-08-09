@@ -1,2 +1,2 @@
-$=- send
+$=- send ᐖᐛ
 -fld=hello "world" ᐖᐛツ

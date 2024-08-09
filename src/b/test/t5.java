@@ -11,10 +11,10 @@ public class t5 extends a {
 
     @Override
     public void to(final xwriter x) throws Throwable {
-        x.inptxt(fld).br().ax(this, "send", "send");
+        x.inptxt(fld).br().ax(this, "send ᐖᐛ", "send");
     }
 
     public void x_send(final xwriter x, final String param) throws Throwable {
-        x.xalert(fld.str());
+        x.xalert(param + " " + fld.str());
     }
 }
