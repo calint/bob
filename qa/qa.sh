@@ -153,6 +153,17 @@ if ! cmp -s cmp/post/t5.txt ../u/20240809--1607-abcdef/uploaded_file; then exit 
 rm ../u/20240809--1607-abcdef/uploaded_file
 echo " ok"
 #--------------------------------------------------------
+TEST_NAME="upload utf8 name: "
+echo -n $TEST_NAME
+curl -s \
+    --header "Content-Type: file" \
+    --header "Cookie: i=20240809--1607-abcdef" \
+    --data-binary @cmp/post/t5.txt \
+    $QA_BASE_URL/dir+space/hello%20%E1%90%96%E1%90%9B%E3%83%84.txt > res 
+if ! cmp -s cmp/post/t5.txt "../u/20240809--1607-abcdef/dir space/hello ᐖᐛツ.txt"; then exit 1; fi
+rm "../u/20240809--1607-abcdef/dir space/hello ᐖᐛツ.txt"
+echo " ok"
+#--------------------------------------------------------
 TEST_NAME="db test1: "
 echo -n $TEST_NAME
 curl -s $QA_BASE_URL/db/test/t4 > res
