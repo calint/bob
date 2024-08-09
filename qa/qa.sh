@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 DIR=$(dirname "$0")
 cd $DIR
@@ -134,12 +134,17 @@ echo " ok"
 #--------------------------------------------------------
 TEST_NAME="postback small: "
 echo -n $TEST_NAME
+# build postback
+echo -ne '$=- send ᐖᐛ\r' > pb
+echo -ne '-fld=hello "world"\nᐖᐛツ\r' >> pb
+# post
 curl -s \
     --header "Content-Type: text/plain; charset=utf-8" \
     --header "Cookie: i=20240809--1607-abcdef" \
-    --data-binary @cmp/post/t5.txt \
+    --data-binary @pb \
     $QA_BASE_URL/b/test/t5 > res 
 if ! cmp -s cmp/14 res; then exit 1; fi
+rm pb
 echo " ok"
 #--------------------------------------------------------
 TEST_NAME="upload small: "
@@ -147,9 +152,9 @@ echo -n $TEST_NAME
 curl -s \
     --header "Content-Type: file" \
     --header "Cookie: i=20240809--1607-abcdef" \
-    --data-binary @cmp/post/t5.txt \
+    --data-binary @files/small.css \
     $QA_BASE_URL/uploaded_file > res 
-if ! cmp -s cmp/post/t5.txt ../u/20240809--1607-abcdef/uploaded_file; then exit 1; fi
+if ! cmp -s files/small.css ../u/20240809--1607-abcdef/uploaded_file; then exit 1; fi
 rm ../u/20240809--1607-abcdef/uploaded_file
 echo " ok"
 #--------------------------------------------------------
@@ -158,9 +163,9 @@ echo -n $TEST_NAME
 curl -s \
     --header "Content-Type: file" \
     --header "Cookie: i=20240809--1607-abcdef" \
-    --data-binary @cmp/post/t5.txt \
+    --data-binary @files/sample.txt \
     $QA_BASE_URL/dir+space/hello%20%E1%90%96%E1%90%9B%E3%83%84.txt > res 
-if ! cmp -s cmp/post/t5.txt "../u/20240809--1607-abcdef/dir space/hello ᐖᐛツ.txt"; then exit 1; fi
+if ! cmp -s files/sample.txt "../u/20240809--1607-abcdef/dir space/hello ᐖᐛツ.txt"; then exit 1; fi
 rm "../u/20240809--1607-abcdef/dir space/hello ᐖᐛツ.txt"
 echo " ok"
 #--------------------------------------------------------
