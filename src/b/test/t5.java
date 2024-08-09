@@ -5,7 +5,7 @@ import b.xwriter;
 
 /** test form */
 public class t5 extends a {
-    private static final long serialVersionUID = 3;
+    private static final long serialVersionUID = 1;
 
     public a fld;
 
