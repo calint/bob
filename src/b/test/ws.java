@@ -4,7 +4,7 @@ import java.nio.ByteBuffer;
 
 import b.websock;
 
-/** Websocket that implements the framework. */
+/** Test websock echo. */
 public class ws extends websock {
     public ws() {
         super(true);
