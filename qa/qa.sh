@@ -175,6 +175,12 @@ curl -s $QA_BASE_URL/db/test/t4 > res
 if ! cmp -s $DIR_CMP/11 res; then exit 1; fi
 echo " ok"
 #--------------------------------------------------------
+TEST_NAME="websock: "
+echo -n $TEST_NAME
+python3 qa-websock.py 2>&1 | grep OK > res
+if ! cmp -s $DIR_CMP/15 res; then exit 1; fi
+echo " ok"
+#--------------------------------------------------------
 rm res
 date
 echo

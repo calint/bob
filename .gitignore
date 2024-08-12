@@ -2,3 +2,5 @@
 /u/
 /private-clipboard
 /books_data_200k.csv
+.mypy_cache
+.venv
