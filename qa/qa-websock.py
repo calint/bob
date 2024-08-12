@@ -1,3 +1,4 @@
+# test the echo websocket
 # note: requires python3 virtual environment and pip install websockets
 import unittest
 import asyncio
