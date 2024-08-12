@@ -1,3 +1,5 @@
+[ ] DbTransaction: dirtyObjects, cache: create at first use
+
 step 1
 [ ] db: stream blob and clob to outputstream and from inputstream
 [ ] bob: Form: upload file

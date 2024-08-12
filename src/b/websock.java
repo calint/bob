@@ -1,4 +1,5 @@
 // reviewed: 2024-08-05
+// reviewed: 2024-08-12
 package b;
 
 import java.nio.ByteBuffer;
@@ -12,11 +13,7 @@ import java.security.MessageDigest;
  */
 public abstract class websock {
     private enum state {
-        handshake, parse_next_frame, parse_data, sending, closed
-    }
-
-    enum op {
-        write, read, close
+        handshake, parse_next_frame, parse_data, send, closed
     }
 
     private req rq;
@@ -24,7 +21,7 @@ public abstract class websock {
     private ByteBuffer bb;
     private state st = state.handshake;
     private int payload_remaining;
-    private ByteBuffer request_bb;
+    private ByteBuffer bb_message;
     private ByteBuffer[] send_bba;
     private boolean is_first_packet;
     private final byte[] mask_key = new byte[4];
@@ -72,7 +69,10 @@ public abstract class websock {
             throw new RuntimeException("initiation packet not fully sent");
         }
         on_opened();
+        assert (bb.remaining() == 0);
         if (is_sending()) {
+            // note: when 'process()' is called and bb.remaining()==0 then the correct state
+            // will be set
             return;
         }
         st = state.parse_next_frame;
@@ -82,7 +82,7 @@ public abstract class websock {
     }
 
     private boolean is_sending() {
-        return st == state.sending;
+        return st == state.send;
     }
 
     /** Called by b whenever there is read or write to socket available. */
@@ -116,8 +116,6 @@ public abstract class websock {
             // parse incoming buffer
             while (bb.remaining() != 0) {
                 switch (st) {
-                default:
-                    throw new RuntimeException();
                 case parse_next_frame:
                     // note: assuming the complete header is buffered. breaking up into states for
                     // header would handle the input buffer of 1 B
@@ -126,10 +124,10 @@ public abstract class websock {
                     // Base Framing Protocol
                     final int b0 = bb.get();
                     // final boolean fin = (b0 & 128) == 128;
-                    final int resv = (b0 >> 4) & 7;
-                    if (resv != 0) {
-                        throw new Error("reserved bits are not 0");
-                    }
+                    // final int resv = (b0 >> 4) & 7;
+                    // if (resv != 0) {
+                    // throw new Error("reserved bits are not 0");
+                    // }
                     final int opcode = b0 & 0xf;
                     if (opcode == 8) {
                         // rfc6455#section-5.5.1
@@ -170,9 +168,10 @@ public abstract class websock {
                     final byte[] bbia = bb.array();
                     final int pos = bb.position();
                     final int limit = bb.remaining() > payload_remaining ? pos + payload_remaining : bb.limit();
-                    if (is_masked && mask_key[0] == 0 && mask_key[1] == 0 && mask_key[2] == 0 && mask_key[3] == 0) {
-                        throw new RuntimeException();
-                    }
+                    // if (is_masked && mask_key[0] == 0 && mask_key[1] == 0 && mask_key[2] == 0 &&
+                    // mask_key[3] == 0) {
+                    // throw new RuntimeException();
+                    // }
                     // unmask
                     for (int i = pos; i < limit; i++) {
                         final byte b = (byte) (bbia[i] ^ mask_key[mask_i]);
@@ -199,6 +198,8 @@ public abstract class websock {
                         return;
                     }
                     break;
+                default:
+                    throw new RuntimeException();
                 }
             }
         }
@@ -206,24 +207,25 @@ public abstract class websock {
 
     private void on_payload(final ByteBuffer bb) throws Throwable {
         final boolean is_last_packet = payload_remaining == 0;
-        if (is_first_packet && !is_last_packet) {
-            request_bb = ByteBuffer.allocate(bb.remaining() + payload_remaining);
-            request_bb.put(bb);
+        if (!is_last_packet) {
+            if (is_first_packet) {
+                bb_message = ByteBuffer.allocate(bb.remaining() + payload_remaining);
+                bb_message.put(bb);
+                return;
+            } else {
+                bb_message.put(bb);
+            }
             return;
         }
-        if (!is_first_packet && !is_last_packet) {
-            request_bb.put(bb);
-            return;
+        // last packet
+        if (!is_first_packet) {
+            bb_message.put(bb);
+            bb_message.flip();
+        } else {
+            bb_message = bb;
         }
-        if (!is_first_packet && is_last_packet) {
-            request_bb.put(bb);
-            request_bb.flip();
-        }
-        if (is_first_packet && is_last_packet) {
-            request_bb = bb;
-        }
-        on_message(request_bb);
-        request_bb = null;
+        on_message(bb_message);
+        bb_message = null;
     }
 
     private void write() throws Throwable {
@@ -232,7 +234,7 @@ public abstract class websock {
         // check if the write is complete.
         for (final ByteBuffer b : send_bba) {
             if (b.hasRemaining()) {
-                // buffer not fully send, request read
+                // buffer not fully sent, request socket write
                 rq.selection_key.interestOps(SelectionKey.OP_WRITE);
                 rq.selection_key.selector().wakeup();
                 return;
@@ -276,7 +278,7 @@ public abstract class websock {
         for (int i = 1; i < send_bba.length; i++) {
             send_bba[i] = bba[i - 1];
         }
-        st = state.sending;
+        st = state.send;
         write();
     }
 
