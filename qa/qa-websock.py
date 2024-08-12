@@ -3,11 +3,14 @@
 import unittest
 import asyncio
 import websockets
+import os
 
 
 class WebSocketTest(unittest.TestCase):
     async def connect_and_test(self):
-        uri = "ws://localhost:8888/b/test/ws"
+        host = os.getenv('QA_HOST', 'localhost')
+        port = os.getenv('QA_PORT', '8888')
+        uri = f"ws://{host}:{port}/b/test/ws"
         async with websockets.connect(uri) as websocket:
             message = "Hello, WebSocket ᐖᐛツ"
             await websocket.send(message)
