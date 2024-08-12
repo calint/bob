@@ -165,7 +165,7 @@ public abstract class websock {
                     st = state.parse_data;
                     // fall through
                 case parse_data:
-                    final byte[] bbia = bb.array();
+                    final byte[] bba = bb.array();
                     final int pos = bb.position();
                     final int limit = bb.remaining() > payload_remaining ? pos + payload_remaining : bb.limit();
                     // if (is_masked && mask_key[0] == 0 && mask_key[1] == 0 && mask_key[2] == 0 &&
@@ -174,27 +174,26 @@ public abstract class websock {
                     // }
                     // unmask
                     for (int i = pos; i < limit; i++) {
-                        final byte b = (byte) (bbia[i] ^ mask_key[mask_i]);
-                        bbia[i] = b;
+                        final byte b = (byte) (bba[i] ^ mask_key[mask_i]);
+                        bba[i] = b;
                         mask_i++;
                         if (mask_i == mask_key.length) {
                             mask_i = 0;
                         }
                     }
                     bb.position(limit); // sets to the current position
-
                     final int read_length = limit - pos; // number of bytes read from the buffer
                     payload_remaining -= read_length;
                     if (payload_remaining == 0) {
                         // data has been fully read
                         st = state.parse_next_frame;
                     }
-                    final ByteBuffer bbii = ByteBuffer.wrap(bbia, pos, read_length);
-                    // note: bbia position is start of data, limit is the data unmasked
-                    on_payload(bbii);
+                    final ByteBuffer bb_payload = ByteBuffer.wrap(bba, pos, read_length);
+                    // note: position is at start of data, limit is at the end of unmasked data
+                    on_payload(bb_payload);
                     is_first_packet = false;
                     if (is_sending()) {
-                        // on_payload -> on_message triggered sending
+                        // note: maybe on_payload -> on_message triggered sending
                         return;
                     }
                     break;
