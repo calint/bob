@@ -1,4 +1,4 @@
-# note: requires python3 environment and pip install websockets
+# note: requires python3 virtual environment and pip install websockets
 import unittest
 import asyncio
 import websockets
