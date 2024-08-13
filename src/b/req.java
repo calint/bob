@@ -39,8 +39,7 @@ public final class req {
                     close();
                     return;
                 }
-            }
-            if (is_oschunked_waiting_write()) {
+            } else if (is_oschunked_waiting_write()) {
                 // not finished writing and waiting for available write
                 synchronized (this) {
                     notify();
