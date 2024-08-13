@@ -197,7 +197,7 @@ public final class b {
     }
 
     private static void process(final req r) throws Throwable {
-        if (r.is_sock()) {
+        if (r.is_websock()) {
             if (r.websock.is_threaded()) {
                 b.thread(r);
                 return;

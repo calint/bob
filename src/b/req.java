@@ -861,7 +861,7 @@ public final class req {
 
         if (websock.class.isAssignableFrom(cls)) {
             // start a socket
-            st = state.sock;
+            st = state.websock;
             websock = (websock) cls.getConstructor().newInstance();
             bb.position(ba_pos);
             // note: sets the position to the end of processed data and the buffer will be
@@ -1071,8 +1071,8 @@ public final class req {
         }
     }
 
-    boolean is_sock() {
-        return st == state.sock;
+    boolean is_websock() {
+        return st == state.websock;
     }
 
     boolean is_oschunked_waiting_write() {
@@ -1096,7 +1096,7 @@ public final class req {
     }
 
     void close() {
-        if (is_sock()) {
+        if (is_websock()) {
             try {
                 websock.on_closed();
             } catch (final Throwable t) {
@@ -1260,6 +1260,6 @@ public final class req {
 
     enum state {
         next_request, method, uri, prot, header_name, header_value, content_read, transfer_file, transfer_buffers,
-        waiting_run_page, run_page, content_upload, sock
+        waiting_run_page, run_page, content_upload, websock
     }
 }
