@@ -78,7 +78,9 @@ public abstract class websock {
         st = state.parse_next_frame;
         // response sent, wait for packet (assumes client hasn't sent anything yet)
         r.selection_key.interestOps(SelectionKey.OP_READ);
-        r.selection_key.selector().wakeup();
+        if (is_threaded) {
+            r.selection_key.selector().wakeup();
+        }
     }
 
     private boolean is_sending() {
