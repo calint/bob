@@ -33,6 +33,7 @@ public final class req {
             if (is_transfer()) {
                 do_transfer();
                 if (is_transfer()) {
+                    // transfer not finished, wait for write
                     return;
                 }
                 if (!connection_keep_alive) {
