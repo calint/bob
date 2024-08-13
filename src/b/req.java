@@ -859,7 +859,6 @@ public final class req {
         }
 
         if (websock.class.isAssignableFrom(cls)) {
-            // start a socket
             st = state.websock;
             websock = (websock) cls.getConstructor().newInstance();
             bb.position(ba_pos);
