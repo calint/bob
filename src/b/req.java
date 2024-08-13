@@ -899,6 +899,8 @@ public final class req {
             return;
         }
         st = state.next_request;
+        selection_key.interestOps(SelectionKey.OP_READ);
+        selection_key.selector().wakeup();
     }
 
     /** Called from run_page(). */
