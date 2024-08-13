@@ -2,7 +2,6 @@
 // reviewed: 2024-08-13
 package b;
 
-import java.nio.channels.SelectionKey;
 import java.util.LinkedList;
 
 /** Request running thread. */
@@ -54,18 +53,7 @@ final class thdreq extends Thread {
                 return;
             }
             thdwatch.pages++;
-            assert (r.is_waiting_run_page());
             r.run_page();
-            if (r.is_websock()) {
-                // the state of the page may have changed to websocket
-                return;
-            }
-            if (!r.is_connection_keepalive()) {
-                r.close();
-                return;
-            }
-            r.selection_key.interestOps(SelectionKey.OP_READ);
-            r.selection_key.selector().wakeup();
         } catch (final Throwable e) {
             b.log(e);
             r.close();

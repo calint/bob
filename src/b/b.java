@@ -144,6 +144,7 @@ public final class b {
         ss.bind(isa, max_pending_connections);
         req.init_static();
         if (thd_watch) {
+            thdwatch.print_fieldnames_to(System.out, "\n");
             new thdwatch().start();
         }
         b.pl("port open: " + b.server_port);

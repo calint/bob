@@ -35,19 +35,18 @@ public final class req {
                 if (is_transfer()) {
                     return;
                 }
-                if (!is_connection_keepalive()) {
+                if (!connection_keep_alive) {
                     close();
                     return;
                 }
             }
             if (is_oschunked_waiting_write()) {
-                // ? is..waiting not synchronized on request ok? spurious notify...
+                // not finished writing and waiting for available write
                 synchronized (this) {
                     notify();
                 }
                 return;
             }
-            // check if buffer is fully processed and make a new read
             if (ba_rem == 0) {
                 bb.clear();
                 final int n = socket_channel.read(bb);
@@ -110,7 +109,7 @@ public final class req {
                     break;
                 }
             }
-            if (st == state.next_request && !is_connection_keepalive()) {
+            if (st == state.next_request && !connection_keep_alive) {
                 close();
                 return;
             }
@@ -896,7 +895,10 @@ public final class req {
                 Db.deinitCurrentTransaction();
             }
         }
-
+        if (!connection_keep_alive) {
+            close();
+            return;
+        }
         st = state.next_request;
     }
 
@@ -1081,10 +1083,6 @@ public final class req {
 
     void oschunked_waiting_write(final boolean b) {
         oschunked_waiting_write = b;
-    }
-
-    boolean is_connection_keepalive() {
-        return connection_keep_alive;
     }
 
     boolean is_transfer() {

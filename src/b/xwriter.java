@@ -17,8 +17,9 @@ public final class xwriter {
      * @return encoded string
      */
     public static String enc_js_in_attr(final String text) {
-        if (text == null)
+        if (text == null) {
             return "";
+        }
         return text.replace("'", "\\'").replace("\"", "&quot;");
     }
 
@@ -29,8 +30,9 @@ public final class xwriter {
      * @return encoded string
      */
     public static String enc_js_str(final String str) {
-        if (str == null)
+        if (str == null) {
             return "";
+        }
         return str.replace("'", "\\'");
     }
 
@@ -41,12 +43,14 @@ public final class xwriter {
      * @return encoded string
      */
     public static String enc_quot(final String str) {
-        if (str == null)
+        if (str == null) {
             return "";
+        }
         return str.replace("\"", "&quot;");
     }
 
-    private boolean is_xu_open; // if xu is open then it needs to be closed at error messaging to client
+    private boolean is_xu_open;
+    // note: if xu is open then it needs to be closed at error messaging to client
     private final OutputStream os;
     private boolean xreload_requested; // reload page races with element serialization to db
 
