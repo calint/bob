@@ -66,8 +66,6 @@ public final class req {
             }
             while (ba_rem > 0) {
                 switch (st) {
-                default:
-                    throw new RuntimeException();
                 case next_request:
                     reset();
                     st = state.method;
@@ -107,6 +105,8 @@ public final class req {
                 case content_upload:
                     parse_content_upload();
                     break;
+                default:
+                    throw new RuntimeException();
                 }
             }
             if (st == state.next_request && !connection_keep_alive) {
