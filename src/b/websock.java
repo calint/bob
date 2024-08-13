@@ -235,7 +235,9 @@ public abstract class websock {
             if (b.hasRemaining()) {
                 // buffer not fully sent, request socket write
                 rq.selection_key.interestOps(SelectionKey.OP_WRITE);
-                rq.selection_key.selector().wakeup();
+                if (is_threaded) {
+                    rq.selection_key.selector().wakeup();
+                }
                 return;
             }
         }
