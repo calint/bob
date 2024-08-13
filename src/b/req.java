@@ -82,7 +82,7 @@ public final class req {
                 case header_name:
                     parse_header_name();
                     // parse_header_name()->do_after_header() might have changed the state and
-                    // started transfer
+                    // started transfer or is an 'a' element
                     if (is_transfer()) {
                         return;
                     }
