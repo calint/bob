@@ -15,7 +15,7 @@ public class Panel extends a {
     }
 
     @Override
-    public void to(xwriter x) throws Throwable {
+    public void to(final xwriter x) throws Throwable {
         x.p("t:").p(core.tick).br();
         x.p(core.zf ? "z" : "-").p(core.nf ? "n" : "-").p(" ");
         int leds = core.leds;

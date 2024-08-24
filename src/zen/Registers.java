@@ -9,7 +9,7 @@ public class Registers extends a {
     public short[] regs;
 
     @Override
-    public void to(xwriter x) throws Throwable {
+    public void to(final xwriter x) throws Throwable {
         int i = 0;
         for (int r = 0; r < 4; r++) {
             for (int c = 0; c < 4; c++) {

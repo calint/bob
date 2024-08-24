@@ -10,7 +10,7 @@ public class RAM extends a {
     public short[] ram;
 
     @Override
-    public void to(xwriter x) throws Throwable {
+    public void to(final xwriter x) throws Throwable {
         int i = 0;
         for (int s = 0; s < 16; s++) {
             for (int r = 0; r < 4; r++) {
