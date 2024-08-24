@@ -104,15 +104,15 @@ public class UI extends a {
             x.xp(t, String.valueOf((char) soc.utx.data));
             soc.utx.go = false;
         }
-        x.xu(p);
         x.xu(r);
+        x.xu(p);
     }
 
     /** reset */
     public final void x_rst(final xwriter x, final String param) throws Throwable {
         soc.reset();
-        x.xu(p);
         x.xu(r);
+        x.xu(p);
         x.xu(t);
     }
 
