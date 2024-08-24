@@ -75,8 +75,6 @@ public class UI extends a {
         x.xu(t);
     }
 
-    private boolean selectActiveInstruction = true;
-
     /** tick */
     public final void x_t(final xwriter x, final String param) throws Throwable {
         final int key = Integer.parseInt(param);
