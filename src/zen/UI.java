@@ -31,7 +31,7 @@ public class UI extends a {
     }
 
     @Override
-    public void to(xwriter x) throws Throwable {
+    public void to(final xwriter x) throws Throwable {
         x.tago("div").attr("class", "topmenu").tagoe();
         x.ax(this, "c", "compile");
         x.p(" ");
@@ -123,19 +123,19 @@ public class UI extends a {
     }
 
     private void selectSourceRange(final xwriter x) throws Throwable {
-        if (zasm == null)
+        if (zasm == null) {
             return;
+        }
         final int[] rng = zasm.getInstructionSourceRange(soc.core.pc);
         final String sid = s.id();
         x.xfocus(sid).p("$('" + sid + "').setSelectionRange(" + rng[0] + "," + rng[1] + ");");
     }
 
-    public static String readResourceAsString(String resourceName) throws IOException {
-        StringBuilder sb = new StringBuilder();
-
-        InputStream is = UI.class.getResourceAsStream(resourceName);
-        InputStreamReader isr = new InputStreamReader(is, "utf8");
-        BufferedReader br = new BufferedReader(isr);
+    public static String readResourceAsString(final String resourceName) throws IOException {
+        final StringBuilder sb = new StringBuilder();
+        final InputStream is = UI.class.getResourceAsStream(resourceName);
+        final InputStreamReader isr = new InputStreamReader(is, "utf8");
+        final BufferedReader br = new BufferedReader(isr);
         String line;
         while ((line = br.readLine()) != null) {
             sb.append(line).append("\n");
