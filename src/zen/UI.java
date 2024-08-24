@@ -118,10 +118,6 @@ public class UI extends a {
         x.xu(t);
     }
 
-    public final void x_r(final xwriter x, final String param) throws Throwable {
-        selectActiveInstruction = !selectActiveInstruction;
-    }
-
     private void selectSourceRange(final xwriter x) throws Throwable {
         if (zasm == null) {
             return;
