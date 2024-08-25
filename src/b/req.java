@@ -901,6 +901,7 @@ public final class req {
         st = state.next_request;
         selection_key.interestOps(SelectionKey.OP_READ);
         selection_key.selector().wakeup();
+        // ! will hang client on chained requests
     }
 
     /** Called from run_page(). */
