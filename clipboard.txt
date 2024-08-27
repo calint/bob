@@ -21,5 +21,4 @@ Here are the steps to enable it:
  *  Install the VS Code Java extension by going to the Extensions view in VS Code and searching for "Java".
  *  Open the settings editor by navigating to Preferences: Open User Settings from the Command Palette (Ctrl + Shift + P).
  *  In the settings editor, search for "java.debug.settings.hotCodeReplace" and set it to "auto" to enable automatic HCR.
-
 ----------------------------------------------------------------------------------
