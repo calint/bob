@@ -750,7 +750,7 @@ public final class req {
                 if (e instanceof IOException && (msg.startsWith("Broken pipe")
                         || msg.startsWith("Connection reset by peer") || msg.startsWith("sendfile failed")
                         || msg.startsWith("An existing connection was forcibly closed by the remote host"))) {
-                    // ? android (when closing browser while transfering file)
+                    // ? android (when closing browser while transferring file)
                     close();
                     return;
                 }
