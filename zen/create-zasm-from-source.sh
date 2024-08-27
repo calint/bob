@@ -1,5 +1,7 @@
 #!/bin/bash
 set -e
+DIR=$(dirname "$0")
+cd $DIR
 
 echo "#!/usr/bin/java --source 11" > zasm
 grep -hE "^import" ../src/zen/zasm/* | sort -u >> zasm
