@@ -29,49 +29,49 @@ public final class osjsstr extends OutputStream {
 
     @Override
     public void write(final byte[] c, final int off, final int len) throws IOException {
-        int i = 0;
-        for (int n = 0; n < len; n++) {
-            final byte b = c[off + n];
+        int from = 0;
+        for (int i = 0; i < len; i++) {
+            final byte b = c[off + i];
             if (b == '\n') {
-                final int k = n - i;
-                if (k != 0) {
-                    os.write(c, off + i, k);
+                final int n = i - from;
+                if (n != 0) {
+                    os.write(c, off + from, n);
                 }
                 os.write(b_jsstr_nl);
-                i = n + 1;
+                from = i + 1;
             } else if (b == '\r') {
-                final int k = n - i;
-                if (k != 0) {
-                    os.write(c, off + i, k);
+                final int n = i - from;
+                if (n != 0) {
+                    os.write(c, off + from, n);
                 }
                 os.write(b_jsstr_cr);
-                i = n + 1;
+                from = i + 1;
             } else if (b == '\'') {
-                final int k = n - i;
-                if (k != 0) {
-                    os.write(c, off + i, k);
+                final int n = i - from;
+                if (n != 0) {
+                    os.write(c, off + from, n);
                 }
                 os.write(b_jsstr_sq);
-                i = n + 1;
+                from = i + 1;
             } else if (b == '\\') {
-                final int k = n - i;
-                if (k != 0) {
-                    os.write(c, off + i, k);
+                final int n = i - from;
+                if (n != 0) {
+                    os.write(c, off + from, n);
                 }
                 os.write(b_jsstr_bs);
-                i = n + 1;
+                from = i + 1;
             } else if (b == '\0') {
-                final int k = n - i;
-                if (k != 0) {
-                    os.write(c, off + i, k);
+                final int n = i - from;
+                if (n != 0) {
+                    os.write(c, off + from, n);
                 }
                 os.write(b_jsstr_eof);
-                i = n + 1;
+                from = i + 1;
             }
         }
-        final int k = len - i;
-        if (k != 0) {
-            os.write(c, off + i, k);
+        final int n = len - from;
+        if (n != 0) {
+            os.write(c, off + from, n);
         }
     }
 
