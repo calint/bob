@@ -42,7 +42,6 @@ public class UI extends a {
         x.a("javascript:zen_tick()", "step");
         x.p(" ");
         x.a("javascript:zen_reset()", "reset");
-        x.p(" ");
         x.div_();
 
         x.br();
