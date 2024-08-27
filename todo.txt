@@ -1,6 +1,3 @@
-[ ] DbTransaction: dirtyObjects, cache: create at first use
-[x] qa: websock test
-
 step 1
 [ ] db: stream blob and clob to outputstream and from inputstream
 [ ] bob: Form: upload file
@@ -104,7 +101,6 @@ step 3
 [ ] howto for google cloud
 [ ] java: synchronize(Object) read { ... } allows multiple reader threads. synchronize(Object) write { ... } allows only one thread
 -------------------------------------------------------------------------------
-[x] xwriter: select renderer.
 dbo
 [x] RelRefN: removeAll
 [x]   update jem
@@ -176,7 +172,14 @@ dbo
 [ ]   oracle?
 [ ]   ms sql server?
 [ ]   ibm db2?
+
 -------------------------------------------------------------------------------
+resolved / rejected
+-------------------------------------------------------------------------------
+[x] xwriter: select renderer.
+[-] DbTransaction: dirtyObjects, cache: create at first use
+    => tradeoff between function call and accessing field
+[x] qa: websock test
 [x] ViewTable: Query: throttle queries to one every nth milliseconds.
 [x] db: DbField.defaultValue to avoid boxing.
 [x] db: DbObject.onCreate().
