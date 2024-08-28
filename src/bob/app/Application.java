@@ -15,7 +15,6 @@ import db.test.TestObj;
 import db.test.User;
 
 public final class Application implements bapp {
-    public static final Application instance = new Application();
 
     /** called by b at startup */
     public void init() throws Throwable {
