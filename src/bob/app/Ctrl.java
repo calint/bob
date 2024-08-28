@@ -5,7 +5,7 @@ import bob.Controller;
 
 /** main element in this bapp */
 public final class Ctrl extends Controller {
-    private static final long serialVersionUID = 3L;
+    private static final long serialVersionUID = 1;
 
     public Ctrl() {
         m.addItem(TableFsFiles.class, "Files browser");

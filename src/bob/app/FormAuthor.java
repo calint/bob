@@ -7,7 +7,7 @@ import db.DbObject;
 import db.test.Author;
 
 public final class FormAuthor extends FormDbo {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1;
 
     public FormAuthor() {
         this(null, null);

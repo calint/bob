@@ -16,7 +16,7 @@ import db.Query;
 import db.test.File;
 
 public final class TableFiles extends ViewTable {
-    static final long serialVersionUID = 1;
+    private static final long serialVersionUID = 1;
 
     public TableFiles() {
         super(null, BIT_SEARCH | BIT_CREATE | BIT_DELETE | BIT_SELECT, BIT_CLICK_ITEM, new TypeInfo("file", "files"));
