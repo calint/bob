@@ -1,16 +1,15 @@
 #!/bin/sh
 # runs on the node by service manager
-
 set -e
 DIR=$(dirname "$0")
 cd $DIR
 
-CFG=$1
-CFG=${CFG:=run.cfg}
+CFG=${1:-run.cfg}
 echo config: $CFG
 
 cat $CFG
 . ./$CFG
+
 echo
 java -version
 echo
