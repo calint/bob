@@ -28,11 +28,11 @@ class WebSocketTest(unittest.TestCase):
         uri = f"ws://{host}:{port}/b/test/ws"
         async with websockets.connect(uri) as websocket:
             with open("files/sample.txt", "r") as f:
-                large_message = f.read()
+                message = f.read()
 
-            await websocket.send(large_message)
+            await websocket.send(message)
             response = await websocket.recv()
-            self.assertEqual(large_message, response)
+            self.assertEqual(message, response)
 
     def test_websocket_echo(self):
         asyncio.run(self.connect_and_test_small_message())
