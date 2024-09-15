@@ -35,14 +35,10 @@ class WebSocketTest(unittest.TestCase):
             self.assertEqual(large_message, response)
 
     def test_websocket_echo(self):
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        loop.run_until_complete(self.connect_and_test_small_message())
+        asyncio.run(self.connect_and_test_small_message())
 
     def test_websocket_large_file(self):
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        loop.run_until_complete(self.connect_and_test_large_file())
+        asyncio.run(self.connect_and_test_large_file())
 
 
 if __name__ == "__main__":
