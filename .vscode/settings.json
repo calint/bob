@@ -1,5 +1,5 @@
 {
-    "java.jdt.ls.java.home": "/home/c/java/jdk-21.0.5+11",
+    "java.jdt.ls.java.home": "/home/c/java/jdk8u432-b06",
     "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx2G -Xms100m -Xlog:disable",
     "java.format.settings.url": ".vscode/java-formatter.xml",
     "java.debug.settings.hotCodeReplace": "auto",
