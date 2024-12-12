@@ -4,5 +4,16 @@
     "java.format.settings.url": ".vscode/java-formatter.xml",
     "[java]": {
         "editor.detectIndentation": false
-    }
+    },
+    "java.jdt.ls.java.home": "/home/c/java/jdk-21.0.5+11",
+    "java.configuration.runtimes": [
+        {
+            "name": "J2SE-1.5",
+            "path": "/home/c/java/jdk1.5.0_22"
+        },
+        {
+            "name": "JavaSE-21",
+            "path": "/home/c/java/jdk-21.0.5+11"
+        }
+    ]
 }
