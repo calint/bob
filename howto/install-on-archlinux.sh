@@ -1,4 +1,7 @@
 #!/bin/sh
+#
+# installs mariadb and creates the database and user
+#
 sudo pacman -S mariadb
 sudo mariadb-install-db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
 sudo sed -i '/\[mysqld\]/a bind-address=0.0.0.0' /etc/my.cnf.d/server.cnf
