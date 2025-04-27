@@ -22,6 +22,7 @@ class WebSocketTest(unittest.TestCase):
             await websocket.send(message)
             response = await websocket.recv()
             self.assertEqual(message, response)
+            await websocket.close()
 
     async def connect_and_test_large_file(self):
         host = os.getenv("QA_HOST", "localhost")
@@ -34,6 +35,7 @@ class WebSocketTest(unittest.TestCase):
             await websocket.send(message)
             response = await websocket.recv()
             self.assertEqual(message, response)
+            await websocket.close()
 
     def test_websocket_echo(self):
         asyncio.run(self.connect_and_test_small_message())
