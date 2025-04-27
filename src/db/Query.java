@@ -182,15 +182,6 @@ public final class Query {
         append(NOP, lh.tableName, lh.name, op, null, Integer.toString(rh));
     }
 
-    public Query(final DbField lh, final int op, final Timestamp ts) {
-        // append(NOP, lh.tableName, lh.columnName, op, null, ts.toString());
-        append(NOP, lh.tableName, lh.name, op, null, "'" + ts.toString() + "'");
-    }
-
-    public Query(final DbField lh, final int op, final DbField rh) {
-        append(NOP, lh.tableName, lh.name, op, rh.tableName, rh.name);
-    }
-
     public Query(final DbField lh, final int op, final float rh) {
         append(NOP, lh.tableName, lh.name, op, null, Float.toString(rh));
     }
@@ -201,6 +192,15 @@ public final class Query {
 
     public Query(final DbField lh, final int op, final boolean rh) {
         append(NOP, lh.tableName, lh.name, op, null, Boolean.toString(rh));
+    }
+
+    public Query(final DbField lh, final int op, final Timestamp ts) {
+        // append(NOP, lh.tableName, lh.columnName, op, null, ts.toString());
+        append(NOP, lh.tableName, lh.name, op, null, "'" + ts.toString() + "'");
+    }
+
+    public Query(final DbField lh, final int op, final DbField rh) {
+        append(NOP, lh.tableName, lh.name, op, rh.tableName, rh.name);
     }
 
     /** Join. */
@@ -286,10 +286,6 @@ public final class Query {
         return append(AND, lh.tableName, lh.name, op, null, Integer.toString(rh));
     }
 
-    public Query and(final DbField lh, final int op, final Timestamp ts) {
-        return append(AND, lh.tableName, lh.name, op, null, "'" + ts.toString() + "'");
-    }
-
     public Query and(final DbField lh, final int op, final float rh) {
         return append(AND, lh.tableName, lh.name, op, null, Float.toString(rh));
     }
@@ -300,6 +296,10 @@ public final class Query {
 
     public Query and(final DbField lh, final int op, final boolean rh) {
         return append(AND, lh.tableName, lh.name, op, null, Boolean.toString(rh));
+    }
+
+    public Query and(final DbField lh, final int op, final Timestamp ts) {
+        return append(AND, lh.tableName, lh.name, op, null, "'" + ts.toString() + "'");
     }
 
     public Query and(final DbField lh, final int op, final DbField rh) {
