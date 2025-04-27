@@ -12,7 +12,17 @@ import java.lang.reflect.Field;
 
 /** A HTML element. */
 public class a implements Serializable {
+    private static final long serialVersionUID = 1;
+
     public static final String id_path_separator = "-";
+
+    /**
+     * Element will not initiate DbTransaction or read and write the state to the
+     * session object.
+     */
+    public static @Retention(RetentionPolicy.RUNTIME) @interface stateless {
+    }
+
     private a parent;
     private String name;
     private String value;
@@ -182,15 +192,6 @@ public class a implements Serializable {
         name = s;
         return this;
     }
-
-    /**
-     * Element will not initiate DbTransaction or read and write the state to the
-     * session object.
-     */
-    public static @Retention(RetentionPolicy.RUNTIME) @interface stateless {
-    }
-
-    private static final long serialVersionUID = 1;
 
     /**
      * Replaces the element 'element_to_replace' with this by setting parent and
