@@ -177,7 +177,7 @@ echo " ok"
 #--------------------------------------------------------
 TEST_NAME="websock: "
 echo -n $TEST_NAME
-python3 qa-websock.py 2>&1 | grep OK > res
+./qa-websock.py 2>&1 | grep OK > res
 if ! cmp -s $DIR_CMP/15 res; then exit 1; fi
 echo " ok"
 #--------------------------------------------------------

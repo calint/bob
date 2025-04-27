@@ -18,3 +18,16 @@ explored digitalocean.com and linode.com services
 * load balancing using service provider
 * SSL enabled using load balancer
 * MySQL cluster implemented in package 'db'
+
+
+how-to:
+* setup database
+`echo "create database testdb; create user 'c'@'%' identified by 'password'; grant all on testdb.* to 'c'@'%';" | mysql`
+* prepare python for tests
+`sudo pacman -S python-websockets`
+* activate legacy Java
+`export PATH=~/java/jdk1.5.0_22/bin:$PATH`
+* start server
+`./build-and-run.sh`
+* run tests (note: websock test may take a while)
+`qa/qa.sh`

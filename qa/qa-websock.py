@@ -1,3 +1,4 @@
+#!/bin/python
 # test the echo websocket
 # note: requires python3 virtual environment and pip install websockets
 import unittest
@@ -13,8 +14,8 @@ class WebSocketTest(unittest.TestCase):
         os.chdir(script_dir)
 
     async def connect_and_test_small_message(self):
-        host = os.getenv('QA_HOST', 'localhost')
-        port = os.getenv('QA_PORT', '8888')
+        host = os.getenv("QA_HOST", "localhost")
+        port = os.getenv("QA_PORT", "8888")
         uri = f"ws://{host}:{port}/b/test/ws"
         async with websockets.connect(uri) as websocket:
             message = "Hello, WebSocket ᐖᐛツ"
@@ -23,8 +24,8 @@ class WebSocketTest(unittest.TestCase):
             self.assertEqual(message, response)
 
     async def connect_and_test_large_file(self):
-        host = os.getenv('QA_HOST', 'localhost')
-        port = os.getenv('QA_PORT', '8888')
+        host = os.getenv("QA_HOST", "localhost")
+        port = os.getenv("QA_PORT", "8888")
         uri = f"ws://{host}:{port}/b/test/ws"
         async with websockets.connect(uri) as websocket:
             with open("files/sample.txt", "r") as f:
