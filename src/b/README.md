@@ -8,3 +8,4 @@
 * does not include protection from malicious clients that open threaded requests and keeps them open depleting the thread pool
 * does not implement SSL assuming it will run in the cloud behind a gateway managing secure connections and denial of service attacks
 * possibly scaled horizontally with sticky sessions or round robin with persistent state depending on the application
+* it is a back in time so it uses a thread pool instead of the two decades later virtual threads implementation
