@@ -1,3 +1,6 @@
+//
+// reviewed: 2025-04-28
+//
 package jem;
 
 import java.io.PrintWriter;
@@ -14,7 +17,7 @@ public class JemRelAggN extends JemRel {
     @Override
     public void emit(final PrintWriter out) {
         final String acc = getAccessorName();
-        final String accSing = JavaCodeEmitter.getSingulariesForPlurar(acc);
+        final String accSing = JavaCodeEmitter.getSingularsForPlurar(acc);
         out.println(HR);
 
         out.println("public " + accSing + " create" + accSing + "(){");

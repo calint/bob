@@ -1,3 +1,6 @@
+//
+// reviewed: 2025-04-28
+//
 package jem;
 
 import java.io.PrintWriter;
@@ -72,7 +75,7 @@ public final class JavaCodeEmitter {
         out.flush();
     }
 
-    public static String getSingulariesForPlurar(final String s) {
+    public static String getSingularsForPlurar(final String s) {
         final StringBuilder sb = new StringBuilder();
         sb.append(s);
         if (s.endsWith("ies")) {
