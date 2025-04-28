@@ -1,10 +1,12 @@
 // reviewed: 2024-08-05
+//           2025-04-28
 package bob;
 
 import java.sql.Timestamp;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -33,14 +35,16 @@ import db.RelRefN;
  * write to object.
  */
 public abstract class FormDbo extends Form {
+
     private final static long serialVersionUID = 1;
 
     private final Class<? extends DbObject> objCls;
-    private final ArrayList<String> dbfields = new ArrayList<String>();
+    private final ArrayList<String> dbFields = new ArrayList<String>();
     private final LinkedHashMap<String, a> fields = new LinkedHashMap<String, a>();
     private transient SimpleDateFormat fmtDate;
     private transient SimpleDateFormat fmtDateTime;
-    private transient NumberFormat fmtNbr;
+    private transient NumberFormat fmtNbrInt;
+    private transient NumberFormat fmtNbrFlt;
 
     public FormDbo(final List<String> idPath, final Class<? extends DbObject> objCls, final String objectId,
             final String initStr) {
@@ -71,6 +75,42 @@ public abstract class FormDbo extends Form {
         return fields.get(id);
     }
 
+    /**
+     * Override this to provide date format.
+     * 
+     * @return Date format.
+     */
+    protected SimpleDateFormat dateFormat() {
+        return new SimpleDateFormat("yyyy-MM-dd"); // ISO 8601
+    }
+
+    /**
+     * Override this to provide date time format.
+     * 
+     * @return Date time format.
+     */
+    protected SimpleDateFormat dateTimeFormat() {
+        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm"); // format of input type datetime-local
+    }
+
+    /**
+     * Override this to provide number formatter for integers.
+     * 
+     * @return Number format.
+     */
+    protected NumberFormat numberFormatInt() {
+        return NumberFormat.getNumberInstance();
+    }
+
+    /**
+     * Override this to provide number formatter for floats.
+     * 
+     * @return Number format.
+     */
+    protected NumberFormat numberFormatFlt() {
+        return NumberFormat.getNumberInstance();
+    }
+
     protected final void beginForm(final xwriter x) {
         x.table("f").nl();
     }
@@ -90,55 +130,37 @@ public abstract class FormDbo extends Form {
 
     /** Focuses on field from "render". */
     protected final void focus(final xwriter x, final String field) {
-        x.script().xfocus(getElem(field)).script_();
+        x.focus(getElem(field));
     }
 
     protected final String formatDate(final Timestamp ts) {
         if (ts == null) {
             return "";
         }
-        if (fmtDate == null) {
-            fmtDate = new SimpleDateFormat("yyyy-MM-dd"); // ISO 8601
-        }
-        return fmtDate.format(ts);
+        return dateFormatter().format(ts);
     }
 
     protected final String formatDateTime(final Timestamp ts) {
         if (ts == null) {
             return "";
         }
-        if (fmtDateTime == null) {
-            fmtDateTime = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm"); // format of input type datetime-local
-        }
-        return fmtDateTime.format(ts);
+        return dateTimeFormatter().format(ts);
     }
 
     protected final String formatDbl(final double i) {
-        if (fmtNbr == null) {
-            fmtNbr = NumberFormat.getNumberInstance();
-        }
-        return fmtNbr.format(i);
+        return numberFormatterFlt().format(i);
     }
 
     protected final String formatFlt(final float i) {
-        if (fmtNbr == null) {
-            fmtNbr = NumberFormat.getNumberInstance();
-        }
-        return fmtNbr.format(i);
+        return numberFormatterFlt().format(i);
     }
 
     protected final String formatInt(final int i) {
-        if (fmtNbr == null) {
-            fmtNbr = NumberFormat.getNumberInstance();
-        }
-        return fmtNbr.format(i);
+        return numberFormatterInt().format(i);
     }
 
     protected final String formatLng(final long i) {
-        if (fmtNbr == null) {
-            fmtNbr = NumberFormat.getNumberInstance();
-        }
-        return fmtNbr.format(i);
+        return numberFormatterInt().format(i);
     }
 
     protected final boolean getBool(final DbField field) {
@@ -256,7 +278,7 @@ public abstract class FormDbo extends Form {
             final boolean defaultValue) {
         final boolean value = isNewObject() ? defaultValue : f.getBool(o);
         inputBool(x, label, f.getName(), value, null);
-        dbfields.add(f.getName());
+        dbFields.add(f.getName());
     }
 
     protected final void inputBool(final xwriter x, final String label, final String field, final boolean value,
@@ -271,7 +293,7 @@ public abstract class FormDbo extends Form {
             final Timestamp defaultValue) {
         final Timestamp value = isNewObject() ? defaultValue : f.getDateTime(o);
         inputDate(x, label, f.getName(), value, null);
-        dbfields.add(f.getName());
+        dbFields.add(f.getName());
     }
 
     protected final void inputDate(final xwriter x, final String label, final String field, final Timestamp value,
@@ -286,7 +308,7 @@ public abstract class FormDbo extends Form {
             final Timestamp defaultValue) {
         final Timestamp value = isNewObject() ? defaultValue : f.getDateTime(o);
         inputDateTime(x, label, f.getName(), value, null);
-        dbfields.add(f.getName());
+        dbFields.add(f.getName());
     }
 
     protected final void inputDateTime(final xwriter x, final String label, final String field, final Timestamp value,
@@ -301,7 +323,7 @@ public abstract class FormDbo extends Form {
             final double defaultValue, final String styleClass) {
         final double value = isNewObject() ? defaultValue : f.getDbl(o);
         inputDbl(x, label, f.getName(), value, styleClass);
-        dbfields.add(f.getName());
+        dbFields.add(f.getName());
     }
 
     protected final void inputDbl(final xwriter x, final String label, final String field, final double value,
@@ -349,7 +371,7 @@ public abstract class FormDbo extends Form {
             final float defaultValue, final String styleClass) {
         final float value = isNewObject() ? defaultValue : f.getFlt(o);
         inputFlt(x, label, f.getName(), value, styleClass);
-        dbfields.add(f.getName());
+        dbFields.add(f.getName());
     }
 
     protected final void inputFlt(final xwriter x, final String label, final String field, final float value,
@@ -364,7 +386,7 @@ public abstract class FormDbo extends Form {
             final int defaultValue, final String styleClass) {
         final int value = isNewObject() ? defaultValue : f.getInt(o);
         inputInt(x, label, f.getName(), value, styleClass);
-        dbfields.add(f.getName());
+        dbFields.add(f.getName());
     }
 
     protected final void inputInt(final xwriter x, final String label, final String field, final int value,
@@ -379,7 +401,7 @@ public abstract class FormDbo extends Form {
             final long defaultValue, final String styleClass) {
         final long value = isNewObject() ? defaultValue : f.getLng(o);
         inputLng(x, label, f.getName(), value, styleClass);
-        dbfields.add(f.getName());
+        dbFields.add(f.getName());
     }
 
     protected final void inputLng(final xwriter x, final String label, final String field, final long value,
@@ -470,7 +492,7 @@ public abstract class FormDbo extends Form {
             final String defaultValue, final String styleClass) {
         final String value = isNewObject() ? defaultValue : f.getStr(o);
         inputText(x, label, f.getName(), value, styleClass);
-        dbfields.add(f.getName());
+        dbFields.add(f.getName());
     }
 
     protected final void inputText(final xwriter x, final String label, final String field, final String value,
@@ -483,7 +505,7 @@ public abstract class FormDbo extends Form {
             final String defaultValue, final String styleClass) {
         final String value = isNewObject() ? defaultValue : f.getStr(o);
         inputTextArea(x, label, f.getName(), value, styleClass);
-        dbfields.add(f.getName());
+        dbFields.add(f.getName());
     }
 
     protected final void inputTextArea(final xwriter x, final String label, final String field, final String value,
@@ -496,7 +518,7 @@ public abstract class FormDbo extends Form {
             final Timestamp defaultValue) {
         final Timestamp value = isNewObject() ? defaultValue : f.getTs(o);
         inputTimestamp(x, label, f.getName(), value, null);
-        dbfields.add(f.getName());
+        dbFields.add(f.getName());
     }
 
     protected final void inputTimestamp(final xwriter x, final String label, final String field, final Timestamp value,
@@ -511,48 +533,30 @@ public abstract class FormDbo extends Form {
         if (Util.isEmpty(s)) {
             return null;
         }
-        if (fmtDate == null) {
-            fmtDate = new SimpleDateFormat("yyyy-MM-dd"); // ISO 8601
-        }
-        return new Timestamp(fmtDate.parse(s).getTime());
+        return new Timestamp(dateFormatter().parse(s).getTime());
     }
 
     protected final Timestamp parseDateTime(final String s) throws ParseException {
         if (Util.isEmpty(s)) {
             return null;
         }
-        if (fmtDateTime == null) {
-            fmtDateTime = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm"); // format of input type datetime-local
-        }
-        return new Timestamp(fmtDateTime.parse(s).getTime());
+        return new Timestamp(dateTimeFormatter().parse(s).getTime());
     }
 
     protected final double parseDbl(final String s) throws ParseException {
-        if (fmtNbr == null) {
-            fmtNbr = NumberFormat.getNumberInstance();
-        }
-        return fmtNbr.parse(s).doubleValue();
+        return numberFormatterFlt().parse(s).doubleValue();
     }
 
     protected final float parseFlt(final String s) throws ParseException {
-        if (fmtNbr == null) {
-            fmtNbr = NumberFormat.getNumberInstance();
-        }
-        return fmtNbr.parse(s).floatValue();
+        return numberFormatterFlt().parse(s).floatValue();
     }
 
     protected final int parseInt(final String s) throws ParseException {
-        if (fmtNbr == null) {
-            fmtNbr = NumberFormat.getNumberInstance();
-        }
-        return fmtNbr.parse(s).intValue();
+        return numberFormatterInt().parse(s).intValue();
     }
 
     protected final long parseLng(final String s) throws ParseException {
-        if (fmtNbr == null) {
-            fmtNbr = NumberFormat.getNumberInstance();
-        }
-        return fmtNbr.parse(s).longValue();
+        return numberFormatterInt().parse(s).longValue();
     }
 
     private DbField getDbFieldFromClass(final String name) {
@@ -567,7 +571,6 @@ public abstract class FormDbo extends Form {
     protected final void save(final xwriter x) throws Throwable {
         final DbObject o;
         if (getObjectId() == null) {
-            // create new
             o = createObject();
             setObjectId(Integer.toString(o.id()));
         } else {
@@ -575,7 +578,7 @@ public abstract class FormDbo extends Form {
         }
         // ? ugly instanceof chain. separation of concerns ok.
         // elements that know how to write to objects
-        for (final String fieldName : dbfields) {
+        for (final String fieldName : dbFields) {
             final DbField dbf = getDbFieldFromClass(fieldName);
             if (!o.getClass().equals(dbf.getDeclaringClass())) {
                 continue;
@@ -678,4 +681,31 @@ public abstract class FormDbo extends Form {
         return e;
     }
 
+    private SimpleDateFormat dateFormatter() {
+        if (fmtDate == null) {
+            fmtDate = dateFormat();
+        }
+        return fmtDate;
+    }
+
+    private SimpleDateFormat dateTimeFormatter() {
+        if (fmtDateTime == null) {
+            fmtDateTime = dateFormat();
+        }
+        return fmtDateTime;
+    }
+
+    private NumberFormat numberFormatterInt() {
+        if (fmtNbrInt == null) {
+            fmtNbrInt = numberFormatInt();
+        }
+        return fmtNbrInt;
+    }
+
+    private NumberFormat numberFormatterFlt() {
+        if (fmtNbrFlt == null) {
+            fmtNbrFlt = numberFormatFlt();
+        }
+        return fmtNbrFlt;
+    }
 }
