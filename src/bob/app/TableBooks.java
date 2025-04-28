@@ -80,7 +80,7 @@ public final class TableBooks extends ViewTable {
     private DbObjects getResults() {
         final Query qry = new Query();
         if (!q.is_empty()) {
-            qry.and(DataText.ft, q.str()).and(Book.data);
+            qry.and(Book.data).and(DataText.ft, q.str());
         }
         if (!title.is_empty()) {
             qry.and(Book.name, Query.EQ, title.str());
