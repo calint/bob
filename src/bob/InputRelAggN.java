@@ -63,9 +63,8 @@ public final class InputRelAggN extends a {
 
     /** Callback "create". */
     public void x_c(final xwriter x, final String param) throws Throwable {
-        final Form f = createFormCls.getConstructor(List.class, String.class, String.class).newInstance(idPath, null,
-                null);
-        f.init();
+        final Form f = createFormCls.getConstructor(List.class, String.class, String.class)
+                .newInstance(idPath, null, null).init();
         super.bubble_event(x, this, f); // display the form
     }
 
@@ -77,9 +76,8 @@ public final class InputRelAggN extends a {
 
     /** Callback "edit". */
     public void x_e(final xwriter x, final String param) throws Throwable {
-        final Form f = createFormCls.getConstructor(List.class, String.class, String.class).newInstance(idPath, param,
-                null);
-        f.init();
+        final Form f = createFormCls.getConstructor(List.class, String.class, String.class)
+                .newInstance(idPath, param, null).init();
         super.bubble_event(x, this, f); // display the form
     }
 

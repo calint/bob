@@ -76,7 +76,7 @@ public abstract class Form extends Elem {
 
     /**
      * Must be called after the form has been constructed to complete the
-     * initialization.
+     * initialization. May be overridden.
      *
      * @return this form.
      */
