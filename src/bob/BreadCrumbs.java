@@ -1,4 +1,5 @@
 // reviewed: 2024-08-05
+//           2025-04-28
 package bob;
 
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import b.xwriter;
  * created elements.
  */
 public final class BreadCrumbs extends a {
+
     private static final long serialVersionUID = 1;
 
     private final ArrayList<a> elements = new ArrayList<a>();
@@ -39,10 +41,8 @@ public final class BreadCrumbs extends a {
     public void x_clk(final xwriter x, final String param) throws Throwable {
         final int i = Integer.parseInt(param);
         final int n = elements.size();
-        if (i + 1 < n) {
-            for (int j = n - 1; j > i; j--) {
-                elements.remove(j);
-            }
+        for (int j = n - 1; j > i; j--) {
+            elements.remove(j);
         }
         x.xu(this);
         bubble_event(x);
