@@ -76,7 +76,9 @@ public abstract class Form extends Elem {
 
     /**
      * Must be called after the form has been constructed to complete the
-     * initialization. May be overridden.
+     * initialization. May be overridden to apply logic before and after
+     * initializing actions and views list. Necessary for views and actions that
+     * need the object created at init.
      *
      * @return this form.
      */
