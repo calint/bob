@@ -76,6 +76,7 @@ public final class TableBooks extends ViewTable {
         return dbo.toList(p.getLimit());
     }
 
+    /** Used in getObjectsCount and getObjectsList. */
     private DbObjects getResults() {
         final Query qry = new Query();
         if (!q.is_empty()) {
