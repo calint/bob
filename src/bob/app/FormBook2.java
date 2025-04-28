@@ -18,7 +18,7 @@ import db.test.User;
 
 public final class FormBook2 extends FormDbo {
 
-    private static final long serialVersionUID = 1;
+    private final static long serialVersionUID = 1;
 
     public FormBook2() {
         this(null, null);

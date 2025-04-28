@@ -8,7 +8,7 @@ import db.DbClass;
 
 public final class FormDbClass extends Form {
 
-    private static final long serialVersionUID = 1;
+    private final static long serialVersionUID = 1;
 
     private final String javaClassName;
 

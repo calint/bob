@@ -8,7 +8,7 @@ import java.util.HashSet;
 public abstract class DbObject {
 
     /** Id field that all objects have. */
-    public static final FldId id = new FldId();
+    public final static FldId id = new FldId();
 
     Object[] fieldValues;
     HashSet<DbField> dirtyFields;

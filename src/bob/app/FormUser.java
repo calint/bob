@@ -15,7 +15,7 @@ import db.test.User;
 
 public final class FormUser extends FormDbo {
 
-    private static final long serialVersionUID = 1;
+    private final static long serialVersionUID = 1;
 
     public FormUser() {
         this(null, null);

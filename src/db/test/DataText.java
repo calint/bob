@@ -6,10 +6,10 @@ import db.IndexFt;
 
 public final class DataText extends DbObject {
 
-    public static final FldClob meta = new FldClob();
-    public static final FldClob data = new FldClob();
+    public final static FldClob meta = new FldClob();
+    public final static FldClob data = new FldClob();
 
-    public static final IndexFt ft = new IndexFt(meta, data);
+    public final static IndexFt ft = new IndexFt(meta, data);
 
     // ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
     public String getMeta() {

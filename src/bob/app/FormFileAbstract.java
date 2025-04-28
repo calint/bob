@@ -11,7 +11,7 @@ import db.test.File;
 
 public abstract class FormFileAbstract extends FormDbo {
 
-    private static final long serialVersionUID = 1;
+    private final static long serialVersionUID = 1;
 
     public FormFileAbstract() {
         this(null, null, null);

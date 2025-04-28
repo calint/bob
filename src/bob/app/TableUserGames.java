@@ -16,7 +16,7 @@ import db.test.User;
 
 public final class TableUserGames extends ViewTable {
 
-    private static final long serialVersionUID = 1;
+    private final static long serialVersionUID = 1;
 
     private final int userId;
 

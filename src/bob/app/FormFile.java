@@ -10,7 +10,7 @@ import db.test.File;
 
 public final class FormFile extends FormFileAbstract {
 
-    private static final long serialVersionUID = 1;
+    private final static long serialVersionUID = 1;
 
     public FormFile() {
         this(null, null, null);

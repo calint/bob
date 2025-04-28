@@ -15,7 +15,7 @@ import db.test.DataText;
 /** Example of use of bob abstract form. */
 public final class FormBook extends Form {
 
-    private static final long serialVersionUID = 1;
+    private final static long serialVersionUID = 1;
 
     public a title;
     public a authorsStr;

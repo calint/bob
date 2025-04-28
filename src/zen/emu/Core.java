@@ -15,26 +15,26 @@ public final class Core {
     public boolean nf;
     public int leds;
 
-    private static final int OP_ADDI = 0x1;
-    private static final int OP_LDI = 0x3;
-    private static final int OP_LD = 0x5;
-    private static final int OP_ST = 0x7;
+    private final static int OP_ADDI = 0x1;
+    private final static int OP_LDI = 0x3;
+    private final static int OP_LD = 0x5;
+    private final static int OP_ST = 0x7;
 
-    private static final int OP_ADD = 0x0;
-    private static final int OP_SUB = 0x2;
-    private static final int OP_OR = 0x4;
-    private static final int OP_XOR = 0x6;
-    private static final int OP_AND = 0x8;
-    private static final int OP_NOT = 0xa;
-    private static final int OP_CP = 0xc;
-    private static final int OP_SHF = 0xe;
+    private final static int OP_ADD = 0x0;
+    private final static int OP_SUB = 0x2;
+    private final static int OP_OR = 0x4;
+    private final static int OP_XOR = 0x6;
+    private final static int OP_AND = 0x8;
+    private final static int OP_NOT = 0xa;
+    private final static int OP_CP = 0xc;
+    private final static int OP_SHF = 0xe;
 
-    private static final int OP_IO_WL = 0x2;
-    private static final int OP_IO_WH = 0xa;
-    private static final int OP_IO_RL = 0x6;
-    private static final int OP_IO_RH = 0xe;
-    private static final int OP_IO_LED = 0x7;
-    private static final int OP_IO_LEDI = 0xf;
+    private final static int OP_IO_WL = 0x2;
+    private final static int OP_IO_WH = 0xa;
+    private final static int OP_IO_RL = 0x6;
+    private final static int OP_IO_RH = 0xe;
+    private final static int OP_IO_LED = 0x7;
+    private final static int OP_IO_LEDI = 0xf;
 
     public Core(final int regs_addr_width, final int calls_addr_width, final short[] ram, final UartTx utx,
             final UartRx urx) {
@@ -235,7 +235,7 @@ public final class Core {
         return imm4 + 1;
     }
 
-    public static final class Calls {
+    public final static class Calls {
         public final int[] mem;
         public int idx = -1;
 

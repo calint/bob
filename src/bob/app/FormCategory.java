@@ -8,7 +8,7 @@ import db.test.Category;
 
 public final class FormCategory extends FormDbo {
 
-    private static final long serialVersionUID = 1;
+    private final static long serialVersionUID = 1;
 
     public FormCategory() {
         this(null, null);

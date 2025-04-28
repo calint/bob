@@ -14,22 +14,22 @@ import java.util.Map;
 public final class Query {
 
     // operation of query element
-    public static final int EQ = 1;
-    public static final int NEQ = 2;
-    public static final int GT = 3;
-    public static final int GTE = 4;
-    public static final int LT = 5;
-    public static final int LTE = 6;
-    public static final int LIKE = 7;
+    public final static int EQ = 1;
+    public final static int NEQ = 2;
+    public final static int GT = 3;
+    public final static int GTE = 4;
+    public final static int LT = 5;
+    public final static int LTE = 6;
+    public final static int LIKE = 7;
     /** Full text query. */
-    public static final int FTQ = 8;
+    public final static int FTQ = 8;
 
     // operations between query elements
-    public static final int NOP = 0;
-    public static final int AND = 1;
-    public static final int OR = 2;
+    public final static int NOP = 0;
+    public final static int AND = 1;
+    public final static int OR = 2;
 
-    private static final class Elem {
+    private final static class Elem {
         private Query query;// if not null then this is a sub query
         private IndexFt ftIx;// if not null then this is a full text query
         private int elemOp; // 'and', 'or' or 'nop'
@@ -127,7 +127,7 @@ public final class Query {
         }
     }
 
-    static final class TableAliasMap {
+    final static class TableAliasMap {
         private int seq;
         private final HashMap<String, String> tblToAlias = new HashMap<String, String>();
 

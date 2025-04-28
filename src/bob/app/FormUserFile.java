@@ -10,7 +10,7 @@ import db.test.User;
 
 public final class FormUserFile extends FormFileAbstract {
 
-    private static final long serialVersionUID = 1;
+    private final static long serialVersionUID = 1;
 
     public FormUserFile() {
         this(null, null, null);

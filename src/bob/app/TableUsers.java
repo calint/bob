@@ -19,7 +19,7 @@ import db.test.User;
 
 public final class TableUsers extends ViewTable {
 
-    private static final long serialVersionUID = 1;
+    private final static long serialVersionUID = 1;
 
     public TableUsers() {
         super(null, BIT_SEARCH | BIT_CREATE | BIT_DELETE | BIT_SELECT, BIT_CLICK_ITEM, new TypeInfo("user", "users"));

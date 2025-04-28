@@ -17,7 +17,7 @@ import bob.ViewTable;
 
 public final class TableFsFiles extends ViewTable {
 
-    private static final long serialVersionUID = 1;
+    private final static long serialVersionUID = 1;
 
     public static String icon_file_uri = "/bob/file.png";
     public static String icon_folder_uri = "/bob/folder.png";

@@ -18,7 +18,7 @@ final class Toc {
     private final Stack<Scope> scopes = new Stack<Scope>();
     private int pc;
 
-    private static final class Scope {
+    private final static class Scope {
 
         /** Labels declared in this scope. */
         HashMap<String, Label> labels = new HashMap<String, Label>();
@@ -30,7 +30,7 @@ final class Toc {
 
     }
 
-    private static final class Link {
+    private final static class Link {
 
         Token token; // source location
         int pc; // location
@@ -48,7 +48,7 @@ final class Toc {
 
     }
 
-    private static final class Label {
+    private final static class Label {
 
         Token token; // token which declared the label
         int pc; // program counter where it was declared

@@ -24,7 +24,7 @@ import java.util.List;
 /** The database. */
 public final class Db {
 
-    private static final ThreadLocal<DbTransaction> currentTransaction = new ThreadLocal<DbTransaction>();
+    private final static ThreadLocal<DbTransaction> currentTransaction = new ThreadLocal<DbTransaction>();
 
     /** True if in cluster. */
     public static boolean clusterOn = false;
@@ -206,10 +206,10 @@ public final class Db {
     }
 
     // --- -- - -- -- - - --- - -- -- - -- --- - - - -- - - -- - -- -- -- - -- - - -
-    private static final LinkedList<PooledConnection> connectionPool = new LinkedList<PooledConnection>();
-    private static final ArrayList<DbClass> dbClasses = new ArrayList<DbClass>();
-    private static final HashMap<Class<? extends DbObject>, DbClass> clsToDbClsMap = new HashMap<Class<? extends DbObject>, DbClass>();
-    static final ArrayList<RelRefNMeta> relRefNMeta = new ArrayList<RelRefNMeta>();
+    private final static LinkedList<PooledConnection> connectionPool = new LinkedList<PooledConnection>();
+    private final static ArrayList<DbClass> dbClasses = new ArrayList<DbClass>();
+    private final static HashMap<Class<? extends DbObject>, DbClass> clsToDbClsMap = new HashMap<Class<? extends DbObject>, DbClass>();
+    final static ArrayList<RelRefNMeta> relRefNMeta = new ArrayList<RelRefNMeta>();
 
     /** If true unused columns are deleted. */
     public static boolean enableDeleteUnusedColumns = true;

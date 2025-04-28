@@ -4,7 +4,7 @@ import b.a;
 import b.xwriter;
 
 public class Registers extends a {
-    private static final long serialVersionUID = 1;
+    private final static long serialVersionUID = 1;
 
     public short[] regs;
 

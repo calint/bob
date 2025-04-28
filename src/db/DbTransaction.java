@@ -22,7 +22,7 @@ public final class DbTransaction {
     final Cache cache = new Cache();
     boolean isRolledBack = false;
 
-    static final class Cache {
+    final static class Cache {
         final HashMap<Class<? extends DbObject>, HashMap<Integer, DbObject>> clsToIdObjMap = new HashMap<Class<? extends DbObject>, HashMap<Integer, DbObject>>();
 
         void put(final DbObject o) {

@@ -1,14 +1,17 @@
 // reviewed: 2024-08-05
+//           2025-04-28
 package bob;
 
 import b.a;
 import b.xwriter;
 
 public final class Checkbox extends a {
-    private static final long serialVersionUID = 1;
 
-    private static final String off = "0";
-    private static final String on = "1";
+    private final static long serialVersionUID = 1;
+
+    private final static String off = "0";
+    private final static String on = "1";
+
     private final String id;
 
     public Checkbox(final String id, final boolean checked) {

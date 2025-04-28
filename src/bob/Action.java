@@ -7,7 +7,7 @@ import b.xwriter;
 
 public class Action extends a {
 
-    private static final long serialVersionUID = 1;
+    private final static long serialVersionUID = 1;
 
     private final String code;
 

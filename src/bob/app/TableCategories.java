@@ -16,7 +16,7 @@ import db.test.Category;
 
 public final class TableCategories extends ViewTable {
 
-    private static final long serialVersionUID = 1;
+    private final static long serialVersionUID = 1;
 
     public TableCategories() {
         super(null, BIT_SEARCH | BIT_SELECT | BIT_CREATE | BIT_DELETE, BIT_CLICK_ITEM,

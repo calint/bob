@@ -8,7 +8,7 @@ import java.util.List;
 import b.a;
 
 public abstract class Elem extends a implements Titled {
-    private static final long serialVersionUID = 1;
+    private final static long serialVersionUID = 1;
 
     /**
      * List of identifiers to be able to navigate to the parent object in context.

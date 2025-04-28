@@ -8,7 +8,7 @@ import b.xwriter;
 
 public @stateless class t3 extends a {
 
-    static final long serialVersionUID = 1;
+    final static long serialVersionUID = 1;
 
     @Override
     public void to(final xwriter x) throws Throwable {

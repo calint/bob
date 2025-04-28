@@ -11,7 +11,7 @@ import db.DbTransaction;
 import db.RelAgg;
 
 public final class InputRelAgg extends a {
-    private static final long serialVersionUID = 1;
+    private final static long serialVersionUID = 1;
 
     private final Class<? extends Form> createFormCls;
     final Class<? extends DbObject> objCls;

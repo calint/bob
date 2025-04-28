@@ -16,7 +16,7 @@ import db.test.Author;
 
 public final class TableAuthors extends ViewTable {
 
-    private static final long serialVersionUID = 1;
+    private final static long serialVersionUID = 1;
 
     public TableAuthors() {
         super(null, BIT_SEARCH | BIT_CREATE | BIT_DELETE | BIT_SELECT, BIT_CLICK_ITEM,

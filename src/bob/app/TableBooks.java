@@ -21,7 +21,7 @@ import db.test.DataText;
 
 public final class TableBooks extends ViewTable {
 
-    private static final long serialVersionUID = 1;
+    private final static long serialVersionUID = 1;
 
     public a title;
     public a id;

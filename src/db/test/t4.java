@@ -9,7 +9,7 @@ import b.xwriter;
 
 public @stateless class t4 extends a implements bin {
 
-    static final long serialVersionUID = 1;
+    final static long serialVersionUID = 1;
 
     public String content_type() {
         return "text/plain";

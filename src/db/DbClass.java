@@ -334,7 +334,7 @@ public final class DbClass {
         throw new RuntimeException("expected to find column " + name + " in " + columns);
     }
 
-    private static final class Column {
+    private final static class Column {
         String name;
         int ordinal_position;
         String type_name;

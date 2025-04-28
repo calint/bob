@@ -8,12 +8,12 @@ import java.util.Set;
 import b.xwriter;
 
 public abstract class View extends Elem {
-    private static final long serialVersionUID = 1;
+    private final static long serialVersionUID = 1;
 
-    public static final int BIT_CREATE = 1;
-    public static final int BIT_DELETE = 2;
-    public static final int BIT_SEARCH = 4;
-    public static final int BIT_SELECT = 8;
+    public final static int BIT_CREATE = 1;
+    public final static int BIT_DELETE = 2;
+    public final static int BIT_SEARCH = 4;
+    public final static int BIT_SELECT = 8;
 
     /** The actions that are enabled in the view. */
     protected final int enabledViewBits;
@@ -94,8 +94,8 @@ public abstract class View extends Elem {
 
     protected abstract void onAction(xwriter x, Action act) throws Throwable;
 
-    public static final class TypeInfo implements Serializable {
-        private static final long serialVersionUID = 1;
+    public final static class TypeInfo implements Serializable {
+        private final static long serialVersionUID = 1;
 
         protected final String name;
         protected final String namePlural;

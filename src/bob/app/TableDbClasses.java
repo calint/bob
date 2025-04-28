@@ -15,7 +15,7 @@ import db.DbObject;
 
 public final class TableDbClasses extends ViewTable {
 
-    private static final long serialVersionUID = 1;
+    private final static long serialVersionUID = 1;
 
     public TableDbClasses() {
         super(null, BIT_SEARCH, BIT_CLICK_ITEM, new TypeInfo("class", "classes"));

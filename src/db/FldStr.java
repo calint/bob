@@ -5,7 +5,7 @@ package db;
 /** String field. */
 public final class FldStr extends DbField {
 
-    public static final int MAX_SIZE = 65535; // ? this is mysql specific
+    public final static int MAX_SIZE = 65535; // ? this is mysql specific
 
     public FldStr() {
         this(250, null, true); // ? default length should be a configurable?

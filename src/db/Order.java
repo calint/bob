@@ -9,7 +9,7 @@ import db.Query.TableAliasMap;
 /** Parameter to get(...) for sorting the result list. */
 public final class Order {
 
-    private static final class Elem {
+    private final static class Elem {
         String tableName;
         String columnName;
         String dir;

@@ -10,7 +10,7 @@ import b.req;
 import b.xwriter;
 
 public class Controller extends a {
-    private static final long serialVersionUID = 1;
+    private final static long serialVersionUID = 1;
 
     public a s; // serialized size
     public a sg; // serialized size, gziped

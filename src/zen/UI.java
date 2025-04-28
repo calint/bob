@@ -11,7 +11,7 @@ import zen.emu.SoC;
 import zen.zasm.Zasm;
 
 public class UI extends a {
-    private static final long serialVersionUID = 1L;
+    private final static long serialVersionUID = 1L;
 
     private final SoC soc = new SoC();
     private Zasm zasm;

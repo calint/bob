@@ -7,8 +7,8 @@ import db.Index;
 
 public final class Author extends DbObject implements Titled {
 
-    public static final FldStr name = new FldStr(250);
-    public static final Index ixName = new Index(name);
+    public final static FldStr name = new FldStr(250);
+    public final static Index ixName = new Index(name);
 
     public String getTitle() {
         return getName();

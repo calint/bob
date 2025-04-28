@@ -5,7 +5,7 @@ import b.xwriter;
 import zen.emu.Core;
 
 public class Panel extends a {
-    private static final long serialVersionUID = 1;
+    private final static long serialVersionUID = 1;
 
     public Core core;
     public Registers regs;

@@ -7,10 +7,10 @@ import b.a;
 import b.xwriter;
 
 public final class Tabs extends a {
-    private static final long serialVersionUID = 1;
+    private final static long serialVersionUID = 1;
 
-    public static final class Tab extends a {
-        private static final long serialVersionUID = 1;
+    public final static class Tab extends a {
+        private final static long serialVersionUID = 1;
 
         private final a elem;
 

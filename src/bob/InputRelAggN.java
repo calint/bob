@@ -10,7 +10,7 @@ import db.DbObjects;
 import db.RelAggN;
 
 public final class InputRelAggN extends a {
-    private static final long serialVersionUID = 1;
+    private final static long serialVersionUID = 1;
 
     private final Class<? extends Form> createFormCls;
     final Class<? extends DbObject> objCls;

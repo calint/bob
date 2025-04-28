@@ -8,12 +8,12 @@ import b.xwriter;
 import bob.View.SelectReceiverSingle;
 
 public abstract class Form extends Elem {
-    private static final long serialVersionUID = 1;
+    private final static long serialVersionUID = 1;
 
-    public static final int BIT_SAVE_CLOSE = 1;
-    public static final int BIT_SAVE = 2;
-    public static final int BIT_CLOSE = 4;
-    public static final int BIT_CANCEL = 8;
+    public final static int BIT_SAVE_CLOSE = 1;
+    public final static int BIT_SAVE = 2;
+    public final static int BIT_CLOSE = 4;
+    public final static int BIT_CANCEL = 8;
 
     /** Actions enabled on this form. */
     protected final int enabledFormBits;

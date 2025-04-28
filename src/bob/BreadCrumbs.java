@@ -13,7 +13,7 @@ import b.xwriter;
  */
 public final class BreadCrumbs extends a {
 
-    private static final long serialVersionUID = 1;
+    private final static long serialVersionUID = 1;
 
     private final ArrayList<a> elements = new ArrayList<a>();
 

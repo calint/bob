@@ -9,9 +9,9 @@ import java.sql.Statement;
 /** Represents the relation table for RelRefN. */
 final class RelRefNMeta {
 
-    public static final String TABLE_NAME_PREFIX = "Refs_";
-    public static final String COLUMN_NAME_FROM = "fromId"; // column name referencing to source id
-    public static final String COLUMN_NAME_TO = "toId"; // column name referencing to target id
+    public final static String TABLE_NAME_PREFIX = "Refs_";
+    public final static String COLUMN_NAME_FROM = "fromId"; // column name referencing to source id
+    public final static String COLUMN_NAME_TO = "toId"; // column name referencing to target id
 
     final String tableName; // the table name for this association NN table
     final String fromTableName; // the table name of the source class

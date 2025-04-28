@@ -33,7 +33,7 @@ import db.RelRefN;
  * write to object.
  */
 public abstract class FormDbo extends Form {
-    private static final long serialVersionUID = 1;
+    private final static long serialVersionUID = 1;
 
     private final Class<? extends DbObject> objCls;
     private final ArrayList<String> dbfields = new ArrayList<String>();

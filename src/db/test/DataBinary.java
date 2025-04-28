@@ -5,7 +5,7 @@ import db.FldBlob;
 
 public final class DataBinary extends DbObject {
 
-    public static final FldBlob data = new FldBlob();
+    public final static FldBlob data = new FldBlob();
 
     // ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
     public byte[] getData() {

@@ -7,12 +7,12 @@ import b.a;
 import b.xwriter;
 
 public final class Menu extends a {
-    private static final long serialVersionUID = 1;
+    private final static long serialVersionUID = 1;
 
     private int selectedIndex;
 
-    private static final class Item extends a {
-        private static final long serialVersionUID = 1;
+    private final static class Item extends a {
+        private final static long serialVersionUID = 1;
 
         Class<? extends a> cls;
         String title;

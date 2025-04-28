@@ -17,21 +17,21 @@ import db.RelRefN;
 
 public final class Book extends DbObject implements Titled {
 
-    public static final FldStr name = new FldStr(800);
-    public static final FldStr authorsStr = new FldStr(3000);
-    public static final RelRefN authors = new RelRefN(Author.class);
-    public static final FldStr publisherStr = new FldStr(400);
-    public static final RelRef publisher = new RelRef(Publisher.class);
-    public static final FldDateTime publishedDate = new FldDateTime();
-    public static final RelAgg data = new RelAgg(DataText.class);
-    public static final FldStr categoriesStr = new FldStr(800);
-    public static final RelRefN categories = new RelRefN(Category.class);
-    public static final FldInt inStock = new FldInt();
-    public static final FldBool showInStore = new FldBool();
-    public static final FldFlt rating = new FldFlt();
+    public final static FldStr name = new FldStr(800);
+    public final static FldStr authorsStr = new FldStr(3000);
+    public final static RelRefN authors = new RelRefN(Author.class);
+    public final static FldStr publisherStr = new FldStr(400);
+    public final static RelRef publisher = new RelRef(Publisher.class);
+    public final static FldDateTime publishedDate = new FldDateTime();
+    public final static RelAgg data = new RelAgg(DataText.class);
+    public final static FldStr categoriesStr = new FldStr(800);
+    public final static RelRefN categories = new RelRefN(Category.class);
+    public final static FldInt inStock = new FldInt();
+    public final static FldBool showInStore = new FldBool();
+    public final static FldFlt rating = new FldFlt();
 
     // optimizes Book join with DataText when doing full text query
-    public static final IndexRel ixRelData = new IndexRel(data);
+    public final static IndexRel ixRelData = new IndexRel(data);
 
     public String getTitle() {
         return getName();
