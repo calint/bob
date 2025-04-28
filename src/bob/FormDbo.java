@@ -1,5 +1,7 @@
+//
 // reviewed: 2024-08-05
 //           2025-04-28
+//
 package bob;
 
 import java.sql.Timestamp;
@@ -80,7 +82,7 @@ public abstract class FormDbo extends Form {
      * 
      * @return Date format.
      */
-    protected SimpleDateFormat dateFormat() {
+    protected SimpleDateFormat createDateFormat() {
         return new SimpleDateFormat("yyyy-MM-dd"); // ISO 8601
     }
 
@@ -89,34 +91,57 @@ public abstract class FormDbo extends Form {
      * 
      * @return Date time format.
      */
-    protected SimpleDateFormat dateTimeFormat() {
+    protected SimpleDateFormat createDateTimeFormat() {
         return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm"); // format of input type datetime-local
     }
 
     /**
-     * Override this to provide number formatter for integers.
+     * Override this to provide number format for integers.
      * 
      * @return Number format.
      */
-    protected NumberFormat numberFormatInt() {
+    protected NumberFormat createNumberFormatInt() {
         return NumberFormat.getNumberInstance();
     }
 
     /**
-     * Override this to provide number formatter for floats.
+     * Override this to provide number format for floats.
      * 
      * @return Number format.
      */
-    protected NumberFormat numberFormatFlt() {
+    protected NumberFormat createNumberFormatFlt() {
         return NumberFormat.getNumberInstance();
+    }
+
+    /**
+     * Override this and return true to create the object at form initialization.
+     * 
+     * @return True if object should be created at initialization.
+     */
+    protected boolean isCreateObjectAtInit() {
+        return false;
+    }
+
+    /**
+     * Override this to create object.
+     * 
+     * @return DbObject
+     */
+    protected DbObject createObject() {
+        return Db.currentTransaction().create(objCls);
+    }
+
+    /**
+     * Override this to get the object.
+     * 
+     * @return DbObject
+     */
+    protected DbObject getObject() {
+        return Db.currentTransaction().get(objCls, getObjectId());
     }
 
     protected final void beginForm(final xwriter x) {
         x.table("f").nl();
-    }
-
-    protected DbObject createObject() {
-        return Db.currentTransaction().create(objCls);
     }
 
     protected final void endForm(final xwriter x) {
@@ -137,30 +162,30 @@ public abstract class FormDbo extends Form {
         if (ts == null) {
             return "";
         }
-        return dateFormatter().format(ts);
+        return dateFormat().format(ts);
     }
 
     protected final String formatDateTime(final Timestamp ts) {
         if (ts == null) {
             return "";
         }
-        return dateTimeFormatter().format(ts);
+        return dateTimeFormat().format(ts);
     }
 
     protected final String formatDbl(final double i) {
-        return numberFormatterFlt().format(i);
+        return numberFormatFlt().format(i);
     }
 
     protected final String formatFlt(final float i) {
-        return numberFormatterFlt().format(i);
+        return numberFormatFlt().format(i);
     }
 
     protected final String formatInt(final int i) {
-        return numberFormatterInt().format(i);
+        return numberFormatInt().format(i);
     }
 
     protected final String formatLng(final long i) {
-        return numberFormatterInt().format(i);
+        return numberFormatInt().format(i);
     }
 
     protected final boolean getBool(final DbField field) {
@@ -225,10 +250,6 @@ public abstract class FormDbo extends Form {
 
     protected final long getLng(final String field) throws ParseException {
         return parseLng(getStr(field));
-    }
-
-    protected DbObject getObject() {
-        return Db.currentTransaction().get(objCls, getObjectId());
     }
 
     protected final int getSelectedId(final RelRef rel) {
@@ -430,6 +451,7 @@ public abstract class FormDbo extends Form {
         }
         x.tr().td("lbl").p(label).p(":").td("val");
         x.divh(e);
+        x.nl();
     }
 
     protected final void inputAgg(final xwriter x, final String label, final List<String> idPath, final DbObject o,
@@ -448,6 +470,7 @@ public abstract class FormDbo extends Form {
         }
         x.tr().td("lbl").p(label).p(":").td("val");
         x.divh(e);
+        x.nl();
     }
 
     protected final void inputAggN(final xwriter x, final String label, final List<String> idPath, final DbObject o,
@@ -466,6 +489,7 @@ public abstract class FormDbo extends Form {
         }
         x.tr().td("lbl").p(label).p(":").td("val");
         x.divh(e);
+        x.nl();
     }
 
     protected final void inputRefN(final xwriter x, final String label, final DbObject o, final RelRefN rel,
@@ -486,6 +510,7 @@ public abstract class FormDbo extends Form {
         }
         x.tr().td("lbl").p(label).p(":").td("val");
         x.divh(e);
+        x.nl();
     }
 
     protected final void inputText(final xwriter x, final String label, final DbObject o, final FldStr f,
@@ -498,7 +523,8 @@ public abstract class FormDbo extends Form {
     protected final void inputText(final xwriter x, final String label, final String field, final String value,
             final String styleClass) {
         x.tr().td("lbl").p(label).p(":").td("val");
-        x.inp(elemFor(field, value), null, styleClass, null, null, this, "sc", null, null).nl();
+        x.inp(elemFor(field, value), null, styleClass, null, null, this, "sc", null, null);
+        x.nl();
     }
 
     protected final void inputTextArea(final xwriter x, final String label, final DbObject o, final FldStr f,
@@ -511,7 +537,8 @@ public abstract class FormDbo extends Form {
     protected final void inputTextArea(final xwriter x, final String label, final String field, final String value,
             final String styleClass) {
         x.tr().td("lbl").p(label).p(":").td("val");
-        x.inptxtarea(elemFor(field, value), styleClass).nl();
+        x.inptxtarea(elemFor(field, value), styleClass);
+        x.nl();
     }
 
     protected final void inputTimestamp(final xwriter x, final String label, final DbObject o, final FldTs f,
@@ -533,38 +560,30 @@ public abstract class FormDbo extends Form {
         if (Util.isEmpty(s)) {
             return null;
         }
-        return new Timestamp(dateFormatter().parse(s).getTime());
+        return new Timestamp(dateFormat().parse(s).getTime());
     }
 
     protected final Timestamp parseDateTime(final String s) throws ParseException {
         if (Util.isEmpty(s)) {
             return null;
         }
-        return new Timestamp(dateTimeFormatter().parse(s).getTime());
+        return new Timestamp(dateTimeFormat().parse(s).getTime());
     }
 
     protected final double parseDbl(final String s) throws ParseException {
-        return numberFormatterFlt().parse(s).doubleValue();
+        return numberFormatFlt().parse(s).doubleValue();
     }
 
     protected final float parseFlt(final String s) throws ParseException {
-        return numberFormatterFlt().parse(s).floatValue();
+        return numberFormatFlt().parse(s).floatValue();
     }
 
     protected final int parseInt(final String s) throws ParseException {
-        return numberFormatterInt().parse(s).intValue();
+        return numberFormatInt().parse(s).intValue();
     }
 
     protected final long parseLng(final String s) throws ParseException {
-        return numberFormatterInt().parse(s).longValue();
-    }
-
-    private DbField getDbFieldFromClass(final String name) {
-        try {
-            return (DbField) objCls.getField(name).get(null);
-        } catch (final Throwable t) {
-            throw new RuntimeException(t);
-        }
+        return numberFormatInt().parse(s).longValue();
     }
 
     @Override
@@ -656,11 +675,6 @@ public abstract class FormDbo extends Form {
 
     protected abstract void writeToObject(final xwriter x, final DbObject obj) throws Throwable;
 
-    /** Override and return true to create the object at form initiation. */
-    protected boolean isCreateObjectAtInit() {
-        return false;
-    }
-
     /** Focuses on field from "save" when for example validation failed. */
     protected final void xfocus(final xwriter x, final DbField f) {
         xfocus(x, f.getName());
@@ -681,31 +695,40 @@ public abstract class FormDbo extends Form {
         return e;
     }
 
-    private SimpleDateFormat dateFormatter() {
+    private SimpleDateFormat dateFormat() {
         if (fmtDate == null) {
-            fmtDate = dateFormat();
+            fmtDate = createDateFormat();
         }
         return fmtDate;
     }
 
-    private SimpleDateFormat dateTimeFormatter() {
+    private SimpleDateFormat dateTimeFormat() {
         if (fmtDateTime == null) {
-            fmtDateTime = dateFormat();
+            fmtDateTime = createDateFormat();
         }
         return fmtDateTime;
     }
 
-    private NumberFormat numberFormatterInt() {
+    private NumberFormat numberFormatInt() {
         if (fmtNbrInt == null) {
-            fmtNbrInt = numberFormatInt();
+            fmtNbrInt = createNumberFormatInt();
         }
         return fmtNbrInt;
     }
 
-    private NumberFormat numberFormatterFlt() {
+    private NumberFormat numberFormatFlt() {
         if (fmtNbrFlt == null) {
-            fmtNbrFlt = numberFormatFlt();
+            fmtNbrFlt = createNumberFormatFlt();
         }
         return fmtNbrFlt;
     }
+
+    private DbField getDbFieldFromClass(final String name) {
+        try {
+            return (DbField) objCls.getField(name).get(null);
+        } catch (final Throwable t) {
+            throw new RuntimeException(t);
+        }
+    }
+
 }
