@@ -161,7 +161,7 @@ public final class Db {
             throw new RuntimeException("Transaction not initiated on this thread.");
         }
         boolean connectionIsOk = true;
-        if (!tn.rollbacked) {
+        if (!tn.isRolledBack) {
             try {
                 tn.commit();
             } catch (final Throwable t) {

@@ -54,7 +54,7 @@ public abstract class TestCase implements Runnable {
             // ! this can leak a transaction if the page running is not @stateless
         }
         final String cachests = cacheon ? " on" : "off";
-        tn.cache_enabled = cacheon;
+        tn.cacheEnabled = cacheon;
         if (data_points_output) {
             out.println("run\tms");
         } else {

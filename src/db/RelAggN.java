@@ -75,7 +75,7 @@ public final class RelAggN extends DbRelation {
             Db.execClusterSql(sb.toString());
         }
 
-        if (tn.cache_enabled) {
+        if (tn.cacheEnabled) {
             tn.cache.remove(toCls, toId);
         }
     }

@@ -44,17 +44,17 @@ public class test1 extends TestCase {
         final User u1 = (User) tn.create(User.class);
         final DbObjects dbo = new DbObjects(User.class);
         final User u2 = (User) dbo.get(u1.id());
-        if (tn.cache_enabled && u1 != u2)
+        if (tn.cacheEnabled && u1 != u2)
             throw new RuntimeException();
-        if (!tn.cache_enabled && u1.id() != u2.id())
+        if (!tn.cacheEnabled && u1.id() != u2.id())
             throw new RuntimeException();
 
         final File f1 = u1.createFile();
         final DbObjects files = u1.getFiles();
         final File f2 = (File) files.get(f1.id());
-        if (tn.cache_enabled && f1 != f2)
+        if (tn.cacheEnabled && f1 != f2)
             throw new RuntimeException();
-        if (!tn.cache_enabled && f1.id() != f2.id())
+        if (!tn.cacheEnabled && f1.id() != f2.id())
             throw new RuntimeException();
         tn.delete(u1);
 
@@ -100,16 +100,16 @@ public class test1 extends TestCase {
             throw new RuntimeException();
         if (!(ls9.get(0).id() == f2.id() && ls9.get(1).id() == f1.id()))
             throw new RuntimeException();
-        if (tn.cache_enabled && ls9.get(0) != f2 && ls9.get(1) != f1)
+        if (tn.cacheEnabled && ls9.get(0) != f2 && ls9.get(1) != f1)
             throw new RuntimeException();
 
         final List<DbObject[]> ls11 = u1.getFiles().get(null, new Order(File.name))
                 .toList(new Class[] { User.class, File.class });
         if (ls11.size() != 2)
             throw new RuntimeException();
-        if (tn.cache_enabled && !(ls11.get(0)[0] == u1 && ls11.get(0)[1] == f2))
+        if (tn.cacheEnabled && !(ls11.get(0)[0] == u1 && ls11.get(0)[1] == f2))
             throw new RuntimeException();
-        if (tn.cache_enabled && !(ls11.get(1)[0] == u1 && ls11.get(1)[1] == f1))
+        if (tn.cacheEnabled && !(ls11.get(1)[0] == u1 && ls11.get(1)[1] == f1))
             throw new RuntimeException();
 
         final Query q = new Query(User.name, Query.EQ, "user name").and(User.files).and(File.name, Query.EQ,
@@ -156,9 +156,9 @@ public class test1 extends TestCase {
         final File f4 = (File) tn.create(File.class);
         u1.setGroupPic(f4.id());
         final File f5 = u1.getGroupPic();
-        if (tn.cache_enabled && f5 != f4)
+        if (tn.cacheEnabled && f5 != f4)
             throw new RuntimeException("expected same instance. is cache off? ");
-        if (!tn.cache_enabled && f5 == f4)
+        if (!tn.cacheEnabled && f5 == f4)
             throw new RuntimeException("expected different instances. is cache on?");
 
         u1.setGroupPic(0);
@@ -214,7 +214,7 @@ public class test1 extends TestCase {
         final byte[] ba1 = { 1, 2, 3, 4, 5 };
         bin1.setData(ba1);
 
-        if (tn.cache_enabled) {
+        if (tn.cacheEnabled) {
             tn.commit(); // flush cache
         }
 
@@ -458,7 +458,7 @@ public class test1 extends TestCase {
         final List<DbObject[]> ls = tn.get(new Class<?>[] { User.class, File.class }, q, ord, null);
         if (ls.size() != 2)
             throw new RuntimeException();
-        if (tn.cache_enabled) {
+        if (tn.cacheEnabled) {
             DbObject[] row;
             row = ls.get(0);
             if (row[0] != u || row[1] != f1)
