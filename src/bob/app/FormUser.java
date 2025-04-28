@@ -51,13 +51,6 @@ public final class FormUser extends FormDbo {
     }
 
     @Override
-    protected void cancel(final xwriter x) throws Throwable {
-        if (isNewObject() && !hasBeenSaved()) {
-            Db.currentTransaction().delete(getObject());
-        }
-    }
-
-    @Override
     protected List<View> getViewsList() {
         final int oid = Integer.parseInt(getObjectId());
         final ArrayList<View> ls = new ArrayList<View>();

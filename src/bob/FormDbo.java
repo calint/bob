@@ -139,6 +139,14 @@ public abstract class FormDbo extends Form {
         return Db.currentTransaction().get(objCls, getObjectId());
     }
 
+    /** Override to implement custom cancel actions. */
+    @Override
+    protected void cancel(final xwriter x) throws Throwable {
+        if (isNewObject() && !hasBeenSaved()) {
+            Db.currentTransaction().delete(getObject());
+        }
+    }
+
     protected final void beginForm(final xwriter x) {
         x.table("f").nl();
     }
@@ -672,6 +680,7 @@ public abstract class FormDbo extends Form {
         writeToObject(x, o);
     }
 
+    /** Override to do further writing to object. */
     protected abstract void writeToObject(final xwriter x, final DbObject obj) throws Throwable;
 
     /** Focuses on field from "save" when for example validation failed. */
