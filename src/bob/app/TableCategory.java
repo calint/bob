@@ -20,6 +20,7 @@ import db.test.Category;
 import db.test.DataText;
 
 public final class TableCategory extends ViewTable {
+
     private static final long serialVersionUID = 1;
 
     public a title;
@@ -158,4 +159,5 @@ public final class TableCategory extends ViewTable {
             super.bubble_event(x, this, t);
         }
     }
+
 }

@@ -14,6 +14,7 @@ import db.DbObject;
 import db.test.User;
 
 public final class FormUser extends FormDbo {
+
     private static final long serialVersionUID = 1;
 
     public FormUser() {
@@ -87,4 +88,5 @@ public final class FormUser extends FormDbo {
             throw new Exception("User name may not be empty.");
         }
     }
+
 }

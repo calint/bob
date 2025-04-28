@@ -16,6 +16,7 @@ import bob.Util;
 import bob.ViewTable;
 
 public final class TableFsFiles extends ViewTable {
+
     private static final long serialVersionUID = 1;
 
     public static String icon_file_uri = "/bob/file.png";
@@ -136,4 +137,5 @@ public final class TableFsFiles extends ViewTable {
         final Form f = new FormFsFile(p).init();
         super.bubble_event(x, this, f);
     }
+
 }

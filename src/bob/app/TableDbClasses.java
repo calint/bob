@@ -14,6 +14,7 @@ import db.DbClass;
 import db.DbObject;
 
 public final class TableDbClasses extends ViewTable {
+
     private static final long serialVersionUID = 1;
 
     public TableDbClasses() {
@@ -69,4 +70,5 @@ public final class TableDbClasses extends ViewTable {
         final Form f = new FormDbClass(dbc).init();
         super.bubble_event(x, this, f);
     }
+
 }

@@ -15,6 +15,7 @@ import db.Query;
 import db.test.Category;
 
 public final class TableCategories extends ViewTable {
+
     private static final long serialVersionUID = 1;
 
     public TableCategories() {

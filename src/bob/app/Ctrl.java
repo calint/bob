@@ -5,6 +5,7 @@ import bob.Controller;
 
 /** main element in this bapp */
 public final class Ctrl extends Controller {
+
     private static final long serialVersionUID = 1;
 
     public Ctrl() {
@@ -18,4 +19,5 @@ public final class Ctrl extends Controller {
         m.addItem(TableFiles.class, "Files");
         m.addItem(TableDbClasses.class, "Classes");
     }
+
 }

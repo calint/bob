@@ -7,6 +7,7 @@ import bob.Form;
 import db.DbClass;
 
 public final class FormDbClass extends Form {
+
     private static final long serialVersionUID = 1;
 
     private final String javaClassName;
@@ -26,4 +27,5 @@ public final class FormDbClass extends Form {
         jem.Main.main(javaClassName, new osltgt(x.outputstream()));
         x.div_();
     }
+
 }

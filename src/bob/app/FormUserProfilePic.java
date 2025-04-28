@@ -13,6 +13,7 @@ import db.test.File;
 import db.test.User;
 
 public final class FormUserProfilePic extends FormDbo {
+
     private static final long serialVersionUID = 1;
 
     public FormUserProfilePic() {
@@ -60,4 +61,5 @@ public final class FormUserProfilePic extends FormDbo {
     protected void writeToObject(final xwriter x, final DbObject obj) throws Throwable {
         // FormDbo writes the input fields to the DbObject
     }
+
 }

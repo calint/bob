@@ -16,6 +16,7 @@ import db.Query;
 import db.test.File;
 
 public final class TableFiles extends ViewTable {
+
     private static final long serialVersionUID = 1;
 
     public TableFiles() {
@@ -100,4 +101,5 @@ public final class TableFiles extends ViewTable {
         }
         sel.clear();
     }
+
 }

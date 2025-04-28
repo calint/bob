@@ -19,6 +19,7 @@ import db.test.Book;
 import db.test.DataText;
 
 public final class TableAuthor extends ViewTable {
+
     private static final long serialVersionUID = 1;
 
     public a title;
@@ -157,4 +158,5 @@ public final class TableAuthor extends ViewTable {
             super.bubble_event(x, this, t);
         }
     }
+
 }

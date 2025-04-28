@@ -17,6 +17,7 @@ import db.test.Publisher;
 import db.test.User;
 
 public final class FormBook2 extends FormDbo {
+
     private static final long serialVersionUID = 1;
 
     public FormBook2() {
@@ -111,4 +112,5 @@ public final class FormBook2 extends FormDbo {
     public void x_test(final xwriter x, final String param) throws Throwable {
         x.xu(this);
     }
+
 }

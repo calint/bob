@@ -18,6 +18,7 @@ import db.Query;
 import db.test.User;
 
 public final class TableUsers extends ViewTable {
+
     private static final long serialVersionUID = 1;
 
     public TableUsers() {
@@ -135,4 +136,5 @@ public final class TableUsers extends ViewTable {
         }
         super.onAction(x, act);
     }
+
 }

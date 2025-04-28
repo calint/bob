@@ -9,6 +9,7 @@ import db.DbTransaction;
 import db.test.User;
 
 public final class FormUserFile extends FormFileAbstract {
+
     private static final long serialVersionUID = 1;
 
     public FormUserFile() {
@@ -38,4 +39,5 @@ public final class FormUserFile extends FormFileAbstract {
         final User u = (User) tn.get(User.class, idPath.get(0));
         return u.getFiles().get(oid);
     }
+
 }

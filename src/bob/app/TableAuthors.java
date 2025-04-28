@@ -15,6 +15,7 @@ import db.Query;
 import db.test.Author;
 
 public final class TableAuthors extends ViewTable {
+
     private static final long serialVersionUID = 1;
 
     public TableAuthors() {
@@ -105,4 +106,5 @@ public final class TableAuthors extends ViewTable {
         }
         sel.clear();
     }
+
 }

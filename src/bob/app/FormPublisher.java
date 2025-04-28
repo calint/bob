@@ -7,6 +7,7 @@ import db.DbObject;
 import db.test.Publisher;
 
 public final class FormPublisher extends FormDbo {
+
     private static final long serialVersionUID = 1;
 
     public FormPublisher() {

@@ -9,6 +9,7 @@ import db.DbTransaction;
 import db.test.File;
 
 public final class FormFile extends FormFileAbstract {
+
     private static final long serialVersionUID = 1;
 
     public FormFile() {
@@ -31,7 +32,9 @@ public final class FormFile extends FormFileAbstract {
         if (oid == null) {
             return null;
         }
+
         final DbTransaction tn = Db.currentTransaction();
         return tn.get(File.class, oid);
     }
+
 }

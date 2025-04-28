@@ -10,6 +10,7 @@ import db.DbObject;
 import db.test.File;
 
 public abstract class FormFileAbstract extends FormDbo {
+
     private static final long serialVersionUID = 1;
 
     public FormFileAbstract() {
@@ -43,4 +44,5 @@ public abstract class FormFileAbstract extends FormDbo {
 
     @Override
     protected abstract DbObject getObject();
+
 }

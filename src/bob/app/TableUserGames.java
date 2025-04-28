@@ -15,6 +15,7 @@ import db.test.Game;
 import db.test.User;
 
 public final class TableUserGames extends ViewTable {
+
     private static final long serialVersionUID = 1;
 
     private final int userId;
@@ -101,4 +102,5 @@ public final class TableUserGames extends ViewTable {
         }
         sel.clear();
     }
+
 }

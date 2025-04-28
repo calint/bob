@@ -15,6 +15,7 @@ import db.Query;
 import db.test.Publisher;
 
 public final class TablePublishers extends ViewTable {
+
     private static final long serialVersionUID = 1;
 
     public TablePublishers() {
@@ -104,4 +105,5 @@ public final class TablePublishers extends ViewTable {
         }
         sel.clear();
     }
+
 }

@@ -7,6 +7,7 @@ import db.DbObject;
 import db.test.Category;
 
 public final class FormCategory extends FormDbo {
+
     private static final long serialVersionUID = 1;
 
     public FormCategory() {
@@ -34,4 +35,5 @@ public final class FormCategory extends FormDbo {
     @Override
     protected void writeToObject(final xwriter x, final DbObject obj) throws Throwable {
     }
+
 }

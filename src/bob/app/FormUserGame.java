@@ -13,6 +13,7 @@ import db.test.Game;
 import db.test.User;
 
 public final class FormUserGame extends FormDbo {
+
     private static final long serialVersionUID = 1;
 
     public FormUserGame() {
@@ -59,4 +60,5 @@ public final class FormUserGame extends FormDbo {
     protected void writeToObject(final xwriter x, final DbObject obj) throws Throwable {
         // FormDbo writes the input fields to the DbObject
     }
+
 }

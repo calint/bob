@@ -7,6 +7,7 @@ import b.xwriter;
 import bob.Form;
 
 public final class FormFsFile extends Form {
+
     private static final long serialVersionUID = 1;
 
     private final path pth;
@@ -26,4 +27,5 @@ public final class FormFsFile extends Form {
         pth.to(new osltgt(x.outputstream()));
         x.div_();
     }
+
 }

@@ -14,6 +14,7 @@ import db.test.DataText;
 
 /** Example of use of bob abstract form. */
 public final class FormBook extends Form {
+
     private static final long serialVersionUID = 1;
 
     public a title;
@@ -23,7 +24,9 @@ public final class FormBook extends Form {
 
     public FormBook(final String objectId, final String initStr) {
         super(null, objectId, initStr, BIT_SAVE_CLOSE | BIT_SAVE | BIT_CLOSE);
+
         final Book o = (Book) (objectId == null ? null : Db.currentTransaction().get(Book.class, objectId));
+
         title.set(o == null ? initStr : o.getName());
         authorsStr.set(o == null ? "" : o.getAuthorsStr());
         publisherStr.set(o == null ? "" : o.getPublisherStr());
@@ -46,6 +49,7 @@ public final class FormBook extends Form {
     @Override
     protected void save(final xwriter x) throws Throwable {
         final DbTransaction tn = Db.currentTransaction();
+
         final Book o;
         if (objectId == null) {
             // create new
@@ -54,6 +58,7 @@ public final class FormBook extends Form {
         } else {
             o = (Book) tn.get(Book.class, objectId);
         }
+
         o.setName(title.str());
         o.setAuthorsStr(authorsStr.str());
         o.setPublisherStr(publisherStr.str());
@@ -63,4 +68,5 @@ public final class FormBook extends Form {
         final DataText d = o.getData(true);
         d.setMeta(o.getName() + " " + o.getAuthorsStr() + " " + o.getPublisher());
     }
+
 }
