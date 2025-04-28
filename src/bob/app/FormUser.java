@@ -12,7 +12,6 @@ import b.xwriter;
 import bob.FormDbo;
 import bob.Util;
 import bob.View;
-import db.Db;
 import db.DbObject;
 import db.test.User;
 
