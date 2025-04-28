@@ -1,11 +1,11 @@
 // reviewed: 2024-08-05
+//           2025-04-28
 package db;
 
 import java.util.HashSet;
 
 /** Abstract database object. */
 public abstract class DbObject {
-
     public static final FldId id = new FldId();
 
     Object[] fieldValues;
@@ -32,6 +32,7 @@ public abstract class DbObject {
         Db.currentTransaction().dirtyObjects.add(this);
     }
 
+    /** Callback when object is created. */
     protected void onCreate() {
     }
 
@@ -49,5 +50,4 @@ public abstract class DbObject {
         sb.append("}");
         return sb.toString();
     }
-
 }
