@@ -1,5 +1,6 @@
 //
 // reviewed: 2024-08-05
+//           2025-04-28
 //
 package db;
 
@@ -15,7 +16,7 @@ public final class IndexFt extends Index {
 
     @Override
     protected void createIndex(final Statement stmt) throws SQLException {
-        final StringBuilder sb = new StringBuilder(128);
+        final StringBuilder sb = new StringBuilder(128); // ? magic number
         sb.append("create fulltext index ").append(name).append(" on ").append(tableName).append('(');
         for (final DbField f : fields) {
             sb.append(f.name).append(',');
