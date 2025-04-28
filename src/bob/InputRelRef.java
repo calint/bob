@@ -64,7 +64,6 @@ public final class InputRelRef extends a {
         if (createFormCls != null) {
             x.ax(this, "c", "create");
         }
-        x.nl();
     }
 
     public void save(final DbObject o) {

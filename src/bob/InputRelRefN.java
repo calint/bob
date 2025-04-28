@@ -95,7 +95,6 @@ public final class InputRelRefN extends a {
             }
             x.spc().ax(this, "r " + o.id(), "✖").p(itemSeparator);
         }
-        x.nl();
     }
 
     public void save(final DbObject o) {
