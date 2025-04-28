@@ -8,6 +8,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
+/** Serializable field */
 public final class FldSerializable extends DbField {
 
     public FldSerializable() {

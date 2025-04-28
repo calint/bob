@@ -4,7 +4,7 @@
 //
 package db;
 
-/** Aggregation One-to-One. */
+/** Aggregation one-to-one. */
 public final class RelAgg extends DbRelation {
 
     public RelAgg(final Class<? extends DbObject> toCls) {

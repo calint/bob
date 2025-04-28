@@ -34,6 +34,7 @@ public final class Db {
     /** Address to cluster writer. */
     public static String clusterIp = "127.0.0.1";
 
+    /** Port of cluster server. */
     public static int clusterPort = 8889;
 
     /** Default is null (InnoDB). */
@@ -47,6 +48,12 @@ public final class Db {
 
     /** Enables the log_sql(...) method. */
     public static boolean enableLogSql = true;
+
+    /**
+     * Re-connect database connections when a connection has existed more than
+     * specified milliseconds.
+     */
+    public static long pooledConnectionMaxAgeMs = 10 * 60 * 1000;
 
     /** Prints the string to System.out. */
     public static void log(final String s) {
@@ -63,8 +70,6 @@ public final class Db {
         }
         System.out.println(s);
     }
-
-    public static long pooledConnectionMaxAgeMs = 10 * 60 * 1000;
 
     /** Called once to create the singleton instance. */
     public static void init() throws Throwable {

@@ -10,8 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Parameter to get(...) and getCount(...) for filtering and joining on
- * relations.
+ * Parameter to get(...) and getCount(...) filtering and joining on relations.
  */
 public final class Query {
 

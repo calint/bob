@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 import db.Query.TableAliasMap;
 
-/** Parameter to get(...) for sorting the result list. */
+/** Parameter to get(...) sorting the result list. */
 public final class Order {
 
     private final static class Elem {

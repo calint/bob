@@ -6,7 +6,7 @@ package db;
 
 import java.util.List;
 
-/** Aggregation One-to-Many. */
+/** Aggregation one-to-many. */
 public final class RelAggN extends DbRelation {
 
     public RelAggN(final Class<? extends DbObject> toCls) {

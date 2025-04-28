@@ -9,7 +9,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.HashSet;
 
-/** Association One-to-Many. */
+/** Association one-to-many. */
 public final class RelRefN extends DbRelation {
 
     RelRefNMeta rrm;

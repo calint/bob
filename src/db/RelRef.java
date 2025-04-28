@@ -4,7 +4,7 @@
 //
 package db;
 
-/** Association One-to-One. */
+/** Association one-to-one. */
 public final class RelRef extends DbRelation {
 
     public RelRef(final Class<? extends DbObject> toCls) {

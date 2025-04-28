@@ -26,12 +26,13 @@ import java.util.Iterator;
 /** Experimental cluster hub. */
 public final class Cluster {
 
-    /** True if sql statements to cluster nodes are executed in parallel. */
+    /** True if SQL statements to cluster nodes are executed in parallel. */
     public static boolean executeInParallel = true;
 
-    /** Close and re-open connections to databases interval. */
+    /** Close and re-open connections to databases interval in milliseconds. */
     public static long connectionRefreshIntervalMs = 60 * 60 * 1000;
 
+    /** Print log to console. */
     public static boolean enableLog = true;
 
     /** Log SQL executed on databases. */
@@ -41,7 +42,7 @@ public final class Cluster {
 
     private final static ArrayList<Client> clients = new ArrayList<Client>();
 
-    /** Timestamp for when the connections where last refreshed. */
+    /** Timestamp for when the connections where last refreshed in milliseconds. */
     private static long connectionsLastRefreshMs;
 
     /** Synchronization object. */
@@ -67,6 +68,7 @@ public final class Cluster {
         System.out.println(s);
     }
 
+    /** Prints cause of exception to System.err. */
     public static void log(Throwable t) {
         while (t.getCause() != null) {
             t = t.getCause();
@@ -74,6 +76,7 @@ public final class Cluster {
         System.err.println(stacktraceToLine(t));
     }
 
+    /** Prints SQL statements to System.out. */
     public static void logSql(final String s) {
         if (!enableLogSql) {
             return;
@@ -214,6 +217,7 @@ public final class Cluster {
         }
     }
 
+    /** @return Stacktrace of exception as String. */
     public static String stacktrace(final Throwable e) {
         final StringWriter sw = new StringWriter();
         final PrintWriter out = new PrintWriter(sw);
@@ -222,6 +226,7 @@ public final class Cluster {
         return sw.toString();
     }
 
+    /** @return Stacktrace of exception as a one line String. */
     public static String stacktraceToLine(final Throwable e) {
         return stacktrace(e).replace('\n', ' ').replace('\r', ' ').replaceAll("\\s+", " ").replace(" at ", " @ ");
     }
