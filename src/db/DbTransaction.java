@@ -197,7 +197,6 @@ public final class DbTransaction {
     }
 
     public List<DbObject> get(final Class<?> cls, final Query qry, final Order ord, final Limit lmt) {
-        // ? call get(new Class[]..)?
         flush(); // update database before query
 
         final Query.TableAliasMap tam = new Query.TableAliasMap();
@@ -376,12 +375,13 @@ public final class DbTransaction {
 
         final Query.TableAliasMap tam = new Query.TableAliasMap();
 
-        if (qry != null) { // ? or qry.isEmpty()?
+        if (qry != null) {
             final StringBuilder sbWhere = new StringBuilder(128);
             qry.appendSql(sbWhere, tam); // build first for tam to know which tables to include
             final StringBuilder sbFrom = new StringBuilder(128);
             tam.appendSqlSelectFromTables(sbFrom);
-            if (sbFrom.length() == 0) { // the query might have been empty
+            if (sbFrom.length() == 0) {
+                // the query might have been empty. append table of class
                 final DbClass dbCls = Db.dbClassForJavaClass(cls);
                 sb.append(dbCls.tableName);
             } else {
