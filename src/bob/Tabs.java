@@ -47,7 +47,7 @@ public final class Tabs extends a {
             }
             x.divo(this, "iat", null).tagoe();
             x.ax(this, "c", str());
-            x.div_();
+            x.div_().nl();
         }
 
         public void x_c(final xwriter x, final String param) throws Throwable {
@@ -86,7 +86,7 @@ public final class Tabs extends a {
         for (final Tab t : tabs) {
             t.to(x, t.elem == ae);
         }
-        x.divh(ae, "ae");
+        x.divh(ae, "ae").nl();
     }
 
     @Override

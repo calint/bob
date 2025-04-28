@@ -45,7 +45,7 @@ public final class InputRelAggN extends a {
 
     @Override
     public void to(final xwriter x) throws Throwable {
-        x.ax(this, "c", "create").br().nl();
+        x.ax(this, "c", "create").br();
         final DbObjects dbos = getRelation().get(objId);
         for (final DbObject ro : dbos.toList()) {
             final String txt;

@@ -59,7 +59,7 @@ public abstract class ViewTable extends View {
             } else {
                 x.p("select " + getTypeInfo().getName() + " by clicking on the link");
             }
-            x.tage("div");
+            x.div_().nl();
         }
         if (!ac.isEmpty()) {
             x.divh(ac, "ac").nl();
@@ -95,8 +95,9 @@ public abstract class ViewTable extends View {
             p.upd();
             p.setPage(1);
         }
+        x.nl();
         x.divh(t).nl();
-        if (p.isEnabled() && !infiniteScroll) {
+        if (p.isEnabled() && !p.isSinglePage() && !infiniteScroll) {
             x.divh(p, "pgr").nl();
         }
     }
@@ -363,6 +364,10 @@ public abstract class ViewTable extends View {
             }
             pg.set(currentPage + 1);
             return true;
+        }
+
+        public boolean isSinglePage() {
+            return npages == 0;
         }
 
         /** Callback on pressing "enter" in page field. */

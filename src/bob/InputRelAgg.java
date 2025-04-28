@@ -62,7 +62,6 @@ public final class InputRelAgg extends a {
         } else {
             x.ax(this, "c", "create");
         }
-        x.nl();
     }
 
     /** Callback "create". */
