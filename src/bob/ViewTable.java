@@ -5,9 +5,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.swing.text.TabableView;
-import javax.swing.text.TableView;
-
 import b.a;
 import b.xwriter;
 import db.Limit;
