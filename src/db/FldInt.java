@@ -1,9 +1,9 @@
 // reviewed: 2024-08-05
+//           2025-04-28
 package db;
 
 /** Integer field. */
 public final class FldInt extends DbField {
-
     public FldInt(final int defVal) {
         super("int", 0, Integer.toString(defVal), defVal, false, false);
     }
@@ -19,5 +19,4 @@ public final class FldInt extends DbField {
     public int getInt(final DbObject ths) {
         return (Integer) getObj(ths);
     }
-
 }

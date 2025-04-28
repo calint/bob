@@ -1,13 +1,13 @@
 // reviewed: 2024-08-05
+//           2025-04-28
 package db;
 
 /** String field. */
 public final class FldStr extends DbField {
-
     public static final int MAX_SIZE = 65535; // ? this is mysql specific
 
     public FldStr() {
-        this(250, null, true);
+        this(250, null, true); // ? default length should be a configurable?
     }
 
     public FldStr(final int size) {
@@ -15,7 +15,7 @@ public final class FldStr extends DbField {
     }
 
     public FldStr(final String defVal) {
-        this(250, defVal, true);
+        this(250, defVal, true); // ? default length should be a configurable?
     }
 
     public FldStr(final int size, final String defVal) {

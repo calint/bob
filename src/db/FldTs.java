@@ -1,4 +1,5 @@
 // reviewed: 2024-08-05
+//           2025-04-28
 package db;
 
 import java.sql.Timestamp;
@@ -22,10 +23,10 @@ public final class FldTs extends DbField {
         return (Timestamp) getObj(ths);
     }
 
-    // java.sql.Timestamp adds .0 at the end. mysql default value does not.
     public static String defValToStr(final Timestamp def) {
         String s = def.toString();
         if (s.endsWith(".0")) {
+            // java.sql.Timestamp adds .0 at the end. mysql default value does not.
             s = s.substring(0, s.length() - 2);
         }
         return s;

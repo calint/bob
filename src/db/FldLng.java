@@ -1,9 +1,9 @@
 // reviewed: 2024-08-05
+//           2025-04-28
 package db;
 
 /** Long field. */
 public final class FldLng extends DbField {
-
     public FldLng(final long defVal) {
         super("bigint", 0, Long.toString(defVal), defVal, false, false);
     }
@@ -19,5 +19,4 @@ public final class FldLng extends DbField {
     public long getLng(final DbObject ths) {
         return (Long) getObj(ths);
     }
-
 }

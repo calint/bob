@@ -1,11 +1,11 @@
 // reviewed: 2024-08-05
+//           2025-04-28
 package db;
 
 import java.sql.Timestamp;
 
 /** Date time field. */
 public final class FldDateTime extends DbField {
-
     public FldDateTime() {
         this(null);
     }
@@ -21,5 +21,4 @@ public final class FldDateTime extends DbField {
     public Timestamp getDateTime(final DbObject ths) {
         return (Timestamp) getObj(ths);
     }
-
 }
