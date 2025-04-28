@@ -15,8 +15,8 @@ import db.RelAgg;
 public final class File extends DbObject implements Titled {
 
     public static final FldStr name = new FldStr(250);
-    public static final FldLng size_B = new FldLng();
-    public static final FldTs created_ts = new FldTs();
+    public static final FldLng sizeBytes = new FldLng();
+    public static final FldTs createdTs = new FldTs();
     public static final RelAgg data = new RelAgg(DataBinary.class);
     public static final Index ixName = new Index(name);
 
@@ -27,7 +27,7 @@ public final class File extends DbObject implements Titled {
             throw new RuntimeException("file '" + path + "' not found");
         }
         final long len = f.length();
-        setSize_B(len);
+        setSizeBytes(len);
         // note: does not handle files bigger than 2G
         final byte[] ba = new byte[(int) len];
         final FileInputStream fis = new FileInputStream(f);
@@ -63,21 +63,21 @@ public final class File extends DbObject implements Titled {
     }
 
     // ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
-    public long getSize_B() {
-        return size_B.getLng(this);
+    public long getSizeBytes() {
+        return sizeBytes.getLng(this);
     }
 
-    public void setSize_B(final long v) {
-        size_B.setLng(this, v);
+    public void setSizeBytes(final long v) {
+        sizeBytes.setLng(this, v);
     }
 
     // ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
-    public Timestamp getCreated_ts() {
-        return created_ts.getTs(this);
+    public Timestamp getCreatedTs() {
+        return createdTs.getTs(this);
     }
 
-    public void setCreated_ts(final Timestamp v) {
-        created_ts.setTs(this, v);
+    public void setCreatedTs(final Timestamp v) {
+        createdTs.setTs(this, v);
     }
 
     // ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -

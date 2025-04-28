@@ -72,7 +72,7 @@ public final class TableFiles extends ViewTable {
         x.td();
         renderLink(x, o, o.getName());
         x.td("nbr");
-        x.p(Util.formatSizeInBytes(o.getSize_B()));
+        x.p(Util.formatSizeInBytes(o.getSizeBytes()));
     }
 
     @Override

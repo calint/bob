@@ -9,6 +9,7 @@ import imp.CsvReader;
 
 // import games
 public class import_games extends TestCase {
+
     private final String filePath;
 
     public import_games() {
@@ -27,19 +28,22 @@ public class import_games extends TestCase {
     @Override
     public void doRun() throws Throwable {
         final DbTransaction tn = Db.currentTransaction();
+
         Db.log("importing " + filePath);
         final FileReader in = new FileReader(filePath);
         final CsvReader csv = new CsvReader(in, ';', '"');
-        List<String> ls = csv.nextRecord(); // read headers
+        List<String> ls = csv.nextRecord(); // skip headers
         int i = 2;
         while (true) {
             ls = csv.nextRecord();
             if (ls == null) {
                 break;
             }
+
             final Game o = (Game) tn.create(Game.class);
             o.setName(ls.get(1));
             o.setDescription(ls.get(2));
+
             if (++i % 100 == 0) {
                 Db.log("  " + i);
                 tn.commit();

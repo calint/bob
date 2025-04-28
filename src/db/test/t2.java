@@ -7,6 +7,7 @@ import b.a.stateless;
 import b.xwriter;
 
 public @stateless class t2 extends a {
+
     static final long serialVersionUID = 1;
 
     @Override
@@ -20,4 +21,5 @@ public @stateless class t2 extends a {
         c.out.println("<pre>");
         c.run();
     }
+
 }

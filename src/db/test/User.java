@@ -19,6 +19,7 @@ import db.RelRef;
 import db.RelRefN;
 
 public final class User extends DbObject {
+
     public static final FldStr name = new FldStr();
     public static final FldStr description = new FldStr();
     public static final FldStr passhash = new FldStr(32);
@@ -236,4 +237,5 @@ public final class User extends DbObject {
     public void deleteAllGames() {
         games.deleteAll(this);
     }
+
 }

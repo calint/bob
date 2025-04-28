@@ -12,6 +12,7 @@ import db.FldSerializable;
 import db.FldStr;
 
 public final class TestObj extends DbObject {
+
     public static final FldSerializable list = new FldSerializable();
     public static final FldChars md5 = new FldChars(32, "abc");
     public static final FldStr subject = new FldStr(200, "no 'subject'");
@@ -20,11 +21,13 @@ public final class TestObj extends DbObject {
     @SuppressWarnings("unchecked")
     public List<String> getList() {
         final Object v = list.getObj(this);
-        if (v == null)
+        if (v == null) {
             return null;
+        }
 
-        if (v instanceof List<?>)
+        if (v instanceof List<?>) {
             return (List<String>) v;
+        }
 
         // convert from sql representation
         final byte[] ba = (byte[]) list.getObj(this);
@@ -68,4 +71,5 @@ public final class TestObj extends DbObject {
     public void setDateTime(final Timestamp v) {
         dateTime.setDateTime(this, v);
     }
+
 }

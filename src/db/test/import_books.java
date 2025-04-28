@@ -18,6 +18,7 @@ import imp.Util;
 // import-200k-book
 //   download csv at https://www.kaggle.com/datasets/mohamedbakhet/amazon-books-reviews
 public class import_books extends TestCase {
+
     private final String filePath;
 
     public import_books() {
@@ -44,7 +45,7 @@ public class import_books extends TestCase {
         // sanity check
         FileReader in = new FileReader(filePath);
         CsvReader csv = new CsvReader(in);
-        List<String> ls = csv.nextRecord();// read headers
+        List<String> ls = csv.nextRecord(); // read headers
         int i = 2; // skip headers
         out.println("\nbounds check file '" + filePath + "'");
         while (true) {
@@ -53,40 +54,46 @@ public class import_books extends TestCase {
                 break;
             }
             final String name = ls.get(0);
-            if (name.length() > Book.name.getSize())
+            if (name.length() > Book.name.getSize()) {
                 throw new RuntimeException("record " + i + " has size of name " + name.length()
                         + " but field length is " + Book.name.getSize());
+            }
 
             final String authorsStr = ls.get(2);
-            if (authorsStr.length() > Book.authorsStr.getSize())
+            if (authorsStr.length() > Book.authorsStr.getSize()) {
                 throw new RuntimeException("record " + i + " has size of authors " + authorsStr.length()
                         + " but field length is " + Book.authorsStr.getSize());
+            }
 
             if (authorsStr.length() != 0) {
                 final List<String> authorsList = Util.readList(new StringReader(authorsStr), ',', '\'');
                 for (final String s : authorsList) {
-                    if (s.length() > Author.name.getSize())
+                    if (s.length() > Author.name.getSize()) {
                         throw new RuntimeException("record " + i + " has size of author name " + s.length()
                                 + " but field length is " + Author.name.getSize());
+                    }
                 }
             }
 
             final String publisherStr = ls.get(5);
-            if (publisherStr.length() > Book.publisherStr.getSize())
+            if (publisherStr.length() > Book.publisherStr.getSize()) {
                 throw new RuntimeException("record " + i + " has size of publisher " + publisherStr.length()
                         + " but field length is " + Book.publisherStr.getSize());
+            }
 
             final String categoriesStr = ls.get(8);
-            if (categoriesStr.length() > Book.categoriesStr.getSize())
+            if (categoriesStr.length() > Book.categoriesStr.getSize()) {
                 throw new RuntimeException("record " + i + " has size of category " + categoriesStr.length()
                         + " but field length is " + Book.categoriesStr.getSize());
+            }
 
             if (categoriesStr.length() != 0) {
                 final List<String> categoriesList = Util.readList(new StringReader(categoriesStr), ',', '\'');
                 for (final String s : categoriesList) {
-                    if (s.length() > Category.name.getSize())
+                    if (s.length() > Category.name.getSize()) {
                         throw new RuntimeException("record " + i + " has size of category name " + s.length()
                                 + " but field length is " + Category.name.getSize());
+                    }
                 }
             }
 
@@ -98,16 +105,19 @@ public class import_books extends TestCase {
         out.println("bounds check done. importing " + (i - 2) + " books from " + filePath + "'");
         in = new FileReader(filePath);
         csv = new CsvReader(in);
-        ls = csv.nextRecord();// read headers
+        ls = csv.nextRecord(); // skip headers
         i = 2; // skip headers
-        final StringBuilder sb = new StringBuilder(1000);
+        final StringBuilder sb = new StringBuilder(1000); // ? magic number
         while (true) {
             ls = csv.nextRecord();
             if (ls == null) {
                 break;
             }
+
             final Book o = (Book) tn.create(Book.class);
+
             o.setName(ls.get(0).trim());
+
             final String authorsStr = ls.get(2).trim();
             if (authorsStr.length() != 0) {
                 final List<String> authorsList = Util.readList(new StringReader(authorsStr), ',', '\'');
@@ -132,6 +142,7 @@ public class import_books extends TestCase {
             } else {
                 o.setAuthorsStr("");
             }
+
             final String publisherStr = ls.get(5).trim();
             o.setPublisherStr(publisherStr);
             if (publisherStr.length() > 0) {
@@ -146,28 +157,30 @@ public class import_books extends TestCase {
                 }
                 o.setPublisher(p);
             }
-            final String pd = ls.get(6).trim();
-            if (pd.length() != 0) {
-                final Timestamp ts = parseDate(pd);
+
+            final String publishDate = ls.get(6).trim();
+            if (publishDate.length() != 0) {
+                final Timestamp ts = parseDate(publishDate);
                 o.setPublishedDate(ts);
             }
+
             final String categoriesStr = ls.get(8).trim();
             if (categoriesStr.length() != 0) {
                 final List<String> categoriesList = Util.readList(new StringReader(categoriesStr), ',', '\'');
-                final StringBuilder categoriesSb = new StringBuilder(128);
+                final StringBuilder categoriesSb = new StringBuilder(128); // ? magic number
                 for (final String s : categoriesList) {
                     final String st = s.trim();
                     categoriesSb.append(st).append(';');
-                    final List<DbObject> cls = tn.get(Category.class, new Query(Category.name, Query.EQ, st), null,
+                    final List<DbObject> catLs = tn.get(Category.class, new Query(Category.name, Query.EQ, st), null,
                             null);
-                    final Category bc;
-                    if (cls.isEmpty()) {
-                        bc = (Category) tn.create(Category.class);
-                        bc.setName(st);
+                    final Category cat;
+                    if (catLs.isEmpty()) {
+                        cat = (Category) tn.create(Category.class);
+                        cat.setName(st);
                     } else {
-                        bc = (Category) cls.get(0);
+                        cat = (Category) catLs.get(0);
                     }
-                    o.addCategory(bc);
+                    o.addCategory(cat);
                 }
                 if (categoriesSb.length() > 1) { // remove last delimiter
                     categoriesSb.setLength(categoriesSb.length() - 1);

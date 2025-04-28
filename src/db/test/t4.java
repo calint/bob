@@ -8,6 +8,7 @@ import b.bin;
 import b.xwriter;
 
 public @stateless class t4 extends a implements bin {
+
     static final long serialVersionUID = 1;
 
     public String content_type() {
@@ -25,4 +26,5 @@ public @stateless class t4 extends a implements bin {
         c.time_output = false;
         c.run();
     }
+
 }

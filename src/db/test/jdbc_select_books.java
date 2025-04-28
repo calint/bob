@@ -10,9 +10,8 @@ public class jdbc_select_books extends TestCase {
     public void doRun() throws Throwable {
         final Statement stmt = Db.currentTransaction().getJdbcStatement();
         final int nreq = 100;
-        int i = 0;
         final String sql = "select t1.* from Book as t1 limit 0,1000000";
-        while (true) {
+        for (int i = 1; i <= nreq; i++) {
             System.out.println(sql);
             final ResultSet rs = stmt.executeQuery(sql);
             final int ncols = rs.getMetaData().getColumnCount();
@@ -22,11 +21,7 @@ public class jdbc_select_books extends TestCase {
                 }
             }
             rs.close();
-            i++;
             System.out.println("requests: " + i);
-            if (i == nreq) {
-                break;
-            }
         }
     }
 }

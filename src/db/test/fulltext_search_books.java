@@ -13,14 +13,13 @@ public class fulltext_search_books extends TestCase {
     public void doRun() throws Throwable {
         final DbTransaction tn = Db.currentTransaction();
         final int nreq = 100;
-        int i = 0;
-        final String qstr = "+whispers +spinning +haddon";
-        final Query qry = new Query(DataText.ft, qstr).and(Book.data);
+        final String queryStr = "+whispers +spinning +haddon";
+        final Query qry = new Query(DataText.ft, queryStr).and(Book.data);
         final Limit lmt = new Limit(0, 20);
-        final int totalcount = tn.getCount(Book.class, null);
-        Db.log("  searchable books: " + totalcount);
-        while (true) {
-            Db.log("   searching '" + qstr + "'");
+        final int totalCount = tn.getCount(Book.class, null);
+        Db.log("  searchable books: " + totalCount);
+        for (int i = 1; i <= nreq; i++) {
+            Db.log("   searching '" + queryStr + "'");
             final int count = tn.getCount(Book.class, qry);
             Db.log("      found " + count);
             final List<DbObject> ls = tn.get(Book.class, qry, null, lmt);
@@ -29,11 +28,7 @@ public class fulltext_search_books extends TestCase {
                 Db.log(bo.id() + ": " + bo.getName());
             }
             Db.log("  objects retrieved: " + ls.size());
-            i++;
             Db.log("requests: " + i);
-            if (i == nreq) {
-                break;
-            }
         }
     }
 }
