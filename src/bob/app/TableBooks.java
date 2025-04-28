@@ -76,7 +76,7 @@ public final class TableBooks extends ViewTable {
         return dbo.toList(p.getLimit());
     }
 
-    protected DbObjects getResults() {
+    private DbObjects getResults() {
         final Query qry = new Query();
         if (!q.is_empty()) {
             qry.and(DataText.ft, q.str()).and(Book.data);
