@@ -2,6 +2,8 @@
 package bob.app;
 
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +20,12 @@ public final class FormUser extends FormDbo {
 
     private final static long serialVersionUID = 1;
 
-    private CustomElem customElem;
+    /**
+     * Custom element demo. Declare it as a private member because it will be
+     * attached by the framework to a named field at render. Instantiate it here or
+     * in the constructor or init.
+     */
+    private CustomElem customElem = new CustomElem();
 
     public FormUser() {
         this(null, null);
@@ -26,7 +33,7 @@ public final class FormUser extends FormDbo {
 
     public FormUser(final String id, final String initStr) {
         super(null, User.class, id, initStr, BIT_SAVE_CLOSE | BIT_SAVE | BIT_CANCEL);
-        customElem = new CustomElem();
+        // customElem = new CustomElem();
     }
 
     @Override
@@ -57,8 +64,14 @@ public final class FormUser extends FormDbo {
         return ls;
     }
 
+    @Override
     public String getTitle() {
         return Util.toStr(getStr(User.name), "New user");
+    }
+
+    @Override
+    protected NumberFormat createNumberFormatFlt() {
+        return new DecimalFormat("0.00");
     }
 
     @Override
@@ -93,10 +106,12 @@ public final class FormUser extends FormDbo {
             throw new Exception("User name may not be empty.");
         }
 
+        // retrieve custom element and do something with it
         CustomElem ce = (CustomElem) getElem("customElem");
-        x.xalert("pos: " + ce.pos_x.str() + "," + ce.pos_y);
+        x.xalert("Custom Element: x = " + ce.pos_x.str() + ", y = " + ce.pos_y);
     }
 
+    /** Example of custom input element */
     public final static class CustomElem extends a {
 
         private final static long serialVersionUID = 1;
