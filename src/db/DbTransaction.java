@@ -149,13 +149,13 @@ public final class DbTransaction {
 
     void removeReferencesToObject(final DbClass dbcls, final int id) {
         // delete orphans
-        for (final RelRefN r : dbcls.referingRefN) {
+        for (final RelRefN r : dbcls.referringRefN) {
             r.deleteReferencesTo(id);
         }
 
         // update referring fields to null
         if (Db.enableUpdateReferringTables) {
-            for (final RelRef r : dbcls.referingRef) {
+            for (final RelRef r : dbcls.referringRef) {
                 final StringBuilder sb = new StringBuilder(256);
                 sb.append("update ").append(r.tableName).append(" set ").append(r.name).append("=null")
                         .append(" where ").append(r.name).append('=').append(id);

@@ -24,7 +24,7 @@ public final class RelRefN extends DbRelation {
             throw new RuntimeException(
                     "class " + toCls + " not found. Has Db.register(" + toCls.getName() + ".class) been called?");
         }
-        todbcls.referingRefN.add(this);
+        todbcls.referringRefN.add(this);
     }
 
     public void add(final DbObject ths, final DbObject o) {

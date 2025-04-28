@@ -1,4 +1,5 @@
 // reviewed: 2024-08-05
+//           2025-04-28
 package db;
 
 import java.lang.reflect.Field;
@@ -15,7 +16,6 @@ import java.util.List;
 
 /** Meta data of {@link DbObject} class. */
 public final class DbClass {
-
     final Class<? extends DbObject> javaClass;
     final String tableName;
     final ArrayList<DbField> declaredFields = new ArrayList<DbField>();
@@ -30,14 +30,14 @@ public final class DbClass {
      * this class. Used to delete orphan entries in the RefN table when an object of
      * this type is deleted.
      */
-    final ArrayList<RelRefN> referingRefN = new ArrayList<RelRefN>();
+    final ArrayList<RelRefN> referringRefN = new ArrayList<RelRefN>();
 
     /**
      * Contains {@link RelRef} relations declared in other classes referring to this
      * class. Used to update the referring fields to null when an object of this
      * type is deleted.
      */
-    final ArrayList<RelRef> referingRef = new ArrayList<RelRef>();
+    final ArrayList<RelRef> referringRef = new ArrayList<RelRef>();
 
     /**
      * True if this type needs to cascade deletes because it contains relations that
@@ -45,11 +45,11 @@ public final class DbClass {
      */
     final boolean cascadeDelete;
 
-    DbClass(final Class<? extends DbObject> c) throws Throwable {
-        javaClass = c;
-        tableName = Db.tableNameForJavaClass(c);
+    DbClass(final Class<? extends DbObject> cls) throws Throwable {
+        javaClass = cls;
+        tableName = Db.tableNameForJavaClass(cls);
         // collect declared fields, relations and indexes
-        boolean cascDeletes = false;
+        boolean hasCascadeDeletes = false;
         for (final Field f : javaClass.getDeclaredFields()) {
             if (!Modifier.isStatic(f.getModifiers())) {
                 continue;
@@ -57,7 +57,7 @@ public final class DbClass {
             if (DbField.class.isAssignableFrom(f.getType())) {
                 final DbField dbf = (DbField) f.get(null);
                 dbf.name = f.getName();
-                dbf.cls = c;
+                dbf.cls = cls;
                 dbf.tableName = tableName;
                 declaredFields.add(dbf);
                 continue;
@@ -65,41 +65,41 @@ public final class DbClass {
             if (DbRelation.class.isAssignableFrom(f.getType())) {
                 final DbRelation dbr = (DbRelation) f.get(null);
                 dbr.name = f.getName();
-                dbr.cls = c;
+                dbr.cls = cls;
                 dbr.tableName = tableName;
                 declaredRelations.add(dbr);
                 if (dbr.cascadeDeleteNeeded()) {
-                    cascDeletes = true;
+                    hasCascadeDeletes = true;
                 }
                 continue;
             }
             if (Index.class.isAssignableFrom(f.getType())) {
                 final Index ix = (Index) f.get(null);
                 ix.name = f.getName();
-                ix.cls = c;
+                ix.cls = cls;
                 ix.tableName = tableName;
                 declaredIndexes.add(ix);
                 continue;
             }
         }
-        cascadeDelete = cascDeletes;
+        cascadeDelete = hasCascadeDeletes;
     }
 
-    /** recurse initiates allFields, allRelations, allIndexes lists */
+    /** Recurse initiates allFields, allRelations, allIndexes lists. */
     void init() {
         init_rec(allFields, allRelations, allIndexes, javaClass);
     }
 
-    private static void init_rec(final List<DbField> lsfld, final List<DbRelation> lsrel, final List<Index> lsix,
+    private static void init_rec(final List<DbField> flds, final List<DbRelation> rels, final List<Index> ixes,
             final Class<?> cls) {
         final Class<?> scls = cls.getSuperclass();
         if (!scls.equals(Object.class)) {
-            init_rec(lsfld, lsrel, lsix, scls);
+            init_rec(flds, rels, ixes, scls);
         }
-        final DbClass dbcls = Db.dbClassForJavaClass(cls);
-        lsfld.addAll(dbcls.declaredFields);
-        lsrel.addAll(dbcls.declaredRelations);
-        lsix.addAll(dbcls.declaredIndexes);
+        final DbClass dbc = Db.dbClassForJavaClass(cls);
+        flds.addAll(dbc.declaredFields);
+        rels.addAll(dbc.declaredRelations);
+        ixes.addAll(dbc.declaredIndexes);
     }
 
     void initDbFields() {
@@ -111,7 +111,7 @@ public final class DbClass {
 
     }
 
-    /** called by Db at init. check and create if necessary */
+    /** Called by Db at init. Check and create if necessary. */
     void ensureTable(final Statement stmt, final DatabaseMetaData dbm) throws Throwable {
         final ResultSet rs = dbm.getTables(null, null, tableName, new String[] { "TABLE" });
         if (rs.next()) {
@@ -374,7 +374,7 @@ public final class DbClass {
         while (rs.next()) {
             final String indexName = rs.getString("INDEX_NAME");
             if ("PRIMARY".equals(indexName)) {
-                // mysql added index on id
+                // note: mysql added index on id
                 continue;
             }
             indexes.add(indexName);
@@ -397,5 +397,4 @@ public final class DbClass {
             stmt.execute(sql);
         }
     }
-
 }

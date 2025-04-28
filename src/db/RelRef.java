@@ -27,7 +27,7 @@ public final class RelRef extends DbRelation {
         }
 
         final DbClass todbcls = Db.dbClassForJavaClass(toCls);
-        todbcls.referingRef.add(this);
+        todbcls.referringRef.add(this);
     }
 
     /**

@@ -110,8 +110,8 @@ public final class RelAggN extends DbRelation {
     private void cascadeDelete(final int thsId) {
         final DbTransaction tn = Db.currentTransaction();
         final DbClass dbClsTo = Db.dbClassForJavaClass(toCls);
-        if (dbClsTo.cascadeDelete || !dbClsTo.referingRefN.isEmpty()
-                || (Db.enableUpdateReferringTables && !dbClsTo.referingRef.isEmpty())) {
+        if (dbClsTo.cascadeDelete || !dbClsTo.referringRefN.isEmpty()
+                || (Db.enableUpdateReferringTables && !dbClsTo.referringRef.isEmpty())) {
             final List<DbObject> ls = get(thsId).toList();
             for (final DbObject o : ls) {
                 tn.delete(o);
