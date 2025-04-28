@@ -45,6 +45,15 @@ public final class TableBooks extends ViewTable {
     }
 
     @Override
+    protected void clearMoreSearchSection(final xwriter x) throws Throwable {
+        id.set("");
+        x.xu(id);
+
+        title.set("");
+        x.xu(title);
+    }
+
+    @Override
     protected boolean isInifiniteScroll() {
         return false;
     }

@@ -157,6 +157,11 @@ public abstract class ViewTable extends View {
     public final void x_more(final xwriter x, final String s) throws Throwable {
         ms_display = !ms_display;
         x.p("$('").p(ms.id()).p("').hidden=").p(!ms_display).pl(";");
+        if (!ms_display) {
+            clearMoreSearchSection(x);
+            p.setPage(1);
+            refresh(x);
+        }
     }
 
     @Override
@@ -231,6 +236,9 @@ public abstract class ViewTable extends View {
     }
 
     protected void renderMoreSearchSection(final xwriter x) {
+    }
+
+    protected void clearMoreSearchSection(final xwriter x) throws Throwable {
     }
 
     @Override
@@ -384,6 +392,7 @@ public abstract class ViewTable extends View {
             return objectsPerPage != 0;
         }
 
+        /** Sets current page starting at 1. */
         public void setPage(final int page) {
             currentPage = page - 1;
             pg.set(page);
