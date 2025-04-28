@@ -1,22 +1,24 @@
 // reviewed: 2024-08-05
+//           2025-04-28
 package db;
 
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 
-/** Abstract field. */
+/** Abstract database mapped field. */
 public abstract class DbField {
 
-    /** The field name where this field was created. */
+    /** The Java class field name where this field was created. */
     protected String name;
 
-    /** The class where this field was created. */
+    /** The Java class where this field was created. */
     protected Class<? extends DbObject> cls;
 
+    /** Database table name for this field. */
     protected String tableName;
 
     /**
-     * the SQL type as returned by TYPE_NAME
+     * The SQL type as returned by TYPE_NAME.
      * {@link DatabaseMetaData}.getColumns(...).
      */
     protected final String type;
@@ -33,6 +35,7 @@ public abstract class DbField {
     /** Default value of type returned by {@link ResultSet}. */
     protected final Object defVal;
 
+    /** True if field null allowed. */
     protected final boolean allowsNull;
 
     /**
@@ -45,13 +48,13 @@ public abstract class DbField {
     protected int slotNbr;
 
     /**
-     * @param sqlType      the SQL type as returned by TYPE_NAME
+     * @param sqlType      The SQL type as returned by TYPE_NAME
      *                     {@link DatabaseMetaData}.getColumns(...).
-     * @param size         where applicable (varchar, char) otherwise 0.
-     * @param sqlDefVal    default value as returned by COLUMN_DEF from
+     * @param size         Where applicable (varchar, char) otherwise 0.
+     * @param sqlDefVal    Default value as returned by COLUMN_DEF from
      *                     {@link DatabaseMetaData}.getColumns(...).
-     * @param allowsNull   true if null is allowed.
-     * @param isStringType true if default value is to be enclosed by quotes and
+     * @param allowsNull   True if null is allowed.
+     * @param isStringType True if default value is to be enclosed by quotes and
      *                     escaped at column definition and update.
      */
     protected DbField(final String sqlType, final int size, final String sqlDefVal, final Object defVal,
@@ -76,13 +79,13 @@ public abstract class DbField {
         return type;
     }
 
-    /** @return size of field if applicable (varchar and char) or 0. */
+    /** @return Size of field if applicable (varchar and char) or 0. */
     public final int getSize() {
         return size;
     }
 
     /**
-     * @return the field name of the Java class where the field was created.
+     * @return The field name of the Java class where the field was created.
      */
     public final String getName() {
         return name;
@@ -99,7 +102,7 @@ public abstract class DbField {
     /**
      * Called by {@link DbTransaction} at object creation.
      *
-     * @return default value as an object of type returned by {@link ResultSet}
+     * @return Default value as an object of type returned by {@link ResultSet}
      *         getObject(int).
      */
     public final Object getDefaultValue() {
@@ -111,7 +114,7 @@ public abstract class DbField {
     }
 
     /**
-     * @return true if default value is a string and should be quoted and escaped
+     * @return True if default value is a string and should be quoted and escaped
      *         when defining column and updates.
      */
     public final boolean isDefaultValueString() {
@@ -122,7 +125,7 @@ public abstract class DbField {
      * Append to SQL statement the definition of the column. Called by
      * {@link DbClass} at column creation and move column.
      */
-    protected void sql_columnDefinition(final StringBuilder sb) {
+    protected void appendSqlColumnDefinition(final StringBuilder sb) {
         sb.append(name).append(' ').append(getSqlType());
         if (size != 0) {
             sb.append("(").append(getSize()).append(")");
@@ -146,7 +149,7 @@ public abstract class DbField {
      * Append to SQL statement the value of the field. Called by
      * {@link DbTransaction} at update database from object.
      */
-    protected void sql_updateValue(final StringBuilder sb, final DbObject o) {
+    protected void appendSqlUpdateValue(final StringBuilder sb, final DbObject o) {
         final Object v = getObj(o);
         if (v == null) {
             sb.append("null");
@@ -224,5 +227,4 @@ public abstract class DbField {
             }
         }
     }
-
 }

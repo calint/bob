@@ -11,7 +11,7 @@ public final class FldBlob extends DbField {
     }
 
     @Override
-    protected void sql_updateValue(final StringBuilder sb, final DbObject o) {
+    protected void appendSqlUpdateValue(final StringBuilder sb, final DbObject o) {
         sb.append("0x");
         final byte[] data = getBlob(o);
         final int cap = sb.length() + data.length * 2;

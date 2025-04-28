@@ -9,7 +9,7 @@ final class FldRel extends DbField {
     }
 
     @Override
-    protected void sql_updateValue(final StringBuilder sb, final DbObject o) {
+    protected void appendSqlUpdateValue(final StringBuilder sb, final DbObject o) {
         final int id = getId(o);
         if (id == 0) {
             sb.append("null");

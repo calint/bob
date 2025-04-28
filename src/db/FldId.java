@@ -17,7 +17,7 @@ public final class FldId extends DbField {
     }
 
     @Override
-    protected void sql_columnDefinition(final StringBuilder sb) {
+    protected void appendSqlColumnDefinition(final StringBuilder sb) {
         sb.append(name).append(' ').append(getSqlType()).append(" primary key auto_increment");
     }
 

@@ -453,7 +453,7 @@ public final class DbTransaction {
         sb.append("update ").append(Db.tableNameForJavaClass(o.getClass())).append(" set ");
         for (final DbField f : o.dirtyFields) {
             sb.append(f.name).append('=');
-            f.sql_updateValue(sb, o);
+            f.appendSqlUpdateValue(sb, o);
             sb.append(',');
         }
         sb.setLength(sb.length() - 1);

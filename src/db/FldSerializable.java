@@ -12,7 +12,7 @@ public final class FldSerializable extends DbField {
     }
 
     @Override
-    protected void sql_updateValue(final StringBuilder sb, final DbObject o) {
+    protected void appendSqlUpdateValue(final StringBuilder sb, final DbObject o) {
         final Object v = getObj(o);
         if (v == null) {
             sb.append("null");

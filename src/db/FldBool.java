@@ -13,7 +13,7 @@ public final class FldBool extends DbField {
     }
 
     @Override
-    protected void sql_updateValue(final StringBuilder sb, final DbObject o) {
+    protected void appendSqlUpdateValue(final StringBuilder sb, final DbObject o) {
         sb.append(getBool(o) ? "b'1'" : "b'0'");
     }
 

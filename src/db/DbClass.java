@@ -128,7 +128,7 @@ public final class DbClass {
         final StringBuilder sb = new StringBuilder(128);
         sb.append("create table ").append(tableName).append("(");
         for (final DbField f : allFields) {
-            f.sql_columnDefinition(sb);
+            f.appendSqlColumnDefinition(sb);
             sb.append(',');
         }
         sb.setLength(sb.length() - 1);
@@ -202,7 +202,7 @@ public final class DbClass {
             }
             final StringBuilder sb = new StringBuilder(128);
             sb.append("alter table ").append(tableName).append(" modify ");
-            f.sql_columnDefinition(sb);
+            f.appendSqlColumnDefinition(sb);
             final String sql = sb.toString();
             Db.logSql(sql);
             stmt.execute(sql);
@@ -228,7 +228,7 @@ public final class DbClass {
                 // profilePic, groupPic
                 final StringBuilder sb = new StringBuilder(128);
                 sb.append("alter table ").append(tableName).append(" modify ");
-                f.sql_columnDefinition(sb);
+                f.appendSqlColumnDefinition(sb);
                 sb.append(' ');
                 if (prevField == null) {
                     sb.append("first");
@@ -274,7 +274,7 @@ public final class DbClass {
     private void addColumn(final Statement stmt, final DbField fld, final DbField prevFld) throws Throwable {
         final StringBuilder sb = new StringBuilder(128);
         sb.append("alter table ").append(tableName).append(" add ");
-        fld.sql_columnDefinition(sb);
+        fld.appendSqlColumnDefinition(sb);
         sb.append(' ');
         if (prevFld == null) {
             sb.append("first");
