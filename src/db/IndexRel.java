@@ -1,9 +1,11 @@
 // reviewed: 2024-08-05
+//           2025-04-28
 package db;
 
 /** Index of relation column. */
 public class IndexRel extends Index {
 
+    /** Relation column. */
     private final DbRelation rel;
 
     public IndexRel(final DbRelation r) {

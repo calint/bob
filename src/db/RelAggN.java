@@ -1,4 +1,5 @@
 // reviewed: 2024-08-05
+//           2025-04-28
 package db;
 
 import java.util.List;
@@ -11,10 +12,10 @@ public final class RelAggN extends DbRelation {
     }
 
     @Override
-    protected void init(final DbClass dbcls) {
+    protected void init(final DbClass dbCls) {
         relFld = new FldRel();
         relFld.cls = toCls;
-        relFld.name = dbcls.tableName + "_" + name;
+        relFld.name = dbCls.tableName + "_" + name;
         final DbClass toDbCls = Db.dbClassForJavaClass(toCls);
         relFld.tableName = toDbCls.tableName;
         toDbCls.allFields.add(relFld);
@@ -62,10 +63,12 @@ public final class RelAggN extends DbRelation {
             return;
         }
 
+        // target class does not need to cascade delete thus just delete them from
+        // target table
         tn.flush();
         tn.removeReferencesToObject(dbClsTo, toId);
 
-        final StringBuilder sb = new StringBuilder(128);
+        final StringBuilder sb = new StringBuilder(128); // ? magic number
         sb.append("delete from ").append(dbClsTo.tableName).append(" where ").append(DbObject.id.name).append("=")
                 .append(toId).append(" and ").append(relFld.name).append("=").append(thsId);
 
@@ -110,6 +113,10 @@ public final class RelAggN extends DbRelation {
     private void cascadeDelete(final int thsId) {
         final DbTransaction tn = Db.currentTransaction();
         final DbClass dbClsTo = Db.dbClassForJavaClass(toCls);
+
+        // if target class needs to cascade deletes or it contains RelRefN (associated
+        // table entries) or database setting is to set null on tables that refer to
+        // this instance (dangling references) and it has tables referring to this
         if (dbClsTo.cascadeDelete || !dbClsTo.referringRefN.isEmpty()
                 || (Db.enableUpdateReferringTables && !dbClsTo.referringRef.isEmpty())) {
             final List<DbObject> ls = get(thsId).toList();
@@ -119,6 +126,8 @@ public final class RelAggN extends DbRelation {
             return;
         }
 
+        // target class does not need to cascade delete thus just delete them from
+        // target table
         tn.flush();
 
         final StringBuilder sb = new StringBuilder(128);

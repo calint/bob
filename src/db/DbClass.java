@@ -16,6 +16,7 @@ import java.util.List;
 
 /** Meta data of {@link DbObject} class. */
 public final class DbClass {
+
     final Class<? extends DbObject> javaClass;
     final String tableName;
     final ArrayList<DbField> declaredFields = new ArrayList<DbField>();
@@ -397,4 +398,5 @@ public final class DbClass {
             stmt.execute(sql);
         }
     }
+
 }

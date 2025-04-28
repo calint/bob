@@ -13,6 +13,7 @@ import java.util.List;
 
 /** Transaction used to create, get, count and delete objects. */
 public final class DbTransaction {
+
     final PooledConnection pooledCon; // ? circular reference ok?
     final Connection con;
     final Statement stmt;
@@ -202,13 +203,13 @@ public final class DbTransaction {
         final Query.TableAliasMap tam = new Query.TableAliasMap();
         final StringBuilder sbWhere = new StringBuilder(128);
         if (qry != null) {
-            qry.sql_build(sbWhere, tam);
+            qry.appendSql(sbWhere, tam);
         }
 
         final DbClass dbCls = Db.dbClassForJavaClass(cls);
         final StringBuilder sb = new StringBuilder(256);
         sb.append("select ").append(tam.getAliasForTableName(dbCls.tableName)).append(".* from ");
-        tam.sql_appendSelectFromTables(sb);
+        tam.appendSqlSelectFromTables(sb);
 
         if (sbWhere.length() != 0) {
             sb.append(" where ");
@@ -217,7 +218,7 @@ public final class DbTransaction {
 
         if (ord != null && !ord.isEmpty()) {
             sb.append(" ");
-            ord.sql_appendToQuery(sb, tam);
+            ord.appendSqlQuery(sb, tam);
         }
 
         if (lmt != null) {
@@ -266,7 +267,7 @@ public final class DbTransaction {
         final Query.TableAliasMap tam = new Query.TableAliasMap();
         final StringBuilder sbWhere = new StringBuilder(128);
         if (qry != null) {
-            qry.sql_build(sbWhere, tam);
+            qry.appendSql(sbWhere, tam);
         }
 
         final int n = classes.length;
@@ -287,7 +288,7 @@ public final class DbTransaction {
         }
         sb.setLength(sb.length() - 1); // remove the last ','
         sb.append(" from ");
-        tam.sql_appendSelectFromTables(sb);
+        tam.appendSqlSelectFromTables(sb);
 
         if (sbWhere.length() != 0) {
             sb.append(" where ");
@@ -296,7 +297,7 @@ public final class DbTransaction {
 
         if (ord != null && !ord.isEmpty()) {
             sb.append(" ");
-            ord.sql_appendToQuery(sb, tam);
+            ord.appendSqlQuery(sb, tam);
         }
 
         if (lmt != null) {
@@ -377,9 +378,9 @@ public final class DbTransaction {
 
         if (qry != null) { // ? or qry.isEmpty()?
             final StringBuilder sbWhere = new StringBuilder(128);
-            qry.sql_build(sbWhere, tam); // build first for tam to know which tables to include
+            qry.appendSql(sbWhere, tam); // build first for tam to know which tables to include
             final StringBuilder sbFrom = new StringBuilder(128);
-            tam.sql_appendSelectFromTables(sbFrom);
+            tam.appendSqlSelectFromTables(sbFrom);
             if (sbFrom.length() == 0) { // the query might have been empty
                 final DbClass dbCls = Db.dbClassForJavaClass(cls);
                 sb.append(dbCls.tableName);
@@ -482,4 +483,5 @@ public final class DbTransaction {
     public String toString() {
         return "dirtyObjects=" + dirtyObjects;
     }
+
 }

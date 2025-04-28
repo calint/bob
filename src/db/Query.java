@@ -1,4 +1,5 @@
 // reviewed: 2024-08-05
+//           2025-04-28
 package db;
 
 import java.sql.Timestamp;
@@ -12,6 +13,7 @@ import java.util.Map;
  */
 public final class Query {
 
+    // operation of query element
     public static final int EQ = 1;
     public static final int NEQ = 2;
     public static final int GT = 3;
@@ -22,14 +24,19 @@ public final class Query {
     /** Full text query. */
     public static final int FTQ = 8;
 
+    // operations between query elements
+    public static final int NOP = 0;
+    public static final int AND = 1;
+    public static final int OR = 2;
+
     private static final class Elem {
         private Query query;// if not null then this is a sub query
-        private IndexFt ftix;// if not null then this is a full text query
+        private IndexFt ftIx;// if not null then this is a full text query
         private int elemOp; // 'and', 'or' or 'nop'
-        private String lhtbl;// left hand table name
+        private String lhTbl;// left hand table name
         private String lh; // left hand field name
         private int op; // EQ, NEQ etc
-        private String rhtbl;
+        private String rhTbl;
         private String rh;
 
         private void appendElemOp(final StringBuilder sb, final int op) {
@@ -47,11 +54,11 @@ public final class Query {
             }
         }
 
-        public void sql_build(final StringBuilder sb, final TableAliasMap tam) {
+        public void appendSql(final StringBuilder sb, final TableAliasMap tam) {
             // sub query
             if (query != null) {
-                final StringBuilder sbSubQuery = new StringBuilder(128);
-                query.sql_build(sbSubQuery, tam);
+                final StringBuilder sbSubQuery = new StringBuilder(128); // ? magic number
+                query.appendSql(sbSubQuery, tam);
                 if (sbSubQuery.length() != 0) {
                     appendElemOp(sb, elemOp);
                     sb.append('(');
@@ -64,13 +71,13 @@ public final class Query {
             appendElemOp(sb, elemOp);
 
             // full text query
-            if (ftix != null) {
+            if (ftIx != null) {
                 sb.append("match(");
-                for (final DbField f : ftix.fields) {
-                    final String tblalias = tam.getAliasForTableName(ftix.tableName);
-                    sb.append(tblalias).append('.').append(f.name).append(',');
+                for (final DbField f : ftIx.fields) {
+                    final String tblAlias = tam.getAliasForTableName(ftIx.tableName);
+                    sb.append(tblAlias).append('.').append(f.name).append(',');
                 }
-                sb.setLength(sb.length() - 1);
+                sb.setLength(sb.length() - 1); // remove trailing ','
                 sb.append(')');
                 sb.append(" against('");
                 DbField.escapeSqlString(sb, rh);
@@ -79,8 +86,8 @@ public final class Query {
             }
 
             // left hand right hand
-            if (lhtbl != null) {
-                sb.append(tam.getAliasForTableName(lhtbl)).append('.');
+            if (lhTbl != null) {
+                sb.append(tam.getAliasForTableName(lhTbl)).append('.');
             }
             sb.append(lh);
 
@@ -113,8 +120,8 @@ public final class Query {
                 throw new RuntimeException("op " + op + " not supported");
             }
 
-            if (rhtbl != null) {
-                sb.append(tam.getAliasForTableName(rhtbl)).append('.');
+            if (rhTbl != null) {
+                sb.append(tam.getAliasForTableName(rhTbl)).append('.');
             }
             sb.append(rh);
         }
@@ -124,32 +131,28 @@ public final class Query {
         private int seq;
         private final HashMap<String, String> tblToAlias = new HashMap<String, String>();
 
-        String getAliasForTableName(final String tblname) {
-            String tblalias = tblToAlias.get(tblname);
-            if (tblalias == null) {
+        String getAliasForTableName(final String tblName) {
+            String tblAlias = tblToAlias.get(tblName);
+            if (tblAlias == null) {
                 seq++;
-                tblalias = "t" + seq;
-                tblToAlias.put(tblname, tblalias);
+                tblAlias = "t" + seq;
+                tblToAlias.put(tblName, tblAlias);
             }
-            return tblalias;
+            return tblAlias;
         }
 
-        void sql_appendSelectFromTables(final StringBuilder sb) {
+        void appendSqlSelectFromTables(final StringBuilder sb) {
             if (tblToAlias.isEmpty()) {
                 return;
             }
             for (final Map.Entry<String, String> kv : tblToAlias.entrySet()) {
                 sb.append(kv.getKey()).append(" ").append(kv.getValue()).append(",");
             }
-            sb.setLength(sb.length() - 1); // remove the last ','
+            sb.setLength(sb.length() - 1); // remove trailing ','
         }
     }
 
     private final ArrayList<Elem> elems = new ArrayList<Elem>();
-
-    public static final int NOP = 0;
-    public static final int AND = 1;
-    public static final int OR = 2;
 
     private static String sqlStr(final String s) {
         final StringBuilder sb = new StringBuilder(s.length() + 10); // ? magic number
@@ -159,16 +162,15 @@ public final class Query {
         return sb.toString();
     }
 
-    void sql_build(final StringBuilder sb, final TableAliasMap tam) {
+    void appendSql(final StringBuilder sb, final TableAliasMap tam) {
         for (final Elem e : elems) {
-            e.sql_build(sb, tam);
+            e.appendSql(sb, tam);
         }
     }
 
     public Query() {
     }
 
-    ////////////////////////////////////////////////////////
     /** Query by id. */
     public Query(final Class<? extends DbObject> c, final int id) {
         append(NOP, Db.tableNameForJavaClass(c), DbObject.id.name, EQ, null, Integer.toString(id));
@@ -195,7 +197,6 @@ public final class Query {
     }
 
     public Query(final DbField lh, final int op, final Timestamp ts) {
-        // append(NOP, lh.tableName, lh.columnName, op, null, ts.toString());
         append(NOP, lh.tableName, lh.name, op, null, "'" + ts.toString() + "'");
     }
 
@@ -210,8 +211,8 @@ public final class Query {
 
     /** Join. */
     public Query(final RelRefN rel) {
-        append(NOP, rel.tableName, DbObject.id.name, EQ, rel.rrm.tableName, rel.rrm.fromColName).append(AND,
-                rel.rrm.tableName, rel.rrm.toColName, EQ, rel.rrm.toTableName, DbObject.id.name);
+        append(NOP, rel.tableName, DbObject.id.name, EQ, rel.rrm.tableName, RelRefNMeta.COLUMN_NAME_FROM).append(AND,
+                rel.rrm.tableName, RelRefNMeta.COLUMN_NAME_TO, EQ, rel.rrm.toTableName, DbObject.id.name);
     }
 
     /** Join. */
@@ -225,15 +226,14 @@ public final class Query {
     }
 
     /** Full text query. */
-    public Query(final IndexFt ix, final String ftquery) {
+    public Query(final IndexFt ix, final String ftQuery) {
         final Elem e = new Elem();
         e.elemOp = NOP;
-        e.ftix = ix;
-        e.rh = ftquery;
+        e.ftIx = ix;
+        e.rh = ftQuery;
         elems.add(e);
     }
 
-    ///////////////////////////////////////////////////////////////////////
     public Query and(final Query q) {
         return append(AND, q);
     }
@@ -242,7 +242,7 @@ public final class Query {
         return append(OR, q);
     }
 
-    private Query append(final int elemOp, final String lhtbl, final String lh, final int op, final String rhtbl,
+    private Query append(final int elemOp, final String lhTbl, final String lh, final int op, final String rhTbl,
             final String rh) {
         final Elem e = new Elem();
         if (elems.isEmpty()) {
@@ -251,10 +251,10 @@ public final class Query {
         } else {
             e.elemOp = elemOp;
         }
-        e.lhtbl = lhtbl;
+        e.lhTbl = lhTbl;
         e.lh = lh;
         e.op = op;
-        e.rhtbl = rhtbl;
+        e.rhTbl = rhTbl;
         e.rh = rh;
         elems.add(e);
         return this;
@@ -273,7 +273,6 @@ public final class Query {
         return this;
     }
 
-    // - - - - - - -- --- - - -- - - -- - - -- --
     public Query and(final Class<? extends DbObject> c, final int id) {
         return append(AND, Db.tableNameForJavaClass(c), DbObject.id.name, EQ, null, Integer.toString(id));
     }
@@ -311,8 +310,8 @@ public final class Query {
     }
 
     public Query and(final RelRefN rel) {
-        return append(AND, rel.tableName, DbObject.id.name, EQ, rel.rrm.tableName, rel.rrm.fromColName).append(AND,
-                rel.rrm.tableName, rel.rrm.toColName, EQ, rel.rrm.toTableName, DbObject.id.name);
+        return append(AND, rel.tableName, DbObject.id.name, EQ, rel.rrm.tableName, RelRefNMeta.COLUMN_NAME_FROM)
+                .append(AND, rel.rrm.tableName, RelRefNMeta.COLUMN_NAME_TO, EQ, rel.rrm.toTableName, DbObject.id.name);
     }
 
     public Query and(final RelAgg rel) {
@@ -323,7 +322,7 @@ public final class Query {
         return append(AND, rel.tableName, rel.relFld.name, EQ, rel.toTableName, DbObject.id.name);
     }
 
-    public Query and(final IndexFt ix, final String ftquery) {
+    public Query and(final IndexFt ix, final String ftQuery) {
         final Elem e = new Elem();
         if (elems.isEmpty()) {
             // first elem is always NOP
@@ -331,13 +330,12 @@ public final class Query {
         } else {
             e.elemOp = AND;
         }
-        e.ftix = ix;
-        e.rh = ftquery;
+        e.ftIx = ix;
+        e.rh = ftQuery;
         elems.add(e);
         return this;
     }
 
-    // - - - - - - -- --- - - -- - - -- - - -- --
     public Query or(final Class<? extends DbObject> c, final int id) {
         return append(OR, Db.tableNameForJavaClass(c), DbObject.id.name, EQ, null, Integer.toString(id));
     }
@@ -375,8 +373,8 @@ public final class Query {
     }
 
     public Query or(final RelRefN rel) {
-        return append(OR, rel.tableName, DbObject.id.name, EQ, rel.rrm.tableName, rel.rrm.fromColName).append(AND,
-                rel.rrm.tableName, rel.rrm.toColName, EQ, rel.rrm.toTableName, DbObject.id.name);
+        return append(OR, rel.tableName, DbObject.id.name, EQ, rel.rrm.tableName, RelRefNMeta.COLUMN_NAME_FROM)
+                .append(AND, rel.rrm.tableName, RelRefNMeta.COLUMN_NAME_TO, EQ, rel.rrm.toTableName, DbObject.id.name);
     }
 
     public Query or(final RelAgg rel) {
@@ -387,7 +385,7 @@ public final class Query {
         return append(OR, rel.tableName, rel.relFld.name, EQ, rel.toTableName, DbObject.id.name);
     }
 
-    public Query or(final IndexFt ix, final String ftquery) {
+    public Query or(final IndexFt ix, final String ftQuery) {
         final Elem e = new Elem();
         if (elems.isEmpty()) {
             // first elem is always NOP
@@ -395,8 +393,8 @@ public final class Query {
         } else {
             e.elemOp = OR;
         }
-        e.ftix = ix;
-        e.rh = ftquery;
+        e.ftIx = ix;
+        e.rh = ftQuery;
         elems.add(e);
         return this;
     }
@@ -404,16 +402,16 @@ public final class Query {
     @Override
     public String toString() {
         final TableAliasMap tam = new TableAliasMap();
-        final StringBuilder sbwhere = new StringBuilder(256);
-        sql_build(sbwhere, tam);
+        final StringBuilder sbWhere = new StringBuilder(256); // ? magic number
+        appendSql(sbWhere, tam);
 
-        final StringBuilder sbfrom = new StringBuilder(256);
-        tam.sql_appendSelectFromTables(sbfrom);
-        if (sbwhere.length() != 0) {
-            sbfrom.append(" where ");
-            sbfrom.append(sbwhere);
+        final StringBuilder sbFrom = new StringBuilder(256); // ? magic number
+        tam.appendSqlSelectFromTables(sbFrom);
+        if (sbWhere.length() != 0) {
+            sbFrom.append(" where ");
+            sbFrom.append(sbWhere);
         }
-        return sbfrom.toString();
+        return sbFrom.toString();
     }
 
 }

@@ -6,14 +6,15 @@ import java.util.List;
 
 /** Lazy collection of DbObjects. */
 public final class DbObjects {
-    private final DbObjects dbobjects;
+
+    private final DbObjects dbObjects;
     private final Class<? extends DbObject> select; // ? review select. generalize with Class[]
     private final Query query;
     private final Order order;
 
     public DbObjects(final DbObjects dbobjects, final Class<? extends DbObject> select, final Query query,
             final Order order) {
-        this.dbobjects = dbobjects;
+        this.dbObjects = dbobjects;
         if (dbobjects == null && select == null) {
             throw new RuntimeException("'select' must be specified if this DbObjects does not wrap a DbObjects.");
         }
@@ -104,8 +105,8 @@ public final class DbObjects {
     }
 
     private void buildQuery(final Query qry, final Order ord) {
-        if (dbobjects != null) {
-            dbobjects.buildQuery(qry, ord);
+        if (dbObjects != null) {
+            dbObjects.buildQuery(qry, ord);
         }
         if (query != null) {
             qry.and(query);
@@ -118,4 +119,5 @@ public final class DbObjects {
             ord.append(order);
         }
     }
+
 }

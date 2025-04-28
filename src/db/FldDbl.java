@@ -4,6 +4,7 @@ package db;
 
 /** Double field. */
 public final class FldDbl extends DbField {
+
     public FldDbl(final double defVal) {
         super("double", 0, defValToStr(defVal), defVal, false, false);
     }
@@ -28,4 +29,5 @@ public final class FldDbl extends DbField {
     public double getDbl(final DbObject ths) {
         return (Double) getObj(ths);
     }
+
 }

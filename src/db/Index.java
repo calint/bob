@@ -1,4 +1,5 @@
 // reviewed: 2024-08-05
+//           2025-04-28
 package db;
 
 import java.sql.DatabaseMetaData;
@@ -17,7 +18,7 @@ public class Index {
     /** The name of the field that declared the index. */
     protected String name;
 
-    /** The table name for the declaring class. */
+    /** The table name of the declaring class. */
     protected String tableName;
 
     /** The fields in this index. */
@@ -78,18 +79,18 @@ public class Index {
             return;
         }
 
-        // declared index does not match index in db. recreate index
+        // declared index does not match index in db. recreate.
         dropIndex(stmt);
         createIndex(stmt);
     }
 
     protected void createIndex(final Statement stmt) throws SQLException {
-        final StringBuilder sb = new StringBuilder(128);
+        final StringBuilder sb = new StringBuilder(128); // ? magic number
         sb.append("create index ").append(name).append(" on ").append(tableName).append('(');
         for (final DbField f : fields) {
             sb.append(f.name).append(',');
         }
-        sb.setLength(sb.length() - 1);
+        sb.setLength(sb.length() - 1); // remove last ','
         sb.append(')');
         final String sql = sb.toString();
         Db.logSql(sql);
@@ -97,7 +98,7 @@ public class Index {
     }
 
     protected void dropIndex(final Statement stmt) throws SQLException {
-        final StringBuilder sb = new StringBuilder(128);
+        final StringBuilder sb = new StringBuilder(128); // ? magic number
         sb.append("drop index ").append(name).append(" on ").append(tableName);
         final String sql = sb.toString();
         Db.logSql(sql);

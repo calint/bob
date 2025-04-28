@@ -4,6 +4,7 @@ package db;
 
 /** String field. */
 public final class FldStr extends DbField {
+
     public static final int MAX_SIZE = 65535; // ? this is mysql specific
 
     public FldStr() {

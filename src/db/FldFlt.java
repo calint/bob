@@ -4,6 +4,7 @@ package db;
 
 /** Float field. */
 public final class FldFlt extends DbField {
+
     public FldFlt(final float defVal) {
         super("float", 0, defValToStr(defVal), defVal, false, false);
     }

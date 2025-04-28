@@ -4,6 +4,7 @@ package db;
 
 /** Boolean field. */
 public final class FldBool extends DbField {
+
     public FldBool(final boolean defVal) {
         super("bit", 1, defVal ? "b'1'" : "b'0'", defVal, false, false);
     }
@@ -24,4 +25,5 @@ public final class FldBool extends DbField {
     public boolean getBool(final DbObject ths) {
         return (Boolean) getObj(ths);
     }
+
 }

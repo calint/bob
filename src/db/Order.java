@@ -1,11 +1,12 @@
 // reviewed: 2024-08-05
+//           2025-04-28
 package db;
 
 import java.util.ArrayList;
 
 import db.Query.TableAliasMap;
 
-/** Parameter to get(...) sorting the result list. */
+/** Parameter to get(...) for sorting the result list. */
 public final class Order {
 
     private static final class Elem {
@@ -58,7 +59,7 @@ public final class Order {
         return this;
     }
 
-    void sql_appendToQuery(final StringBuilder sb, final Query.TableAliasMap tam) {
+    void appendSqlQuery(final StringBuilder sb, final Query.TableAliasMap tam) {
         if (elems.isEmpty()) {
             return;
         }
@@ -71,7 +72,7 @@ public final class Order {
             }
             sb.append(',');
         }
-        sb.setLength(sb.length() - 1); // remove last coma
+        sb.setLength(sb.length() - 1); // remove last ','
     }
 
     public Order append(final Order ord) {
@@ -89,7 +90,7 @@ public final class Order {
     public String toString() {
         final TableAliasMap tam = new TableAliasMap();
         final StringBuilder sb = new StringBuilder(256);
-        sql_appendToQuery(sb, tam);
+        appendSqlQuery(sb, tam);
         return sb.toString();
     }
 

@@ -1,4 +1,5 @@
 // reviewed: 2024-08-05
+//           2025-04-28
 package db;
 
 /** Association One-to-One. */
@@ -26,13 +27,13 @@ public final class RelRef extends DbRelation {
             dbc.allIndexes.add(ix);
         }
 
-        final DbClass todbcls = Db.dbClassForJavaClass(toCls);
-        todbcls.referringRef.add(this);
+        final DbClass toDbCls = Db.dbClassForJavaClass(toCls);
+        toDbCls.referringRef.add(this);
     }
 
     /**
-     * @param ths   source object.
-     * @param trgId id of referenced object or 0 to remove.
+     * @param ths   Source object.
+     * @param trgId Id of referenced object or 0 to remove.
      */
     public void set(final DbObject ths, final int trgId) {
         relFld.setId(ths, trgId);

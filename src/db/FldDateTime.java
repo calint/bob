@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 
 /** Date time field. */
 public final class FldDateTime extends DbField {
+
     public FldDateTime() {
         this(null);
     }
@@ -21,4 +22,5 @@ public final class FldDateTime extends DbField {
     public Timestamp getDateTime(final DbObject ths) {
         return (Timestamp) getObj(ths);
     }
+
 }

@@ -6,6 +6,8 @@ import java.util.HashSet;
 
 /** Abstract database object. */
 public abstract class DbObject {
+
+    /** Id field that all objects have. */
     public static final FldId id = new FldId();
 
     Object[] fieldValues;
@@ -50,4 +52,5 @@ public abstract class DbObject {
         sb.append("}");
         return sb.toString();
     }
+
 }

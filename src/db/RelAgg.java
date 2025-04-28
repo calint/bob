@@ -1,4 +1,5 @@
 // reviewed: 2024-08-05
+//           2025-04-28
 package db;
 
 /** Aggregation One-to-One. */
@@ -9,13 +10,13 @@ public final class RelAgg extends DbRelation {
     }
 
     @Override
-    protected void init(final DbClass dbcls) {
+    protected void init(final DbClass dbCls) {
         relFld = new FldRel();
-        relFld.cls = cls;
+        relFld.cls = cls; // to class
         final DbClass dbc = Db.getDbClassForJavaClass(cls);
         relFld.tableName = dbc.tableName;
         relFld.name = name;
-        dbcls.allFields.add(relFld);
+        dbCls.allFields.add(relFld);
     }
 
     /** @returns 0 if id is null */
@@ -63,10 +64,11 @@ public final class RelAgg extends DbRelation {
             return;
         }
 
+        // no cascade needed. just delete row in target table
         tn.flush();
         tn.removeReferencesToObject(dbClsTo, toId);
 
-        final StringBuilder sb = new StringBuilder(128);
+        final StringBuilder sb = new StringBuilder(128); // ? magic number
         sb.append("delete from ").append(dbClsTo.tableName).append(" where ").append(DbObject.id.name).append("=")
                 .append(toId);
         if (!Db.clusterOn) {

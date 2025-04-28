@@ -4,6 +4,7 @@ package db;
 
 /** CLOB field. */
 public final class FldClob extends DbField {
+
     public FldClob() {
         super("longtext", 0, null, null, true, true);
     }
@@ -15,4 +16,5 @@ public final class FldClob extends DbField {
     public String getClob(final DbObject ths) {
         return (String) getObj(ths);
     }
+
 }

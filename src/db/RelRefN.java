@@ -1,4 +1,5 @@
 // reviewed: 2024-08-05
+//           2025-04-28
 package db;
 
 import java.sql.DatabaseMetaData;
@@ -19,12 +20,12 @@ public final class RelRefN extends DbRelation {
     protected void init(final DbClass c) {
         rrm = new RelRefNMeta(c.javaClass, name, toCls);
         Db.relRefNMeta.add(rrm);
-        final DbClass todbcls = Db.dbClassForJavaClass(toCls);
-        if (todbcls == null) {
+        final DbClass toDbCls = Db.dbClassForJavaClass(toCls);
+        if (toDbCls == null) {
             throw new RuntimeException(
                     "class " + toCls + " not found. Has Db.register(" + toCls.getName() + ".class) been called?");
         }
-        todbcls.referringRefN.add(this);
+        toDbCls.referringRefN.add(this);
     }
 
     public void add(final DbObject ths, final DbObject o) {
@@ -37,8 +38,8 @@ public final class RelRefN extends DbRelation {
 
     /** @param thsId source object id. */
     public void add(final int thsId, final int toId) {
-        final StringBuilder sb = new StringBuilder(256);
-        rrm.sql_addToTable(sb, thsId, toId);
+        final StringBuilder sb = new StringBuilder(256); // ? magic number
+        rrm.appendSqlAddToTable(sb, thsId, toId);
         if (!Db.clusterOn) {
             Db.currentTransaction().execSql(sb.toString());
         } else {
@@ -66,8 +67,8 @@ public final class RelRefN extends DbRelation {
 
     /** @param thsId source object id. */
     public void remove(final int thsId, final int toId) {
-        final StringBuilder sb = new StringBuilder(256);
-        rrm.sql_deleteFromTable(sb, thsId, toId);
+        final StringBuilder sb = new StringBuilder(256); // ? magic number
+        rrm.appendSqlDeleteFromTable(sb, thsId, toId);
         if (!Db.clusterOn) {
             Db.currentTransaction().execSql(sb.toString());
         } else {
@@ -81,8 +82,8 @@ public final class RelRefN extends DbRelation {
 
     /** @param thsId source object id. */
     public void removeAll(final int thsId) {
-        final StringBuilder sb = new StringBuilder(256);
-        rrm.sql_deleteAllFromTable(sb, thsId);
+        final StringBuilder sb = new StringBuilder(256); // ? magic number
+        rrm.appendSqlDeleteAllFromTable(sb, thsId);
         if (!Db.clusterOn) {
             Db.currentTransaction().execSql(sb.toString());
         } else {
@@ -91,8 +92,8 @@ public final class RelRefN extends DbRelation {
     }
 
     void deleteReferencesTo(final int id) {
-        final StringBuilder sb = new StringBuilder(256);
-        rrm.sql_deleteReferencesTo(sb, id);
+        final StringBuilder sb = new StringBuilder(256); // ? magic number
+        rrm.appendSqlDeleteReferencesTo(sb, id);
         if (!Db.clusterOn) {
             Db.currentTransaction().execSql(sb.toString());
         } else {
@@ -121,16 +122,16 @@ public final class RelRefN extends DbRelation {
         }
 
         if (lookingForIndexNames.contains(fromIxName)) {
-            final StringBuilder sb = new StringBuilder(128);
-            rrm.sql_createIndexOnFromColumn(sb);
+            final StringBuilder sb = new StringBuilder(128); // ? magic number
+            rrm.appendSqlCreateIndexOnFromColumn(sb);
             final String sql = sb.toString();
             Db.logSql(sql);
             stmt.execute(sql);
         }
 
         if (lookingForIndexNames.contains(toIxName)) {
-            final StringBuilder sb = new StringBuilder(128);
-            rrm.sql_createIndexOnToColumn(sb);
+            final StringBuilder sb = new StringBuilder(128); // ? magic number
+            rrm.appendSqlCreateIndexOnToColumn(sb);
             final String sql = sb.toString();
             Db.logSql(sql);
             stmt.execute(sql);

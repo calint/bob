@@ -589,4 +589,5 @@ public final class Db {
         return "jdbc:mysql://" + address + ":3306/" + dbName + "?user=" + user + "&password=" + password
                 + "&useSSL=false&allowPublicKeyRetrieval=true";
     }
+
 }
