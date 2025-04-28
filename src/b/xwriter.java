@@ -274,7 +274,7 @@ public final class xwriter {
     }
 
     /**
-     * Renders a div with HTML escaped element output.
+     * Renders a div with HTML escaped element output of `to(OutputStream)`.
      * 
      * @param e     element
      * @param cls   style class or null/empty string if none
@@ -313,7 +313,7 @@ public final class xwriter {
     }
 
     /**
-     * Renders a 'div' with HTML output of by the element.
+     * Renders a 'div' with HTML output of the element.
      * 
      * @param e element
      * @return this
@@ -334,7 +334,7 @@ public final class xwriter {
     }
 
     /**
-     * Renders a 'div' with HTML output of the element.
+     * Renders a 'div' with HTML output of element `to(xwriter)`.
      * 
      * @param e     element
      * @param cls   style class or null/empty string if none
@@ -342,14 +342,7 @@ public final class xwriter {
      * @return this
      */
     public xwriter divh(final a e, final String cls, final String style) {
-        tago("div").attr("id", e.id());
-        if (!isempty(cls)) {
-            attr("class", cls);
-        }
-        if (!isempty(style)) {
-            attr("style", style);
-        }
-        tagoe();
+        divo(e, cls, style).tagoe();
         try {
             e.to(this);
         } catch (final Throwable t) {
@@ -855,8 +848,9 @@ public final class xwriter {
      * @return this
      */
     public xwriter p(final String s) {
-        if (s == null)
+        if (s == null) {
             return this;
+        }
         try {
             os.write(tobytes(s));
         } catch (final IOException e) {

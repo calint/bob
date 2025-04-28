@@ -41,8 +41,11 @@ public final class TableBooks extends ViewTable {
 
     @Override
     protected void renderMoreSearchSection(final xwriter x) {
-        x.p("Id: ").inptxt(id, "nbr").p(' ');
-        x.p("Exact book title: ").inptxt(title, "small");
+        // note: `enter` in field will do callback on `x_q` of parent class triggering
+        // search
+        x.p("Id: ").inptxt(id, "nbr", this, "q").p(' ');
+        x.focus(id);
+        x.p("Exact book title: ").inptxt(title, "small", this, "q");
     }
 
     @Override

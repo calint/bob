@@ -5,6 +5,9 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.swing.text.TabableView;
+import javax.swing.text.TableView;
+
 import b.a;
 import b.xwriter;
 import db.Limit;
@@ -18,19 +21,19 @@ public abstract class ViewTable extends View {
     public a q; // query field
     public Table t;
     public Paging p;
-    public a ms; // more search section
 
     /** True to display more search section. */
-    private boolean ms_display;
+    private boolean displayMoreSearch;
 
     /** The actions that are enabled in the table. */
     protected final int enabledTableBits;
 
     public ViewTable(final List<String> idPath, final int viewBits, final int tableBits, final TypeInfo typeInfo) {
         super(idPath, viewBits, typeInfo);
+
         enabledTableBits = tableBits;
-        t.setTableView(this);
-        p.setTableView(this);
+        t.setViewTable(this);
+        p.setViewTable(this);
         if ((enabledViewBits & BIT_CREATE) != 0) {
             ac.add(new Action("create " + typeInfo.name, "create"));
         }
@@ -70,20 +73,20 @@ public abstract class ViewTable extends View {
             x.attr("oninput", "$b(this);ui.debounce(()=>$x('" + eid + " q'),500)");
             x.attr("value", q.str());
             x.tagoe();
-            x.script().xfocus(q).script_();
             if (hasMoreSearchSection()) {
                 x.spc();
-                x.ax(this, "more", "more");
-                x.spc();
-                x.tago("div").default_attrs_for_element(ms, "more-search", null);
-                if (!ms_display) {
-                    x.attr("hidden");
+                x.ax(this, "more", displayMoreSearch ? "less" : "more");
+                if (displayMoreSearch) {
+                    x.divo(this, "ms", null).tagoe();
+                    renderMoreSearchSection(x);
+                    x.div_();
+                    x.spc();
+                    x.ax(this, "q", "search");
+                } else {
+                    x.focus(q); // note: focus sticks to first call and cannot be overridden
                 }
-                x.tagoe();
-                renderMoreSearchSection(x);
-                x.spc();
-                x.ax(this, "q", "search");
-                x.tage("div").nl();
+            } else {
+                x.focus(q); // note: focus sticks to first call and cannot be overridden
             }
         }
         final boolean inifiniteScroll = isInifiniteScroll();
@@ -155,13 +158,12 @@ public abstract class ViewTable extends View {
 
     /** Callback for "more" search. */
     public final void x_more(final xwriter x, final String s) throws Throwable {
-        ms_display = !ms_display;
-        x.p("$('").p(ms.id()).p("').hidden=").p(!ms_display).pl(";");
-        if (!ms_display) {
+        displayMoreSearch = !displayMoreSearch;
+        if (!displayMoreSearch) {
             clearMoreSearchSection(x);
             p.setPage(1);
-            refresh(x);
         }
+        x.xu(this);
     }
 
     @Override
@@ -284,23 +286,24 @@ public abstract class ViewTable extends View {
     // -----------------------------------------------------------------------------------
 
     public static final class Paging extends a {
+
         private static final long serialVersionUID = 1;
 
         private int currentPage; // page starting at 0
         private int objectsPerPage;
         private int objectsCount; // objects in view
         private int npages; // pages
-        private ViewTable tv;
+        private ViewTable vt;
         public a pg; // current page
 
-        public void setTableView(final ViewTable tv) {
-            this.tv = tv;
-            objectsPerPage = tv.getObjectsPerPageCount();
+        public void setViewTable(final ViewTable vt) {
+            this.vt = vt;
+            objectsPerPage = vt.getObjectsPerPageCount();
             pg.set(currentPage + 1);
         }
 
         public void upd() {
-            objectsCount = tv.getObjectsCount();
+            objectsCount = vt.getObjectsCount();
             npages = objectsCount / objectsPerPage;
             if (objectsCount % objectsPerPage != 0) {
                 npages++;
@@ -316,9 +319,9 @@ public abstract class ViewTable extends View {
             x.p(objectsCount);
             x.p(' ');
             if (objectsCount == 1) {
-                x.p(tv.getTypeInfo().name);
+                x.p(vt.getTypeInfo().name);
             } else {
-                x.p(tv.getTypeInfo().namePlural);
+                x.p(vt.getTypeInfo().namePlural);
             }
             x.p(". ");
             if (npages > 1) {
@@ -401,35 +404,37 @@ public abstract class ViewTable extends View {
         public Limit getLimit() {
             return new Limit(getLimitStart(), getLimitCount());
         }
+
     }
 
     public static final class Table extends a {
+
         static final long serialVersionUID = 1;
         public Container cbs; // checkboxes
         public a is; // infinite scroll marker
 
-        private ViewTable tv; // the parent
+        private ViewTable vt; // the parent
         private final LinkedHashSet<String> selectedIds = new LinkedHashSet<String>();
 
-        public void setTableView(final ViewTable tv) {
-            this.tv = tv;
+        public void setViewTable(final ViewTable vt) {
+            this.vt = vt;
         }
 
         @Override
         public void to(final xwriter x) throws Throwable {
-            final boolean inifiniteScroll = tv.isInifiniteScroll();
+            final boolean inifiniteScroll = vt.isInifiniteScroll();
             if (inifiniteScroll) {
-                tv.p.setPage(1);
+                vt.p.setPage(1);
             }
-            final List<?> ls = tv.getObjectsList();
+            final List<?> ls = vt.getObjectsList();
             if (!ls.isEmpty()) {
                 x.table("t").nl();
                 x.tr();
-                if ((tv.enabledViewBits & View.BIT_SELECT) != 0 || tv.isSelectModeMulti()) {
+                if ((vt.enabledViewBits & View.BIT_SELECT) != 0 || vt.isSelectModeMulti()) {
                     // header for the checkbox
                     x.th();
                 }
-                tv.renderHeaders(x);
+                vt.renderHeaders(x);
                 x.nl();
                 cbs.clear();
                 renderRows(x, ls);
@@ -449,9 +454,9 @@ public abstract class ViewTable extends View {
         private void renderRows(final xwriter x, final List<?> ls) throws Throwable {
             for (final Object o : ls) {
                 x.tr();
-                if ((tv.enabledViewBits & View.BIT_SELECT) != 0 || tv.isSelectModeMulti()) {
+                if ((vt.enabledViewBits & View.BIT_SELECT) != 0 || vt.isSelectModeMulti()) {
                     // render checkbox
-                    final String id = tv.getIdFrom(o);
+                    final String id = vt.getIdFrom(o);
                     x.td();
                     final Checkbox cb = new Checkbox(id, selectedIds.contains(id));
                     // add to container where the element will get a unique name in the context.
@@ -460,10 +465,10 @@ public abstract class ViewTable extends View {
                     // checkbox now has parent and name. render it.
                     cb.to(x);
                 }
-                tv.renderRowCells(x, o);
+                vt.renderRowCells(x, o);
                 x.nl();
             }
-            if (tv.isInifiniteScroll()) {
+            if (vt.isInifiniteScroll()) {
                 // insertion point for more rows
                 x.p("<tr id=" + is.id() + ">");
             }
@@ -472,7 +477,7 @@ public abstract class ViewTable extends View {
         @Override
         protected void bubble_event(final xwriter js, final a from, final Object o) throws Throwable {
             // event bubbled from child
-            if (from instanceof Checkbox && ((tv.enabledViewBits & View.BIT_SELECT) != 0 || tv.isSelectModeMulti())) {
+            if (from instanceof Checkbox && ((vt.enabledViewBits & View.BIT_SELECT) != 0 || vt.isSelectModeMulti())) {
                 final String id = ((Checkbox) from).getId();
                 if ("checked".equals(o)) {
                     selectedIds.add(id);
@@ -489,19 +494,20 @@ public abstract class ViewTable extends View {
 
         /** Callback for infinite scroll. */
         public void x_is(final xwriter y, final String s) throws Throwable {
-            if (!tv.p.nextPage()) {
+            if (!vt.p.nextPage()) {
                 // if there are no more pages
                 return;
             }
 
             final xwriter x = y.xub(is, false, false); // render more rows at the insertion tag
-            renderRows(x, tv.getObjectsList());
+            renderRows(x, vt.getObjectsList());
             y.xube();
         }
 
         protected Set<String> getSelectedIds() {
             return selectedIds;
         }
+
     }
 
 }
