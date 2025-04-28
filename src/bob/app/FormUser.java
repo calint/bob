@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import b.a;
 import b.xwriter;
 import bob.FormDbo;
 import bob.Util;
@@ -17,12 +18,15 @@ public final class FormUser extends FormDbo {
 
     private final static long serialVersionUID = 1;
 
+    private CustomElem customElem;
+
     public FormUser() {
         this(null, null);
     }
 
     public FormUser(final String id, final String initStr) {
         super(null, User.class, id, initStr, BIT_SAVE_CLOSE | BIT_SAVE | BIT_CANCEL);
+        customElem = new CustomElem();
     }
 
     @Override
@@ -75,6 +79,7 @@ public final class FormUser extends FormDbo {
         inputDate(x, "Date", o, User.date, Timestamp.valueOf("2023-01-25 00:00:00"));
         inputAgg(x, "Profile picture", makeExtendedIdPath(o.id()), o, User.profilePic, FormUserProfilePic.class);
         inputAggN(x, "Files", makeExtendedIdPath(o.id()), o, User.files, FormUserFile.class);
+        inputElem(x, "customElem", customElem);
         endForm(x);
     }
 
@@ -86,6 +91,25 @@ public final class FormUser extends FormDbo {
         if (Util.isEmpty(o.getName())) {
             xfocus(x, User.name);
             throw new Exception("User name may not be empty.");
+        }
+
+        CustomElem ce = (CustomElem) getElem("customElem");
+        x.xalert("pos: " + ce.pos_x.str() + "," + ce.pos_y);
+    }
+
+    public final static class CustomElem extends a {
+
+        private final static long serialVersionUID = 1;
+
+        public a pos_x;
+        public a pos_y;
+
+        @Override
+        public void to(xwriter x) throws Throwable {
+            x.p("Custom Element: x = ").inpint(pos_x).p(" y = ").inpint(pos_y).spc().ax(this, "", "update page");
+        }
+
+        public void x_(final xwriter x, final String param) {
         }
     }
 
