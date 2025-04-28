@@ -21,7 +21,7 @@ public final class IndexFt extends Index {
         sb.setLength(sb.length() - 1);
         sb.append(')');
         final String sql = sb.toString();
-        Db.log_sql(sql);
+        Db.logSql(sql);
         stmt.execute(sql);
     }
 

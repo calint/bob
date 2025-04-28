@@ -138,13 +138,13 @@ public final class DbClass {
         }
 
         final String sql = sb.toString();
-        Db.log_sql(sql);
+        Db.logSql(sql);
         stmt.execute(sql);
     }
 
     private void ensureColumns(final Statement stmt, final DatabaseMetaData dbm) throws Throwable {
         addMissingColumns(stmt, dbm);
-        if (Db.enable_delete_unused_columns) {
+        if (Db.enableDeleteUnusedColumns) {
             deleteUnusedColumns(stmt, dbm);
         }
         arrangeColumns(stmt, dbm);
@@ -164,7 +164,7 @@ public final class DbClass {
             final StringBuilder sb = new StringBuilder(128);
             sb.append("alter table ").append(tableName).append(" drop column ").append(c.name);
             final String sql = sb.toString();
-            Db.log_sql(sql);
+            Db.logSql(sql);
             stmt.execute(sql);
         }
     }
@@ -204,7 +204,7 @@ public final class DbClass {
             sb.append("alter table ").append(tableName).append(" modify ");
             f.sql_columnDefinition(sb);
             final String sql = sb.toString();
-            Db.log_sql(sql);
+            Db.logSql(sql);
             stmt.execute(sql);
         }
     }
@@ -237,7 +237,7 @@ public final class DbClass {
                     sb.append(prevField.name);
                 }
                 final String sql = sb.toString();
-                Db.log_sql(sql);
+                Db.logSql(sql);
                 stmt.execute(sql);
                 break;
             }
@@ -283,7 +283,7 @@ public final class DbClass {
             sb.append(prevFld.name);
         }
         final String sql = sb.toString();
-        Db.log_sql(sql);
+        Db.logSql(sql);
         stmt.execute(sql);
     }
 
@@ -393,7 +393,7 @@ public final class DbClass {
             final StringBuilder sb = new StringBuilder(128);
             sb.append("drop index ").append(s).append(" on ").append(tableName);
             final String sql = sb.toString();
-            Db.log_sql(sql);
+            Db.logSql(sql);
             stmt.execute(sql);
         }
     }

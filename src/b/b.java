@@ -118,7 +118,7 @@ public final class b {
 
         // initiate db
         Db.init();
-        Db.cluster_on = bapp_cluster_mode;
+        Db.clusterOn = bapp_cluster_mode;
         Db.register(session.class);
         Db.register(sessionobj.class);
         // initiate application

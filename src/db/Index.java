@@ -92,7 +92,7 @@ public class Index {
         sb.setLength(sb.length() - 1);
         sb.append(')');
         final String sql = sb.toString();
-        Db.log_sql(sql);
+        Db.logSql(sql);
         stmt.execute(sql);
     }
 
@@ -100,7 +100,7 @@ public class Index {
         final StringBuilder sb = new StringBuilder(128);
         sb.append("drop index ").append(name).append(" on ").append(tableName);
         final String sql = sb.toString();
-        Db.log_sql(sql);
+        Db.logSql(sql);
         stmt.execute(sql);
     }
 

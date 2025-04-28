@@ -44,7 +44,7 @@ final class RelRefNMeta {
             sb.append("engine=").append(Db.engine);
         }
         final String sql = sb.toString();
-        Db.log_sql(sql);
+        Db.logSql(sql);
         stmt.execute(sql);
     }
 

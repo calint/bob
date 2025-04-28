@@ -18,8 +18,8 @@ public final class Application implements bapp {
 
     /** called by b at startup */
     public void init() throws Throwable {
-        Db.enable_log = false;
-        Db.enable_log_sql = true;
+        Db.enableLog = false;
+        Db.enableLogSql = true;
         Db.register(User.class);
         Db.register(File.class);
         Db.register(DataBinary.class);

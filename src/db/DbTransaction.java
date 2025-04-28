@@ -62,7 +62,7 @@ public final class DbTransaction {
         pooledCon = pc;
         con = pc.getConnection();
         stmt = con.createStatement();
-        cache_enabled = Db.enable_cache;
+        cache_enabled = Db.enableCache;
     }
 
     public Statement getJdbcStatement() {
@@ -89,8 +89,8 @@ public final class DbTransaction {
             sb.append("insert into ").append(Db.tableNameForJavaClass(cls)).append(" values()");
 
             final String sql = sb.toString();
-            if (!Db.cluster_on) {
-                Db.log_sql(sql);
+            if (!Db.clusterOn) {
+                Db.logSql(sql);
                 stmt.execute(sql, Statement.RETURN_GENERATED_KEYS);
                 final ResultSet rs = stmt.getGeneratedKeys();
                 if (!rs.next()) {
@@ -135,7 +135,7 @@ public final class DbTransaction {
         // delete this
         final StringBuilder sb = new StringBuilder(256);
         sb.append("delete from ").append(dbcls.tableName).append(" where id=").append(id);
-        if (!Db.cluster_on) {
+        if (!Db.clusterOn) {
             execSql(sb.toString());
         } else {
             Db.execClusterSql(sb.toString());
@@ -154,12 +154,12 @@ public final class DbTransaction {
         }
 
         // update referring fields to null
-        if (Db.enable_update_referring_tables) {
+        if (Db.enableUpdateReferringTables) {
             for (final RelRef r : dbcls.referingRef) {
                 final StringBuilder sb = new StringBuilder(256);
                 sb.append("update ").append(r.tableName).append(" set ").append(r.name).append("=null")
                         .append(" where ").append(r.name).append('=').append(id);
-                if (!Db.cluster_on) {
+                if (!Db.clusterOn) {
                     execSql(sb.toString());
                 } else {
                     Db.execClusterSql(sb.toString());
@@ -228,7 +228,7 @@ public final class DbTransaction {
         try {
             final Constructor<?> ctor = cls.getConstructor();
             final String sql = sb.toString();
-            Db.log_sql(sql);
+            Db.logSql(sql);
             final ResultSet rs = stmt.executeQuery(sql);
             if (cache_enabled) {
                 while (rs.next()) {
@@ -314,7 +314,7 @@ public final class DbTransaction {
             }
 
             final String sql = sb.toString();
-            Db.log_sql(sql);
+            Db.logSql(sql);
             final ResultSet rs = stmt.executeQuery(sql);
             if (cache_enabled) {
                 while (rs.next()) {
@@ -393,7 +393,7 @@ public final class DbTransaction {
         }
 
         final String sql = sb.toString();
-        Db.log_sql(sql);
+        Db.logSql(sql);
         try {
             final ResultSet rs = stmt.executeQuery(sql);
             if (!rs.next()) {
@@ -411,7 +411,7 @@ public final class DbTransaction {
         if (cache_enabled) { // will keep memory usage down at batch imports
             cache.clear();
         }
-        if (Db.cluster_on || Db.autocommit) {
+        if (Db.clusterOn || Db.autocommit) {
             return;
         }
         con.commit();
@@ -422,7 +422,7 @@ public final class DbTransaction {
         if (cache_enabled) {
             cache.clear();
         }
-        if (Db.cluster_on || Db.autocommit) {
+        if (Db.clusterOn || Db.autocommit) {
             return;
         }
         try {
@@ -458,7 +458,7 @@ public final class DbTransaction {
         }
         sb.setLength(sb.length() - 1);
         sb.append(" where id=").append(o.id());
-        if (!Db.cluster_on) {
+        if (!Db.clusterOn) {
             execSql(sb.toString());
         } else {
             Db.execClusterSql(sb.toString());
@@ -467,7 +467,7 @@ public final class DbTransaction {
     }
 
     void execSql(final String sql) {
-        Db.log_sql(sql);
+        Db.logSql(sql);
         try {
             stmt.execute(sql);
         } catch (final Throwable t) {

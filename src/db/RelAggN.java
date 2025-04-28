@@ -69,7 +69,7 @@ public final class RelAggN extends DbRelation {
         sb.append("delete from ").append(dbClsTo.tableName).append(" where ").append(DbObject.id.name).append("=")
                 .append(toId).append(" and ").append(relFld.name).append("=").append(thsId);
 
-        if (!Db.cluster_on) {
+        if (!Db.clusterOn) {
             tn.execSql(sb.toString());
         } else {
             Db.execClusterSql(sb.toString());
@@ -111,7 +111,7 @@ public final class RelAggN extends DbRelation {
         final DbTransaction tn = Db.currentTransaction();
         final DbClass dbClsTo = Db.dbClassForJavaClass(toCls);
         if (dbClsTo.cascadeDelete || !dbClsTo.referingRefN.isEmpty()
-                || (Db.enable_update_referring_tables && !dbClsTo.referingRef.isEmpty())) {
+                || (Db.enableUpdateReferringTables && !dbClsTo.referingRef.isEmpty())) {
             final List<DbObject> ls = get(thsId).toList();
             for (final DbObject o : ls) {
                 tn.delete(o);
@@ -125,7 +125,7 @@ public final class RelAggN extends DbRelation {
         sb.append("delete from ").append(dbClsTo.tableName).append(" where ").append(relFld.name).append("=")
                 .append(thsId);
 
-        if (!Db.cluster_on) {
+        if (!Db.clusterOn) {
             tn.execSql(sb.toString());
         } else {
             Db.execClusterSql(sb.toString());

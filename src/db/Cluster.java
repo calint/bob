@@ -1,4 +1,7 @@
+//
 // reviewed: 2024-08-05
+//           2025-04-28
+//
 package db;
 
 import java.io.BufferedReader;
@@ -23,40 +26,42 @@ import java.util.Iterator;
 /** Experimental cluster hub. */
 public final class Cluster {
 
-    /** true if sql statements to cluster nodes are executed in parallel */
-    public static boolean execute_in_parallel = true;
+    /** True if sql statements to cluster nodes are executed in parallel. */
+    public static boolean executeInParallel = true;
 
-    public static long connection_refresh_intervall_ms = 60 * 60 * 1000;
+    /** Close and re-open connections to databases interval. */
+    public static long connectionRefreshIntervalMs = 60 * 60 * 1000;
 
-    public static boolean enable_log = true;
+    public static boolean enableLog = true;
 
-    public static boolean enable_log_sql = false;
+    /** Log SQL executed on databases. */
+    public static boolean enableLogSql = false;
 
-    public static int server_port = 8889;
+    public static int serverPort = 8889;
 
     private static final ArrayList<Client> clients = new ArrayList<Client>();
 
-    /** Timestamp for when the connections where created. */
-    private static long connections_last_refresh_ms;
+    /** Timestamp for when the connections where last refreshed. */
+    private static long connectionsLastRefreshMs;
 
     /** Synchronization object. */
     private static Object monitor = new Object();
 
-    /** Counter used to synchronize. */
-    private static int active_threads;
+    /** Counter used when synchronizing. */
+    private static int activeThreads;
 
     /** Current SQL executed by the cluster */
-    private static String current_sql;
+    private static String currentSql;
 
-    private static String dbname;
+    private static String dbName;
 
-    private static String user;
+    private static String dbUser;
 
-    private static String password;
+    private static String dbPassword;
 
-    /** Prints the string to System.out */
+    /** Prints the string to System.out. */
     public static void log(final String s) {
-        if (!enable_log) {
+        if (!enableLog) {
             return;
         }
         System.out.println(s);
@@ -66,11 +71,11 @@ public final class Cluster {
         while (t.getCause() != null) {
             t = t.getCause();
         }
-        System.err.println(stacktraceline(t));
+        System.err.println(stacktraceToLine(t));
     }
 
-    public static void log_sql(final String s) {
-        if (!enable_log_sql) {
+    public static void logSql(final String s) {
+        if (!enableLogSql) {
             return;
         }
         System.out.println(s);
@@ -78,20 +83,20 @@ public final class Cluster {
 
     public static void main(final String[] args) throws Throwable {
         final Driver driver = (Driver) Class.forName("com.mysql.jdbc.Driver").getConstructor().newInstance();
-        // note: necessary in java 1.5
+        // note: necessary in Java 1.5
         DriverManager.registerDriver(driver);
 
         if (args.length < 4) {
-            System.out.println("Usage: " + Cluster.class.getName() + " <ip:port file> <dbname> <user> <password>");
+            System.out.println("Usage: " + Cluster.class.getName() + " <ip:port file> <database> <user> <password>");
             return;
         }
 
-        dbname = args[1];
-        user = args[2];
-        password = args[3];
+        dbName = args[1];
+        dbUser = args[2];
+        dbPassword = args[3];
 
         // connect to cluster nodes
-        log("database '" + dbname + "' user '" + user + "' password [not displayed]");
+        log("database '" + dbName + "' user '" + dbUser + "' password [not displayed]");
         log("reading nodes ip file '" + args[0] + "'");
         final FileReader fr = new FileReader(args[0]);
         final BufferedReader bfr = new BufferedReader(fr);
@@ -119,13 +124,13 @@ public final class Cluster {
             ct.connectToDatabase();
         }
         log("connected to databases.");
-        connections_last_refresh_ms = System.currentTimeMillis();
+        connectionsLastRefreshMs = System.currentTimeMillis();
 
         log("waiting for " + nclients + " node" + (nclients > 1 ? "s" : "") + " to connect.");
 
         final ServerSocketChannel ssc = ServerSocketChannel.open();
         ssc.configureBlocking(false);
-        final InetSocketAddress isa = new InetSocketAddress(server_port);
+        final InetSocketAddress isa = new InetSocketAddress(serverPort);
         ssc.socket().bind(isa);
 
         final Selector selector = Selector.open();
@@ -161,13 +166,14 @@ public final class Cluster {
 
         log("starting cluster.");
         // register client channels for read and give go ahead
-        if (execute_in_parallel) {
+        if (executeInParallel) {
             for (final Client ct : clients) {
                 ct.thread.start();
             }
         }
 
-        // ? potential racing. wait for all the threads to be in the sem before starting
+        // ? potential racing. wait for all the threads to be in the semaphore before
+        // starting
 
         // register for read
         for (final Client ct : clients) {
@@ -175,10 +181,10 @@ public final class Cluster {
         }
 
         // give go ahead
-        final byte[] ba_nl = "\n".getBytes();
+        final byte[] baNewLine = "\n".getBytes();
         for (final Client ct : clients) {
-            final int c = ct.socketChannel.write(ByteBuffer.wrap(ba_nl));
-            if (c != ba_nl.length) {
+            final int c = ct.socketChannel.write(ByteBuffer.wrap(baNewLine));
+            if (c != baNewLine.length) {
                 throw new RuntimeException("Could not write full message to client.");
             }
         }
@@ -216,24 +222,24 @@ public final class Cluster {
         return sw.toString();
     }
 
-    public static String stacktraceline(final Throwable e) {
+    public static String stacktraceToLine(final Throwable e) {
         return stacktrace(e).replace('\n', ' ').replace('\r', ' ').replaceAll("\\s+", " ").replace(" at ", " @ ");
     }
 
-    /** @return generated id when insert statement or 0 */
+    /** @return Generated id when insert statement or 0. */
     private static int execSql(final String sql) {
-        if (!execute_in_parallel) {
-            return execSql_serial(sql);
+        if (!executeInParallel) {
+            return executeSqlInSerial(sql);
         }
 
         // set new SQL to execute, notify all clients and wait for all to be done
         synchronized (monitor) {
-            current_sql = sql;
-            active_threads = clients.size();
+            currentSql = sql;
+            activeThreads = clients.size();
             // notify all threads to execute sql
             monitor.notifyAll();
             // wait for last thread to finish
-            while (active_threads != 0) {
+            while (activeThreads != 0) {
                 try {
                     monitor.wait();
                 } catch (final InterruptedException ok) {
@@ -251,7 +257,7 @@ public final class Cluster {
         }
         int prev = clients.get(0).thread.autogeneratedId;
         // check that all clients generated the same id
-        for (int i = 1; i < n; i++) {
+        for (int i = 1; i < n; i++) {// 1 because first id already extracted
             final int id = clients.get(i).thread.autogeneratedId;
             if (id != prev) {
                 throw new RuntimeException(
@@ -262,7 +268,7 @@ public final class Cluster {
         return prev;
     }
 
-    private static int execSql_serial(final String sql) {
+    private static int executeSqlInSerial(final String sql) {
         ArrayList<Client> broken_clients = null;
         int autogenerated_id = 0;
         if (sql.startsWith("insert ")) {
@@ -290,7 +296,7 @@ public final class Cluster {
             }
             int previd = autogenerated_ids.get(0);
             // check that all clients generated the same id
-            for (int i = 1; i < nclients; i++) {
+            for (int i = 1; i < nclients; i++) {// 1 because first id already extracted
                 final int id = autogenerated_ids.get(1);
                 if (previd != id) {
                     throw new RuntimeException("generated ids do not match " + id + " vs " + previd + " after " + sql);
@@ -332,11 +338,11 @@ public final class Cluster {
 
     private static void refreshConnectionsIfNecessary() {
         final long t1 = System.currentTimeMillis();
-        final long dt = t1 - connections_last_refresh_ms;
-        if (dt < connection_refresh_intervall_ms) {
+        final long dt = t1 - connectionsLastRefreshMs;
+        if (dt < connectionRefreshIntervalMs) {
             return;
         }
-        connections_last_refresh_ms = t1;
+        connectionsLastRefreshMs = t1;
         ArrayList<Client> brokenClients = null;
         for (final Client ct : clients) {
             try {
@@ -349,7 +355,7 @@ public final class Cluster {
                 continue;
             }
         }
-        final long dt1 = System.currentTimeMillis() - connections_last_refresh_ms;
+        final long dt1 = System.currentTimeMillis() - connectionsLastRefreshMs;
         log("refreshed connections in " + dt1 + " ms");
         if (brokenClients == null) {
             return;
@@ -363,7 +369,7 @@ public final class Cluster {
     private static final class Client {
         private final String address;
         private final ByteBuffer bb = ByteBuffer.allocate(64 * 1024);
-        private final ByteBuffer bb_nl = ByteBuffer.wrap("\n".getBytes());
+        private final ByteBuffer bbNewLine = ByteBuffer.wrap("\n".getBytes());
         private final StringBuilder sb = new StringBuilder(64 * 1024);
         private final ClientThread thread;
         private Connection connection;
@@ -372,7 +378,7 @@ public final class Cluster {
 
         public Client(final String address) {
             this.address = address;
-            if (execute_in_parallel) {
+            if (executeInParallel) {
                 thread = new ClientThread(this, address);
             } else {
                 thread = null;
@@ -397,7 +403,7 @@ public final class Cluster {
 
         public void connectToDatabase() {
             // ? do this in the constructor and make fields final
-            final String cs = Db.getJdbcConnectionString(address, dbname, user, password);
+            final String cs = Db.getJdbcConnectionString(address, dbName, dbUser, dbPassword);
             while (true) {
                 try {
                     connection = DriverManager.getConnection(cs);
@@ -435,9 +441,9 @@ public final class Cluster {
                         throw new RuntimeException("could not fully write buffer");
                     }
                 } else {
-                    bb_nl.clear();
-                    socketChannel.write(bb_nl);
-                    if (bb_nl.remaining() != 0) {
+                    bbNewLine.clear();
+                    socketChannel.write(bbNewLine);
+                    if (bbNewLine.remaining() != 0) {
                         throw new RuntimeException("could not fully write buffer");
                     }
                 }
@@ -453,14 +459,14 @@ public final class Cluster {
             } catch (final Throwable e) {
                 log(e);
             }
-            final String cs = Db.getJdbcConnectionString(address, dbname, user, password);
+            final String cs = Db.getJdbcConnectionString(address, dbName, dbUser, dbPassword);
             connection = DriverManager.getConnection(cs);
             statement = connection.createStatement();
         }
     }
 
     private static final class ClientThread extends Thread {
-        // ? reduce context of thread in case java memory model flushes too much
+        // ? reduce context of thread in case Java memory model flushes too much
         private int autogeneratedId;
         private final Client client;
         private String prevSql;
@@ -479,7 +485,7 @@ public final class Cluster {
                 }
                 // wait for new sql or stopped
                 synchronized (monitor) {
-                    while (!stopped && prevSql == current_sql) {
+                    while (!stopped && prevSql == currentSql) {
                         try {
                             monitor.wait();
                         } catch (final InterruptedException ok) {
@@ -490,11 +496,11 @@ public final class Cluster {
                     // thread might be flagged for stop and then interrupted
                     break;
                 }
-                prevSql = current_sql;
+                prevSql = currentSql;
                 autogeneratedId = 0;
                 try {
-                    if (current_sql.startsWith("insert ")) {
-                        client.statement.execute(current_sql, Statement.RETURN_GENERATED_KEYS);
+                    if (currentSql.startsWith("insert ")) {
+                        client.statement.execute(currentSql, Statement.RETURN_GENERATED_KEYS);
                         final ResultSet rs = client.statement.getGeneratedKeys();
                         if (!rs.next()) {
                             throw new RuntimeException("expected generated id");
@@ -503,7 +509,7 @@ public final class Cluster {
                         rs.close();
                     } else {
                         // not insert statement
-                        client.statement.execute(current_sql);
+                        client.statement.execute(currentSql);
                     }
                 } catch (final Throwable e) {
                     // close client
@@ -514,8 +520,8 @@ public final class Cluster {
                     }
                     // last thread done notifies the executor to continue
                     synchronized (monitor) {
-                        active_threads--;
-                        if (active_threads == 0) {
+                        activeThreads--;
+                        if (activeThreads == 0) {
                             monitor.notify();
                         }
                     }
@@ -523,13 +529,12 @@ public final class Cluster {
                 }
                 // last thread done notifies the executor to continue
                 synchronized (monitor) {
-                    active_threads--;
-                    if (active_threads == 0) {
+                    activeThreads--;
+                    if (activeThreads == 0) {
                         monitor.notify();
                     }
                 }
             }
         }
     }
-
 }

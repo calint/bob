@@ -39,7 +39,7 @@ public final class RelRefN extends DbRelation {
     public void add(final int thsId, final int toId) {
         final StringBuilder sb = new StringBuilder(256);
         rrm.sql_addToTable(sb, thsId, toId);
-        if (!Db.cluster_on) {
+        if (!Db.clusterOn) {
             Db.currentTransaction().execSql(sb.toString());
         } else {
             Db.execClusterSqlInsert(sb.toString());
@@ -68,7 +68,7 @@ public final class RelRefN extends DbRelation {
     public void remove(final int thsId, final int toId) {
         final StringBuilder sb = new StringBuilder(256);
         rrm.sql_deleteFromTable(sb, thsId, toId);
-        if (!Db.cluster_on) {
+        if (!Db.clusterOn) {
             Db.currentTransaction().execSql(sb.toString());
         } else {
             Db.execClusterSql(sb.toString());
@@ -83,7 +83,7 @@ public final class RelRefN extends DbRelation {
     public void removeAll(final int thsId) {
         final StringBuilder sb = new StringBuilder(256);
         rrm.sql_deleteAllFromTable(sb, thsId);
-        if (!Db.cluster_on) {
+        if (!Db.clusterOn) {
             Db.currentTransaction().execSql(sb.toString());
         } else {
             Db.execClusterSql(sb.toString());
@@ -93,7 +93,7 @@ public final class RelRefN extends DbRelation {
     void deleteReferencesTo(final int id) {
         final StringBuilder sb = new StringBuilder(256);
         rrm.sql_deleteReferencesTo(sb, id);
-        if (!Db.cluster_on) {
+        if (!Db.clusterOn) {
             Db.currentTransaction().execSql(sb.toString());
         } else {
             Db.execClusterSql(sb.toString());
@@ -124,7 +124,7 @@ public final class RelRefN extends DbRelation {
             final StringBuilder sb = new StringBuilder(128);
             rrm.sql_createIndexOnFromColumn(sb);
             final String sql = sb.toString();
-            Db.log_sql(sql);
+            Db.logSql(sql);
             stmt.execute(sql);
         }
 
@@ -132,7 +132,7 @@ public final class RelRefN extends DbRelation {
             final StringBuilder sb = new StringBuilder(128);
             rrm.sql_createIndexOnToColumn(sb);
             final String sql = sb.toString();
-            Db.log_sql(sql);
+            Db.logSql(sql);
             stmt.execute(sql);
         }
     }

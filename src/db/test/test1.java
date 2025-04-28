@@ -167,7 +167,7 @@ public class test1 extends TestCase {
             throw new RuntimeException("expected null");
 
         // test update referring table column to null at delete
-        if (Db.enable_update_referring_tables) {
+        if (Db.enableUpdateReferringTables) {
             u1.setGroupPic(f4);
             tn.delete(f4);
             tn.commit();

@@ -1,4 +1,5 @@
 // reviewed: 2024-08-05
+//           2025-04-28
 package db;
 
 import java.io.BufferedOutputStream;
@@ -23,45 +24,45 @@ import java.util.List;
 /** The database. */
 public final class Db {
 
-    private static final ThreadLocal<DbTransaction> tn = new ThreadLocal<DbTransaction>();
+    private static final ThreadLocal<DbTransaction> currentTransaction = new ThreadLocal<DbTransaction>();
 
-    /** true if in cluster */
-    public static boolean cluster_on = false;
+    /** True if in cluster. */
+    public static boolean clusterOn = false;
 
-    /** address to cluster writer */
-    public static String cluster_ip = "127.0.0.1";
+    /** Address to cluster writer. */
+    public static String clusterIp = "127.0.0.1";
 
-    public static int cluster_port = 8889;
+    public static int clusterPort = 8889;
 
-    /** default is null (InnoDB) */
+    /** Default is null (InnoDB). */
     public static String engine = "myisam";
 
-    /** default is false */
+    /** Default is false. */
     public static boolean autocommit = true;
 
     /** Enables the log(...) method. */
-    public static boolean enable_log = true;
+    public static boolean enableLog = true;
 
     /** Enables the log_sql(...) method. */
-    public static boolean enable_log_sql = true;
+    public static boolean enableLogSql = true;
 
-    /** Prints the string to System.out */
+    /** Prints the string to System.out. */
     public static void log(final String s) {
-        if (!enable_log) {
+        if (!enableLog) {
             return;
         }
         System.out.println(s);
     }
 
-    /** Prints the string to System.out */
-    public static void log_sql(final String s) {
-        if (!enable_log_sql) {
+    /** Prints the string to System.out. */
+    public static void logSql(final String s) {
+        if (!enableLogSql) {
             return;
         }
         System.out.println(s);
     }
 
-    public static long pooled_connection_max_age_in_ms = 10 * 60 * 1000;
+    public static long pooledConnectionMaxAgeMs = 10 * 60 * 1000;
 
     /** Called once to create the singleton instance. */
     public static void init() throws Throwable {
@@ -76,26 +77,26 @@ public final class Db {
      * Initiates thread local for currentTransaction(). The transaction can be
      * retrieved anywhere in the thread using Db.currentTransaction().
      *
-     * @return the created transaction
+     * @return The created transaction.
      */
     public static DbTransaction initCurrentTransaction() { // ? so ugly
-        if (tn.get() != null) {
+        if (currentTransaction.get() != null) {
             throw new RuntimeException("transaction already initiated on this thread.");
         }
         PooledConnection pc;
         // get pooled connection
-        synchronized (conpool) {
-            while (conpool.isEmpty()) {
+        synchronized (connectionPool) {
+            while (connectionPool.isEmpty()) {
                 // spurious interrupt might happen
                 try {
-                    conpool.wait();
+                    connectionPool.wait();
                 } catch (final InterruptedException e) {
                     log(e);
                 }
             }
-            pc = conpool.removeFirst();
+            pc = connectionPool.removeFirst();
         }
-        if (pc.getAgeInMs() > Db.pooled_connection_max_age_in_ms) {
+        if (pc.getAgeInMs() > Db.pooledConnectionMaxAgeMs) {
             // connection exceeded life time. create a new connection.
             try {
                 pc.getConnection().close();
@@ -105,9 +106,9 @@ public final class Db {
             while (true) {
                 try {
                     final Connection c = Db.createJdbcConnection();
-                    final PooledConnection pc2 = new PooledConnection(c);
-                    final DbTransaction t = new DbTransaction(pc2);
-                    tn.set(t);
+                    final PooledConnection p = new PooledConnection(c);
+                    final DbTransaction t = new DbTransaction(p);
+                    currentTransaction.set(t);
                     return t;
                 } catch (final Throwable e) {
                     log(e);
@@ -118,7 +119,7 @@ public final class Db {
         while (true) {
             try {
                 final DbTransaction t = new DbTransaction(pc);
-                tn.set(t);
+                currentTransaction.set(t);
                 return t;
             } catch (final Throwable e) {
                 log(e);
@@ -127,9 +128,9 @@ public final class Db {
             // create a new connection
             try {
                 final Connection c = createJdbcConnection();
-                final PooledConnection pc2 = new PooledConnection(c);
-                final DbTransaction t = new DbTransaction(pc2);
-                tn.set(t);
+                final PooledConnection p = new PooledConnection(c);
+                final DbTransaction t = new DbTransaction(p);
+                currentTransaction.set(t);
                 return t;
             } catch (final Throwable e) {
                 log(e);
@@ -138,12 +139,12 @@ public final class Db {
     }
 
     /**
-     * @return current transaction that was initiated in the thread local by
+     * @return Current transaction that was initiated in the thread local by
      *         initCurrentTransaction().
      */
     public static DbTransaction currentTransaction() {
         // Db.log("dbo: get current transaction on " + Thread.currentThread());
-        final DbTransaction t = tn.get();
+        final DbTransaction t = currentTransaction.get();
         if (t == null) {
             throw new RuntimeException("No transaction in the thread. Has Db.initCurrentTransaction() been done?");
         }
@@ -155,33 +156,33 @@ public final class Db {
      * returned to the pool.
      */
     public static void deinitCurrentTransaction() { // ? so ugly
-        final DbTransaction tx = tn.get();
-        if (tx == null) {
-            throw new RuntimeException("transaction not initiated on this thread.");
+        final DbTransaction tn = currentTransaction.get();
+        if (tn == null) {
+            throw new RuntimeException("Transaction not initiated on this thread.");
         }
-        boolean connection_is_ok = true;
-        if (!tx.rollbacked) {
+        boolean connectionIsOk = true;
+        if (!tn.rollbacked) {
             try {
-                tx.commit();
+                tn.commit();
             } catch (final Throwable t) {
-                connection_is_ok = false;
+                connectionIsOk = false;
                 log(t);
             }
         }
-        tn.remove();
-        if (connection_is_ok) {
-            synchronized (conpool) {
-                conpool.addFirst(tx.pooledCon);
-                conpool.notify();
+        currentTransaction.remove();
+        if (connectionIsOk) {
+            synchronized (connectionPool) {
+                connectionPool.addFirst(tn.pooledCon);
+                connectionPool.notify();
             }
             return;
         }
-        // this connection threw exception while deinit. make a new one
+        // this connection threw exception while de-init. make a new one
         final Connection c = createJdbcConnection();
-        final PooledConnection pc = new PooledConnection(c);
-        synchronized (conpool) {
-            conpool.addFirst(pc);
-            conpool.notify();
+        final PooledConnection p = new PooledConnection(c);
+        synchronized (connectionPool) {
+            connectionPool.addFirst(p);
+            connectionPool.notify();
         }
     }
 
@@ -189,7 +190,7 @@ public final class Db {
         while (t.getCause() != null) {
             t = t.getCause();
         }
-        System.err.println(stacktraceline(t));
+        System.err.println(stacktraceToLine(t));
     }
 
     public static String stacktrace(final Throwable e) {
@@ -200,63 +201,63 @@ public final class Db {
         return sw.toString();
     }
 
-    public static String stacktraceline(final Throwable e) {
+    public static String stacktraceToLine(final Throwable e) {
         return stacktrace(e).replace('\n', ' ').replace('\r', ' ').replaceAll("\\s+", " ").replace(" at ", " @ ");
     }
 
     // --- -- - -- -- - - --- - -- -- - -- --- - - - -- - - -- - -- -- -- - -- - - -
-    private static final LinkedList<PooledConnection> conpool = new LinkedList<PooledConnection>();
-    private static final ArrayList<DbClass> dbclasses = new ArrayList<DbClass>();
+    private static final LinkedList<PooledConnection> connectionPool = new LinkedList<PooledConnection>();
+    private static final ArrayList<DbClass> dbClasses = new ArrayList<DbClass>();
     private static final HashMap<Class<? extends DbObject>, DbClass> clsToDbClsMap = new HashMap<Class<? extends DbObject>, DbClass>();
     static final ArrayList<RelRefNMeta> relRefNMeta = new ArrayList<RelRefNMeta>();
 
-    /** If true undeclared columns are deleted. */
-    public static boolean enable_delete_unused_columns = true;
+    /** If true unused columns are deleted. */
+    public static boolean enableDeleteUnusedColumns = true;
 
-    /** If true undeclared indexes are deleted. */
-    public static boolean enable_drop_undeclared_indexes = true;
+    /** If true unused indexes are deleted. */
+    public static boolean enableDropUndeclaredIndexes = true;
 
     /**
      * Object delete triggers the updating of referring columns to null. Racing
      * conditions may occur.
      */
-    public static boolean enable_update_referring_tables = true;
+    public static boolean enableUpdateReferringTables = true;
 
     /**
      * Objects retrieved from the database are cached. This ensures that get(...)
      * returns the same instance of a previously retrieved object.
      */
-    public static boolean enable_cache = true;
+    public static boolean enableCache = true;
 
-    private static String jdbc_connection_string;
+    private static String jdbcConnectionString;
 
     /** Registers DbObject class to be persisted. */
     public static void register(final Class<? extends DbObject> cls) throws Throwable {
-        final DbClass dbcls = new DbClass(cls);
-        dbclasses.add(dbcls);
-        clsToDbClsMap.put(cls, dbcls);
+        final DbClass dc = new DbClass(cls);
+        dbClasses.add(dc);
+        clsToDbClsMap.put(cls, dc);
     }
 
     /**
      * Initiates the registered classes and connects to the database.
      *
-     * @param host       server host.
-     * @param dbname     database.
+     * @param host       Server host.
+     * @param dbName     Database name.
      * @param user
      * @param password
-     * @param ncons      number of connections in the pool
-     * @param cluster_ip null if none.
+     * @param ncons      Number of connections in the pool.
+     * @param clusterIp  null if none.
      * @param clust_port 0 if none.
      */
-    public static void start(final String host, final String dbname, final String user, final String password,
-            final int ncons, final String cluster_ip, final int cluster_port) throws Throwable {
-        jdbc_connection_string = getJdbcConnectionString(host, dbname, user, password);
-        Db.cluster_ip = cluster_ip;
-        Db.cluster_port = cluster_port;
+    public static void start(final String host, final String dbName, final String user, final String password,
+            final int ncons, final String clusterIp, final int clusterPort) throws Throwable {
+        jdbcConnectionString = getJdbcConnectionString(host, dbName, user, password);
+        Db.clusterIp = clusterIp;
+        Db.clusterPort = clusterPort;
 
         Db.log("--- - - - ---- - - - - - -- -- --- -- --- ---- -- -- - - -");
-        Db.log("   cluster: " + cluster_on);
-        Db.log("connection: " + jdbc_connection_string);
+        Db.log("   cluster: " + clusterOn);
+        Db.log("connection: " + jdbcConnectionString);
         // Db.log(" user: " + user);
         // Db.log(" password: " + (password == null ? "[none]" : "[not displayed]"));
         final Connection con = createJdbcConnection();
@@ -267,32 +268,32 @@ public final class Db {
         Db.log("--- - - - ---- - - - - - -- -- --- -- --- ---- -- -- - - -");
 
         // recursively populate lists: allFields, allRelations, allIndexes
-        for (final DbClass c : dbclasses) {
+        for (final DbClass c : dbClasses) {
             c.init();
         }
 
         // allow DbClass relations to add necessary fields and indexes, even to other
         // DbClasses
-        for (final DbClass c : dbclasses) {
+        for (final DbClass c : dbClasses) {
             for (final DbRelation r : c.allRelations) {
                 r.init(c);
             }
         }
 
         // initiate DbField indexes in the data list
-        for (final DbClass c : dbclasses) {
+        for (final DbClass c : dbClasses) {
             c.initDbFields();
         }
 
-        // allow indexes to initiate using fully initiated relations.
-        for (final DbClass c : dbclasses) {
+        // allow indexes to initiate using fully initiated relations
+        for (final DbClass c : dbClasses) {
             for (final Index ix : c.allIndexes) {
                 ix.init(c);
             }
         }
 
         // print summary
-        for (final DbClass c : dbclasses) {
+        for (final DbClass c : dbClasses) {
             Db.log(c.toString());
         }
 
@@ -312,19 +313,19 @@ public final class Db {
         for (int i = 0; i < ncons; i++) {
             final Connection c = createJdbcConnection();
             final PooledConnection pc = new PooledConnection(c);
-            conpool.add(pc);
+            connectionPool.add(pc);
         }
 
         Db.log("--- - - - ---- - - - - - -- -- --- -- --- ---- -- -- - - -");
 
-        if (!cluster_on) {
+        if (!clusterOn) {
             return;
         }
 
         while (true) {
-            log("connecting to cluster " + cluster_ip + ":" + cluster_port);
+            log("connecting to cluster " + clusterIp + ":" + clusterPort);
             try {
-                clusterSocket = new Socket(cluster_ip, cluster_port);
+                clusterSocket = new Socket(clusterIp, clusterPort);
                 clusterSocket.setTcpNoDelay(true);
                 clusterSocketReader = new BufferedReader(new InputStreamReader(clusterSocket.getInputStream()));
                 clusterSocketOs = new BufferedOutputStream(clusterSocket.getOutputStream(), 1024 * 1);
@@ -351,12 +352,12 @@ public final class Db {
     static Socket clusterSocket;
     static BufferedReader clusterSocketReader;
     static BufferedOutputStream clusterSocketOs;
-    private static byte[] ba_nl = "\n".getBytes();
+    private static byte[] baNl = "\n".getBytes();
 
     public static synchronized int execClusterSqlInsert(final String sql) {
         try {
             clusterSocketOs.write(sql.getBytes());
-            clusterSocketOs.write(ba_nl);
+            clusterSocketOs.write(baNl);
             clusterSocketOs.flush();
             final String idStr = clusterSocketReader.readLine();
             if (idStr == null) {
@@ -371,7 +372,7 @@ public final class Db {
     public static synchronized void execClusterSql(final String sql) {
         try {
             clusterSocketOs.write(sql.getBytes());
-            clusterSocketOs.write(ba_nl);
+            clusterSocketOs.write(baNl);
             clusterSocketOs.flush();
             final String ack = clusterSocketReader.readLine();
             if (ack == null) {
@@ -386,21 +387,21 @@ public final class Db {
     }
 
     /**
-     * @return a new JDBC connection. The method will block until a connection has
+     * @return A new JDBC connection. The method will block until a connection has
      *         been created.
      */
     public static Connection createJdbcConnection() {
         Connection c = null;
         while (true) {
             try {
-                c = DriverManager.getConnection(jdbc_connection_string);
-                if (!cluster_on && !autocommit) {
+                c = DriverManager.getConnection(jdbcConnectionString);
+                if (!clusterOn && !autocommit) {
                     c.setAutoCommit(false);
                 }
                 return c;
             } catch (final Throwable t) {
                 try {
-                    System.err.println("dbo: cannot create connection. waiting. " + stacktraceline(t));
+                    System.err.println("dbo: cannot create connection. waiting. " + stacktraceToLine(t));
                     Thread.sleep(1000);
                 } catch (final InterruptedException e) {
                     log(e);
@@ -411,43 +412,43 @@ public final class Db {
 
     private static void printDbMetaInfo(final DatabaseMetaData dbm) throws SQLException {
         // output tables, columns, indexes
-        final ResultSet rstbls = dbm.getTables(null, null, null, new String[] { "TABLE" });
-        while (rstbls.next()) {
-            final String tblname = rstbls.getString("TABLE_NAME");
-            Db.log("[" + tblname + "]");
-            final ResultSet rscols = dbm.getColumns(null, null, tblname, null);
-            while (rscols.next()) {
-                final String columnName = rscols.getString("COLUMN_NAME");
-                final String datatype = rscols.getString("TYPE_NAME");
-                final String defval = rscols.getString("COLUMN_DEF");
+        final ResultSet rsTbls = dbm.getTables(null, null, null, new String[] { "TABLE" });
+        while (rsTbls.next()) {
+            final String tblName = rsTbls.getString("TABLE_NAME");
+            Db.log("[" + tblName + "]");
+            final ResultSet rsCols = dbm.getColumns(null, null, tblName, null);
+            while (rsCols.next()) {
+                final String columnName = rsCols.getString("COLUMN_NAME");
+                final String dataType = rsCols.getString("TYPE_NAME");
+                final String defValue = rsCols.getString("COLUMN_DEF");
                 final StringBuilder sb = new StringBuilder();
-                sb.append("    ").append(columnName).append(' ').append(datatype);
-                if (defval != null) {
-                    sb.append(" '").append(defval).append('\'');
+                sb.append("    ").append(columnName).append(' ').append(dataType);
+                if (defValue != null) {
+                    sb.append(" '").append(defValue).append('\'');
                 }
                 Db.log(sb.toString());
             }
-            rscols.close();
+            rsCols.close();
 
-            final ResultSet rsix = dbm.getIndexInfo(null, null, tblname, false, false);
-            while (rsix.next()) {
-                Db.log("  index " + rsix.getString("INDEX_NAME") + " on " + rsix.getString("COLUMN_NAME"));
+            final ResultSet rsIx = dbm.getIndexInfo(null, null, tblName, false, false);
+            while (rsIx.next()) {
+                Db.log("  index " + rsIx.getString("INDEX_NAME") + " on " + rsIx.getString("COLUMN_NAME"));
             }
-            rsix.close();
+            rsIx.close();
             Db.log("");
         }
-        rstbls.close();
+        rsTbls.close();
     }
 
     private static void ensureTablesAndIndexes(final Connection con, final DatabaseMetaData dbm) throws Throwable {
         final Statement stmt = con.createStatement();
 
         // ensure tables exist and match definition
-        for (final DbClass dbcls : dbclasses) {
-            if (Modifier.isAbstract(dbcls.javaClass.getModifiers())) {
+        for (final DbClass dbCls : dbClasses) {
+            if (Modifier.isAbstract(dbCls.javaClass.getModifiers())) {
                 continue;
             }
-            dbcls.ensureTable(stmt, dbm);
+            dbCls.ensureTable(stmt, dbm);
         }
 
         // ensure RefN tables exist and match definition
@@ -459,30 +460,30 @@ public final class Db {
 
         // relations might need to create index directly with Statement or add to
         // allIndexes to other classes
-        for (final DbClass dbcls : dbclasses) {
-            for (final DbRelation dbrel : dbcls.allRelations) {
-                dbrel.ensureIndexes(stmt, dbm);
+        for (final DbClass dbCls : dbClasses) {
+            for (final DbRelation dbRel : dbCls.allRelations) {
+                dbRel.ensureIndexes(stmt, dbm);
             }
         }
 
         // ensure indexes exist and match definition
-        for (final DbClass dbcls : dbclasses) {
-            for (final Index ix : dbcls.allIndexes) {
+        for (final DbClass dbCls : dbClasses) {
+            for (final Index ix : dbCls.allIndexes) {
                 ix.ensureIndex(stmt, dbm);
             }
         }
 
-        if (enable_drop_undeclared_indexes) {
+        if (enableDropUndeclaredIndexes) {
             // drop undeclared indexes
-            for (final DbClass dbcls : dbclasses) {
-                dbcls.dropUndeclaredIndexes(stmt, dbm);
+            for (final DbClass dbCls : dbClasses) {
+                dbCls.dropUndeclaredIndexes(stmt, dbm);
             }
 
             // drop unused RefN tables
             final ArrayList<String> refsTbls = new ArrayList<String>();
-            final ResultSet rstbls = RelRefNMeta.getAllRefsTables(dbm);
-            while (rstbls.next()) {
-                final String tbl = rstbls.getString("TABLE_NAME");
+            final ResultSet rsTbls = RelRefNMeta.getAllRefsTables(dbm);
+            while (rsTbls.next()) {
+                final String tbl = rsTbls.getString("TABLE_NAME");
                 refsTbls.add(tbl);
             }
 
@@ -494,7 +495,7 @@ public final class Db {
                 final StringBuilder sb = new StringBuilder(128);
                 sb.append("drop table ").append(s);
                 final String sql = sb.toString();
-                Db.log_sql(sql);
+                Db.logSql(sql);
                 stmt.execute(sql);
             }
         }
@@ -512,21 +513,21 @@ public final class Db {
             con = createJdbcConnection();
             final Statement stmt = con.createStatement();
             final StringBuilder sb = new StringBuilder();
-            for (final DbClass dbc : dbclasses) {
+            for (final DbClass dbc : dbClasses) {
                 if (Modifier.isAbstract(dbc.javaClass.getModifiers())) {
                     continue;
                 }
                 sb.setLength(0);
                 sb.append("drop table ").append(dbc.tableName);
                 final String sql = sb.toString();
-                Db.log_sql(sql);
+                Db.logSql(sql);
                 stmt.execute(sql);
             }
             for (final RelRefNMeta rnm : relRefNMeta) {
                 sb.setLength(0);
                 sb.append("drop table ").append(rnm.tableName);
                 final String sql = sb.toString();
-                Db.log_sql(sql);
+                Db.logSql(sql);
                 stmt.execute(sql);
             }
             stmt.close();
@@ -548,15 +549,15 @@ public final class Db {
     /** Closes the connections in the pool. */
     public static void shutdown() {
         Db.log("dbo: shutdown");
-        synchronized (conpool) {
-            for (final PooledConnection pc : conpool) {
+        synchronized (connectionPool) {
+            for (final PooledConnection pc : connectionPool) {
                 try {
                     pc.getConnection().close();
                 } catch (final Throwable t) {
                     log(t);
                 }
             }
-            conpool.clear();
+            connectionPool.clear();
         }
     }
 
@@ -568,25 +569,24 @@ public final class Db {
         return clsToDbClsMap.get(c);
     }
 
-    public static List<DbClass> getDbClasses() {
-        return dbclasses;
-    }
-
-    /** @return the {@link DbClass} for the Java class */
+    /** @return The {@link DbClass} for the Java class. */
     public static DbClass getDbClassForJavaClass(final Class<? extends DbObject> cls) {
         return clsToDbClsMap.get(cls);
     }
 
+    public static List<DbClass> getDbClasses() {
+        return dbClasses;
+    }
+
     public static int getConnectionPoolSize() {
-        synchronized (conpool) {
-            return conpool.size();
+        synchronized (connectionPool) {
+            return connectionPool.size();
         }
     }
 
-    public static String getJdbcConnectionString(final String address, final String dbname, final String user,
-            final String passwd) {
-        return "jdbc:mysql://" + address + ":3306/" + dbname + "?user=" + user + "&password=" + passwd
+    public static String getJdbcConnectionString(final String address, final String dbName, final String user,
+            final String password) {
+        return "jdbc:mysql://" + address + ":3306/" + dbName + "?user=" + user + "&password=" + password
                 + "&useSSL=false&allowPublicKeyRetrieval=true";
     }
-
 }
