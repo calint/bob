@@ -1,10 +1,11 @@
 // reviewed: 2024-08-05
+//           2025-04-28
 package db;
 
 import java.util.List;
 
+/** Lazy collection of DbObjects. */
 public final class DbObjects {
-
     private final DbObjects dbobjects;
     private final Class<? extends DbObject> select; // ? review select. generalize with Class[]
     private final Query query;
@@ -63,10 +64,12 @@ public final class DbObjects {
         return toList(classes, null);
     }
 
+    /** @return A new lazy collection with additional query and order. */
     public DbObjects get(final Query qry, final Order ord) {
         return new DbObjects(this, select, qry, ord);
     }
 
+    /** @return A new lazy collection with additional query. */
     public DbObjects get(final Query qry) {
         return get(qry, null);
     }
@@ -115,5 +118,4 @@ public final class DbObjects {
             ord.append(order);
         }
     }
-
 }
