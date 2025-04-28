@@ -51,12 +51,13 @@ public final class FormBook extends Form {
         final DbTransaction tn = Db.currentTransaction();
 
         final Book o;
-        if (objectId == null) {
+        final String oid = getObjectId();
+        if (oid == null) {
             // create new
             o = (Book) tn.create(Book.class);
-            objectId = Integer.toString(o.id());
+            setObjectId(Integer.toString(o.id()));
         } else {
-            o = (Book) tn.get(Book.class, objectId);
+            o = (Book) tn.get(Book.class, oid);
         }
 
         o.setName(title.str());

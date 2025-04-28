@@ -1,4 +1,5 @@
 // reviewed: 2024-08-05
+//           2025-04-28
 package bob;
 
 import b.a;
@@ -10,10 +11,11 @@ import db.DbTransaction;
 import db.RelRef;
 
 public final class InputRelRef extends a {
+
     private final static long serialVersionUID = 1;
 
-    final Class<? extends DbObject> objCls;
-    final String relationName;
+    private final Class<? extends DbObject> objCls;
+    private final String relationName;
     private final Class<? extends View> selectViewClass; // the view to use when selecting
     private final Class<? extends Form> createFormCls;
     private int selectedId;
@@ -63,6 +65,14 @@ public final class InputRelRef extends a {
         x.nl();
     }
 
+    public void save(final DbObject o) {
+        getRelation().set(o, selectedId);
+    }
+
+    public int getSelectedId() {
+        return selectedId;
+    }
+
     /** Callback "select". */
     public void x_s(final xwriter x, final String param) throws Throwable {
         final View v = selectViewClass.getConstructor().newInstance();
@@ -93,14 +103,6 @@ public final class InputRelRef extends a {
     public void x_r(final xwriter x, final String param) throws Throwable {
         selectedId = 0;
         x.xu(this);
-    }
-
-    public void save(final DbObject o) {
-        getRelation().set(o, selectedId);
-    }
-
-    public int getSelectedId() {
-        return selectedId;
     }
 
 }

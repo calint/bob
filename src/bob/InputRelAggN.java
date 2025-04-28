@@ -1,4 +1,5 @@
 // reviewed: 2024-08-05
+//           2025-04-28
 package bob;
 
 import java.util.List;
@@ -10,13 +11,14 @@ import db.DbObjects;
 import db.RelAggN;
 
 public final class InputRelAggN extends a {
+
     private final static long serialVersionUID = 1;
 
     private final Class<? extends Form> createFormCls;
-    final Class<? extends DbObject> objCls;
-    final int objId;
-    final String relationName;
-    final List<String> idPath;
+    private final Class<? extends DbObject> objCls;
+    private final int objId;
+    private final String relationName;
+    private final List<String> idPath;
 
     public InputRelAggN(final List<String> idPath, final DbObject obj, final RelAggN rel,
             final Class<? extends Form> createFormCls) {

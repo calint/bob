@@ -1,4 +1,5 @@
 // reviewed: 2024-08-05
+//           2025-04-28
 package bob;
 
 import java.io.ByteArrayOutputStream;
@@ -10,6 +11,7 @@ import b.req;
 import b.xwriter;
 
 public class Controller extends a {
+
     private final static long serialVersionUID = 1;
 
     public a s; // serialized size
@@ -101,6 +103,7 @@ public class Controller extends a {
         super.bubble_event(x, from, o);
     }
 
+    /** Update serialized and server info. */
     public void x_s(final xwriter x, final String param) throws Throwable {
         updateSerializedSize();
         updateServerInfo();

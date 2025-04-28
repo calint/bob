@@ -1,4 +1,5 @@
 // reviewed: 2024-08-05
+//           2025-04-28
 package bob;
 
 import java.util.List;
@@ -8,6 +9,7 @@ import b.xwriter;
 import bob.View.SelectReceiverSingle;
 
 public abstract class Form extends Elem {
+
     private final static long serialVersionUID = 1;
 
     public final static int BIT_SAVE_CLOSE = 1;
@@ -28,7 +30,7 @@ public abstract class Form extends Elem {
     public Tabs t;
 
     /** Id that represents the resource this form is rendering */
-    protected String objectId;
+    private String objectId;
 
     /** When select mode this interface will receive the created object id. */
     private SelectReceiverSingle selectReceiverSingle;
@@ -40,17 +42,18 @@ public abstract class Form extends Elem {
     private boolean hasBeenSaved;
 
     /** True if editing new object. */
-    protected final boolean isNewObject;
+    private final boolean isNewObject;
 
     /**
-     * @param objectId        string representing the object.
-     * @param initStr         the initial string for constructor to use. ViewTable
+     * @param objectId        String representing the object.
+     * @param initStr         Initial string for constructor to use. ViewTable
      *                        passes the query field as initial string.
-     * @param enabledFormBits rendering of "save and close", "save" and "close"
+     * @param enabledFormBits Rendering of "save and close", "save" and "close"
      *                        actions.
      */
     public Form(final List<String> idPath, final String objectId, final String initStr, final int enabledFormBits) {
         super(idPath);
+
         this.objectId = objectId;
         isNewObject = objectId == null;
         this.initStr = initStr;
@@ -99,7 +102,11 @@ public abstract class Form extends Elem {
         return objectId;
     }
 
-    /** @return the initializer string supplied at create */
+    public final void setObjectId(String id) {
+        objectId = id;
+    }
+
+    /** @return The initializer string supplied at create. */
     public final String getInitStr() {
         return initStr;
     }
@@ -110,7 +117,9 @@ public abstract class Form extends Elem {
 
     @Override
     public final void to(final xwriter x) throws Throwable {
-        x.script().p("window.onscroll=null;").script_().nl(); // disable infinite scroll event
+        x.script().p("window.onscroll=null;").script_().nl();
+        // note: disables infinite scroll event
+
         if (!ans.isEmpty()) {
             // render actions container
             x.divh(ans, "ac").nl();
@@ -164,12 +173,12 @@ public abstract class Form extends Elem {
         super.bubble_event(x, from, o);
     }
 
-    /** @return list of actions for this form. */
+    /** @return List of actions for this form. */
     protected List<Action> getActionsList() {
         return null;
     }
 
-    /** @return list of views of aggregated objects. */
+    /** @return List of views of aggregated objects. */
     protected List<View> getViewsList() {
         return null;
     }
@@ -203,16 +212,16 @@ public abstract class Form extends Elem {
     protected void save(final xwriter x) throws Throwable {
     }
 
-    /** Callback for "save and close" action. */
-    public final void x_sc(final xwriter x, final String param) throws Throwable {
-        saveAndClose(x);
-    }
-
     /**
      * Set the receiver for form to call at save after object has been created.
      */
     public final void setSelectMode(final SelectReceiverSingle srs) {
         selectReceiverSingle = srs;
+    }
+
+    /** Callback for "save and close" action. */
+    public final void x_sc(final xwriter x, final String param) throws Throwable {
+        saveAndClose(x);
     }
 
 }

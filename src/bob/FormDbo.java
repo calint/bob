@@ -55,9 +55,9 @@ public abstract class FormDbo extends Form {
 
     @Override
     public Form init() {
-        if (objectId == null && isCreateObjectAtInit()) {
+        if (getObjectId() == null && isCreateObjectAtInit()) {
             final DbObject o = createObject();
-            objectId = Integer.toString(o.id());
+            setObjectId(Integer.toString(o.id()));
         }
         return super.init();
     }
@@ -566,10 +566,10 @@ public abstract class FormDbo extends Form {
     @Override
     protected final void save(final xwriter x) throws Throwable {
         final DbObject o;
-        if (objectId == null) {
+        if (getObjectId() == null) {
             // create new
             o = createObject();
-            objectId = Integer.toString(o.id());
+            setObjectId(Integer.toString(o.id()));
         } else {
             o = getObject();
         }
@@ -639,16 +639,12 @@ public abstract class FormDbo extends Form {
         for (final a e : fields.values()) {
             if (e instanceof InputRelRefN) {
                 final InputRelRefN ir = (InputRelRefN) e;
-                if (o.getClass().equals(ir.objCls)) {
-                    ir.save(o);
-                }
+                ir.save(o);
                 continue;
             }
             if (e instanceof InputRelRef) {
-                final InputRelRef r = (InputRelRef) e;
-                if (o.getClass().equals(r.objCls)) {
-                    r.save(o);
-                }
+                final InputRelRef ir = (InputRelRef) e;
+                ir.save(o);
                 continue;
             }
         }

@@ -1,4 +1,5 @@
 // reviewed: 2024-08-05
+//           2025-04-28
 package bob;
 
 import java.util.ArrayList;
@@ -18,8 +19,8 @@ import db.RelRefN;
 public final class InputRelRefN extends a {
     private final static long serialVersionUID = 1;
 
-    final Class<? extends DbObject> objCls;
-    final String relationName;
+    private final Class<? extends DbObject> objCls;
+    private final String relationName;
     private final Class<? extends View> selectViewClass; // the view to use when selecting
     private final Class<? extends Form> createFormCls; // the form used to create object
     private final LinkedHashSet<String> initialSelectedIds; // the initial ids from object
@@ -59,6 +60,10 @@ public final class InputRelRefN extends a {
         }
     }
 
+    public Set<String> getSelectedIds() {
+        return selectedIds;
+    }
+
     @Override
     public void to(final xwriter x) throws Throwable {
         final DbTransaction tn = Db.currentTransaction();
@@ -76,8 +81,7 @@ public final class InputRelRefN extends a {
         }
         final Class<? extends DbObject> toCls = getRelation().getToClass();
         for (final String s : selectedIds) {
-            final int id = Integer.parseInt(s);
-            final DbObject o = tn.get(toCls, id);
+            final DbObject o = tn.get(toCls, s);
             if (o == null) {
                 continue;
             }
@@ -90,39 +94,6 @@ public final class InputRelRefN extends a {
             x.spc().ax(this, "r " + o.id(), "✖").p(itemSeparator);
         }
         x.nl();
-    }
-
-    /** Callback "select". */
-    public void x_s(final xwriter x, final String param) throws Throwable {
-        final View t = selectViewClass.getConstructor().newInstance();
-        t.setSelectMode(selectedIds, new SelectReceiverMulti() {
-            private final static long serialVersionUID = 1;
-
-            public void onSelect(final Set<String> selected) {
-                selectedIds.clear();
-                selectedIds.addAll(selected);
-            }
-        });
-        super.bubble_event(x, this, t); // display the table
-    }
-
-    /** Callback "create". */
-    public void x_c(final xwriter x, final String param) throws Throwable {
-        final Form f = createFormCls.getConstructor().newInstance().init();
-        f.setSelectMode(new SelectReceiverSingle() {
-            private final static long serialVersionUID = 1;
-
-            public void onSelect(final String selected) {
-                selectedIds.add(selected);
-            }
-        });
-        super.bubble_event(x, this, f); // display the form
-    }
-
-    /** Callback "remove". */
-    public void x_r(final xwriter x, final String param) throws Throwable {
-        selectedIds.remove(param);
-        x.xu(this);
     }
 
     public void save(final DbObject o) {
@@ -148,8 +119,37 @@ public final class InputRelRefN extends a {
         }
     }
 
-    public Set<String> getSelectedIds() {
-        return selectedIds;
+    /** Callback "select". */
+    public void x_s(final xwriter x, final String param) throws Throwable {
+        final View v = selectViewClass.getConstructor().newInstance();
+        v.setSelectMode(selectedIds, new SelectReceiverMulti() {
+            private final static long serialVersionUID = 1;
+
+            public void onSelect(final Set<String> selected) {
+                selectedIds.clear();
+                selectedIds.addAll(selected);
+            }
+        });
+        super.bubble_event(x, this, v); // display the table
+    }
+
+    /** Callback "create". */
+    public void x_c(final xwriter x, final String param) throws Throwable {
+        final Form f = createFormCls.getConstructor().newInstance().init();
+        f.setSelectMode(new SelectReceiverSingle() {
+            private final static long serialVersionUID = 1;
+
+            public void onSelect(final String selected) {
+                selectedIds.add(selected);
+            }
+        });
+        super.bubble_event(x, this, f); // display the form
+    }
+
+    /** Callback "remove". */
+    public void x_r(final xwriter x, final String param) throws Throwable {
+        selectedIds.remove(param);
+        x.xu(this);
     }
 
 }

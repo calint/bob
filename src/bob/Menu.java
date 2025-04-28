@@ -1,4 +1,5 @@
 // reviewed: 2024-08-05
+//           2025-04-28
 package bob;
 
 import java.util.ArrayList;
@@ -7,11 +8,13 @@ import b.a;
 import b.xwriter;
 
 public final class Menu extends a {
+
     private final static long serialVersionUID = 1;
 
     private int selectedIndex;
 
     private final static class Item extends a {
+
         private final static long serialVersionUID = 1;
 
         Class<? extends a> cls;

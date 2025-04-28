@@ -1,4 +1,5 @@
 // reviewed: 2024-08-05
+//           2025-04-28
 package bob;
 
 import java.io.Serializable;
@@ -8,6 +9,7 @@ import java.util.Set;
 import b.xwriter;
 
 public abstract class View extends Elem {
+
     private final static long serialVersionUID = 1;
 
     public final static int BIT_CREATE = 1;
@@ -18,7 +20,7 @@ public abstract class View extends Elem {
     /** The actions that are enabled in the view. */
     protected final int enabledViewBits;
 
-    /** True if view renders to select item(s) */
+    /** True if view renders for selection item(s) */
     private boolean isSelectMode;
 
     /** True if view renders for selection of multiple items. */
@@ -35,6 +37,7 @@ public abstract class View extends Elem {
 
     public View(final List<String> idPath, final int enabledBits, final TypeInfo ti) {
         super(idPath);
+
         enabledViewBits = enabledBits;
         typeInfo = ti == null ? new TypeInfo("object", "objects") : ti;
     }
@@ -64,20 +67,18 @@ public abstract class View extends Elem {
     }
 
     /**
-     * Returns the object count per page.
-     *
-     * @return objects per page or 0 if paging is disabled.
+     * @return Objects per page or 0 if paging is disabled.
      */
     protected abstract int getObjectsPerPageCount();
 
     /**
      * If paging is enabled this will be called before getObjectsList().
      * 
-     * @return number of objects in the list
+     * @return Number of objects in the list
      */
     protected abstract int getObjectsCount();
 
-    /** @return objects in this list */
+    /** @return Objects in this list */
     protected abstract List<?> getObjectsList();
 
     /**
@@ -95,10 +96,11 @@ public abstract class View extends Elem {
     protected abstract void onAction(xwriter x, Action act) throws Throwable;
 
     public final static class TypeInfo implements Serializable {
+
         private final static long serialVersionUID = 1;
 
-        protected final String name;
-        protected final String namePlural;
+        private final String name;
+        private final String namePlural;
 
         public TypeInfo(final String name, final String namePlural) {
             this.name = name;

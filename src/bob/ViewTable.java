@@ -1,4 +1,5 @@
 // reviewed: 2024-08-05
+//           2025-04-28
 package bob;
 
 import java.util.LinkedHashSet;
@@ -10,6 +11,7 @@ import b.xwriter;
 import db.Limit;
 
 public abstract class ViewTable extends View {
+
     private final static long serialVersionUID = 1;
 
     public final static int BIT_CLICK_ITEM = 1;
@@ -19,7 +21,7 @@ public abstract class ViewTable extends View {
     public Table t;
     public Paging p;
 
-    /** True to display more search section. */
+    /** True to display "more search" section. */
     private boolean displayMoreSearch;
 
     /** The actions that are enabled in the table. */
@@ -32,10 +34,10 @@ public abstract class ViewTable extends View {
         t.setViewTable(this);
         p.setViewTable(this);
         if ((enabledViewBits & BIT_CREATE) != 0) {
-            ac.add(new Action("create " + typeInfo.name, "create"));
+            ac.add(new Action("create " + typeInfo.getName(), "create"));
         }
         if ((enabledViewBits & BIT_DELETE) != 0) {
-            ac.add(new Action("delete selected " + typeInfo.namePlural, "delete"));
+            ac.add(new Action("delete selected " + typeInfo.getNamePlural(), "delete"));
         }
         final List<Action> actions = getActionsList();
         if (actions != null) {
@@ -50,10 +52,10 @@ public abstract class ViewTable extends View {
         if (isSelectMode()) {
             x.tago("div").attr("class", "attention").tagoe();
             if (isSelectModeMulti()) {
-                x.p("select " + getTypeInfo().namePlural + " then click ");
+                x.p("select " + getTypeInfo().getNamePlural() + " then click ");
                 x.ax(this, "sm", "select");
             } else {
-                x.p("select " + getTypeInfo().name + " by clicking on the link");
+                x.p("select " + getTypeInfo().getName() + " by clicking on the link");
             }
             x.tage("div");
         }
@@ -107,7 +109,7 @@ public abstract class ViewTable extends View {
             }
             if ("delete".equals(code) && (enabledViewBits & BIT_DELETE) != 0) {
                 if (getSelectedIds().isEmpty()) {
-                    x.xalert("No " + getTypeInfo().namePlural + " selected.");
+                    x.xalert("No " + getTypeInfo().getNamePlural() + " selected.");
                     return;
                 }
                 onActionDelete(x);
@@ -275,7 +277,7 @@ public abstract class ViewTable extends View {
     /**
      * Called when a row is clicked.
      *
-     * @param cmd specified at renderLinked(...), null if default.
+     * @param cmd Specified at renderLinked(...), null if default.
      **/
     protected void onRowClick(final xwriter x, final String id, final String cmd) throws Throwable {
     }
@@ -286,12 +288,13 @@ public abstract class ViewTable extends View {
 
         private final static long serialVersionUID = 1;
 
+        public a pg; // current page
+
         private int currentPage; // page starting at 0
         private int objectsPerPage;
         private int objectsCount; // objects in view
         private int npages; // pages
-        private ViewTable vt;
-        public a pg; // current page
+        private ViewTable vt; // reference to parent
 
         public void setViewTable(final ViewTable vt) {
             this.vt = vt;
@@ -316,9 +319,9 @@ public abstract class ViewTable extends View {
             x.p(objectsCount);
             x.p(' ');
             if (objectsCount == 1) {
-                x.p(vt.getTypeInfo().name);
+                x.p(vt.getTypeInfo().getName());
             } else {
-                x.p(vt.getTypeInfo().namePlural);
+                x.p(vt.getTypeInfo().getNamePlural());
             }
             x.p(". ");
             if (npages > 1) {
@@ -360,6 +363,7 @@ public abstract class ViewTable extends View {
             return true;
         }
 
+        /** Callback on pressing "enter" in page field. */
         public void x_p(final xwriter x, final String param) throws Throwable {
             final int n;
             try {
@@ -407,6 +411,7 @@ public abstract class ViewTable extends View {
     public final static class Table extends a {
 
         final static long serialVersionUID = 1;
+
         public Container cbs; // checkboxes
         public a is; // infinite scroll marker
 
