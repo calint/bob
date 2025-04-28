@@ -1,3 +1,6 @@
+//
+// reviewed: 2025-04-28
+//
 package imp;
 
 import java.io.IOException;
@@ -14,19 +17,22 @@ public final class Util {
         final ArrayList<String> ls = new ArrayList<String>();
         boolean inString = false;
         sb.setLength(0);
-        if (reader.read() != '[')
+        if (reader.read() != '[') {
             throw new RuntimeException("expected '[' to open list.");
+        }
         while (true) {
             final int chi = reader.read();
-            if (chi == -1)
+            if (chi == -1) {
                 return ls;
+            }
             final char ch = (char) chi;
             if (inString) {
                 if (ch == stringDelim) { // example ... "the quote ""hello"" ", ...
                     reader.mark(1);
                     final int nxtChr = reader.read(); // check if ""
-                    if (nxtChr == -1)
+                    if (nxtChr == -1) {
                         throw new RuntimeException("unexpected end of stream");
+                    }
                     if ((char) nxtChr == stringDelim) {
                         sb.append(stringDelim);
                         continue;

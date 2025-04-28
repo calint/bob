@@ -1,3 +1,6 @@
+//
+// reviewed: 2025-04-28
+//
 package imp;
 
 import java.io.BufferedReader;
@@ -31,8 +34,9 @@ public final class CsvReader {
         while (true) {
             final int chi = reader.read();
             if (chi == -1) {
-                if (ls.isEmpty())
+                if (ls.isEmpty()) {
                     return null;
+                }
                 throw new RuntimeException("unexpected end of stream");
             }
             final char ch = (char) chi;
@@ -40,8 +44,9 @@ public final class CsvReader {
                 if (ch == stringDelim) { // example ... "the quote ""hello"" ", ...
                     reader.mark(1);
                     final int nxtChr = reader.read(); // check if ""
-                    if (nxtChr == -1)
+                    if (nxtChr == -1) {
                         throw new RuntimeException("unexpected end of stream");
+                    }
                     if ((char) nxtChr == stringDelim) {
                         sb.append(stringDelim);
                         continue;
