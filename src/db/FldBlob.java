@@ -3,7 +3,6 @@ package db;
 
 /** BLOB field. */
 public final class FldBlob extends DbField {
-
     private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
 
     public FldBlob() {
@@ -36,5 +35,4 @@ public final class FldBlob extends DbField {
             sb.append(hex);
         }
     }
-
 }
