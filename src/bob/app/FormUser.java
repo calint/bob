@@ -85,8 +85,8 @@ public final class FormUser extends FormDbo {
         inputTimestamp(x, "Timestamp", o, User.birthTime, Timestamp.valueOf("2023-01-23 20:36:00"));
         inputDateTime(x, "Date time", o, User.dateTime, Timestamp.valueOf("2023-01-24 09:00:00"));
         inputDate(x, "Date", o, User.date, Timestamp.valueOf("2023-01-25 00:00:00"));
-        inputAgg(x, "Profile picture", makeExtendedIdPath(o.id()), o, User.profilePic, FormUserProfilePic.class);
-        inputAggN(x, "Files", makeExtendedIdPath(o.id()), o, User.files, FormUserFile.class);
+        inputAgg(x, "Profile picture", extendIdPath(o.id()), o, User.profilePic, FormUserProfilePic.class);
+        inputAggN(x, "Files", extendIdPath(o.id()), o, User.files, FormUserFile.class);
         inputElem(x, "customElem", customElem);
         endForm(x);
     }

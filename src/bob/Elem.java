@@ -40,7 +40,7 @@ public abstract class Elem extends a implements Titled {
      * @param id new id to add to the copy of the path
      * @return a new id path
      */
-    public final List<String> makeExtendedIdPath(final String id) {
+    public final List<String> extendIdPath(final String id) {
         final ArrayList<String> ls = new ArrayList<String>();
         if (idPath != null) {
             ls.addAll(idPath);
@@ -50,8 +50,8 @@ public abstract class Elem extends a implements Titled {
     }
 
     /** Convenience for an integer id. */
-    public final List<String> makeExtendedIdPath(final int id) {
-        return makeExtendedIdPath(Integer.toString(id));
+    public final List<String> extendIdPath(final int id) {
+        return extendIdPath(Integer.toString(id));
     }
 
 }

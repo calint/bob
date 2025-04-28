@@ -85,7 +85,7 @@ public final class TableUserFiles extends ViewTable {
     @Override
     protected void onRowClick(final xwriter x, final String id, final String cmd) throws Throwable {
         if (cmd == null) {
-            final Form f = new FormUserFile(makeExtendedIdPath(Integer.toString(userId)), id, null).init();
+            final Form f = new FormUserFile(extendIdPath(Integer.toString(userId)), id, null).init();
             super.bubble_event(x, this, f);
             return;
         }
@@ -93,7 +93,7 @@ public final class TableUserFiles extends ViewTable {
 
     @Override
     protected void onActionCreate(final xwriter x, final String initStr) throws Throwable {
-        final Form f = new FormUserFile(makeExtendedIdPath(Integer.toString(userId)), null, initStr).init();
+        final Form f = new FormUserFile(extendIdPath(Integer.toString(userId)), null, initStr).init();
         super.bubble_event(x, this, f);
     }
 
