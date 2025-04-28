@@ -45,6 +45,8 @@ public final class FormUser extends FormDbo {
     protected DbObject createObject() {
         final User o = (User) super.createObject();
         o.setName(getInitStr());
+        // initiate custom element after object has been created at init.
+        customElem.pos_x.set(o.id());
         return o;
     }
 
