@@ -117,7 +117,8 @@ input.query {
 	margin: 1rem 0 1rem 0;
 }
 
-.more-search {
+.ms {
+	/* more search */
 	background-color: var(--attention);
 	padding: 1rem;
 }

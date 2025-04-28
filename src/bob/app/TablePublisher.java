@@ -50,11 +50,6 @@ public final class TablePublisher extends ViewTable {
     }
 
     @Override
-    protected boolean isInifiniteScroll() {
-        return false;
-    }
-
-    @Override
     protected int getObjectsPerPageCount() {
         return 20;
     }

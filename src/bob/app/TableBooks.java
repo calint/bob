@@ -43,8 +43,7 @@ public final class TableBooks extends ViewTable {
     protected void renderMoreSearchSection(final xwriter x) {
         // note: `enter` in field will do callback on `x_q` of parent class triggering
         // search
-        x.p("Id: ").inptxt(id, "nbr", this, "q").p(' ');
-        x.focus(id);
+        x.p("Id: ").inptxt(id, "nbr", this, "q").focus(id).p(' ');
         x.p("Exact book title: ").inptxt(title, "small", this, "q");
     }
 
@@ -55,11 +54,6 @@ public final class TableBooks extends ViewTable {
 
         title.set("");
         x.xu(title);
-    }
-
-    @Override
-    protected boolean isInifiniteScroll() {
-        return false;
     }
 
     @Override

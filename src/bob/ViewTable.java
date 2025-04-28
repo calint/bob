@@ -89,13 +89,13 @@ public abstract class ViewTable extends View {
                 x.focus(q); // note: focus sticks to first call and cannot be overridden
             }
         }
-        final boolean inifiniteScroll = isInifiniteScroll();
-        if (inifiniteScroll) {
+        final boolean infiniteScroll = isInfiniteScroll();
+        if (infiniteScroll) {
             p.upd();
             p.setPage(1);
         }
         x.divh(t).nl();
-        if (p.isEnabled() && !inifiniteScroll) {
+        if (p.isEnabled() && !infiniteScroll) {
             x.divh(p, "pgr").nl();
         }
     }
@@ -132,7 +132,7 @@ public abstract class ViewTable extends View {
 
     private void refresh(final xwriter x) throws Throwable {
         x.xu(t); // update table
-        if (p.isEnabled() && !isInifiniteScroll()) {
+        if (p.isEnabled() && !isInfiniteScroll()) {
             // update paging
             x.xu(p);
         }
@@ -248,7 +248,7 @@ public abstract class ViewTable extends View {
         return 0;
     }
 
-    protected boolean isInifiniteScroll() {
+    protected boolean isInfiniteScroll() {
         return false;
     }
 
@@ -422,7 +422,7 @@ public abstract class ViewTable extends View {
 
         @Override
         public void to(final xwriter x) throws Throwable {
-            final boolean inifiniteScroll = vt.isInifiniteScroll();
+            final boolean inifiniteScroll = vt.isInfiniteScroll();
             if (inifiniteScroll) {
                 vt.p.setPage(1);
             }
@@ -468,7 +468,7 @@ public abstract class ViewTable extends View {
                 vt.renderRowCells(x, o);
                 x.nl();
             }
-            if (vt.isInifiniteScroll()) {
+            if (vt.isInfiniteScroll()) {
                 // insertion point for more rows
                 x.p("<tr id=" + is.id() + ">");
             }

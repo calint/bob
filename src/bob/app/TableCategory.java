@@ -50,11 +50,6 @@ public final class TableCategory extends ViewTable {
     }
 
     @Override
-    protected boolean isInifiniteScroll() {
-        return false;
-    }
-
-    @Override
     protected int getObjectsPerPageCount() {
         return 20;
     }
