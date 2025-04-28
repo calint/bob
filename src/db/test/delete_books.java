@@ -8,6 +8,7 @@ import db.DbTransaction;
 
 // 	delete all books (cascading delete of aggregated DataText)
 public class delete_books extends TestCase {
+
     @Override
     public void doRun() {
         final DbTransaction tn = Db.currentTransaction();

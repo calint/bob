@@ -4,6 +4,7 @@ import db.DbObject;
 import db.FldBlob;
 
 public final class DataBinary extends DbObject {
+
     public static final FldBlob data = new FldBlob();
 
     // ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -

@@ -16,6 +16,7 @@ import db.RelRef;
 import db.RelRefN;
 
 public final class Book extends DbObject implements Titled {
+
     public static final FldStr name = new FldStr(800);
     public static final FldStr authorsStr = new FldStr(3000);
     public static final RelRefN authors = new RelRefN(Author.class);
@@ -187,4 +188,5 @@ public final class Book extends DbObject implements Titled {
     public void removeAllCategories() {
         categories.removeAll(this);
     }
+
 }

@@ -13,6 +13,7 @@ import db.Index;
 import db.RelAgg;
 
 public final class File extends DbObject implements Titled {
+
     public static final FldStr name = new FldStr(250);
     public static final FldLng size_B = new FldLng();
     public static final FldTs created_ts = new FldTs();
@@ -22,11 +23,12 @@ public final class File extends DbObject implements Titled {
     public void loadFile(final String path) throws Throwable {
         final DataBinary d = getData(true);
         final java.io.File f = new java.io.File(path);
-        if (!f.exists())
+        if (!f.exists()) {
             throw new RuntimeException("file '" + path + "' not found");
+        }
         final long len = f.length();
         setSize_B(len);
-        // note does not handle files bigger than 4G
+        // note: does not handle files bigger than 2G
         final byte[] ba = new byte[(int) len];
         final FileInputStream fis = new FileInputStream(f);
         fis.read(ba);
@@ -36,10 +38,11 @@ public final class File extends DbObject implements Titled {
 
     public void writeFile(final String path) throws Throwable {
         final DataBinary d = getData(false);
-        if (d == null)
+        if (d == null) {
             return;
+        }
         final java.io.File f = new java.io.File(path);
-        // note does not handle files bigger than 4G
+        // note: does not handle files bigger than 2G
         final byte[] ba = d.getData();
         final FileOutputStream fos = new FileOutputStream(f);
         fos.write(ba);

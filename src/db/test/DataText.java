@@ -5,6 +5,7 @@ import db.FldClob;
 import db.IndexFt;
 
 public final class DataText extends DbObject {
+
     public static final FldClob meta = new FldClob();
     public static final FldClob data = new FldClob();
 
@@ -27,4 +28,5 @@ public final class DataText extends DbObject {
     public void setData(final String v) {
         data.setClob(this, v);
     }
+
 }
