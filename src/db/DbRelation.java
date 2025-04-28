@@ -1,4 +1,5 @@
 // reviewed: 2024-08-05
+//           2025-04-28
 package db;
 
 import java.sql.DatabaseMetaData;
@@ -8,7 +9,7 @@ import java.sql.Statement;
 public abstract class DbRelation {
 
     /**
-     * the class where the relation was declared. Initiated by db after all classes
+     * The class where the relation was declared. Initiated by db after all classes
      * have been loaded.
      */
     protected Class<? extends DbObject> cls;
@@ -68,7 +69,9 @@ public abstract class DbRelation {
         return toCls;
     }
 
-    /** @return true if cascadeDelete is to be called when an object is deleted. */
+    /**
+     * @return true if cascadeDelete is to be called when source object is deleted.
+     */
     protected boolean cascadeDeleteNeeded() {
         return true;
     }
@@ -81,5 +84,4 @@ public abstract class DbRelation {
     public String toString() {
         return name;
     }
-
 }
