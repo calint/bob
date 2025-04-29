@@ -24,7 +24,7 @@ public class UI extends a {
 
     public UI() throws Throwable {
         r.ram = soc.ram;
-        p.core = soc.core;
+        p.c = soc.core;
         p.init();
         final String src = readResourceAsString("/zen/emu/tests/input-print.zasm");
         s.set(src);
@@ -44,7 +44,7 @@ public class UI extends a {
         x.a("javascript:zen_reset()", "reset");
         x.div_();
 
-        x.br();
+        x.br().br().br();
         x.p("zen-one emulator");
         x.br().br();
 
