@@ -1,3 +1,6 @@
+//
+// reviewed: 2024-04-29
+//
 package zen.emu;
 
 public final class SoC {

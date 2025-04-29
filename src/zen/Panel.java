@@ -1,3 +1,6 @@
+//
+// reviewed: 2025-04-29
+//
 package zen;
 
 import b.a;
@@ -5,6 +8,7 @@ import b.xwriter;
 import zen.emu.Core;
 
 public class Panel extends a {
+
     private final static long serialVersionUID = 1;
 
     public Core c;
