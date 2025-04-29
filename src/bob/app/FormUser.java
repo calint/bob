@@ -66,7 +66,6 @@ public final class FormUser extends FormDbo {
         return ls;
     }
 
-    @Override
     public String title() {
         return Util.toStr(getStr(User.name), "New user");
     }

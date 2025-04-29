@@ -133,7 +133,7 @@ public final class TableAuthor extends ViewTable {
 
     @Override
     protected List<Action> actionsList() {
-        final List<Action> actions = new ArrayList<>();
+        final List<Action> actions = new ArrayList<Action>();
         actions.add(new Action("display selected book ids", "dsbi"));
         return actions;
     }
