@@ -24,8 +24,8 @@ public final class TableUserGames extends ViewTable {
     private final int userId;
 
     public TableUserGames(final int userId) {
-        super(null, BIT_SEARCH | BIT_SELECT | BIT_CREATE | BIT_DELETE, BIT_CLICK_ITEM,
-                new TypeInfo("user game", "user games"));
+        super(new TypeInfo("user game", "user games"), null, BIT_SEARCH | BIT_SELECT | BIT_CREATE | BIT_DELETE,
+                BIT_RENDER_LINKED_ITEM);
         this.userId = userId;
     }
 

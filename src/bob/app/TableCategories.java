@@ -22,8 +22,8 @@ public final class TableCategories extends ViewTable {
     private final static long serialVersionUID = 1;
 
     public TableCategories() {
-        super(null, BIT_SEARCH | BIT_SELECT | BIT_CREATE | BIT_DELETE, BIT_CLICK_ITEM,
-                new TypeInfo("category", "categories"));
+        super(new TypeInfo("category", "categories"), null, BIT_SEARCH | BIT_SELECT | BIT_CREATE | BIT_DELETE,
+                BIT_RENDER_LINKED_ITEM);
     }
 
     public String title() {

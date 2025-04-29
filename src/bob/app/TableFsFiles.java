@@ -39,7 +39,7 @@ public final class TableFsFiles extends ViewTable {
     }
 
     public TableFsFiles(final path pth) {
-        super(null, BIT_SEARCH, BIT_CLICK_ITEM, new TypeInfo("file", "files"));
+        super(new TypeInfo("file", "files"), null, BIT_SEARCH, BIT_RENDER_LINKED_ITEM);
         this.pth = pth;
     }
 

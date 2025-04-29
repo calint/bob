@@ -16,7 +16,8 @@ public abstract class ViewTable extends View {
 
     private final static long serialVersionUID = 1;
 
-    public final static int BIT_CLICK_ITEM = 1;
+    public final static int BIT_RENDER_LINKED_ITEM = 1;
+    public final static int BIT_HAS_MORE_SEARCH_SECTION = 2;
 
     public Container ac; // actions
     public a q; // query field
@@ -27,22 +28,27 @@ public abstract class ViewTable extends View {
     private boolean displayMoreSearch;
 
     /** The actions that are enabled in the table. */
-    protected final int enabledTableBits;
+    private final int tableBits;
 
-    public ViewTable(final List<String> idPath, final int viewBits, final int tableBits, final TypeInfo typeInfo) {
-        super(idPath, viewBits, typeInfo);
+    public ViewTable(final TypeInfo typeInfo, final List<String> idPath, final int viewBits, final int tableBits) {
+        super(typeInfo, idPath, viewBits);
 
-        enabledTableBits = tableBits;
-        t.setViewTable(this);
-        p.setViewTable(this);
+        this.tableBits = tableBits;
+
+        t.init(this);
+        p.init(this);
+
         if ((enabledViewBits & BIT_CREATE) != 0) {
             ac.add(new Action("create " + typeInfo.name(), "create"));
         }
         if ((enabledViewBits & BIT_DELETE) != 0) {
             ac.add(new Action("delete selected " + typeInfo.namePlural(), "delete"));
         }
+
+        // get actions list from implementor
         final List<Action> actions = actionsList();
         if (actions != null) {
+            // add to actions
             for (final Action a : actions) {
                 ac.add(a);
             }
@@ -74,7 +80,7 @@ public abstract class ViewTable extends View {
             x.attr("oninput", "$b(this);ui.debounce(()=>$x('" + eid + " q'),500)");
             x.attr("value", q.str());
             x.tagoe();
-            if (hasMoreSearchSection()) {
+            if ((tableBits & BIT_HAS_MORE_SEARCH_SECTION) != 0) {
                 x.spc();
                 x.ax(this, "more", displayMoreSearch ? "less" : "more");
                 if (displayMoreSearch) {
@@ -158,7 +164,7 @@ public abstract class ViewTable extends View {
         if (isSelectMode() && !isSelectModeMulti()) {
             final String id = idFrom(o);
             x.ax(this, "ss " + id, linkText);
-        } else if ((enabledTableBits & ViewTable.BIT_CLICK_ITEM) != 0) {
+        } else if ((tableBits & ViewTable.BIT_RENDER_LINKED_ITEM) != 0) {
             final String id = idFrom(o);
             x.ax(this, "clk " + id, linkText);
         } else {
@@ -181,7 +187,7 @@ public abstract class ViewTable extends View {
 
     /** Callback for click on row. */
     public final void x_clk(final xwriter x, final String s) throws Throwable {
-        if ((enabledTableBits & ViewTable.BIT_CLICK_ITEM) != 0) {
+        if ((tableBits & ViewTable.BIT_RENDER_LINKED_ITEM) != 0) {
             onRowClick(x, s, null);
         }
     }
@@ -235,10 +241,6 @@ public abstract class ViewTable extends View {
     //
     // override methods below to customize
     //
-
-    protected boolean hasMoreSearchSection() {
-        return false;
-    }
 
     protected void renderMoreSearchSection(final xwriter x) {
     }
@@ -298,7 +300,7 @@ public abstract class ViewTable extends View {
         private int npages; // pages
         private ViewTable vt; // reference to parent
 
-        public void setViewTable(final ViewTable vt) {
+        public void init(final ViewTable vt) {
             this.vt = vt;
             objectsPerPage = vt.objectsPerPageCount();
             pg.set(currentPage + 1);
@@ -425,7 +427,7 @@ public abstract class ViewTable extends View {
         private ViewTable vt; // the parent
         private final LinkedHashSet<String> selectedIds = new LinkedHashSet<String>();
 
-        public void setViewTable(final ViewTable vt) {
+        public void init(final ViewTable vt) {
             this.vt = vt;
         }
 

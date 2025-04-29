@@ -25,8 +25,8 @@ public final class TableUserFiles extends ViewTable {
     private final int userId;
 
     public TableUserFiles(final int userId) {
-        super(null, BIT_SEARCH | BIT_SELECT | BIT_CREATE | BIT_DELETE, BIT_CLICK_ITEM,
-                new TypeInfo("user file", "user files"));
+        super(new TypeInfo("user file", "user files"), null, BIT_SEARCH | BIT_SELECT | BIT_CREATE | BIT_DELETE,
+                BIT_RENDER_LINKED_ITEM);
         this.userId = userId;
     }
 

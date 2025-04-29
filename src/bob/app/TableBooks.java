@@ -30,16 +30,12 @@ public final class TableBooks extends ViewTable {
     public a id;
 
     public TableBooks() {
-        super(null, BIT_SEARCH | BIT_SELECT | BIT_CREATE | BIT_DELETE, BIT_CLICK_ITEM, new TypeInfo("book", "books"));
+        super(new TypeInfo("book", "books"), null, BIT_SEARCH | BIT_SELECT | BIT_CREATE | BIT_DELETE,
+                BIT_RENDER_LINKED_ITEM | BIT_HAS_MORE_SEARCH_SECTION);
     }
 
     public String title() {
         return "Books";
-    }
-
-    @Override
-    protected boolean hasMoreSearchSection() {
-        return true;
     }
 
     @Override

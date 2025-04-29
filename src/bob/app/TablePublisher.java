@@ -28,18 +28,14 @@ public final class TablePublisher extends ViewTable {
     private final int publisherId;
 
     public TablePublisher(final int publisherId) {
-        super(null, BIT_SEARCH | BIT_SELECT | BIT_CREATE | BIT_DELETE, BIT_CLICK_ITEM, new TypeInfo("book", "books"));
+        super(new TypeInfo("book", "books"), null, BIT_SEARCH | BIT_SELECT | BIT_CREATE | BIT_DELETE,
+                BIT_RENDER_LINKED_ITEM | BIT_HAS_MORE_SEARCH_SECTION);
         this.publisherId = publisherId;
     }
 
     public String title() {
         final Publisher o = (Publisher) Db.currentTransaction().get(Publisher.class, publisherId);
         return o.getName();
-    }
-
-    @Override
-    protected boolean hasMoreSearchSection() {
-        return true;
     }
 
     @Override

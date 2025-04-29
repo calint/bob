@@ -31,18 +31,14 @@ public final class TableCategory extends ViewTable {
     private final int categoryId;
 
     public TableCategory(final int categoryId) {
-        super(null, BIT_SEARCH | BIT_SELECT | BIT_CREATE | BIT_DELETE, BIT_CLICK_ITEM, new TypeInfo("book", "books"));
+        super(new TypeInfo("book", "books"), null, BIT_SEARCH | BIT_SELECT | BIT_CREATE | BIT_DELETE,
+                BIT_RENDER_LINKED_ITEM | BIT_HAS_MORE_SEARCH_SECTION);
         this.categoryId = categoryId;
     }
 
     public String title() {
         final Category o = (Category) Db.currentTransaction().get(Category.class, categoryId);
         return o.getName();
-    }
-
-    @Override
-    protected boolean hasMoreSearchSection() {
-        return true;
     }
 
     @Override
