@@ -147,6 +147,13 @@ public abstract class FormDbo extends Form {
         }
     }
 
+    /** Override to do further writing to object. */
+    protected abstract void writeToObject(final xwriter x, final DbObject obj) throws Throwable;
+
+    //
+    //
+    //
+
     protected final void beginForm(final xwriter x) {
         x.table("f").nl();
     }
@@ -679,9 +686,6 @@ public abstract class FormDbo extends Form {
         }
         writeToObject(x, o);
     }
-
-    /** Override to do further writing to object. */
-    protected abstract void writeToObject(final xwriter x, final DbObject obj) throws Throwable;
 
     /** Focuses on field from "save" when for example validation failed. */
     protected final void xfocus(final xwriter x, final DbField f) {
