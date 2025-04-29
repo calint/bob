@@ -30,6 +30,7 @@ public final class TableAuthor extends ViewTable {
 
     private final static long serialVersionUID = 1;
 
+    // fields used in "more" search section
     public a title;
     public a id;
 
