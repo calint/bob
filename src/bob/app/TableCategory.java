@@ -61,12 +61,12 @@ public final class TableCategory extends ViewTable {
     }
 
     @Override
-    protected int getObjectsPerPageCount() {
+    protected int objectsPerPageCount() {
         return 20;
     }
 
     @Override
-    protected int getObjectsCount() {
+    protected int objectsCount() {
         return getResults().getCount();
     }
 

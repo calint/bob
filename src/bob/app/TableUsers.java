@@ -33,12 +33,12 @@ public final class TableUsers extends ViewTable {
     }
 
     @Override
-    protected int getObjectsPerPageCount() {
+    protected int objectsPerPageCount() {
         return 50;
     }
 
     @Override
-    protected int getObjectsCount() {
+    protected int objectsCount() {
         return getResults().getCount();
     }
 

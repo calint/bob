@@ -71,14 +71,14 @@ public abstract class View extends Elem {
     /**
      * @return Objects per page or 0 if paging is disabled.
      */
-    protected abstract int getObjectsPerPageCount();
+    protected abstract int objectsPerPageCount();
 
     /**
      * If paging is enabled this will be called before getObjectsList().
      * 
      * @return Number of objects in the list
      */
-    protected abstract int getObjectsCount();
+    protected abstract int objectsCount();
 
     /** @return Objects in this list */
     protected abstract List<?> getObjectsList();

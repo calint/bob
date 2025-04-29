@@ -142,32 +142,6 @@ public abstract class ViewTable extends View {
         x.xscroll_to_top();
     }
 
-    /** Callback for change in query field. */
-    public final void x_q(final xwriter x, final String s) throws Throwable {
-        if (p.isEnabled()) {
-            p.setPage(1); // reset the page
-            x.xu(p); // update paging
-        }
-        x.xu(t); // update table
-    }
-
-    /** Callback for press enter in query field. */
-    public final void x_new(final xwriter x, final String s) throws Throwable {
-        if ((enabledViewBits & BIT_CREATE) != 0) {
-            onActionCreate(x, q.str());
-        }
-    }
-
-    /** Callback for "more" search. */
-    public final void x_more(final xwriter x, final String s) throws Throwable {
-        displayMoreSearch = !displayMoreSearch;
-        if (!displayMoreSearch) {
-            clearMoreSearchSection(x);
-            p.setPage(1);
-        }
-        x.xu(this);
-    }
-
     @Override
     protected final Set<String> getSelectedIds() {
         return t.getSelectedIds();
@@ -212,6 +186,32 @@ public abstract class ViewTable extends View {
         }
     }
 
+    /** Callback for change in query field. */
+    public final void x_q(final xwriter x, final String s) throws Throwable {
+        if (p.isEnabled()) {
+            p.setPage(1); // reset the page
+            x.xu(p); // update paging
+        }
+        x.xu(t); // update table
+    }
+
+    /** Callback for press enter in query field. */
+    public final void x_new(final xwriter x, final String s) throws Throwable {
+        if ((enabledViewBits & BIT_CREATE) != 0) {
+            onActionCreate(x, q.str());
+        }
+    }
+
+    /** Callback for "more" search. */
+    public final void x_more(final xwriter x, final String s) throws Throwable {
+        displayMoreSearch = !displayMoreSearch;
+        if (!displayMoreSearch) {
+            clearMoreSearchSection(x);
+            p.setPage(1);
+        }
+        x.xu(this);
+    }
+
     /** Callback for click on row. */
     public final void x_c(final xwriter x, final String s) throws Throwable {
         final int i = s.indexOf(' ');
@@ -246,7 +246,7 @@ public abstract class ViewTable extends View {
     }
 
     @Override
-    protected int getObjectsPerPageCount() {
+    protected int objectsPerPageCount() {
         return 0;
     }
 
@@ -255,7 +255,7 @@ public abstract class ViewTable extends View {
     }
 
     @Override
-    protected int getObjectsCount() {
+    protected int objectsCount() {
         return 0;
     }
 
@@ -278,14 +278,12 @@ public abstract class ViewTable extends View {
     }
 
     /**
-     * Called when a row is clicked.
+     * Called when a link in a row is clicked.
      *
      * @param cmd Specified at renderLinked(...), null if default.
      **/
     protected void onRowClick(final xwriter x, final String id, final String cmd) throws Throwable {
     }
-
-    // -----------------------------------------------------------------------------------
 
     public final static class Paging extends a {
 
@@ -301,16 +299,8 @@ public abstract class ViewTable extends View {
 
         public void setViewTable(final ViewTable vt) {
             this.vt = vt;
-            objectsPerPage = vt.getObjectsPerPageCount();
+            objectsPerPage = vt.objectsPerPageCount();
             pg.set(currentPage + 1);
-        }
-
-        public void upd() {
-            objectsCount = vt.getObjectsCount();
-            npages = objectsCount / objectsPerPage;
-            if (objectsCount % objectsPerPage != 0) {
-                npages++;
-            }
         }
 
         @Override
@@ -342,18 +332,12 @@ public abstract class ViewTable extends View {
             }
         }
 
-        public void x_pg(final xwriter x, final String param) throws Throwable {
-            if ("prv".equals(param)) {
-                currentPage--;
-                if (currentPage < 0) {
-                    currentPage = 0;
-                }
+        public void upd() {
+            objectsCount = vt.objectsCount();
+            npages = objectsCount / objectsPerPage;
+            if (objectsCount % objectsPerPage != 0) {
+                npages++;
             }
-            if ("nxt".equals(param)) {
-                nextPage();
-            }
-            pg.set(currentPage + 1);
-            super.bubble_event(x);
         }
 
         public boolean nextPage() {
@@ -368,6 +352,43 @@ public abstract class ViewTable extends View {
 
         public boolean isSinglePage() {
             return npages == 0;
+        }
+
+        /** Sets current page starting at 1. */
+        public void setPage(final int page) {
+            currentPage = page - 1;
+            pg.set(page);
+        }
+
+        public int getLimitStart() {
+            return currentPage * objectsPerPage;
+        }
+
+        public int getLimitCount() {
+            return objectsPerPage;
+        }
+
+        public boolean isEnabled() {
+            return objectsPerPage != 0;
+        }
+
+        public Limit getLimit() {
+            return new Limit(getLimitStart(), getLimitCount());
+        }
+
+        /** Callback when clicking "previous" and "next" in pager. */
+        public void x_pg(final xwriter x, final String param) throws Throwable {
+            if ("prv".equals(param)) {
+                currentPage--;
+                if (currentPage < 0) {
+                    currentPage = 0;
+                }
+            }
+            if ("nxt".equals(param)) {
+                nextPage();
+            }
+            pg.set(currentPage + 1);
+            super.bubble_event(x);
         }
 
         /** Callback on pressing "enter" in page field. */
@@ -389,28 +410,6 @@ public abstract class ViewTable extends View {
                 pg.set(currentPage + 1);
             }
             super.bubble_event(x);
-        }
-
-        public int getLimitStart() {
-            return currentPage * objectsPerPage;
-        }
-
-        public int getLimitCount() {
-            return objectsPerPage;
-        }
-
-        public boolean isEnabled() {
-            return objectsPerPage != 0;
-        }
-
-        /** Sets current page starting at 1. */
-        public void setPage(final int page) {
-            currentPage = page - 1;
-            pg.set(page);
-        }
-
-        public Limit getLimit() {
-            return new Limit(getLimitStart(), getLimitCount());
         }
 
     }
@@ -483,6 +482,10 @@ public abstract class ViewTable extends View {
             }
         }
 
+        protected Set<String> getSelectedIds() {
+            return selectedIds;
+        }
+
         @Override
         protected void bubble_event(final xwriter js, final a from, final Object o) throws Throwable {
             // event bubbled from child
@@ -511,10 +514,6 @@ public abstract class ViewTable extends View {
             final xwriter x = y.xub(is, false, false); // render more rows at the insertion tag
             renderRows(x, vt.getObjectsList());
             y.xube();
-        }
-
-        protected Set<String> getSelectedIds() {
-            return selectedIds;
         }
 
     }
