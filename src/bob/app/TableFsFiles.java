@@ -1,4 +1,7 @@
+//
 // reviewed: 2024-08-05
+//           2025-04-29
+//
 package bob.app;
 
 import java.text.SimpleDateFormat;
@@ -15,6 +18,7 @@ import bob.Form;
 import bob.Util;
 import bob.ViewTable;
 
+/** Navigator of file system. */
 public final class TableFsFiles extends ViewTable {
 
     private final static long serialVersionUID = 1;
@@ -81,6 +85,7 @@ public final class TableFsFiles extends ViewTable {
             }
             final path p = pth.get(pthnm);
             if (p.isdir()) {
+                // put a prefix so that directories are placed before files by sort
                 result.add("./" + pthnm);
             } else {
                 result.add(pthnm);
@@ -99,12 +104,6 @@ public final class TableFsFiles extends ViewTable {
     }
 
     @Override
-    protected void onAction(final xwriter x, final Action act) throws Throwable {
-        final Set<String> selectedIds = getSelectedIds();
-        x.xalert(act.name() + selectedIds);
-    }
-
-    @Override
     protected void renderHeaders(final xwriter x) {
         x.th().th().p("Name").th().p("Last modified").th().p("Size");
     }
@@ -119,9 +118,8 @@ public final class TableFsFiles extends ViewTable {
         } else {
             img = "<img src=" + icon_file_uri + ">";
         }
-        renderLink(x, o, img);
-        x.td();
-        x.p(p.name());
+        renderLink(x, o, img); // link `img` to action `onRowClick`
+        x.td().p(p.name());
         x.td().p(formatDateTime(p.lastmod()));
         x.td("nbr").p(Util.formatSizeInBytes(p.size()));
     }

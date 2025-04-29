@@ -1,4 +1,7 @@
+//
 // reviewed: 2024-08-05
+//           2025-04-29
+//
 package bob.app;
 
 import java.util.ArrayList;
@@ -16,6 +19,7 @@ import db.test.DataText;
 import db.test.Publisher;
 import db.test.User;
 
+/** Example using abstract `DbObject` edit form. */
 public final class FormBook2 extends FormDbo {
 
     private final static long serialVersionUID = 1;
@@ -46,12 +50,13 @@ public final class FormBook2 extends FormDbo {
         inputInt(x, "In stock", o, Book.inStock, 0, "nbr");
         inputBool(x, "Show in store", o, Book.showInStore, true);
         inputFlt(x, "Rating", o, Book.rating, 0, "nbr");
-        // aggregated object
+        // aggregated object field in form field `description`
         inputTextArea(x, "Description", "description", o == null ? "" : o.getData(true).getData(), "large");
         endForm(x);
-        x.ax(this, "test", "test").nl();
+        x.ax(this, "rfsh", "refresh").nl();
     }
 
+    /** Additional processing at `save`. */
     @Override
     protected void writeToObject(final xwriter x, final DbObject obj) throws Throwable {
         final Book o = (Book) obj;
@@ -93,23 +98,25 @@ public final class FormBook2 extends FormDbo {
         d.setData(getStr("description"));
     }
 
+    /** Additional actions for this form. */
     @Override
     protected List<Action> getActionsList() {
         final List<Action> ls = new ArrayList<Action>();
-        ls.add(new Action("alert me", "alert"));
+        ls.add(new Action("alert me", "alert")); // sample action
         return ls;
     }
 
     @Override
     protected void onAction(final xwriter x, final Action act) throws Throwable {
         if ("alert".equals(act.code())) {
+            // handle action `alert`
             x.xalert("alert");
             return;
         }
         super.onAction(x, act);
     }
 
-    public void x_test(final xwriter x, final String param) throws Throwable {
+    public void x_rfsh(final xwriter x, final String param) throws Throwable {
         x.xu(this);
     }
 

@@ -1,4 +1,7 @@
+//
 // reviewed: 2024-08-05
+//           2025-04-29
+//
 package bob.app;
 
 import java.sql.Timestamp;
@@ -21,8 +24,8 @@ public final class FormUser extends FormDbo {
 
     /**
      * Custom element demo. Declare it as a private member because it will be
-     * attached by the framework to a named field at render. Instantiate it here or
-     * in the constructor or init.
+     * attached by the framework to a named field at `render`. Instantiate it here
+     * or in the constructor or `init`.
      */
     private CustomElem customElem = new CustomElem();
 
@@ -35,6 +38,10 @@ public final class FormUser extends FormDbo {
         // customElem = new CustomElem();
     }
 
+    /**
+     * This form has attached views and needs to create the object at form creation.
+     * `cancel` cascade deletes the object.
+     */
     @Override
     protected boolean isCreateObjectAtInit() {
         return true;
@@ -49,6 +56,7 @@ public final class FormUser extends FormDbo {
         return o;
     }
 
+    /** Attached views of aggregated objects. */
     @Override
     protected List<View> getViewsList() {
         final int oid = Integer.parseInt(getObjectId());
@@ -63,6 +71,7 @@ public final class FormUser extends FormDbo {
         return Util.toStr(getStr(User.name), "New user");
     }
 
+    /** Custom number formatter for `float` and `double`. */
     @Override
     protected NumberFormat createNumberFormatFlt() {
         return new DecimalFormat("0.00");
@@ -73,7 +82,7 @@ public final class FormUser extends FormDbo {
         final User o = (User) getObject();
         beginForm(x);
         inputText(x, "Name", o, User.name, getInitStr(), "medium");
-        focus(x, User.name);
+        focus(x, User.name); // note: not `xfocus` at `render`
         inputTextArea(x, "Description", o, User.description, "b", "medium");
         inputText(x, "Password hash", o, User.passhash, "c", "medium");
         inputInt(x, "Integer", o, User.nlogins, 1, "nbr");
@@ -92,11 +101,11 @@ public final class FormUser extends FormDbo {
 
     @Override
     protected void writeToObject(final xwriter x, final DbObject obj) throws Throwable {
-        // FormDbo writes the input fields to the DbObject
+        // `FormDbo` writes the input fields to the `DbObject`
 
         final User o = (User) obj;
         if (Util.isEmpty(o.getName())) {
-            xfocus(x, User.name);
+            xfocus(x, User.name); // note: not `focus` in handling of server event
             throw new Exception("User name may not be empty.");
         }
 
@@ -105,7 +114,7 @@ public final class FormUser extends FormDbo {
         x.xalert("Custom Element: x = " + ce.pos_x.str() + ", y = " + ce.pos_y);
     }
 
-    /** Example of custom input element */
+    /** Example of custom input element. */
     public final static class CustomElem extends a {
 
         private final static long serialVersionUID = 1;
@@ -119,6 +128,7 @@ public final class FormUser extends FormDbo {
         }
 
         public void x_(final xwriter x, final String param) {
+            // empty default event
         }
     }
 

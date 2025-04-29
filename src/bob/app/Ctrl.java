@@ -1,16 +1,19 @@
+//
 // reviewed: 2024-08-05
+//           2025-04-29
+//
 package bob.app;
 
 import bob.Controller;
 
-/** main element in this bapp */
+/** Main element in this `bapp`. */
 public final class Ctrl extends Controller {
 
     private final static long serialVersionUID = 1;
 
     public Ctrl() {
         m.addItem(TableFsFiles.class, "Files browser");
-        bc.add(new TableFsFiles()); // initial view
+        bc.add(new TableFsFiles()); // initial view added to breadcrumbs
         m.addItem(TableBooks.class, "Books");
         m.addItem(TableCategories.class, "Categories");
         m.addItem(TableAuthors.class, "Authors");

@@ -1,4 +1,7 @@
+//
 // reviewed: 2024-08-05
+//           2025-04-29
+//
 package bob.app;
 
 import java.util.List;
@@ -70,7 +73,6 @@ public final class TableBooks extends ViewTable {
     protected List<?> getObjectsList() {
         final DbObjects dbo = getResults();
         if (!p.isEnabled()) {
-            // if no paging
             return dbo.toList();
         }
         return dbo.toList(p.getLimit());

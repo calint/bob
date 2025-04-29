@@ -45,8 +45,13 @@ public final class TablePublisher extends ViewTable {
 
     @Override
     protected void renderMoreSearchSection(final xwriter x) {
-        x.p("Id: ").inptxt(id, "nbr").p(' ');
-        x.p("Exact book title: ").inptxt(title, "small");
+        x.p("Id: ").inptxt(id, "nbr", this, "q").focus(id).spc();
+        x.p("Exact book title: ").inptxt(title, "small", this, "q");
+    }
+
+    @Override
+    protected void clearMoreSearchSection(xwriter x) throws Throwable {
+        // example when fields are not cleared when "more" sections is closed
     }
 
     @Override
@@ -63,14 +68,14 @@ public final class TablePublisher extends ViewTable {
     protected List<?> getObjectsList() {
         final DbObjects dbo = getResults();
         if (!p.isEnabled()) {
-            // if no paging
             return dbo.toList();
         }
         return dbo.toList(p.getLimit());
     }
 
-    protected DbObjects getResults() {
+    private DbObjects getResults() {
         final Query qry = new Query();
+        qry.and(Book.publisher).and(Publisher.class, publisherId);
         if (!q.is_empty()) {
             qry.and(Book.data).and(DataText.ft, q.str());
         }
@@ -80,7 +85,6 @@ public final class TablePublisher extends ViewTable {
         if (!id.is_empty()) {
             qry.and(Book.class, id.toint());
         }
-        qry.and(Book.publisher).and(Publisher.class, publisherId);
         return new DbObjects(null, Book.class, qry, null);
     }
 
@@ -105,12 +109,6 @@ public final class TablePublisher extends ViewTable {
             tn.delete(b);
         }
         sel.clear();
-    }
-
-    @Override
-    protected void onAction(final xwriter x, final Action act) throws Throwable {
-        final Set<String> selectedIds = getSelectedIds();
-        x.xalert(act.name() + selectedIds);
     }
 
     @Override

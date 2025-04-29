@@ -1,4 +1,7 @@
+//
 // reviewed: 2024-08-05
+//           2025-04-29
+//
 package bob.app;
 
 import java.sql.Timestamp;
@@ -39,8 +42,9 @@ public final class FormBook extends Form {
 
     @Override
     protected void render(final xwriter x) throws Throwable {
+        // note: postback to parent `x_sc` which is "save & close"
         x.p("title: ").inptxt(title, this, "sc").nl();
-        x.script().xfocus(title).script_();
+        x.focus(title);
         x.p("authors: ").inptxt(authorsStr, this, "sc").nl();
         x.p("publisher: ").inptxt(publisherStr, this, "sc").nl();
         x.p("publishedDate: ").inptxt(publishedDate, this, "sc").nl();
@@ -53,7 +57,6 @@ public final class FormBook extends Form {
         final Book o;
         final String oid = getObjectId();
         if (oid == null) {
-            // create new
             o = (Book) tn.create(Book.class);
             setObjectId(Integer.toString(o.id()));
         } else {

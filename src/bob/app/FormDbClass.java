@@ -1,4 +1,7 @@
+//
 // reviewed: 2024-08-05
+//           2025-04-29
+//
 package bob.app;
 
 import b.osltgt;
@@ -23,9 +26,10 @@ public final class FormDbClass extends Form {
 
     @Override
     protected void render(final xwriter x) throws Throwable {
+        // open div tag with class attribute and close it.
         x.tago("div").attr("class", "output").tagoe();
         jem.Main.main(javaClassName, new osltgt(x.outputstream()));
-        x.div_();
+        x.div_().nl();
     }
 
 }

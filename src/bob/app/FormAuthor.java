@@ -1,4 +1,7 @@
+//
 // reviewed: 2024-08-05
+//           2025-04-29
+//
 package bob.app;
 
 import b.xwriter;
@@ -34,6 +37,11 @@ public final class FormAuthor extends FormDbo {
 
     @Override
     protected void writeToObject(final xwriter x, final DbObject obj) throws Throwable {
+        final Author o = (Author) obj;
+        if (o.getName().length() == 0) {
+            xfocus(x, Author.name);
+            throw new Exception("Name must be specified.");
+        }
     }
 
 }

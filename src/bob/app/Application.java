@@ -1,4 +1,7 @@
+//
 // reviewed: 2024-08-05
+//           2025-04-29
+//
 package bob.app;
 
 import b.bapp;
@@ -14,9 +17,10 @@ import db.test.Publisher;
 import db.test.TestObj;
 import db.test.User;
 
+/** Configuration of bob sample application. */
 public final class Application implements bapp {
 
-    /** called by b at startup */
+    /** called by `b` at startup */
     public void init() throws Throwable {
         Db.enableLog = false;
         Db.enableLogSql = true;
@@ -45,13 +49,13 @@ public final class Application implements bapp {
         b.b.set_path_to_class("/b/test/t5", b.test.t5.class);
         b.b.set_path_to_class("/b/test/ws", b.test.ws.class);
 
-        b.b.set_path_to_class("/db/test/t1", db.test.t4.class);
+        b.b.set_path_to_class("/db/test/t1", db.test.t1.class);
         b.b.set_path_to_class("/db/test/t2", db.test.t2.class);
         b.b.set_path_to_class("/db/test/t3", db.test.t3.class);
         b.b.set_path_to_class("/db/test/t4", db.test.t4.class);
     }
 
-    /** called by b at shutdown */
+    /** called by `b` at shutdown */
     public void shutdown() throws Throwable {
     }
 

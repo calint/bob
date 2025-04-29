@@ -403,7 +403,8 @@ public final class xwriter {
     }
 
     /**
-     * Renders a 'script' block that focuses on element.
+     * Renders a 'script' block that focuses on element. Intended to be used from
+     * HTML renderer.
      * 
      * @param e element
      * @return this

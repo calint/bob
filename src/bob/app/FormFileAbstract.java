@@ -1,4 +1,7 @@
+//
 // reviewed: 2024-08-05
+//           2025-04-29
+//
 package bob.app;
 
 import java.util.List;
@@ -9,6 +12,10 @@ import bob.Util;
 import db.DbObject;
 import db.test.File;
 
+/**
+ * Abstract form for creating/editing a `db.test.File` object. Implement
+ * `createObject()` to create the file for the relevant object.
+ */
 public abstract class FormFileAbstract extends FormDbo {
 
     private final static long serialVersionUID = 1;
@@ -36,7 +43,7 @@ public abstract class FormFileAbstract extends FormDbo {
 
     @Override
     protected void writeToObject(final xwriter x, final DbObject obj) throws Throwable {
-        // FormDbo writes the input fields to the DbObject
+        // `FormDbo` writes the input fields to the `DbObject`
     }
 
     @Override

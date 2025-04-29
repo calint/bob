@@ -1,4 +1,7 @@
+//
 // reviewed: 2024-08-05
+//           2025-04-29
+//
 package bob.app;
 
 import java.util.List;
@@ -15,6 +18,7 @@ import db.Order;
 import db.Query;
 import db.test.File;
 
+/** Example of basic view as table of objects. */
 public final class TableFiles extends ViewTable {
 
     private final static long serialVersionUID = 1;
@@ -41,13 +45,12 @@ public final class TableFiles extends ViewTable {
     protected List<?> getObjectsList() {
         final DbObjects dbo = getResults();
         if (!p.isEnabled()) {
-            // if no paging
             return dbo.toList();
         }
         return dbo.toList(p.getLimit());
     }
 
-    protected DbObjects getResults() {
+    private DbObjects getResults() {
         final Query qry = new Query();
         if (!q.is_empty()) {
             qry.and(File.name, Query.LIKE, "%" + q.str() + "%");

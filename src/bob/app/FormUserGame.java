@@ -1,4 +1,7 @@
+//
 // reviewed: 2024-08-05
+//           2025-04-29
+//
 package bob.app;
 
 import java.util.List;
@@ -48,8 +51,9 @@ public final class FormUserGame extends FormDbo {
     @Override
     protected DbObject getObject() {
         final String oid = getObjectId();
-        if (oid == null)
+        if (oid == null) {
             return null;
+        }
         final List<String> idPath = getIdPath();
         final DbTransaction tn = Db.currentTransaction();
         final User u = (User) tn.get(User.class, idPath.get(0));
@@ -58,7 +62,7 @@ public final class FormUserGame extends FormDbo {
 
     @Override
     protected void writeToObject(final xwriter x, final DbObject obj) throws Throwable {
-        // FormDbo writes the input fields to the DbObject
+        // `FormDbo` writes the input fields to the `DbObject`
     }
 
 }

@@ -1,4 +1,7 @@
+//
 // reviewed: 2024-08-05
+//           2025-04-29
+//
 package bob.app;
 
 import java.util.List;
@@ -47,7 +50,7 @@ public final class TableCategories extends ViewTable {
         return dbo.toList(p.getLimit());
     }
 
-    protected DbObjects getResults() {
+    private DbObjects getResults() {
         final Query qry = new Query();
         if (!q.is_empty()) {
             qry.and(Category.name, Query.LIKE, "%" + q.str() + "%");

@@ -1,4 +1,7 @@
+//
 // reviewed: 2024-08-05
+//           2025-04-29
+//
 package bob.app;
 
 import b.xwriter;
@@ -34,6 +37,8 @@ public final class FormCategory extends FormDbo {
 
     @Override
     protected void writeToObject(final xwriter x, final DbObject obj) throws Throwable {
+        // no additional processing necessary. `FormDbo` writes form fields to
+        // `DbObject`
     }
 
 }

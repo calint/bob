@@ -1,4 +1,7 @@
+//
 // reviewed: 2024-08-05
+//           2025-04-29
+//
 package bob.app;
 
 import java.util.ArrayList;
@@ -43,13 +46,12 @@ public final class TableUsers extends ViewTable {
     protected List<?> getObjectsList() {
         final DbObjects dbo = getResults();
         if (!p.isEnabled()) {
-            // if no paging
             return dbo.toList();
         }
         return dbo.toList(p.getLimit());
     }
 
-    protected DbObjects getResults() {
+    private DbObjects getResults() {
         final Query qry = new Query();
         if (!q.is_empty()) {
             qry.and(User.ixFt, q.str());
