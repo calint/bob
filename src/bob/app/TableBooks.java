@@ -113,12 +113,6 @@ public final class TableBooks extends ViewTable {
     }
 
     @Override
-    protected void onAction(final xwriter x, final Action act) throws Throwable {
-        final Set<String> selectedIds = selectedIds();
-        x.xalert(act.name() + selectedIds);
-    }
-
-    @Override
     protected void renderHeaders(final xwriter x) {
         x.th().p("Id").th().p("Title").th().p("Author").th().p("Categories");
     }

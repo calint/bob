@@ -74,8 +74,10 @@ public final class TableAuthors extends ViewTable {
         final Author bc = (Author) o;
         x.td();
         renderLink(x, bc, bc.getName());
+        // note: this will callback `onRowClick` with command `null`
         x.td("icn");
         renderLink(x, Integer.toString(bc.id()), "b", "<img src=/bob/link.png>");
+        // note: this will callback `onRowClick` with command `b`
     }
 
     @Override

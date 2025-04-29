@@ -44,7 +44,6 @@ public final class TableCategories extends ViewTable {
     protected List<?> objectsList() {
         final DbObjects dbo = getResults();
         if (!p.isEnabled()) {
-            // if no paging
             return dbo.toList();
         }
         return dbo.toList(p.getLimit());

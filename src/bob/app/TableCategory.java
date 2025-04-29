@@ -44,6 +44,7 @@ public final class TableCategory extends ViewTable {
     @Override
     protected void renderMoreSearchSection(final xwriter x) {
         x.p("Id: ").inptxt(id, "nbr", this, "q").focus(id).p(' ');
+        // note: pressing `enter` in field will call `x_q` in `ViewTable`
         x.p("Exact book title: ").inptxt(title, "small", this, "q");
     }
 

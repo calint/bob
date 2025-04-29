@@ -78,7 +78,6 @@ public final class TableAuthor extends ViewTable {
     protected List<?> objectsList() {
         final DbObjects dbo = getResults();
         if (!p.isEnabled()) {
-            // if no paging
             return dbo.toList();
         }
         return dbo.toList(p.getLimit());
@@ -126,6 +125,7 @@ public final class TableAuthor extends ViewTable {
         sel.clear();
     }
 
+    /** Sample action. */
     @Override
     protected List<Action> actionsList() {
         final List<Action> actions = new ArrayList<Action>();
@@ -133,11 +133,15 @@ public final class TableAuthor extends ViewTable {
         return actions;
     }
 
-    /** Dummy response to any custom action. */
+    /** Sample action handler. */
     @Override
     protected void onAction(final xwriter x, final Action act) throws Throwable {
-        final Set<String> selectedIds = selectedIds();
-        x.xalert("action code: " + act.code() + " selected ids: " + selectedIds);
+        if ("dsbi".equals(act.code())) {
+            final Set<String> selectedIds = selectedIds();
+            x.xalert("action code: " + act.code() + " selected ids: " + selectedIds);
+            return;
+        }
+        super.onAction(x, act);
     }
 
     /** Table headers. */
