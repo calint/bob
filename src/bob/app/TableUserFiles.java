@@ -45,7 +45,7 @@ public final class TableUserFiles extends ViewTable {
     }
 
     @Override
-    protected List<?> getObjectsList() {
+    protected List<?> objectsList() {
         final DbObjects dbo = getResults();
         if (!p.isEnabled()) {
             return dbo.toList();
@@ -64,7 +64,7 @@ public final class TableUserFiles extends ViewTable {
     }
 
     @Override
-    protected String getIdFrom(final Object obj) {
+    protected String idFrom(final Object obj) {
         final File o = (File) obj;
         return Integer.toString(o.id());
     }
@@ -101,7 +101,7 @@ public final class TableUserFiles extends ViewTable {
 
     @Override
     protected void onActionDelete(final xwriter x) throws Throwable {
-        final Set<String> sel = getSelectedIds();
+        final Set<String> sel = selectedIds();
         final DbTransaction tn = Db.currentTransaction();
         final User u = (User) tn.get(User.class, userId);
         for (final String id : sel) {

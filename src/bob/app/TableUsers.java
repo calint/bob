@@ -43,7 +43,7 @@ public final class TableUsers extends ViewTable {
     }
 
     @Override
-    protected List<?> getObjectsList() {
+    protected List<?> objectsList() {
         final DbObjects dbo = getResults();
         if (!p.isEnabled()) {
             return dbo.toList();
@@ -60,7 +60,7 @@ public final class TableUsers extends ViewTable {
     }
 
     @Override
-    protected String getIdFrom(final Object obj) {
+    protected String idFrom(final Object obj) {
         final User o = (User) obj;
         return Integer.toString(o.id());
     }
@@ -110,7 +110,7 @@ public final class TableUsers extends ViewTable {
 
     @Override
     protected void onActionDelete(final xwriter x) throws Throwable {
-        final Set<String> sel = getSelectedIds();
+        final Set<String> sel = selectedIds();
         final DbTransaction tn = Db.currentTransaction();
         for (final String id : sel) {
             final User o = (User) tn.get(User.class, id);
@@ -120,7 +120,7 @@ public final class TableUsers extends ViewTable {
     }
 
     @Override
-    protected List<Action> getActionsList() {
+    protected List<Action> actionsList() {
         final ArrayList<Action> ls = new ArrayList<Action>();
         ls.add(new Action("delete all", "da"));
         return ls;

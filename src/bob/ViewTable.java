@@ -41,7 +41,7 @@ public abstract class ViewTable extends View {
         if ((enabledViewBits & BIT_DELETE) != 0) {
             ac.add(new Action("delete selected " + typeInfo.getNamePlural(), "delete"));
         }
-        final List<Action> actions = getActionsList();
+        final List<Action> actions = actionsList();
         if (actions != null) {
             for (final Action a : actions) {
                 ac.add(a);
@@ -54,10 +54,10 @@ public abstract class ViewTable extends View {
         if (isSelectMode()) {
             x.tago("div").attr("class", "attention").tagoe();
             if (isSelectModeMulti()) {
-                x.p("select " + getTypeInfo().getNamePlural() + " then click ");
+                x.p("select " + typeInfo().getNamePlural() + " then click ");
                 x.ax(this, "sm", "select");
             } else {
-                x.p("select " + getTypeInfo().getName() + " by clicking on the link");
+                x.p("select " + typeInfo().getName() + " by clicking on the link");
             }
             x.div_().nl();
         }
@@ -111,8 +111,8 @@ public abstract class ViewTable extends View {
                 return;
             }
             if ("delete".equals(code) && (enabledViewBits & BIT_DELETE) != 0) {
-                if (getSelectedIds().isEmpty()) {
-                    x.xalert("No " + getTypeInfo().getNamePlural() + " selected.");
+                if (selectedIds().isEmpty()) {
+                    x.xalert("No " + typeInfo().getNamePlural() + " selected.");
                     return;
                 }
                 onActionDelete(x);
@@ -143,7 +143,7 @@ public abstract class ViewTable extends View {
     }
 
     @Override
-    protected final Set<String> getSelectedIds() {
+    protected final Set<String> selectedIds() {
         return t.getSelectedIds();
     }
 
@@ -156,10 +156,10 @@ public abstract class ViewTable extends View {
      */
     protected final void renderLink(final xwriter x, final Object o, final String linkText) {
         if (isSelectMode() && !isSelectModeMulti()) {
-            final String id = getIdFrom(o);
+            final String id = idFrom(o);
             x.ax(this, "ss " + id, linkText);
         } else if ((enabledTableBits & ViewTable.BIT_CLICK_ITEM) != 0) {
-            final String id = getIdFrom(o);
+            final String id = idFrom(o);
             x.ax(this, "clk " + id, linkText);
         } else {
             x.p(linkText);
@@ -222,7 +222,7 @@ public abstract class ViewTable extends View {
 
     /** Callback for click on "select" when in select multi mode. */
     public final void x_sm(final xwriter x, final String s) throws Throwable {
-        getSelectReceiverMulti().onSelect(getSelectedIds());
+        getSelectReceiverMulti().onSelect(selectedIds());
         super.bubble_event(x, this, "close");
     }
 
@@ -232,8 +232,9 @@ public abstract class ViewTable extends View {
         super.bubble_event(x, this, "close");
     }
 
-    // -----------------------------------------------------------------------------------
-    // override these to specialize table
+    //
+    // override methods below to customize
+    //
 
     protected boolean hasMoreSearchSection() {
         return false;
@@ -312,9 +313,9 @@ public abstract class ViewTable extends View {
             x.p(objectsCount);
             x.p(' ');
             if (objectsCount == 1) {
-                x.p(vt.getTypeInfo().getName());
+                x.p(vt.typeInfo().getName());
             } else {
-                x.p(vt.getTypeInfo().getNamePlural());
+                x.p(vt.typeInfo().getNamePlural());
             }
             x.p(". ");
             if (npages > 1) {
@@ -434,7 +435,7 @@ public abstract class ViewTable extends View {
             if (inifiniteScroll) {
                 vt.p.setPage(1);
             }
-            final List<?> ls = vt.getObjectsList();
+            final List<?> ls = vt.objectsList();
             if (!ls.isEmpty()) {
                 x.table("t").nl();
                 x.tr();
@@ -464,7 +465,7 @@ public abstract class ViewTable extends View {
                 x.tr();
                 if ((vt.enabledViewBits & View.BIT_SELECT) != 0 || vt.isSelectModeMulti()) {
                     // render checkbox
-                    final String id = vt.getIdFrom(o);
+                    final String id = vt.idFrom(o);
                     x.td();
                     final Checkbox cb = new Checkbox(id, selectedIds.contains(id));
                     // add to container where the element will get a unique name in the context.
@@ -512,7 +513,7 @@ public abstract class ViewTable extends View {
             }
 
             final xwriter x = y.xub(is, false, false); // render more rows at the insertion tag
-            renderRows(x, vt.getObjectsList());
+            renderRows(x, vt.objectsList());
             y.xube();
         }
 

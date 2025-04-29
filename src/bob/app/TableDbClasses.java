@@ -26,7 +26,7 @@ public final class TableDbClasses extends ViewTable {
     }
 
     @Override
-    protected List<?> getObjectsList() {
+    protected List<?> objectsList() {
         final List<DbClass> result = new ArrayList<DbClass>();
         final String query = q.str();
         for (final DbClass c : Db.getDbClasses()) {
@@ -44,7 +44,7 @@ public final class TableDbClasses extends ViewTable {
     }
 
     @Override
-    protected String getIdFrom(final Object o) {
+    protected String idFrom(final Object o) {
         return ((DbClass) o).getJavaClass().getName();
     }
 

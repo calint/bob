@@ -44,58 +44,9 @@ public abstract class View extends Elem {
         typeInfo = ti == null ? new TypeInfo("object", "objects") : ti;
     }
 
-    public final TypeInfo getTypeInfo() {
+    public final TypeInfo typeInfo() {
         return typeInfo;
     }
-
-    public final boolean isSelectMode() {
-        return isSelectMode;
-    }
-
-    public final boolean isSelectModeMulti() {
-        return isSelectModeMulti;
-    }
-
-    public final SelectReceiverMulti getSelectReceiverMulti() {
-        return selectReceiverMulti;
-    }
-
-    public final SelectReceiverSingle getSelectReceiverSingle() {
-        return selectReceiverSingle;
-    }
-
-    protected List<Action> getActionsList() {
-        return null;
-    }
-
-    /**
-     * @return Objects per page or 0 if paging is disabled.
-     */
-    protected abstract int objectsPerPageCount();
-
-    /**
-     * If paging is enabled this will be called before getObjectsList().
-     * 
-     * @return Number of objects in the list
-     */
-    protected abstract int objectsCount();
-
-    /** @return Objects in this list */
-    protected abstract List<?> getObjectsList();
-
-    /**
-     * Called to get the id from an object. Used to link views to other views or
-     * forms.
-     */
-    protected abstract String getIdFrom(Object obj);
-
-    protected abstract Set<String> getSelectedIds();
-
-    protected abstract void onActionCreate(xwriter x, String initStr) throws Throwable;
-
-    protected abstract void onActionDelete(xwriter x) throws Throwable;
-
-    protected abstract void onAction(xwriter x, Action act) throws Throwable;
 
     public final static class TypeInfo implements Serializable {
 
@@ -126,11 +77,19 @@ public abstract class View extends Elem {
         void onSelect(String selectedId);
     }
 
+    public final boolean isSelectMode() {
+        return isSelectMode;
+    }
+
+    public final boolean isSelectModeMulti() {
+        return isSelectModeMulti;
+    }
+
     public final void setSelectMode(final Set<String> selectedIds, final SelectReceiverMulti sr) {
         isSelectMode = true;
         isSelectModeMulti = true;
         selectReceiverMulti = sr;
-        final Set<String> selection = getSelectedIds();
+        final Set<String> selection = selectedIds();
         selection.clear();
         selection.addAll(selectedIds);
     }
@@ -140,5 +99,50 @@ public abstract class View extends Elem {
         isSelectModeMulti = false;
         selectReceiverSingle = sr;
     }
+
+    public final SelectReceiverMulti getSelectReceiverMulti() {
+        return selectReceiverMulti;
+    }
+
+    public final SelectReceiverSingle getSelectReceiverSingle() {
+        return selectReceiverSingle;
+    }
+
+    //
+    // customize methods below for customizations
+    //
+
+    protected List<Action> actionsList() {
+        return null;
+    }
+
+    /**
+     * @return Objects per page or 0 if paging is disabled.
+     */
+    protected abstract int objectsPerPageCount();
+
+    /**
+     * If paging is enabled this will be called before getObjectsList().
+     * 
+     * @return Number of objects in the list
+     */
+    protected abstract int objectsCount();
+
+    /** @return Objects in this list */
+    protected abstract List<?> objectsList();
+
+    /**
+     * Called to get the id from an object. Used to link views to other views or
+     * forms.
+     */
+    protected abstract String idFrom(Object obj);
+
+    protected abstract Set<String> selectedIds();
+
+    protected abstract void onActionCreate(xwriter x, String initStr) throws Throwable;
+
+    protected abstract void onActionDelete(xwriter x) throws Throwable;
+
+    protected abstract void onAction(xwriter x, Action act) throws Throwable;
 
 }

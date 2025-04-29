@@ -52,7 +52,7 @@ public final class TableFsFiles extends ViewTable {
     }
 
     @Override
-    protected List<?> getObjectsList() {
+    protected List<?> objectsList() {
         final List<String> result = getResultList();
         Collections.sort(result);
         if (p.isEnabled()) {
@@ -93,7 +93,7 @@ public final class TableFsFiles extends ViewTable {
     }
 
     @Override
-    protected String getIdFrom(final Object o) {
+    protected String idFrom(final Object o) {
         String dispnm = o.toString();
         if (dispnm.startsWith("./")) {
             dispnm = dispnm.substring("./".length());

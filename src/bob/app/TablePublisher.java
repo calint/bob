@@ -64,7 +64,7 @@ public final class TablePublisher extends ViewTable {
     }
 
     @Override
-    protected List<?> getObjectsList() {
+    protected List<?> objectsList() {
         final DbObjects dbo = getResults();
         if (!p.isEnabled()) {
             return dbo.toList();
@@ -88,7 +88,7 @@ public final class TablePublisher extends ViewTable {
     }
 
     @Override
-    protected String getIdFrom(final Object o) {
+    protected String idFrom(final Object o) {
         final Book b = (Book) o;
         return Integer.toString(b.id());
     }
@@ -101,7 +101,7 @@ public final class TablePublisher extends ViewTable {
 
     @Override
     protected void onActionDelete(final xwriter x) throws Throwable {
-        final Set<String> sel = getSelectedIds();
+        final Set<String> sel = selectedIds();
         final DbTransaction tn = Db.currentTransaction();
         for (final String id : sel) {
             final Book b = (Book) tn.get(Book.class, Integer.parseInt(id));
