@@ -78,7 +78,7 @@ public abstract class ViewTable extends View {
                 x.spc();
                 x.ax(this, "more", displayMoreSearch ? "less" : "more");
                 if (displayMoreSearch) {
-                    x.divo(this, "ms", null).tagoe();
+                    x.tago("div").attr("class", "ms").tagoe();
                     renderMoreSearchSection(x);
                     x.div_();
                     x.spc();

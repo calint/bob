@@ -34,7 +34,7 @@ public class Controller extends a {
 
     @Override
     public void to(final xwriter x) throws Throwable {
-        x.divh(m, "menu").nl();
+        x.divh(m, "m").nl();
         x.divh(bc, "bc").nl();
         final a active_elem = bc.getActive();
         active_elem.replace(ae);
