@@ -100,7 +100,7 @@ public final class FormBook2 extends FormDbo {
 
     /** Additional actions for this form. */
     @Override
-    protected List<Action> getActionsList() {
+    protected List<Action> actionsList() {
         final List<Action> ls = new ArrayList<Action>();
         ls.add(new Action("alert me", "alert")); // sample action
         return ls;

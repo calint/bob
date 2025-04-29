@@ -41,7 +41,7 @@ public abstract class Form extends Elem {
     private final String initStr;
 
     /** True if the form has been saved. */
-    private boolean hasBeenSaved;
+    private boolean isSaved;
 
     /** True if editing new object. */
     private final boolean isNewObject;
@@ -83,13 +83,13 @@ public abstract class Form extends Elem {
      * @return this form.
      */
     public Form init() {
-        final List<Action> actions = getActionsList();
+        final List<Action> actions = actionsList();
         if (actions != null) {
             for (final Action a : actions) {
                 ans.add(a);
             }
         }
-        final List<View> views = getViewsList();
+        final List<View> views = viewsList();
         if (views != null) {
             for (final View v : views) {
                 t.add(new Tabs.Tab(v.getTitle(), v));
@@ -98,7 +98,14 @@ public abstract class Form extends Elem {
         return this;
     }
 
-    protected final boolean isNewObject() {
+    /**
+     * Set the receiver for form to call at save after object has been created.
+     */
+    public final void setSelectMode(final SelectReceiverSingle srs) {
+        selectReceiverSingle = srs;
+    }
+
+    public final boolean isNewObject() {
         return isNewObject;
     }
 
@@ -115,8 +122,8 @@ public abstract class Form extends Elem {
         return initStr;
     }
 
-    protected final boolean hasBeenSaved() {
-        return hasBeenSaved;
+    public final boolean isSaved() {
+        return isSaved;
     }
 
     @Override
@@ -139,6 +146,29 @@ public abstract class Form extends Elem {
         }
     }
 
+    protected final void saveAndClose(final xwriter x) throws Throwable {
+        try {
+            save(x);
+            isSaved = true;
+        } catch (final Throwable t) {
+            x.xalert(t.getMessage());
+            return;
+        }
+        if (selectReceiverSingle != null) {
+            selectReceiverSingle.onSelect(objectId);
+        }
+        super.bubble_event(x, this, "close");
+    }
+
+    /** Callback for "save and close" action. */
+    public final void x_sc(final xwriter x, final String param) throws Throwable {
+        saveAndClose(x);
+    }
+
+    //
+    // override methods below for customizations
+    //
+
     @Override
     protected void bubble_event(final xwriter x, final a from, final Object o) throws Throwable {
         if (from instanceof Action) {
@@ -150,7 +180,7 @@ public abstract class Form extends Elem {
             if ("s".equals(code) && (enabledFormBits & BIT_SAVE) != 0) {
                 try {
                     save(x);
-                    hasBeenSaved = true;
+                    isSaved = true;
                 } catch (final Throwable t) {
                     x.xalert(t.getMessage());
                     return;
@@ -177,14 +207,25 @@ public abstract class Form extends Elem {
         super.bubble_event(x, from, o);
     }
 
-    /** @return List of actions for this form. */
-    protected List<Action> getActionsList() {
+    /** Called to render form content. */
+    protected abstract void render(xwriter x) throws Throwable;
+
+    /**
+     * Called to get actions list for for context.
+     * 
+     * @return List of actions for this form.
+     */
+    protected List<Action> actionsList() {
         return null;
     }
 
     /** @return List of views of aggregated objects. */
-    protected List<View> getViewsList() {
+    protected List<View> viewsList() {
         return null;
+    }
+
+    /** Called when object is saved. */
+    protected void save(final xwriter x) throws Throwable {
     }
 
     /** Called when "cancel" action has been activated. */
@@ -193,39 +234,6 @@ public abstract class Form extends Elem {
 
     /** Called when action is activated. */
     protected void onAction(final xwriter x, final Action act) throws Throwable {
-    }
-
-    protected final void saveAndClose(final xwriter x) throws Throwable {
-        try {
-            save(x);
-            hasBeenSaved = true;
-        } catch (final Throwable t) {
-            x.xalert(t.getMessage());
-            return;
-        }
-        if (selectReceiverSingle != null) {
-            selectReceiverSingle.onSelect(objectId);
-        }
-        super.bubble_event(x, this, "close");
-    }
-
-    /** Called to render form content. */
-    protected abstract void render(xwriter x) throws Throwable;
-
-    /** Called when object is saved. */
-    protected void save(final xwriter x) throws Throwable {
-    }
-
-    /**
-     * Set the receiver for form to call at save after object has been created.
-     */
-    public final void setSelectMode(final SelectReceiverSingle srs) {
-        selectReceiverSingle = srs;
-    }
-
-    /** Callback for "save and close" action. */
-    public final void x_sc(final xwriter x, final String param) throws Throwable {
-        saveAndClose(x);
     }
 
 }

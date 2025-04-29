@@ -142,7 +142,7 @@ public abstract class FormDbo extends Form {
     /** Override to implement custom cancel actions. */
     @Override
     protected void cancel(final xwriter x) throws Throwable {
-        if (isNewObject() && !hasBeenSaved()) {
+        if (isNewObject() && !isSaved()) {
             Db.currentTransaction().delete(getObject());
         }
     }
