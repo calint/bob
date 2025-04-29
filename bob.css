@@ -111,7 +111,7 @@ input.query {
 	padding: .5rem;
 }
 
-.attention {
+.atn {
 	/* select object(s) description */
 	background-color: var(--attention);
 	padding: 1rem;

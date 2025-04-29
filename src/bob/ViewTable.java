@@ -52,7 +52,7 @@ public abstract class ViewTable extends View {
     @Override
     public final void to(final xwriter x) throws Throwable {
         if (isSelectMode()) {
-            x.tago("div").attr("class", "attention").tagoe();
+            x.tago("div").attr("class", "atn").tagoe();
             if (isSelectModeMulti()) {
                 x.p("select " + typeInfo().namePlural() + " then click ");
                 x.ax(this, "sm", "select");
