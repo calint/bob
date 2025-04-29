@@ -35,7 +35,7 @@ public final class TableCategory extends ViewTable {
         this.categoryId = categoryId;
     }
 
-    public String getTitle() {
+    public String title() {
         final Category o = (Category) Db.currentTransaction().get(Category.class, categoryId);
         return o.getName();
     }

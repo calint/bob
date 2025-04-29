@@ -49,7 +49,7 @@ public final class File extends DbObject implements Titled {
         fos.close();
     }
 
-    public String getTitle() {
+    public String title() {
         return getName();
     }
 

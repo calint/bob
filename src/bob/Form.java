@@ -92,7 +92,7 @@ public abstract class Form extends Elem {
         final List<View> views = viewsList();
         if (views != null) {
             for (final View v : views) {
-                t.add(new Tabs.Tab(v.getTitle(), v));
+                t.add(new Tabs.Tab(v.title(), v));
             }
         }
         return this;

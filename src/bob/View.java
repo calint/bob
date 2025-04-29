@@ -60,11 +60,11 @@ public abstract class View extends Elem {
             this.namePlural = namePlural;
         }
 
-        public String getName() {
+        public String name() {
             return name;
         }
 
-        public String getNamePlural() {
+        public String namePlural() {
             return namePlural;
         }
     }

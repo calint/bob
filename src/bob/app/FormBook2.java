@@ -32,7 +32,7 @@ public final class FormBook2 extends FormDbo {
         super(null, Book.class, objectId, initStr);
     }
 
-    public String getTitle() {
+    public String title() {
         final Book o = (Book) getObject();
         return o == null ? "New book" : o.getName();
     }

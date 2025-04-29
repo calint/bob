@@ -51,7 +51,7 @@ public final class InputRelAggN extends a {
             final String txt;
             if (ro instanceof Titled) {
                 final Titled t = (Titled) ro;
-                txt = t.getTitle();
+                txt = t.title();
             } else {
                 txt = Integer.toString(ro.id());
             }

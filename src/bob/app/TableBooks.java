@@ -33,7 +33,7 @@ public final class TableBooks extends ViewTable {
         super(null, BIT_SEARCH | BIT_SELECT | BIT_CREATE | BIT_DELETE, BIT_CLICK_ITEM, new TypeInfo("book", "books"));
     }
 
-    public String getTitle() {
+    public String title() {
         return "Books";
     }
 

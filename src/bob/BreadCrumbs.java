@@ -28,7 +28,7 @@ public final class BreadCrumbs extends a {
             x.p(" &raquo; ");
             final String nm;
             if (e instanceof Titled) { // ? oop?
-                nm = ((Titled) e).getTitle();
+                nm = ((Titled) e).title();
             } else { // ? oop
                 nm = getClass().getName();
             }

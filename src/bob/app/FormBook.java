@@ -36,7 +36,7 @@ public final class FormBook extends Form {
         publishedDate.set(o == null ? "" : Util.toStr(o.getPublishedDate(), ""));
     }
 
-    public String getTitle() {
+    public String title() {
         return Util.toStr(title.str(), "New book");
     }
 

@@ -10,7 +10,7 @@ public final class Publisher extends DbObject implements Titled {
     public final static FldStr name = new FldStr(250);
     public final static Index ixName = new Index(name);
 
-    public String getTitle() {
+    public String title() {
         return getName();
     }
 

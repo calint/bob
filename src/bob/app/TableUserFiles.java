@@ -30,7 +30,7 @@ public final class TableUserFiles extends ViewTable {
         this.userId = userId;
     }
 
-    public String getTitle() {
+    public String title() {
         return "User files";
     }
 

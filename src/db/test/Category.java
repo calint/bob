@@ -10,7 +10,7 @@ public final class Category extends DbObject implements Titled {
     // public final static Index ixName=new Index(name); // ? key length is max 250
     // in mysam tables
 
-    public String getTitle() {
+    public String title() {
         return getName();
     }
 

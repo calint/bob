@@ -36,10 +36,10 @@ public abstract class ViewTable extends View {
         t.setViewTable(this);
         p.setViewTable(this);
         if ((enabledViewBits & BIT_CREATE) != 0) {
-            ac.add(new Action("create " + typeInfo.getName(), "create"));
+            ac.add(new Action("create " + typeInfo.name(), "create"));
         }
         if ((enabledViewBits & BIT_DELETE) != 0) {
-            ac.add(new Action("delete selected " + typeInfo.getNamePlural(), "delete"));
+            ac.add(new Action("delete selected " + typeInfo.namePlural(), "delete"));
         }
         final List<Action> actions = actionsList();
         if (actions != null) {
@@ -54,10 +54,10 @@ public abstract class ViewTable extends View {
         if (isSelectMode()) {
             x.tago("div").attr("class", "attention").tagoe();
             if (isSelectModeMulti()) {
-                x.p("select " + typeInfo().getNamePlural() + " then click ");
+                x.p("select " + typeInfo().namePlural() + " then click ");
                 x.ax(this, "sm", "select");
             } else {
-                x.p("select " + typeInfo().getName() + " by clicking on the link");
+                x.p("select " + typeInfo().name() + " by clicking on the link");
             }
             x.div_().nl();
         }
@@ -112,7 +112,7 @@ public abstract class ViewTable extends View {
             }
             if ("delete".equals(code) && (enabledViewBits & BIT_DELETE) != 0) {
                 if (selectedIds().isEmpty()) {
-                    x.xalert("No " + typeInfo().getNamePlural() + " selected.");
+                    x.xalert("No " + typeInfo().namePlural() + " selected.");
                     return;
                 }
                 onActionDelete(x);
@@ -313,9 +313,9 @@ public abstract class ViewTable extends View {
             x.p(objectsCount);
             x.p(' ');
             if (objectsCount == 1) {
-                x.p(vt.typeInfo().getName());
+                x.p(vt.typeInfo().name());
             } else {
-                x.p(vt.typeInfo().getNamePlural());
+                x.p(vt.typeInfo().namePlural());
             }
             x.p(". ");
             if (npages > 1) {

@@ -21,7 +21,7 @@ public final class FormPublisher extends FormDbo {
         super(null, Publisher.class, objectId, initStr);
     }
 
-    public String getTitle() {
+    public String title() {
         final Publisher o = (Publisher) getObject();
         return o == null ? "New publisher" : o.getName();
     }

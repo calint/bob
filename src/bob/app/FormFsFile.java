@@ -21,7 +21,7 @@ public final class FormFsFile extends Form {
         this.pth = pth;
     }
 
-    public String getTitle() {
+    public String title() {
         return pth.name();
     }
 

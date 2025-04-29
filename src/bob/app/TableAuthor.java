@@ -40,7 +40,7 @@ public final class TableAuthor extends ViewTable {
         this.authorId = authorId;
     }
 
-    public String getTitle() {
+    public String title() {
         final Author o = (Author) Db.currentTransaction().get(Author.class, authorId);
         return o.getName();
     }

@@ -89,7 +89,7 @@ public final class InputRelRefN extends a {
             }
             if (o instanceof Titled) {
                 final Titled t = (Titled) o;
-                x.p(t.getTitle());
+                x.p(t.title());
             } else {
                 x.p(o.id());
             }

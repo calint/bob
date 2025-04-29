@@ -43,7 +43,7 @@ public final class TableFsFiles extends ViewTable {
         this.pth = pth;
     }
 
-    public String getTitle() {
+    public String title() {
         final String nm = pth.name();
         if (".".equals(nm)) {
             return pth.fullpath();

@@ -26,7 +26,7 @@ public final class TableAuthors extends ViewTable {
                 new TypeInfo("author", "authors"));
     }
 
-    public String getTitle() {
+    public String title() {
         return "Authors";
     }
 

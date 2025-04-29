@@ -21,7 +21,7 @@ public final class FormAuthor extends FormDbo {
         super(null, Author.class, objectId, initStr);
     }
 
-    public String getTitle() {
+    public String title() {
         final Author o = (Author) getObject();
         return o == null ? "New author" : o.getName();
     }

@@ -32,7 +32,7 @@ public final class TablePublisher extends ViewTable {
         this.publisherId = publisherId;
     }
 
-    public String getTitle() {
+    public String title() {
         final Publisher o = (Publisher) Db.currentTransaction().get(Publisher.class, publisherId);
         return o.getName();
     }

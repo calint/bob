@@ -47,7 +47,7 @@ public final class InputRelRef extends a {
             if (ro != null) { // ? dangling reference
                 if (ro instanceof Titled) {
                     final Titled t = (Titled) ro;
-                    x.p(t.getTitle());
+                    x.p(t.title());
                 } else {
                     x.p(ro.id());
                 }

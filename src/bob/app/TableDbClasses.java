@@ -21,7 +21,7 @@ public final class TableDbClasses extends ViewTable {
         super(null, BIT_SEARCH, BIT_CLICK_ITEM, new TypeInfo("class", "classes"));
     }
 
-    public String getTitle() {
+    public String title() {
         return "Classes";
     }
 

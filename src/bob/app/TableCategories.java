@@ -26,7 +26,7 @@ public final class TableCategories extends ViewTable {
                 new TypeInfo("category", "categories"));
     }
 
-    public String getTitle() {
+    public String title() {
         return "Categories";
     }
 

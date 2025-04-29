@@ -33,7 +33,7 @@ public final class Book extends DbObject implements Titled {
     // optimizes Book join with DataText when doing full text query
     public final static IndexRel ixRelData = new IndexRel(data);
 
-    public String getTitle() {
+    public String title() {
         return getName();
     }
 

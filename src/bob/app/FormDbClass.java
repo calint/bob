@@ -20,7 +20,7 @@ public final class FormDbClass extends Form {
         javaClassName = dbclass.getJavaClass().getName();
     }
 
-    public String getTitle() {
+    public String title() {
         return javaClassName;
     }
 

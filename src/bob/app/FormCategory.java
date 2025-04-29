@@ -21,7 +21,7 @@ public final class FormCategory extends FormDbo {
         super(null, Category.class, objectId, initStr);
     }
 
-    public String getTitle() {
+    public String title() {
         final Category o = (Category) getObject();
         return o == null ? "New category" : o.getName();
     }

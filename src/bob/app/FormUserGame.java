@@ -27,7 +27,7 @@ public final class FormUserGame extends FormDbo {
         super(idPath, Game.class, objectId, initStr);
     }
 
-    public String getTitle() {
+    public String title() {
         return Util.toStr(getStr(Game.name), "New game");
     }
 

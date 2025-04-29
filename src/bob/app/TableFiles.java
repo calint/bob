@@ -27,7 +27,7 @@ public final class TableFiles extends ViewTable {
         super(null, BIT_SEARCH | BIT_CREATE | BIT_DELETE | BIT_SELECT, BIT_CLICK_ITEM, new TypeInfo("file", "files"));
     }
 
-    public String getTitle() {
+    public String title() {
         return "Files";
     }
 

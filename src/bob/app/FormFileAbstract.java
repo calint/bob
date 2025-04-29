@@ -28,7 +28,7 @@ public abstract class FormFileAbstract extends FormDbo {
         super(idPath, File.class, objectId, initStr);
     }
 
-    public String getTitle() {
+    public String title() {
         return Util.toStr(getStr(File.name), "New file");
     }
 

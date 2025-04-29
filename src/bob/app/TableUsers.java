@@ -28,7 +28,7 @@ public final class TableUsers extends ViewTable {
         super(null, BIT_SEARCH | BIT_CREATE | BIT_DELETE | BIT_SELECT, BIT_CLICK_ITEM, new TypeInfo("user", "users"));
     }
 
-    public String getTitle() {
+    public String title() {
         return "Users";
     }
 
