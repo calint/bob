@@ -35,7 +35,7 @@ public final class InputRelAggN extends a {
         this.createFormCls = createFormCls;
     }
 
-    private RelAggN getRelation() {
+    public RelAggN relation() {
         try {
             return (RelAggN) objCls.getField(relationName).get(null);
         } catch (final Throwable t) {
@@ -46,7 +46,7 @@ public final class InputRelAggN extends a {
     @Override
     public void to(final xwriter x) throws Throwable {
         x.ax(this, "c", "create").br();
-        final DbObjects dbos = getRelation().get(objId);
+        final DbObjects dbos = relation().get(objId);
         for (final DbObject ro : dbos.toList()) {
             final String txt;
             if (ro instanceof Titled) {
@@ -70,7 +70,7 @@ public final class InputRelAggN extends a {
 
     /** Callback "delete". */
     public void x_d(final xwriter x, final String param) throws Throwable {
-        getRelation().delete(objId, Integer.parseInt(param)); // ? idPath
+        relation().delete(objId, Integer.parseInt(param)); // ? idPath
         x.xu(this);
     }
 

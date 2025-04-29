@@ -31,7 +31,7 @@ public final class InputRelRef extends a {
         this.createFormCls = createFormCls;
     }
 
-    private RelRef getRelation() {
+    public RelRef relation() {
         try {
             return (RelRef) objCls.getField(relationName).get(null);
         } catch (final Throwable t) {
@@ -43,7 +43,7 @@ public final class InputRelRef extends a {
     public void to(final xwriter x) throws Throwable {
         final DbTransaction tn = Db.currentTransaction();
         if (selectedId != 0) {
-            final DbObject ro = tn.get(getRelation().getToClass(), selectedId);
+            final DbObject ro = tn.get(relation().getToClass(), selectedId);
             if (ro != null) { // ? dangling reference
                 if (ro instanceof Titled) {
                     final Titled t = (Titled) ro;
@@ -67,10 +67,10 @@ public final class InputRelRef extends a {
     }
 
     public void save(final DbObject o) {
-        getRelation().set(o, selectedId);
+        relation().set(o, selectedId);
     }
 
-    public int getSelectedId() {
+    public int selectedId() {
         return selectedId;
     }
 

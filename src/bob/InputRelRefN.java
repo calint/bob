@@ -54,7 +54,7 @@ public final class InputRelRefN extends a {
         selectedIds.addAll(defaultValues);
     }
 
-    private RelRefN getRelation() {
+    public final RelRefN relation() {
         try {
             return (RelRefN) objCls.getField(relationName).get(null);
         } catch (final Throwable t) {
@@ -62,7 +62,7 @@ public final class InputRelRefN extends a {
         }
     }
 
-    public Set<String> getSelectedIds() {
+    public Set<String> selectedIds() {
         return selectedIds;
     }
 
@@ -81,7 +81,7 @@ public final class InputRelRefN extends a {
         if (selectViewClass != null || createFormCls != null) {
             x.br();
         }
-        final Class<? extends DbObject> toCls = getRelation().getToClass();
+        final Class<? extends DbObject> toCls = relation().getToClass();
         for (final String s : selectedIds) {
             final DbObject o = tn.get(toCls, s);
             if (o == null) {
@@ -103,7 +103,7 @@ public final class InputRelRefN extends a {
                 continue;
             }
             final int id = Integer.parseInt(s);
-            getRelation().add(o, id);
+            relation().add(o, id);
             initialSelectedIds.add(s);
         }
         final ArrayList<String> removedIds = new ArrayList<String>();
@@ -112,7 +112,7 @@ public final class InputRelRefN extends a {
                 continue;
             }
             final int id = Integer.parseInt(s);
-            getRelation().remove(o, id);
+            relation().remove(o, id);
             removedIds.add(s);
         }
         for (final String id : removedIds) {

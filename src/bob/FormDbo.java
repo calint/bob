@@ -272,7 +272,7 @@ public abstract class FormDbo extends Form {
 
     protected final int getSelectedId(final String field) {
         final InputRelRef e = (InputRelRef) fields.get(field);
-        return e.getSelectedId();
+        return e.selectedId();
     }
 
     protected final Set<String> getSelectedIds(final RelRefN rel) {
@@ -281,7 +281,7 @@ public abstract class FormDbo extends Form {
 
     protected final Set<String> getSelectedIds(final String field) {
         final InputRelRefN e = (InputRelRefN) fields.get(field);
-        return e.getSelectedIds();
+        return e.selectedIds();
     }
 
     protected final String getStr(final FldStr f) {
@@ -674,13 +674,19 @@ public abstract class FormDbo extends Form {
         // relations
         for (final a e : fields.values()) {
             if (e instanceof InputRelRefN) {
-                final InputRelRefN ir = (InputRelRefN) e;
-                ir.save(o);
+                final InputRelRefN r = (InputRelRefN) e;
+                if (!o.getClass().equals(r.relation().getFromClass())) {
+                    continue;
+                }
+                r.save(o);
                 continue;
             }
             if (e instanceof InputRelRef) {
-                final InputRelRef ir = (InputRelRef) e;
-                ir.save(o);
+                final InputRelRef r = (InputRelRef) e;
+                if (!o.getClass().equals(r.relation().getFromClass())) {
+                    continue;
+                }
+                r.save(o);
                 continue;
             }
         }

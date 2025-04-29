@@ -36,7 +36,7 @@ public final class InputRelAgg extends a {
         this.createFormCls = createFormCls;
     }
 
-    private RelAgg getRelation() {
+    public RelAgg relation() {
         try {
             return (RelAgg) objCls.getField(relationName).get(null);
         } catch (final Throwable t) {
@@ -48,7 +48,7 @@ public final class InputRelAgg extends a {
     public void to(final xwriter x) throws Throwable {
         final DbTransaction tn = Db.currentTransaction();
         final DbObject o = tn.get(objCls, objId);
-        final DbObject ro = getRelation().get(o, false);
+        final DbObject ro = relation().get(o, false);
         if (ro != null) {
             final String txt;
             if (ro instanceof Titled) {
@@ -75,7 +75,7 @@ public final class InputRelAgg extends a {
     public void x_d(final xwriter x, final String param) throws Throwable {
         final DbTransaction tn = Db.currentTransaction();
         final DbObject o = tn.get(objCls, objId); // ? idPath
-        getRelation().delete(o);
+        relation().delete(o);
         x.xu(this);
     }
 
@@ -83,7 +83,7 @@ public final class InputRelAgg extends a {
     public void x_e(final xwriter x, final String param) throws Throwable {
         final DbTransaction tn = Db.currentTransaction();
         final DbObject o = tn.get(objCls, objId); // ? idPath
-        final DbObject ro = getRelation().get(o, false);
+        final DbObject ro = relation().get(o, false);
         final Form f = createFormCls.getConstructor(List.class, String.class, String.class)
                 .newInstance(idPath, Integer.toString(ro.id()), null).init();
         super.bubble_event(x, this, f); // display the form
