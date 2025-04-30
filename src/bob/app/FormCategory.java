@@ -22,15 +22,15 @@ public final class FormCategory extends FormDbo {
     }
 
     public String title() {
-        final Category o = (Category) getObject();
+        final Category o = (Category) object();
         return o == null ? "New category" : o.getName();
     }
 
     @Override
     protected void render(final xwriter x) throws Throwable {
-        final Category o = (Category) getObject();
+        final Category o = (Category) object();
         beginForm(x);
-        inputText(x, "Name", o, Category.name, getInitStr(), "medium");
+        inputText(x, "Name", o, Category.name, initString(), "medium");
         focus(x, Category.name);
         endForm(x);
     }

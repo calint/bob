@@ -28,7 +28,7 @@ public final class FormFile extends FormFileAbstract {
     }
 
     @Override
-    protected DbObject getObject() {
+    protected DbObject object() {
         final String oid = objectId();
         if (oid == null) {
             return null;

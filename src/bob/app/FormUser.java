@@ -50,7 +50,7 @@ public final class FormUser extends FormDbo {
     @Override
     protected DbObject createObject() {
         final User o = (User) super.createObject();
-        o.setName(getInitStr());
+        o.setName(initString());
         // initiate custom element after object has been created at init.
         customElem.pos_x.set(o.id());
         return o;
@@ -66,7 +66,7 @@ public final class FormUser extends FormDbo {
     }
 
     public String title() {
-        return Util.toStr(getStr(User.name), "New user");
+        return Util.toStr(str(User.name), "New user");
     }
 
     /** Custom number formatter for `float` and `double`. */
@@ -77,9 +77,9 @@ public final class FormUser extends FormDbo {
 
     @Override
     protected void render(final xwriter x) throws Throwable {
-        final User o = (User) getObject();
+        final User o = (User) object();
         beginForm(x);
-        inputText(x, "Name", o, User.name, getInitStr(), "medium");
+        inputText(x, "Name", o, User.name, initString(), "medium");
         focus(x, User.name); // note: not `xfocus` at `render`
         inputTextArea(x, "Description", o, User.description, "b", "medium");
         inputText(x, "Password hash", o, User.passhash, "c", "medium");

@@ -22,15 +22,15 @@ public final class FormPublisher extends FormDbo {
     }
 
     public String title() {
-        final Publisher o = (Publisher) getObject();
+        final Publisher o = (Publisher) object();
         return o == null ? "New publisher" : o.getName();
     }
 
     @Override
     protected void render(final xwriter x) throws Throwable {
-        final Publisher o = (Publisher) getObject();
+        final Publisher o = (Publisher) object();
         beginForm(x);
-        inputText(x, "Name", o, Publisher.name, getInitStr(), "medium");
+        inputText(x, "Name", o, Publisher.name, initString(), "medium");
         focus(x, Publisher.name);
         endForm(x);
     }

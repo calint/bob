@@ -22,15 +22,15 @@ public final class FormAuthor extends FormDbo {
     }
 
     public String title() {
-        final Author o = (Author) getObject();
+        final Author o = (Author) object();
         return o == null ? "New author" : o.getName();
     }
 
     @Override
     protected void render(final xwriter x) throws Throwable {
-        final Author o = (Author) getObject();
+        final Author o = (Author) object();
         beginForm(x);
-        inputText(x, "Name", o, Author.name, getInitStr(), "medium");
+        inputText(x, "Name", o, Author.name, initString(), "medium");
         focus(x, Author.name);
         endForm(x);
     }

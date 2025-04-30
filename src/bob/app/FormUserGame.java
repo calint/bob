@@ -26,14 +26,14 @@ public final class FormUserGame extends FormDbo {
     }
 
     public String title() {
-        return Util.toStr(getStr(Game.name), "New game");
+        return Util.toStr(str(Game.name), "New game");
     }
 
     @Override
     protected void render(final xwriter x) throws Throwable {
-        final Game o = (Game) getObject();
+        final Game o = (Game) object();
         beginForm(x);
-        inputText(x, "Name", o, Game.name, getInitStr(), "medium");
+        inputText(x, "Name", o, Game.name, initString(), "medium");
         focus(x, Game.name);
         endForm(x);
     }
@@ -46,7 +46,7 @@ public final class FormUserGame extends FormDbo {
     }
 
     @Override
-    protected DbObject getObject() {
+    protected DbObject object() {
         final String oid = objectId();
         if (oid == null) {
             return null;

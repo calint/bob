@@ -13,9 +13,6 @@ public abstract class Elem extends a implements Titled {
 
     private final static long serialVersionUID = 1;
 
-    /**
-     * Path to parent of element in context or null if none.
-     */
     private final IdPath idPath;
 
     /**
@@ -50,14 +47,12 @@ public abstract class Elem extends a implements Titled {
         return extendIdPath(Integer.toString(id));
     }
 
-    /** A path of ids up to but not including current element. */
     public final static class IdPath implements Serializable {
 
         private final static long serialVersionUID = 1;
 
         private ArrayList<String> ids;
 
-        /** @return Parent object idi or null if none. */
         public String current() {
             if (ids == null) {
                 return null;
@@ -76,7 +71,7 @@ public abstract class Elem extends a implements Titled {
             return ids.get(ix);
         }
 
-        void add(final IdPath pth) {
+        protected void add(final IdPath pth) {
             if (ids == null) {
                 ids = new ArrayList<String>();
             }

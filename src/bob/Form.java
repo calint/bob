@@ -22,11 +22,11 @@ public abstract class Form extends Elem {
     /** Actions enabled on this form. */
     protected final int enabledFormBits;
 
-    /** Actions container. */
-    public Container ans;
+    /** Object actions container. */
+    public Container oa;
 
-    /** "save and close", "save", "close" actions container */
-    public Container scc;
+    /** Form "save and close", "save", "close" actions container */
+    public Container fa;
 
     /** The attached views of aggregated objects */
     public Tabs t;
@@ -47,8 +47,8 @@ public abstract class Form extends Elem {
     private final boolean isNewObject;
 
     /**
-     * @param idPath          Path to parent of element in context or null if none.
-     * @param objectId        String representing the object.
+     * @param idPath          Path to parent of object in context or null if none.
+     * @param objectId        String representing the object id.
      * @param initStr         Initial string for constructor to use. ViewTable
      *                        passes the query field as initial string.
      * @param enabledFormBits Rendering of "save and close", "save", "close" and
@@ -62,16 +62,16 @@ public abstract class Form extends Elem {
         this.initStr = initStr;
         this.enabledFormBits = enabledFormBits;
         if ((enabledFormBits & BIT_SAVE_CLOSE) != 0) {
-            scc.add(new Action("save and close", "sc"));
+            fa.add(new Action("save and close", "sc"));
         }
         if ((enabledFormBits & BIT_SAVE) != 0) {
-            scc.add(new Action("save", "s"));
+            fa.add(new Action("save", "s"));
         }
         if ((enabledFormBits & BIT_CLOSE) != 0) {
-            scc.add(new Action("close", "c"));
+            fa.add(new Action("close", "c"));
         }
         if ((enabledFormBits & BIT_CANCEL) != 0) {
-            scc.add(new Action("cancel", "cl"));
+            fa.add(new Action("cancel", "cl"));
         }
     }
 
@@ -87,7 +87,7 @@ public abstract class Form extends Elem {
         final List<Action> actions = actionsList();
         if (actions != null) {
             for (final Action a : actions) {
-                ans.add(a);
+                oa.add(a);
             }
         }
         final List<View> views = viewsList();
@@ -114,12 +114,12 @@ public abstract class Form extends Elem {
         return objectId;
     }
 
-    public final void setObjectId(String id) {
+    public final void objectId(String id) {
         objectId = id;
     }
 
     /** @return The initializer string supplied at create. */
-    public final String getInitStr() {
+    public final String initString() {
         return initStr;
     }
 
@@ -132,14 +132,14 @@ public abstract class Form extends Elem {
         x.script().p("window.onscroll=null;").script_().nl();
         // note: disables infinite scroll event
 
-        if (!ans.isEmpty()) {
+        if (!oa.isEmpty()) {
             // render actions container
-            x.divh(ans, "ac").nl();
+            x.divh(oa, "ac").nl();
         }
         render(x);
-        if (!scc.isEmpty()) {
+        if (!fa.isEmpty()) {
             // render form actions
-            x.divh(scc, "sc").nl();
+            x.divh(fa, "sc").nl();
         }
         if (!t.isEmpty()) {
             // render tabs

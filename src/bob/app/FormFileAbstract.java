@@ -27,14 +27,14 @@ public abstract class FormFileAbstract extends FormDbo {
     }
 
     public String title() {
-        return Util.toStr(getStr(File.name), "New file");
+        return Util.toStr(str(File.name), "New file");
     }
 
     @Override
     protected void render(final xwriter x) throws Throwable {
-        final File o = (File) getObject();
+        final File o = (File) object();
         beginForm(x);
-        inputText(x, "Name", o, File.name, getInitStr(), "medium");
+        inputText(x, "Name", o, File.name, initString(), "medium");
         focus(x, File.name);
         endForm(x);
     }
@@ -48,6 +48,6 @@ public abstract class FormFileAbstract extends FormDbo {
     protected abstract DbObject createObject();
 
     @Override
-    protected abstract DbObject getObject();
+    protected abstract DbObject object();
 
 }

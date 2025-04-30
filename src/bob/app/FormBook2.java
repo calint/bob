@@ -33,15 +33,15 @@ public final class FormBook2 extends FormDbo {
     }
 
     public String title() {
-        final Book o = (Book) getObject();
+        final Book o = (Book) object();
         return o == null ? "New book" : o.getName();
     }
 
     @Override
     protected void render(final xwriter x) throws Throwable {
-        final Book o = (Book) getObject();
+        final Book o = (Book) object();
         beginForm(x);
-        inputText(x, "Title", o, Book.name, getInitStr(), "long");
+        inputText(x, "Title", o, Book.name, initString(), "long");
         focus(x, Book.name);
         inputRefN(x, "Authors", o, Book.authors, null, TableAuthors.class, FormAuthor.class);
         inputRef(x, "Publisher", o, Book.publisher, 0, TablePublishers.class, FormPublisher.class);
@@ -95,7 +95,7 @@ public final class FormBook2 extends FormDbo {
         // aggregated object
         final DataText d = o.getData(true);
         d.setMeta(o.getName() + " " + o.getAuthorsStr() + " " + o.getPublisherStr() + " " + o.getCategoriesStr());
-        d.setData(getStr("description"));
+        d.setData(str("description"));
     }
 
     /** Additional actions for this form. */

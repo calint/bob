@@ -58,7 +58,7 @@ public final class FormBook extends Form {
         final String oid = objectId();
         if (oid == null) {
             o = (Book) tn.create(Book.class);
-            setObjectId(Integer.toString(o.id()));
+            objectId(Integer.toString(o.id()));
         } else {
             o = (Book) tn.get(Book.class, oid);
         }

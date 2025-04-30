@@ -61,7 +61,7 @@ public abstract class FormDbo extends Form {
     public Form init() {
         if (objectId() == null && isCreateObjectAtInit()) {
             final DbObject o = createObject();
-            setObjectId(Integer.toString(o.id()));
+            objectId(Integer.toString(o.id()));
         }
         return super.init();
     }
@@ -134,7 +134,7 @@ public abstract class FormDbo extends Form {
      * 
      * @return DbObject
      */
-    protected DbObject getObject() {
+    protected DbObject object() {
         return Db.currentTransaction().get(objCls, objectId());
     }
 
@@ -142,7 +142,7 @@ public abstract class FormDbo extends Form {
     @Override
     protected void cancel(final xwriter x) throws Throwable {
         if (isNewObject() && !isSaved()) {
-            Db.currentTransaction().delete(getObject());
+            Db.currentTransaction().delete(object());
         }
     }
 
@@ -206,7 +206,7 @@ public abstract class FormDbo extends Form {
     }
 
     protected final boolean getBool(final String field) {
-        return "1".equals(getStr(field));
+        return "1".equals(str(field));
     }
 
     protected final Timestamp getDate(final FldDateTime field) throws ParseException {
@@ -214,7 +214,7 @@ public abstract class FormDbo extends Form {
     }
 
     protected final Timestamp getDate(final String field) throws ParseException {
-        return parseDate(getStr(field));
+        return parseDate(str(field));
     }
 
     protected final Timestamp getDateTime(final FldDateTime field) throws ParseException {
@@ -222,7 +222,7 @@ public abstract class FormDbo extends Form {
     }
 
     protected final Timestamp getDateTime(final String field) throws ParseException {
-        return parseDateTime(getStr(field));
+        return parseDateTime(str(field));
     }
 
     protected final double getDbl(final FldDbl field) throws ParseException {
@@ -230,7 +230,7 @@ public abstract class FormDbo extends Form {
     }
 
     protected final double getDbl(final String field) throws ParseException {
-        return parseDbl(getStr(field));
+        return parseDbl(str(field));
     }
 
     protected final a getElem(final DbField f) {
@@ -246,7 +246,7 @@ public abstract class FormDbo extends Form {
     }
 
     protected final float getFlt(final String field) throws ParseException {
-        return parseFlt(getStr(field));
+        return parseFlt(str(field));
     }
 
     protected final int getInt(final FldInt field) throws ParseException {
@@ -254,7 +254,7 @@ public abstract class FormDbo extends Form {
     }
 
     protected final int getInt(final String field) throws ParseException {
-        return parseInt(getStr(field));
+        return parseInt(str(field));
     }
 
     protected final long getLng(final FldLng field) throws ParseException {
@@ -262,7 +262,7 @@ public abstract class FormDbo extends Form {
     }
 
     protected final long getLng(final String field) throws ParseException {
-        return parseLng(getStr(field));
+        return parseLng(str(field));
     }
 
     protected final int getSelectedId(final RelRef rel) {
@@ -275,19 +275,19 @@ public abstract class FormDbo extends Form {
     }
 
     protected final Set<String> getSelectedIds(final RelRefN rel) {
-        return getSelectedIds(rel.getName());
+        return selectedIds(rel.getName());
     }
 
-    protected final Set<String> getSelectedIds(final String field) {
+    protected final Set<String> selectedIds(final String field) {
         final InputRelRefN e = (InputRelRefN) fields.get(field);
         return e.selectedIds();
     }
 
-    protected final String getStr(final FldStr f) {
-        return getStr(f.getName());
+    protected final String str(final FldStr f) {
+        return str(f.getName());
     }
 
-    protected final String getStr(final String field) {
+    protected final String str(final String field) {
         final a e = fields.get(field);
         return e.str().trim();
     }
@@ -604,9 +604,9 @@ public abstract class FormDbo extends Form {
         final DbObject o;
         if (objectId() == null) {
             o = createObject();
-            setObjectId(Integer.toString(o.id()));
+            objectId(Integer.toString(o.id()));
         } else {
-            o = getObject();
+            o = object();
         }
         // ? ugly instanceof chain. separation of concerns ok.
         // elements that know how to write to objects
@@ -616,7 +616,7 @@ public abstract class FormDbo extends Form {
                 continue;
             }
             if (dbf instanceof FldStr) {
-                dbf.setObj(o, getStr(fieldName));
+                dbf.setObj(o, str(fieldName));
                 continue;
             }
             if (dbf instanceof FldBool) {
