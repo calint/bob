@@ -22,8 +22,7 @@ public final class InputRelAgg extends a {
     private final Elem.IdPath idPath;
 
     /**
-     * @param idPath        Current element in `idPath` must be the id of `obj` to
-     *                      initiate `createFormCls`.
+     * @param idPath        Id path to parent of `obj`.
      * @param obj           The object.
      * @param rel           The relation from objects.
      * @param createFormCls The form used to create the relation object.
