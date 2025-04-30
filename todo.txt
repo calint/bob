@@ -1,3 +1,5 @@
+[ ] FormDbo: id path including id, relation, ... for navigation to current object programmatically
+
 step 1
 [ ] db: stream blob and clob to outputstream and from inputstream
 [ ] bob: Form: upload file
