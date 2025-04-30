@@ -47,11 +47,12 @@ public abstract class Form extends Elem {
     private final boolean isNewObject;
 
     /**
+     * @param idPath          Path to parent of element in context or null if none.
      * @param objectId        String representing the object.
      * @param initStr         Initial string for constructor to use. ViewTable
      *                        passes the query field as initial string.
-     * @param enabledFormBits Rendering of "save and close", "save" and "close"
-     *                        actions.
+     * @param enabledFormBits Rendering of "save and close", "save", "close" and
+     *                        "cancel" actions. See `BIT_xxx`.
      */
     public Form(final IdPath idPath, final String objectId, final String initStr, final int enabledFormBits) {
         super(idPath);
