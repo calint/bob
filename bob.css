@@ -35,13 +35,13 @@ ol {
 a,
 a:visited {
 	text-decoration: none;
-	color: #00a
+	color: rgb(28, 108, 19)
 }
 
 a:focus,
 a:hover,
 a:active {
-	color: green;
+	color: rgb(232, 50, 37);
 	text-shadow: 0 0 1rem rgba(0, 0, 0, .7)
 }
 
