@@ -25,7 +25,7 @@ public final class InputRelAgg extends a {
      * @param idPath        Id path to parent of `obj`.
      * @param obj           The object.
      * @param rel           The relation from object.
-     * @param createFormCls The form used to create the relation object.
+     * @param createFormCls The form used to create the relation target object.
      */
     public InputRelAgg(final Elem.IdPath idPath, final DbObject obj, final RelAgg rel,
             final Class<? extends Form> createFormCls) {
