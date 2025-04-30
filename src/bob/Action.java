@@ -11,7 +11,7 @@ public class Action extends a {
 
     private final static long serialVersionUID = 1;
 
-    private final String code;
+    private String code;
 
     public Action() {
         this("", "");
@@ -24,6 +24,10 @@ public class Action extends a {
 
     public final String code() {
         return code;
+    }
+
+    public final void code(final String str) {
+        code = str;
     }
 
     @Override
