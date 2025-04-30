@@ -4,8 +4,6 @@
 //
 package bob.app;
 
-import java.util.List;
-
 import db.Db;
 import db.DbObject;
 import db.DbTransaction;
@@ -19,7 +17,7 @@ public final class FormFile extends FormFileAbstract {
         this(null, null, null);
     }
 
-    public FormFile(final List<String> idPath, final String objectId, final String initStr) {
+    public FormFile(final IdPath idPath, final String objectId, final String initStr) {
         super(idPath, objectId, initStr);
     }
 
@@ -31,7 +29,7 @@ public final class FormFile extends FormFileAbstract {
 
     @Override
     protected DbObject getObject() {
-        final String oid = getObjectId();
+        final String oid = objectId();
         if (oid == null) {
             return null;
         }

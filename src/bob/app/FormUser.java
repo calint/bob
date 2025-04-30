@@ -59,10 +59,9 @@ public final class FormUser extends FormDbo {
     /** Attached views of aggregated objects. */
     @Override
     protected List<View> viewsList() {
-        final int oid = Integer.parseInt(getObjectId());
         final ArrayList<View> ls = new ArrayList<View>();
-        ls.add(new TableUserFiles(oid));
-        ls.add(new TableUserGames(oid));
+        ls.add(new TableUserFiles(extendIdPath(objectId())));
+        ls.add(new TableUserGames(extendIdPath(objectId())));
         return ls;
     }
 

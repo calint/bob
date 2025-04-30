@@ -10,7 +10,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Set;
 
 import b.a;
@@ -47,12 +46,12 @@ public abstract class FormDbo extends Form {
     private transient NumberFormat fmtNbrInt;
     private transient NumberFormat fmtNbrFlt;
 
-    public FormDbo(final List<String> idPath, final Class<? extends DbObject> objCls, final String objectId,
+    public FormDbo(final IdPath idPath, final Class<? extends DbObject> objCls, final String objectId,
             final String initStr) {
         this(idPath, objCls, objectId, initStr, BIT_SAVE_CLOSE | BIT_SAVE | BIT_CLOSE);
     }
 
-    public FormDbo(final List<String> idPath, final Class<? extends DbObject> objCls, final String objectId,
+    public FormDbo(final IdPath idPath, final Class<? extends DbObject> objCls, final String objectId,
             final String initStr, final int enabledFormBits) {
         super(idPath, objectId, initStr, enabledFormBits);
         this.objCls = objCls;
@@ -60,7 +59,7 @@ public abstract class FormDbo extends Form {
 
     @Override
     public Form init() {
-        if (getObjectId() == null && isCreateObjectAtInit()) {
+        if (objectId() == null && isCreateObjectAtInit()) {
             final DbObject o = createObject();
             setObjectId(Integer.toString(o.id()));
         }
@@ -136,7 +135,7 @@ public abstract class FormDbo extends Form {
      * @return DbObject
      */
     protected DbObject getObject() {
-        return Db.currentTransaction().get(objCls, getObjectId());
+        return Db.currentTransaction().get(objCls, objectId());
     }
 
     /** Override to implement custom cancel actions. */
@@ -468,12 +467,12 @@ public abstract class FormDbo extends Form {
         x.nl();
     }
 
-    protected final void inputAgg(final xwriter x, final String label, final List<String> idPath, final DbObject o,
+    protected final void inputAgg(final xwriter x, final String label, final IdPath idPath, final DbObject o,
             final RelAgg rel, final Class<? extends Form> createFormCls) {
         inputAgg(x, label, rel.getName(), idPath, o, rel, createFormCls);
     }
 
-    protected final void inputAgg(final xwriter x, final String label, final String field, final List<String> idPath,
+    protected final void inputAgg(final xwriter x, final String label, final String field, final IdPath idPath,
             final DbObject o, final RelAgg rel, final Class<? extends Form> createFormCls) {
         InputRelAgg e = (InputRelAgg) fields.get(field);
         if (e == null) {
@@ -487,12 +486,12 @@ public abstract class FormDbo extends Form {
         x.nl();
     }
 
-    protected final void inputAggN(final xwriter x, final String label, final List<String> idPath, final DbObject o,
+    protected final void inputAggN(final xwriter x, final String label, final IdPath idPath, final DbObject o,
             final RelAggN rel, final Class<? extends Form> createFormCls) {
         inputAggN(x, label, rel.getName(), idPath, o, rel, createFormCls);
     }
 
-    protected final void inputAggN(final xwriter x, final String label, final String field, final List<String> idPath,
+    protected final void inputAggN(final xwriter x, final String label, final String field, final IdPath idPath,
             final DbObject o, final RelAggN rel, final Class<? extends Form> createFormCls) {
         InputRelAggN e = (InputRelAggN) fields.get(field);
         if (e == null) {
@@ -603,7 +602,7 @@ public abstract class FormDbo extends Form {
     @Override
     protected final void save(final xwriter x) throws Throwable {
         final DbObject o;
-        if (getObjectId() == null) {
+        if (objectId() == null) {
             o = createObject();
             setObjectId(Integer.toString(o.id()));
         } else {

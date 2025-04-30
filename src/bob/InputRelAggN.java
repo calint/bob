@@ -4,8 +4,6 @@
 //
 package bob;
 
-import java.util.List;
-
 import b.a;
 import b.xwriter;
 import db.DbObject;
@@ -20,9 +18,9 @@ public final class InputRelAggN extends a {
     private final Class<? extends DbObject> objCls;
     private final int objId;
     private final String relationName;
-    private final List<String> idPath;
+    private final Elem.IdPath idPath;
 
-    public InputRelAggN(final List<String> idPath, final DbObject obj, final RelAggN rel,
+    public InputRelAggN(final Elem.IdPath idPath, final DbObject obj, final RelAggN rel,
             final Class<? extends Form> createFormCls) {
         if (obj == null) {
             throw new RuntimeException(
@@ -63,7 +61,7 @@ public final class InputRelAggN extends a {
 
     /** Callback "create". */
     public void x_c(final xwriter x, final String param) throws Throwable {
-        final Form f = createFormCls.getConstructor(List.class, String.class, String.class)
+        final Form f = createFormCls.getConstructor(Elem.IdPath.class, String.class, String.class)
                 .newInstance(idPath, null, null).init();
         super.bubble_event(x, this, f); // display the form
     }
@@ -76,7 +74,7 @@ public final class InputRelAggN extends a {
 
     /** Callback "edit". */
     public void x_e(final xwriter x, final String param) throws Throwable {
-        final Form f = createFormCls.getConstructor(List.class, String.class, String.class)
+        final Form f = createFormCls.getConstructor(Elem.IdPath.class, String.class, String.class)
                 .newInstance(idPath, param, null).init();
         super.bubble_event(x, this, f); // display the form
     }

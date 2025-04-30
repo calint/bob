@@ -22,12 +22,9 @@ public final class TableUserFiles extends ViewTable {
 
     private final static long serialVersionUID = 1;
 
-    private final int userId;
-
-    public TableUserFiles(final int userId) {
-        super(new TypeInfo("user file", "user files"), null, BIT_SEARCH | BIT_SELECT | BIT_CREATE | BIT_DELETE,
+    public TableUserFiles(final IdPath idPath) {
+        super(new TypeInfo("user file", "user files"), idPath, BIT_SEARCH | BIT_SELECT | BIT_CREATE | BIT_DELETE,
                 BIT_RENDER_LINKED_ITEM);
-        this.userId = userId;
     }
 
     public String title() {
@@ -59,7 +56,7 @@ public final class TableUserFiles extends ViewTable {
             qry.and(File.name, Query.LIKE, "%" + q.str() + "%");
         }
         final DbTransaction tn = Db.currentTransaction();
-        final User u = (User) tn.get(User.class, userId);
+        final User u = (User) tn.get(User.class, idPath().current());
         return u.getFiles().get(qry);
     }
 
@@ -87,7 +84,7 @@ public final class TableUserFiles extends ViewTable {
     @Override
     protected void onRowClick(final xwriter x, final String id, final String cmd) throws Throwable {
         if (cmd == null) {
-            final Form f = new FormUserFile(extendIdPath(Integer.toString(userId)), id, null).init();
+            final Form f = new FormUserFile(idPath(), id, null).init();
             super.bubble_event(x, this, f);
             return;
         }
@@ -95,7 +92,7 @@ public final class TableUserFiles extends ViewTable {
 
     @Override
     protected void onActionCreate(final xwriter x, final String initStr) throws Throwable {
-        final Form f = new FormUserFile(extendIdPath(Integer.toString(userId)), null, initStr).init();
+        final Form f = new FormUserFile(idPath(), null, initStr).init();
         super.bubble_event(x, this, f);
     }
 
@@ -103,7 +100,7 @@ public final class TableUserFiles extends ViewTable {
     protected void onActionDelete(final xwriter x) throws Throwable {
         final Set<String> sel = selectedIds();
         final DbTransaction tn = Db.currentTransaction();
-        final User u = (User) tn.get(User.class, userId);
+        final User u = (User) tn.get(User.class, idPath().current());
         for (final String id : sel) {
             u.deleteFile(Integer.parseInt(id));
         }

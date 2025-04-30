@@ -30,7 +30,7 @@ public abstract class ViewTable extends View {
     /** The actions that are enabled in the table. */
     private final int tableBits;
 
-    public ViewTable(final TypeInfo typeInfo, final List<String> idPath, final int viewBits, final int tableBits) {
+    public ViewTable(final TypeInfo typeInfo, final IdPath idPath, final int viewBits, final int tableBits) {
         super(typeInfo, idPath, viewBits);
 
         this.tableBits = tableBits;

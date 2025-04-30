@@ -53,7 +53,7 @@ public abstract class Form extends Elem {
      * @param enabledFormBits Rendering of "save and close", "save" and "close"
      *                        actions.
      */
-    public Form(final List<String> idPath, final String objectId, final String initStr, final int enabledFormBits) {
+    public Form(final IdPath idPath, final String objectId, final String initStr, final int enabledFormBits) {
         super(idPath);
 
         this.objectId = objectId;
@@ -109,7 +109,7 @@ public abstract class Form extends Elem {
         return isNewObject;
     }
 
-    public final String getObjectId() {
+    public final String objectId() {
         return objectId;
     }
 

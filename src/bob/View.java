@@ -37,7 +37,7 @@ public abstract class View extends Elem {
     /** Name and plural of the object type. */
     private final View.TypeInfo typeInfo;
 
-    public View(final TypeInfo ti, final List<String> idPath, final int enabledBits) {
+    public View(final TypeInfo ti, final IdPath idPath, final int enabledBits) {
         super(idPath);
 
         enabledViewBits = enabledBits;

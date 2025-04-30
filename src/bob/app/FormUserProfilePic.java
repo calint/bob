@@ -4,8 +4,6 @@
 //
 package bob.app;
 
-import java.util.List;
-
 import b.xwriter;
 import bob.FormDbo;
 import bob.Util;
@@ -23,7 +21,7 @@ public final class FormUserProfilePic extends FormDbo {
         this(null, null, null);
     }
 
-    public FormUserProfilePic(final List<String> idPath, final String objectId, final String initStr) {
+    public FormUserProfilePic(final IdPath idPath, final String objectId, final String initStr) {
         super(idPath, File.class, objectId, initStr);
     }
 
@@ -42,21 +40,19 @@ public final class FormUserProfilePic extends FormDbo {
 
     @Override
     protected DbObject createObject() {
-        final List<String> idPath = getIdPath();
         final DbTransaction tn = Db.currentTransaction();
-        final User u = (User) tn.get(User.class, idPath.get(0));
+        final User u = (User) tn.get(User.class, idPath().current());
         return u.getProfilePic(true);
     }
 
     @Override
     protected DbObject getObject() {
-        final String oid = getObjectId();
+        final String oid = objectId();
         if (oid == null) {
             return null;
         }
-        final List<String> idPath = getIdPath();
         final DbTransaction tn = Db.currentTransaction();
-        final User u = (User) tn.get(User.class, idPath.get(0));
+        final User u = (User) tn.get(User.class, idPath().current());
         return u.getProfilePic(false);
     }
 

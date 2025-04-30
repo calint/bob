@@ -4,8 +4,6 @@
 //
 package bob.app;
 
-import java.util.List;
-
 import db.Db;
 import db.DbObject;
 import db.DbTransaction;
@@ -20,7 +18,7 @@ public final class FormUserFile extends FormFileAbstract {
         this(null, null, null);
     }
 
-    public FormUserFile(final List<String> idPath, final String objectId, final String initStr) {
+    public FormUserFile(final IdPath idPath, final String objectId, final String initStr) {
         super(idPath, objectId, initStr);
     }
 
@@ -28,22 +26,20 @@ public final class FormUserFile extends FormFileAbstract {
     protected DbObject createObject() {
         // use path of ids to navigate to object in context and create an aggregated
         // file
-        final List<String> idPath = getIdPath();
         final DbTransaction tn = Db.currentTransaction();
-        final User u = (User) tn.get(User.class, idPath.get(0));
+        final User u = (User) tn.get(User.class, idPath().current());
         return u.createFile();
     }
 
     @Override
     protected DbObject getObject() {
-        final String oid = getObjectId();
+        final String oid = objectId();
         if (oid == null) {
             return null;
         }
         // use path of ids to navigate to object in context
-        final List<String> idPath = getIdPath();
         final DbTransaction tn = Db.currentTransaction();
-        final User u = (User) tn.get(User.class, idPath.get(0));
+        final User u = (User) tn.get(User.class, idPath().current());
         return u.getFiles().get(oid);
     }
 

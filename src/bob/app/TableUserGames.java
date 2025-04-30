@@ -21,12 +21,9 @@ public final class TableUserGames extends ViewTable {
 
     private final static long serialVersionUID = 1;
 
-    private final int userId;
-
-    public TableUserGames(final int userId) {
-        super(new TypeInfo("user game", "user games"), null, BIT_SEARCH | BIT_SELECT | BIT_CREATE | BIT_DELETE,
+    public TableUserGames(final IdPath idPath) {
+        super(new TypeInfo("user game", "user games"), idPath, BIT_SEARCH | BIT_SELECT | BIT_CREATE | BIT_DELETE,
                 BIT_RENDER_LINKED_ITEM);
-        this.userId = userId;
     }
 
     public String title() {
@@ -58,7 +55,7 @@ public final class TableUserGames extends ViewTable {
             qry.and(Game.name, Query.LIKE, "%" + q.str() + "%");
         }
         final DbTransaction tn = Db.currentTransaction();
-        final User u = (User) tn.get(User.class, userId);
+        final User u = (User) tn.get(User.class, idPath().current());
         return u.getGames().get(qry);
     }
 
@@ -82,7 +79,7 @@ public final class TableUserGames extends ViewTable {
     @Override
     protected void onRowClick(final xwriter x, final String id, final String cmd) throws Throwable {
         if (cmd == null) {
-            final Form f = new FormUserGame(extendIdPath(Integer.toString(userId)), id, null).init();
+            final Form f = new FormUserGame(idPath(), id, null).init();
             super.bubble_event(x, this, f);
             return;
         }
@@ -90,7 +87,7 @@ public final class TableUserGames extends ViewTable {
 
     @Override
     protected void onActionCreate(final xwriter x, final String initStr) throws Throwable {
-        final Form f = new FormUserGame(extendIdPath(Integer.toString(userId)), null, initStr).init();
+        final Form f = new FormUserGame(idPath(), null, initStr).init();
         super.bubble_event(x, this, f);
     }
 
@@ -98,7 +95,7 @@ public final class TableUserGames extends ViewTable {
     protected void onActionDelete(final xwriter x) throws Throwable {
         final Set<String> sel = selectedIds();
         final DbTransaction tn = Db.currentTransaction();
-        final User u = (User) tn.get(User.class, userId);
+        final User u = (User) tn.get(User.class, idPath().current());
         for (final String id : sel) {
             u.deleteGame(Integer.parseInt(id));
         }

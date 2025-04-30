@@ -4,8 +4,6 @@
 //
 package bob;
 
-import java.util.List;
-
 import b.a;
 import b.xwriter;
 import db.Db;
@@ -21,9 +19,9 @@ public final class InputRelAgg extends a {
     private final Class<? extends DbObject> objCls;
     private final int objId;
     private final String relationName;
-    private final List<String> idPath;
+    private final Elem.IdPath idPath;
 
-    public InputRelAgg(final List<String> idPath, final DbObject obj, final RelAgg rel,
+    public InputRelAgg(final Elem.IdPath idPath, final DbObject obj, final RelAgg rel,
             final Class<? extends Form> createFormCls) {
         if (obj == null) {
             throw new RuntimeException(
@@ -66,7 +64,7 @@ public final class InputRelAgg extends a {
 
     /** Callback "create". */
     public void x_c(final xwriter x, final String param) throws Throwable {
-        final Form f = createFormCls.getConstructor(List.class, String.class, String.class)
+        final Form f = createFormCls.getConstructor(Elem.IdPath.class, String.class, String.class)
                 .newInstance(idPath, null, null).init();
         super.bubble_event(x, this, f); // display the form
     }
@@ -84,7 +82,7 @@ public final class InputRelAgg extends a {
         final DbTransaction tn = Db.currentTransaction();
         final DbObject o = tn.get(objCls, objId); // ? idPath
         final DbObject ro = relation().get(o, false);
-        final Form f = createFormCls.getConstructor(List.class, String.class, String.class)
+        final Form f = createFormCls.getConstructor(Elem.IdPath.class, String.class, String.class)
                 .newInstance(idPath, Integer.toString(ro.id()), null).init();
         super.bubble_event(x, this, f); // display the form
     }

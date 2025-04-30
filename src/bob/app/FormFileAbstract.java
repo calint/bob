@@ -4,8 +4,6 @@
 //
 package bob.app;
 
-import java.util.List;
-
 import b.xwriter;
 import bob.FormDbo;
 import bob.Util;
@@ -24,7 +22,7 @@ public abstract class FormFileAbstract extends FormDbo {
         this(null, null, null);
     }
 
-    public FormFileAbstract(final List<String> idPath, final String objectId, final String initStr) {
+    public FormFileAbstract(final IdPath idPath, final String objectId, final String initStr) {
         super(idPath, File.class, objectId, initStr);
     }
 
