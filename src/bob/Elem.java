@@ -34,12 +34,7 @@ public abstract class Elem extends a implements Titled {
      * @return A new id path.
      */
     public final IdPath extendIdPath(final String id) {
-        final IdPath pth = new IdPath();
-        if (idPath != null) {
-            pth.add(idPath);
-        }
-        pth.add(id);
-        return pth;
+        return IdPath.extend(idPath, id);
     }
 
     /** Convenience for an integer id. */
@@ -52,6 +47,24 @@ public abstract class Elem extends a implements Titled {
         private final static long serialVersionUID = 1;
 
         private ArrayList<String> ids;
+
+        /**
+         * @param idPth `IdPath` to extend. May be null.
+         * @return New instance extended by id.
+         */
+        public static IdPath extend(final IdPath idPth, final String id) {
+            final IdPath pth = new IdPath();
+            if (idPth != null) {
+                pth.add(idPth);
+            }
+            pth.add(id);
+            return pth;
+        }
+
+        /** Convenience for int id converting it to String. */
+        public static IdPath extend(final IdPath idPth, final int id) {
+            return IdPath.extend(idPth, Integer.toString(id));
+        }
 
         public String current() {
             if (ids == null) {
@@ -74,6 +87,9 @@ public abstract class Elem extends a implements Titled {
         protected void add(final IdPath pth) {
             if (ids == null) {
                 ids = new ArrayList<String>();
+            }
+            if (pth == null) {
+                return;
             }
             ids.addAll(pth.ids);
         }

@@ -21,6 +21,13 @@ public final class InputRelAgg extends a {
     private final String relationName;
     private final Elem.IdPath idPath;
 
+    /**
+     * @param idPath        Current element in `idPath` must be the id of `obj` to
+     *                      initiate `createFormCls`.
+     * @param obj           The object.
+     * @param rel           The relation from objects.
+     * @param createFormCls The form used to create the relation object.
+     */
     public InputRelAgg(final Elem.IdPath idPath, final DbObject obj, final RelAgg rel,
             final Class<? extends Form> createFormCls) {
         if (obj == null) {
@@ -65,7 +72,7 @@ public final class InputRelAgg extends a {
     /** Callback "create". */
     public void x_c(final xwriter x, final String param) throws Throwable {
         final Form f = createFormCls.getConstructor(Elem.IdPath.class, String.class, String.class)
-                .newInstance(idPath, null, null).init();
+                .newInstance(Elem.IdPath.extend(idPath, objId), null, null).init();
         super.bubble_event(x, this, f); // display the form
     }
 
@@ -83,7 +90,7 @@ public final class InputRelAgg extends a {
         final DbObject o = tn.get(objCls, objId); // ? idPath
         final DbObject ro = relation().get(o, false);
         final Form f = createFormCls.getConstructor(Elem.IdPath.class, String.class, String.class)
-                .newInstance(idPath, Integer.toString(ro.id()), null).init();
+                .newInstance(Elem.IdPath.extend(idPath, objId), Integer.toString(ro.id()), null).init();
         super.bubble_event(x, this, f); // display the form
     }
 

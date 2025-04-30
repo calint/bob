@@ -471,16 +471,16 @@ public abstract class FormDbo extends Form {
         x.nl();
     }
 
-    protected final void inputAgg(final xwriter x, final String label, final IdPath idPath, final DbObject o,
-            final RelAgg rel, final Class<? extends Form> createFormCls) {
-        inputAgg(x, label, rel.getName(), idPath, o, rel, createFormCls);
+    protected final void inputAgg(final xwriter x, final String label, final DbObject o, final RelAgg rel,
+            final Class<? extends Form> createFormCls) {
+        inputAgg(x, label, rel.getName(), o, rel, createFormCls);
     }
 
-    protected final void inputAgg(final xwriter x, final String label, final String field, final IdPath idPath,
-            final DbObject o, final RelAgg rel, final Class<? extends Form> createFormCls) {
+    protected final void inputAgg(final xwriter x, final String label, final String field, final DbObject o,
+            final RelAgg rel, final Class<? extends Form> createFormCls) {
         InputRelAgg e = (InputRelAgg) fields.get(field);
         if (e == null) {
-            e = new InputRelAgg(idPath, o, rel, createFormCls);
+            e = new InputRelAgg(idPath(), o, rel, createFormCls);
             e.parent(this);
             e.name(field);
             fields.put(field, e);
@@ -490,16 +490,16 @@ public abstract class FormDbo extends Form {
         x.nl();
     }
 
-    protected final void inputAggN(final xwriter x, final String label, final IdPath idPath, final DbObject o,
-            final RelAggN rel, final Class<? extends Form> createFormCls) {
-        inputAggN(x, label, rel.getName(), idPath, o, rel, createFormCls);
+    protected final void inputAggN(final xwriter x, final String label, final DbObject o, final RelAggN rel,
+            final Class<? extends Form> createFormCls) {
+        inputAggN(x, label, rel.getName(), o, rel, createFormCls);
     }
 
-    protected final void inputAggN(final xwriter x, final String label, final String field, final IdPath idPath,
-            final DbObject o, final RelAggN rel, final Class<? extends Form> createFormCls) {
+    protected final void inputAggN(final xwriter x, final String label, final String field, final DbObject o,
+            final RelAggN rel, final Class<? extends Form> createFormCls) {
         InputRelAggN e = (InputRelAggN) fields.get(field);
         if (e == null) {
-            e = new InputRelAggN(idPath, o, rel, createFormCls);
+            e = new InputRelAggN(idPath(), o, rel, createFormCls);
             e.parent(this);
             e.name(field);
             fields.put(field, e);
