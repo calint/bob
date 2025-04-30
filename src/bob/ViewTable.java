@@ -493,7 +493,7 @@ public abstract class ViewTable extends View {
         protected void bubble_event(final xwriter js, final a from, final Object o) throws Throwable {
             // event bubbled from child
             if (from instanceof Checkbox && ((vt.enabledViewBits & View.BIT_SELECT) != 0 || vt.isSelectModeMulti())) {
-                final String id = ((Checkbox) from).getId();
+                final String id = ((Checkbox) from).value();
                 if ("checked".equals(o)) {
                     selectedIds.add(id);
                     return;

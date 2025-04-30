@@ -14,15 +14,15 @@ public final class Checkbox extends a {
     private final static String off = "0";
     private final static String on = "1";
 
-    private final String id;
+    private final String value;
 
-    public Checkbox(final String id, final boolean checked) {
-        this.id = id;
+    public Checkbox(final String value, final boolean checked) {
+        this.value = value;
         set(checked ? on : off);
     }
 
-    public String getId() {
-        return id;
+    public String value() {
+        return value;
     }
 
     @Override
