@@ -32,7 +32,7 @@ public class Action extends a {
 
     @Override
     public final void to(final xwriter x) throws Throwable {
-        x.ax(this, null, str());
+        x.ax(this, null, str(), "act");
     }
 
     public final void x_(final xwriter x, final String param) throws Throwable {

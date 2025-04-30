@@ -49,7 +49,7 @@ public final class InputRelAggN extends a {
 
     @Override
     public void to(final xwriter x) throws Throwable {
-        x.ax(this, "c", "create").br();
+        x.ax(this, "c", "create", "act").br();
         final DbObjects dbos = relation().get(objId);
         for (final DbObject ro : dbos.toList()) {
             final String txt;
@@ -61,7 +61,7 @@ public final class InputRelAggN extends a {
             }
             final int oid = ro.id();
             x.ax(this, "e " + oid, txt);
-            x.spc().ax(this, "d " + oid, "✖").br().nl();
+            x.spc().ax(this, "d " + oid, "✖", "act").br().nl();
         }
     }
 

@@ -45,6 +45,11 @@ a:active {
 	text-shadow: 0 0 1rem rgba(0, 0, 0, .7)
 }
 
+/* actions */
+a.act {
+	font-weight: bold;
+}
+
 em {
 	font-weight: bold
 }

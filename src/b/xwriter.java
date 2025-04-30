@@ -139,11 +139,29 @@ public final class xwriter {
      * @param e        element
      * @param callback callback function name without prefix 'x_' and the rest is
      *                 parameter
-     * @param html     a href tag HTML
+     * @param html     HTML in href tag
      * @return this
      */
     public xwriter ax(final a e, final String callback, final String html) {
-        p("<a href=\"javascript:");
+        return ax(e, callback, html, null);
+    }
+
+    /**
+     * Generates a href tag with JavaScript code for a callback.
+     * 
+     * @param e        element
+     * @param callback callback function name without prefix 'x_' and the rest is
+     *                 parameter
+     * @param html     HTML in href tag
+     * @param cls      style class
+     * @return this
+     */
+    public xwriter ax(final a e, final String callback, final String html, final String cls) {
+        p("<a ");
+        if (cls != null) {
+            p(" class=\"").p(cls).p("\" ");
+        }
+        p("href=\"javascript:");
         js_x(e, callback, true);
         p("\">").p(html).p("</a>");
         return this;

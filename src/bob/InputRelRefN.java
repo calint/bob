@@ -70,13 +70,13 @@ public final class InputRelRefN extends a {
     public void to(final xwriter x) throws Throwable {
         final DbTransaction tn = Db.currentTransaction();
         if (selectViewClass != null) {
-            x.ax(this, "s", "select");
+            x.ax(this, "s", "select", "act");
             if (createFormCls != null) {
                 x.p(" • ");
             }
         }
         if (createFormCls != null) {
-            x.ax(this, "c", "create");
+            x.ax(this, "c", "create", "act");
         }
         if (selectViewClass != null || createFormCls != null) {
             x.br();
@@ -93,7 +93,7 @@ public final class InputRelRefN extends a {
             } else {
                 x.p(o.id());
             }
-            x.spc().ax(this, "r " + o.id(), "✖").p(itemSeparator);
+            x.spc().ax(this, "r " + o.id(), "✖", "act").p(itemSeparator);
         }
     }
 

@@ -62,9 +62,9 @@ public final class InputRelAgg extends a {
                 txt = Integer.toString(ro.id());
             }
             x.ax(this, "e", txt);
-            x.spc().ax(this, "d", "✖");
+            x.spc().ax(this, "d", "✖", "act");
         } else {
-            x.ax(this, "c", "create");
+            x.ax(this, "c", "create", "act");
         }
     }
 

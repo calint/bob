@@ -51,18 +51,18 @@ public final class InputRelRef extends a {
                 } else {
                     x.p(ro.id());
                 }
-                x.spc().ax(this, "r", "✖");
+                x.spc().ax(this, "r", "✖", "act");
             }
         }
         if (selectViewClass != null) {
             x.spc();
-            x.ax(this, "s", "select");
+            x.ax(this, "s", "select", "act");
             if (createFormCls != null) {
                 x.p(" • ");
             }
         }
         if (createFormCls != null) {
-            x.ax(this, "c", "create");
+            x.ax(this, "c", "create", "act");
         }
     }
 
