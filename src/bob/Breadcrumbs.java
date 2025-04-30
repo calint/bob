@@ -13,7 +13,7 @@ import b.xwriter;
  * Contains elements in a list. Used to create a name space for dynamically
  * created elements.
  */
-public final class BreadCrumbs extends a {
+public final class Breadcrumbs extends a {
 
     private final static long serialVersionUID = 1;
 

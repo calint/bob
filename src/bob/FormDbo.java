@@ -57,6 +57,10 @@ public abstract class FormDbo extends Form {
         this.objCls = objCls;
     }
 
+    //
+    // overridable
+    //
+
     @Override
     public Form init() {
         if (objectId() == null && isCreateObjectAtInit()) {
@@ -150,7 +154,7 @@ public abstract class FormDbo extends Form {
     protected abstract void writeToObject(final xwriter x, final DbObject obj) throws Throwable;
 
     //
-    //
+    // api / helpers
     //
 
     protected final void beginForm(final xwriter x) {

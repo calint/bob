@@ -19,7 +19,7 @@ public class Controller extends a {
     public a s; // serialized size
     public a sg; // serialized size, gziped
     public a si; // server info
-    public BreadCrumbs bc;
+    public Breadcrumbs bc;
     public a ae; // active element
     public Menu m;
 
@@ -60,7 +60,7 @@ public class Controller extends a {
         }
         if (from == bc) {
             // event from bread crumbs
-            final a e = ((BreadCrumbs) from).getActive();
+            final a e = ((Breadcrumbs) from).getActive();
             e.replace(ae); // replace active element
             x.xu(ae); // update active element
             x.xscroll_to_top();
