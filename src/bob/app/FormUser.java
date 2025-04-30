@@ -103,7 +103,7 @@ public final class FormUser extends FormDbo {
 
         final User o = (User) obj;
         if (Util.isEmpty(o.getName())) {
-            xfocus(x, User.name); // note: not `focus` in handling of server event
+            xfocus(x, User.name); // note: not `focus` in handling of ui event
             throw new Exception("User name may not be empty.");
         }
 
