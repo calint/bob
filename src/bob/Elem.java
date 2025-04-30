@@ -19,13 +19,14 @@ public abstract class Elem extends a implements Titled {
     private final IdPath idPath;
 
     /**
-     * @param idPath a list of strings representing the object identifiers to
-     *               navigate an object hierarchy
+     * @param idPath Identifiers for navigation of object hierarchy to parent
+     *               object.
      */
     public Elem(final IdPath idPath) {
         this.idPath = idPath;
     }
 
+    /** @return Path to parent of object in context or null if none. */
     public final IdPath idPath() {
         return idPath;
     }
@@ -57,6 +58,7 @@ public abstract class Elem extends a implements Titled {
 
         private ArrayList<String> ids;
 
+        /** @return Parent object idi or null if none. */
         public String current() {
             if (ids == null) {
                 return null;
