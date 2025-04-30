@@ -20,6 +20,7 @@ public final class InputRelAgg extends a {
     private final int objId;
     private final String relationName;
     private final Elem.IdPath idPath;
+    private final boolean allowDelete;
 
     /**
      * @param idPath        Id path to parent of `obj`.
@@ -28,7 +29,7 @@ public final class InputRelAgg extends a {
      * @param createFormCls The form used to create the relation target object.
      */
     public InputRelAgg(final Elem.IdPath idPath, final DbObject obj, final RelAgg rel,
-            final Class<? extends Form> createFormCls) {
+            final Class<? extends Form> createFormCls, final boolean allowDelete) {
         if (obj == null) {
             throw new RuntimeException(
                     "Element cannot be created with object being null. Try 'create at init' pattern to initiate the object before creating this element.");
@@ -38,6 +39,7 @@ public final class InputRelAgg extends a {
         objId = obj.id();
         relationName = rel.getName();
         this.createFormCls = createFormCls;
+        this.allowDelete = allowDelete;
     }
 
     public RelAgg relation() {
@@ -62,8 +64,10 @@ public final class InputRelAgg extends a {
                 txt = Integer.toString(ro.id());
             }
             x.ax(this, "e", txt);
-            x.spc().ax(this, "d", "✖", "act");
-        } else {
+            if (allowDelete) {
+                x.spc().ax(this, "d", "✖", "act");
+            }
+        } else if (createFormCls != null) {
             x.ax(this, "c", "create", "act");
         }
     }

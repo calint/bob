@@ -472,15 +472,15 @@ public abstract class FormDbo extends Form {
     }
 
     protected final void inputAgg(final xwriter x, final String label, final DbObject o, final RelAgg rel,
-            final Class<? extends Form> createFormCls) {
-        inputAgg(x, label, rel.getName(), o, rel, createFormCls);
+            final Class<? extends Form> createFormCls, final boolean allowDelete) {
+        inputAgg(x, label, rel.getName(), o, rel, createFormCls, allowDelete);
     }
 
     protected final void inputAgg(final xwriter x, final String label, final String field, final DbObject o,
-            final RelAgg rel, final Class<? extends Form> createFormCls) {
+            final RelAgg rel, final Class<? extends Form> createFormCls, final boolean allowDelete) {
         InputRelAgg e = (InputRelAgg) fields.get(field);
         if (e == null) {
-            e = new InputRelAgg(idPath(), o, rel, createFormCls);
+            e = new InputRelAgg(idPath(), o, rel, createFormCls, allowDelete);
             e.parent(this);
             e.name(field);
             fields.put(field, e);
@@ -491,15 +491,15 @@ public abstract class FormDbo extends Form {
     }
 
     protected final void inputAggN(final xwriter x, final String label, final DbObject o, final RelAggN rel,
-            final Class<? extends Form> createFormCls) {
-        inputAggN(x, label, rel.getName(), o, rel, createFormCls);
+            final Class<? extends Form> createFormCls, final boolean allowDelete) {
+        inputAggN(x, label, rel.getName(), o, rel, createFormCls, allowDelete);
     }
 
     protected final void inputAggN(final xwriter x, final String label, final String field, final DbObject o,
-            final RelAggN rel, final Class<? extends Form> createFormCls) {
+            final RelAggN rel, final Class<? extends Form> createFormCls, final boolean allowDelete) {
         InputRelAggN e = (InputRelAggN) fields.get(field);
         if (e == null) {
-            e = new InputRelAggN(idPath(), o, rel, createFormCls);
+            e = new InputRelAggN(idPath(), o, rel, createFormCls, allowDelete);
             e.parent(this);
             e.name(field);
             fields.put(field, e);

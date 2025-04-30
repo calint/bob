@@ -19,6 +19,7 @@ public final class InputRelAggN extends a {
     private final int objId;
     private final String relationName;
     private final Elem.IdPath idPath;
+    private final boolean allowDelete;
 
     /**
      * @param idPath        Id path to parent of `obj`.
@@ -27,7 +28,7 @@ public final class InputRelAggN extends a {
      * @param createFormCls The form used to create the relation target object.
      */
     public InputRelAggN(final Elem.IdPath idPath, final DbObject obj, final RelAggN rel,
-            final Class<? extends Form> createFormCls) {
+            final Class<? extends Form> createFormCls, final boolean allowDelete) {
         if (obj == null) {
             throw new RuntimeException(
                     "Element cannot be created with object being null. Try 'create at init' pattern to initiate the object before creating this element.");
@@ -37,6 +38,7 @@ public final class InputRelAggN extends a {
         this.idPath = idPath;
         relationName = rel.getName();
         this.createFormCls = createFormCls;
+        this.allowDelete = allowDelete;
     }
 
     public RelAggN relation() {
@@ -49,7 +51,9 @@ public final class InputRelAggN extends a {
 
     @Override
     public void to(final xwriter x) throws Throwable {
-        x.ax(this, "c", "create", "act").br();
+        if (createFormCls != null) {
+            x.ax(this, "c", "create", "act").br();
+        }
         final DbObjects dbos = relation().get(objId);
         for (final DbObject ro : dbos.toList()) {
             final String txt;
@@ -61,7 +65,11 @@ public final class InputRelAggN extends a {
             }
             final int oid = ro.id();
             x.ax(this, "e " + oid, txt);
-            x.spc().ax(this, "d " + oid, "✖", "act").br().nl();
+            if (allowDelete) {
+                x.spc().ax(this, "d " + oid, "✖", "act").br().nl();
+            } else {
+                x.br().nl();
+            }
         }
     }
 

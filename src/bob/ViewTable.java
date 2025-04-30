@@ -60,8 +60,8 @@ public abstract class ViewTable extends View {
         if (isSelectMode()) {
             x.tago("div").attr("class", "atn").tagoe();
             if (isSelectModeMulti()) {
-                x.p("select " + typeInfo().namePlural() + " then click ");
-                x.ax(this, "sm", "select");
+                x.p("select " + typeInfo().namePlural() + " then click: ");
+                x.ax(this, "sm", "select", "act");
             } else {
                 x.p("select " + typeInfo().name() + " by clicking on the link");
             }

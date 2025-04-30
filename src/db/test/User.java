@@ -38,6 +38,8 @@ public final class User extends DbObject {
     public final static RelAggN files = new RelAggN(File.class);
     public final static RelRefN refFiles = new RelRefN(File.class);
     public final static RelAggN games = new RelAggN(Game.class);
+    public final static RelRef author = new RelRef(Author.class);
+    public final static RelRefN books = new RelRefN(Book.class);
 
     // public final static Index ixName = new Index(name);
     public final static IndexFt ixFt = new IndexFt(name);
@@ -238,4 +240,45 @@ public final class User extends DbObject {
         games.deleteAll(this);
     }
 
+    // ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
+    public int getAuthorId() {
+        return author.getId(this);
+    }
+
+    public Author getAuthor() {
+        return (Author) author.get(this);
+    }
+
+    public void setAuthor(final int id) {
+        author.set(this, id);
+    }
+
+    public void setAuthor(final Author o) {
+        author.set(this, o);
+    }
+
+    // ---- - - - - - ---- -- --- - -- - -- - -- -- - -- - - - -- - - --- - -
+    public void addBook(final int id) {
+        books.add(this, id);
+    }
+
+    public void addBook(final Book o) {
+        books.add(this, o);
+    }
+
+    public DbObjects getBooks() {
+        return books.get(this);
+    }
+
+    public void removeBook(final int id) {
+        books.remove(this, id);
+    }
+
+    public void removeBook(final Book o) {
+        books.remove(this, o);
+    }
+
+    public void removeAllBooks() {
+        books.removeAll(this);
+    }
 }
