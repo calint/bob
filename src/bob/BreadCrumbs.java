@@ -22,7 +22,7 @@ public final class BreadCrumbs extends a {
     @Override
     public void to(final xwriter x) {
         final int n = elements.size();
-        final int lei = n - 1; // last element index
+        final int lastElemIx = n - 1;
         for (int i = 0; i < n; i++) {
             final a e = elements.get(i);
             x.p(" &raquo; ");
@@ -30,9 +30,9 @@ public final class BreadCrumbs extends a {
             if (e instanceof Titled) { // ? oop?
                 nm = ((Titled) e).title();
             } else { // ? oop
-                nm = getClass().getName();
+                nm = e.getClass().getName();
             }
-            if (i == lei) {
+            if (i == lastElemIx) {
                 x.tag("em").p(nm).tage("em");
                 return;
             }
