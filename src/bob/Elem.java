@@ -14,19 +14,18 @@ public abstract class Elem extends a implements Titled {
     private final static long serialVersionUID = 1;
 
     /**
-     * List of identifiers up to object but not including object in context.
+     * Path to parent of element in context or null if none.
      */
     private final IdPath idPath;
 
     /**
-     * @param idPath Identifiers for navigation of object hierarchy to parent
-     *               object.
+     * @param idPath Path to parent of element in context or null if none.
      */
     public Elem(final IdPath idPath) {
         this.idPath = idPath;
     }
 
-    /** @return Path to parent of object in context or null if none. */
+    /** @return Path to parent of element in context or null if none. */
     public final IdPath idPath() {
         return idPath;
     }
