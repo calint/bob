@@ -277,8 +277,7 @@ public abstract class ViewTable extends View {
     protected void renderHeaders(final xwriter x) {
     }
 
-    protected void renderRowCells(final xwriter x, final Object obj) {
-    }
+    protected abstract void renderRowCells(final xwriter x, final Object obj);
 
     /**
      * Called when a link in a row is clicked.

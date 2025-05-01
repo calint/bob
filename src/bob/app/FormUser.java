@@ -12,10 +12,15 @@ import java.util.List;
 
 import b.a;
 import b.xwriter;
+import bob.Form;
 import bob.FormDbo;
 import bob.Util;
 import bob.View;
+import bob.ViewTable;
+import db.Db;
 import db.DbObject;
+import db.DbTransaction;
+import db.test.Game;
 import db.test.User;
 
 public final class FormUser extends FormDbo {
@@ -29,6 +34,11 @@ public final class FormUser extends FormDbo {
      */
     private CustomElem customElem = new CustomElem();
 
+    /**
+     * Embedded element. Created at init there object id is available.
+     */
+    private CustomView embeddedView;
+
     public FormUser() {
         this(null, null);
     }
@@ -36,6 +46,13 @@ public final class FormUser extends FormDbo {
     public FormUser(final String id, final String initStr) {
         super(null, User.class, id, initStr, BIT_SAVE_CLOSE | BIT_SAVE | BIT_CANCEL);
         // customElem = new CustomElem();
+    }
+
+    @Override
+    public Form init() {
+        super.init();
+        embeddedView = new CustomView();
+        return this;
     }
 
     /**
@@ -96,6 +113,7 @@ public final class FormUser extends FormDbo {
         inputRef(x, "Author", o, User.author, 0, TableAuthors.class, FormAuthor.class);
         inputRefN(x, "Books", o, User.books, null, TableBooks.class, FormBook2.class);
         inputElem(x, "customElem", customElem);
+        inputElem(x, "embeddedView", embeddedView);
         endForm(x);
     }
 
@@ -124,11 +142,40 @@ public final class FormUser extends FormDbo {
 
         @Override
         public void to(xwriter x) throws Throwable {
-            x.p("Custom Element: x = ").inpint(pos_x).p(" y = ").inpint(pos_y).spc().ax(this, "", "update page");
+            x.p("Custom Element: x = ").inpint(pos_x).p(" y = ").inpint(pos_y).spc().ax(this, "", "update page").nl();
         }
 
         public void x_(final xwriter x, final String param) {
             // empty default event
+        }
+    }
+
+    public final static class CustomView extends ViewTable {
+
+        private final static long serialVersionUID = 1;
+
+        public CustomView() {
+            super(null, null, 0, 0);
+        }
+
+        @Override
+        public String title() {
+            return "Games";
+        }
+
+        @Override
+        protected List<?> objectsList() {
+            return Db.currentTransaction().get(Game.class, null, null, null);
+        }
+
+        @Override
+        protected String idFrom(final Object obj) {
+            return Integer.toString(((DbObject) obj).id());
+        }
+
+        @Override
+        protected void renderRowCells(xwriter x, Object obj) {
+            x.td().p(((Game) obj).getName());
         }
     }
 
