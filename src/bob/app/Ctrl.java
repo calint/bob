@@ -21,6 +21,7 @@ public final class Ctrl extends Controller {
         m.addItem(TableUsers.class, "Users");
         m.addItem(TableFiles.class, "Files");
         m.addItem(TableDbClasses.class, "Classes");
+        // m.addItem(FormUser.class, "User");
     }
 
 }

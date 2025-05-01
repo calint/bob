@@ -4,7 +4,6 @@
 //
 package bob.app;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -122,7 +121,7 @@ public final class TableUsers extends ViewTable {
 
     @Override
     protected List<Action> actionsList() {
-        final ArrayList<Action> ls = new ArrayList<Action>();
+        final List<Action> ls = super.actionsList();
         ls.add(new Action("delete all", "da"));
         return ls;
     }

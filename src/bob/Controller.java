@@ -36,7 +36,7 @@ public class Controller extends a {
     public void to(final xwriter x) throws Throwable {
         x.divh(m, "m").nl();
         x.divh(bc, "bc").nl();
-        final a active_elem = bc.getActive();
+        final a active_elem = bc.active();
         active_elem.replace(ae);
         x.divh(ae, "ae").nl();
         x.tago("div").attr("class", "ser").tagoe();
@@ -48,8 +48,13 @@ public class Controller extends a {
     @Override
     protected void bubble_event(final xwriter x, final a from, final Object o) throws Throwable {
         if (from == m) {
-            // event from the menu
-            final a e = (a) ((Class<?>) o).getConstructor().newInstance();
+            // event from the menu, `o` is a class
+            final a e = ((Class<? extends a>) o).getConstructor().newInstance();
+            if (e instanceof View) {
+                ((View) e).init();
+            } else if (e instanceof Form) {
+                ((Form) e).init();
+            }
             bc.clear();
             bc.add(e); // add to bread crumb
             e.replace(ae); // replace active element
@@ -57,10 +62,11 @@ public class Controller extends a {
             x.xu(bc); // update bread crumbs
             x.xscroll_to_top();
             return;
+
         }
         if (from == bc) {
             // event from bread crumbs
-            final a e = ((Breadcrumbs) from).getActive();
+            final a e = ((Breadcrumbs) from).active();
             e.replace(ae); // replace active element
             x.xu(ae); // update active element
             x.xscroll_to_top();
@@ -69,12 +75,14 @@ public class Controller extends a {
         if (from instanceof Form) {
             // event from a form
             if ("close".equals(o)) {
-                bc.removeLast(); // remove last element in bread crumbs
-                final a e = bc.getActive(); // get current element
-                e.replace(ae); // replace active element
-                x.xu(ae); // update active element
-                x.xu(bc); // update bread crumbs
-                x.xscroll_to_top();
+                if (bc.elementCount() > 1) {
+                    bc.removeLast(); // remove last element in bread crumbs
+                    final a e = bc.active(); // get current element
+                    e.replace(ae); // replace active element
+                    x.xu(ae); // update active element
+                    x.xu(bc); // update bread crumbs
+                    x.xscroll_to_top();
+                }
                 return;
             }
             if ("updated".equals(o)) {
@@ -84,7 +92,7 @@ public class Controller extends a {
         }
         if (from instanceof View && "close".equals(o)) {
             bc.removeLast(); // remove last element in bread crumbs
-            final a e = bc.getActive(); // get current element
+            final a e = bc.active(); // get current element
             e.replace(ae); // replace active element
             x.xu(ae); // update active element
             x.xu(bc); // update bread crumbs

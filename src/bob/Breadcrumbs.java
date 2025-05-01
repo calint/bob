@@ -54,7 +54,7 @@ public final class Breadcrumbs extends a {
         elements.add(e);
     }
 
-    public a getActive() {
+    public a active() {
         if (elements.isEmpty()) {
             return null;
         }
@@ -78,4 +78,7 @@ public final class Breadcrumbs extends a {
         elements.clear();
     }
 
+    public int elementCount() {
+        return elements.size();
+    }
 }

@@ -20,7 +20,6 @@ public abstract class ViewTable extends View {
     public final static int BIT_HAS_MORE_SEARCH_SECTION = 2;
 
     public Container ac; // actions
-    public a q; // query field
     public Table t;
     public Paging p;
 
@@ -42,21 +41,17 @@ public abstract class ViewTable extends View {
         t.init(this);
         p.init(this);
 
-        if ((enabledViewBits & BIT_CREATE) != 0) {
-            ac.add(new Action("create " + typeInfo.name(), "create"));
-        }
-        if ((enabledViewBits & BIT_DELETE) != 0) {
-            ac.add(new Action("delete selected " + typeInfo.namePlural(), "delete"));
-        }
+    }
 
-        // get actions list from implementor
+    @Override
+    public View init() throws Throwable {
+        super.init();
+
         final List<Action> actions = actionsList();
-        if (actions != null) {
-            // add to actions
-            for (final Action a : actions) {
-                ac.add(a);
-            }
+        for (final Action a : actions) {
+            ac.add(a);
         }
+        return this;
     }
 
     @Override
@@ -113,26 +108,7 @@ public abstract class ViewTable extends View {
     }
 
     @Override
-    protected final void bubble_event(final xwriter x, final a from, final Object o) throws Throwable {
-        if (from instanceof Action) {
-            final String code = ((Action) from).code();
-            if ("create".equals(code) && (enabledViewBits & BIT_CREATE) != 0) {
-                onActionCreate(x, q.str());
-                return;
-            }
-            if ("delete".equals(code) && (enabledViewBits & BIT_DELETE) != 0) {
-                if (selectedIds().isEmpty()) {
-                    x.xalert("No " + typeInfo().namePlural() + " selected.");
-                    return;
-                }
-                onActionDelete(x);
-                refresh(x);
-                return;
-            }
-            onAction(x, (Action) from);
-            refresh(x);
-            return;
-        }
+    protected void bubble_event(final xwriter x, final a from, final Object o) throws Throwable {
         if (from == p) {
             // event from pager
             refresh(x);
@@ -142,7 +118,8 @@ public abstract class ViewTable extends View {
         super.bubble_event(x, from, o);
     }
 
-    private void refresh(final xwriter x) throws Throwable {
+    @Override
+    protected void refresh(final xwriter x) throws Throwable {
         x.xu(t); // update table
         if (p.isEnabled() && !isInfiniteScroll()) {
             // update paging

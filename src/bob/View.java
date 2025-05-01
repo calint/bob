@@ -5,9 +5,11 @@
 package bob;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import b.a;
 import b.xwriter;
 
 public abstract class View extends Elem {
@@ -39,6 +41,9 @@ public abstract class View extends Elem {
     /** Name and plural of the object type. */
     private final TypeInfo typeInfo;
 
+    /** The query field that all views have. */
+    public a q;
+
     /**
      * @param ti     TypeInfo may be null and default "object"/"objects" is used.
      * @param idPath May be null.
@@ -48,6 +53,10 @@ public abstract class View extends Elem {
 
         enabledViewBits = enabledBits;
         typeInfo = ti == null ? defaultTypeInfo : ti;
+    }
+
+    public View init() throws Throwable {
+        return this;
     }
 
     public final TypeInfo typeInfo() {
@@ -137,8 +146,19 @@ public abstract class View extends Elem {
         return 0;
     }
 
+    /**
+     * If implementor adds additional actions get the list by calling
+     * `super.actionsList()` and add actions.
+     */
     protected List<Action> actionsList() {
-        return null;
+        final ArrayList<Action> ls = new ArrayList<Action>();
+        if ((enabledViewBits & BIT_CREATE) != 0) {
+            ls.add(new Action("create " + typeInfo.name(), "create"));
+        }
+        if ((enabledViewBits & BIT_DELETE) != 0) {
+            ls.add(new Action("delete selected " + typeInfo.namePlural(), "delete"));
+        }
+        return ls;
     }
 
     /**
@@ -154,4 +174,33 @@ public abstract class View extends Elem {
     protected abstract void onAction(xwriter x, Action act) throws Throwable;
 
     protected abstract Set<String> selectedIds();
+
+    /** Refresh view. */
+    protected void refresh(xwriter x) throws Throwable {
+    }
+
+    @Override
+    protected void bubble_event(final xwriter x, final a from, final Object o) throws Throwable {
+        if (from instanceof Action) {
+            final String code = ((Action) from).code();
+            if ("create".equals(code) && (enabledViewBits & BIT_CREATE) != 0) {
+                onActionCreate(x, q.str());
+                return;
+            }
+            if ("delete".equals(code) && (enabledViewBits & BIT_DELETE) != 0) {
+                if (selectedIds().isEmpty()) {
+                    x.xalert("No " + typeInfo().namePlural() + " selected.");
+                    return;
+                }
+                onActionDelete(x);
+                refresh(x);
+                return;
+            }
+            onAction(x, (Action) from);
+            refresh(x);
+            return;
+        }
+        // event unknown by this element
+        super.bubble_event(x, from, o);
+    }
 }

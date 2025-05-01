@@ -4,7 +4,6 @@
 //
 package bob.app;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -129,7 +128,7 @@ public final class TableAuthor extends ViewTable {
     /** Sample action. */
     @Override
     protected List<Action> actionsList() {
-        final List<Action> actions = new ArrayList<Action>();
+        final List<Action> actions = super.actionsList();
         actions.add(new Action("display selected book ids", "dsbi"));
         return actions;
     }
