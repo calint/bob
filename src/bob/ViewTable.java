@@ -242,24 +242,11 @@ public abstract class ViewTable extends View {
     // override methods below to customize
     //
 
-    protected void renderMoreSearchSection(final xwriter x) {
-    }
-
-    protected void clearMoreSearchSection(final xwriter x) throws Throwable {
-    }
+    protected abstract void renderRowCells(final xwriter x, final Object obj);
 
     @Override
-    protected int objectsPerPageCount() {
-        return 0;
-    }
-
-    protected boolean isInfiniteScroll() {
-        return false;
-    }
-
-    @Override
-    protected int objectsCount() {
-        return 0;
+    public String title() {
+        return getClass().getName();
     }
 
     @Override
@@ -277,7 +264,10 @@ public abstract class ViewTable extends View {
     protected void renderHeaders(final xwriter x) {
     }
 
-    protected abstract void renderRowCells(final xwriter x, final Object obj);
+    @Override
+    protected String idFrom(Object obj) {
+        return null;
+    }
 
     /**
      * Called when a link in a row is clicked.
@@ -286,6 +276,20 @@ public abstract class ViewTable extends View {
      **/
     protected void onRowClick(final xwriter x, final String id, final String cmd) throws Throwable {
     }
+
+    protected void renderMoreSearchSection(final xwriter x) {
+    }
+
+    protected void clearMoreSearchSection(final xwriter x) throws Throwable {
+    }
+
+    protected boolean isInfiniteScroll() {
+        return false;
+    }
+
+    //
+    // Inner classes
+    //
 
     public final static class Paging extends a {
 

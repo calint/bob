@@ -158,11 +158,6 @@ public final class FormUser extends FormDbo {
         }
 
         @Override
-        public String title() {
-            return "Games";
-        }
-
-        @Override
         protected List<?> objectsList() {
             return Db.currentTransaction().get(Game.class, null, null, null);
         }

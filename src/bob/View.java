@@ -112,24 +112,28 @@ public abstract class View extends Elem {
     // customize methods below for customizations
     //
 
-    protected List<Action> actionsList() {
-        return null;
-    }
+    /** @return Objects in this view */
+    protected abstract List<?> objectsList();
 
     /**
      * @return Objects per page or 0 if paging is disabled.
      */
-    protected abstract int objectsPerPageCount();
+    protected int objectsPerPageCount() {
+        return 0;
+    }
 
     /**
-     * If paging is enabled this will be called before getObjectsList().
+     * If paging is enabled this will be called before `objectsList()`.
      * 
      * @return Number of objects in the list
      */
-    protected abstract int objectsCount();
+    protected int objectsCount() {
+        return 0;
+    }
 
-    /** @return Objects in this list */
-    protected abstract List<?> objectsList();
+    protected List<Action> actionsList() {
+        return null;
+    }
 
     /**
      * Called to get the id from an object. Used to link views to other views or
@@ -137,12 +141,11 @@ public abstract class View extends Elem {
      */
     protected abstract String idFrom(Object obj);
 
-    protected abstract Set<String> selectedIds();
-
     protected abstract void onActionCreate(xwriter x, String initStr) throws Throwable;
 
     protected abstract void onActionDelete(xwriter x) throws Throwable;
 
     protected abstract void onAction(xwriter x, Action act) throws Throwable;
 
+    protected abstract Set<String> selectedIds();
 }
