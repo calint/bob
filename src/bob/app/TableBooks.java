@@ -57,7 +57,7 @@ public final class TableBooks extends ViewTable {
 
     @Override
     protected int objectsPerPageCount() {
-        return 20;
+        return 100;
     }
 
     @Override

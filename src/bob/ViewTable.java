@@ -101,7 +101,7 @@ public abstract class ViewTable extends View {
         }
         x.nl();
         x.divh(t).nl();
-        if (p.isEnabled() && !p.isSinglePage() && !infiniteScroll) {
+        if (p.isEnabled() && !infiniteScroll) {
             x.divh(p, "pgr").nl();
         }
     }
@@ -334,10 +334,6 @@ public abstract class ViewTable extends View {
             }
             pg.set(currentPage + 1);
             return true;
-        }
-
-        public boolean isSinglePage() {
-            return npages == 0;
         }
 
         /** Sets current page starting at 1. */
