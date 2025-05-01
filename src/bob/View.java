@@ -115,7 +115,7 @@ public abstract class View extends Elem {
     }
 
     //
-    // customize methods below for customizations
+    // customize methods below
     //
 
     /** @return Objects in this view */
