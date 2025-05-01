@@ -416,8 +416,8 @@ public abstract class ViewTable extends View {
 
         @Override
         public void to(final xwriter x) throws Throwable {
-            final boolean inifiniteScroll = vt.isInfiniteScroll();
-            if (inifiniteScroll) {
+            final boolean infiniteScroll = vt.isInfiniteScroll();
+            if (infiniteScroll) {
                 vt.p.setPage(1);
             }
             final List<?> ls = vt.objectsList();
@@ -434,7 +434,7 @@ public abstract class ViewTable extends View {
                 renderRows(x, ls);
                 x.table_();
                 x.script();
-                if (inifiniteScroll) {
+                if (infiniteScroll) {
                     x.p("window.onscroll=(e)=>{if((window.innerHeight+window.scrollY)>=document.body.offsetHeight){$x('"
                             + id() + " is');}}");
                 } else {
