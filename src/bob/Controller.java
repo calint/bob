@@ -49,6 +49,7 @@ public class Controller extends a {
     protected void bubble_event(final xwriter x, final a from, final Object o) throws Throwable {
         if (from == m) {
             // event from the menu, `o` is a class
+            @SuppressWarnings("unchecked")
             final a e = ((Class<? extends a>) o).getConstructor().newInstance();
             if (e instanceof View) {
                 ((View) e).init();

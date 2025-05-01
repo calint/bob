@@ -122,7 +122,7 @@ public final class InputRelRefN extends a {
 
     /** Callback "select". */
     public void x_s(final xwriter x, final String param) throws Throwable {
-        final View v = selectViewClass.getConstructor().newInstance();
+        final View v = selectViewClass.getConstructor().newInstance().init();
         v.setSelectMode(selectedIds, new SelectReceiverMulti() {
             private final static long serialVersionUID = 1;
 

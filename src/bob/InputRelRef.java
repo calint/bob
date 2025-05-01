@@ -76,7 +76,7 @@ public final class InputRelRef extends a {
 
     /** Callback "select". */
     public void x_s(final xwriter x, final String param) throws Throwable {
-        final View v = selectViewClass.getConstructor().newInstance();
+        final View v = selectViewClass.getConstructor().newInstance().init();
         v.setSelectMode(Integer.toString(selectedId), new SelectReceiverSingle() {
             private final static long serialVersionUID = 1;
 
