@@ -141,11 +141,12 @@ public final class FormUser extends FormDbo {
 
         @Override
         public void to(xwriter x) throws Throwable {
-            x.p("Custom Element: x = ").inpint(pos_x).p(" y = ").inpint(pos_y).spc().ax(this, "", "update page").nl();
+            x.p("Custom Element: x = ").inpint(pos_x).p(" y = ").inpint(pos_y).spc().ax(this, "upd", "update page")
+                    .nl();
         }
 
-        public void x_(final xwriter x, final String param) {
-            // empty default event
+        public void x_upd(final xwriter x, final String param) {
+            x.xalert("update page");
         }
     }
 
