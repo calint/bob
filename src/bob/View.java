@@ -148,8 +148,9 @@ public abstract class View extends Elem {
     }
 
     /**
-     * If implementor adds additional actions get the list by calling
-     * `super.actionsList()` and add actions.
+     * Called once at `init()` after constructor is complete so implementor can add
+     * additional actions depending on constructor arguments. To add actions get the
+     * list by calling `super.actionsList()`, add actions and return it.
      */
     protected List<Action> actionsList() {
         final ArrayList<Action> ls = new ArrayList<Action>();
