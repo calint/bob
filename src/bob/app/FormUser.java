@@ -153,10 +153,6 @@ public final class FormUser extends FormDbo {
 
         private final static long serialVersionUID = 1;
 
-        public CustomView() {
-            super(null, null, 0, 0);
-        }
-
         @Override
         protected List<?> objectsList() {
             return Db.currentTransaction().get(Game.class, null, null, null);

@@ -19,6 +19,8 @@ public abstract class View extends Elem {
     public final static int BIT_SEARCH = 4;
     public final static int BIT_SELECT = 8;
 
+    private final static TypeInfo defaultTypeInfo = new TypeInfo("object", "objects");
+
     /** The actions that are enabled in the view. */
     protected final int enabledViewBits;
 
@@ -35,13 +37,17 @@ public abstract class View extends Elem {
     private SelectReceiverSingle selectReceiverSingle;
 
     /** Name and plural of the object type. */
-    private final View.TypeInfo typeInfo;
+    private final TypeInfo typeInfo;
 
+    /**
+     * @param ti     TypeInfo may be null and default "object"/"objects" is used.
+     * @param idPath May be null.
+     */
     public View(final TypeInfo ti, final IdPath idPath, final int enabledBits) {
         super(idPath);
 
         enabledViewBits = enabledBits;
-        typeInfo = ti == null ? new TypeInfo("object", "objects") : ti;
+        typeInfo = ti == null ? defaultTypeInfo : ti;
     }
 
     public final TypeInfo typeInfo() {
