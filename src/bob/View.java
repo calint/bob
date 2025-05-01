@@ -55,6 +55,7 @@ public abstract class View extends Elem {
         typeInfo = ti == null ? defaultTypeInfo : ti;
     }
 
+    /** Must be called after constructor to complete initialization. */
     public View init() throws Throwable {
         return this;
     }
