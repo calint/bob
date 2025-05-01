@@ -11,9 +11,9 @@ public final class Ctrl extends Controller {
 
     private final static long serialVersionUID = 1;
 
-    public Ctrl() {
+    public Ctrl() throws Throwable {
         m.addItem(TableFsFiles.class, "Files browser");
-        bc.add(new TableFsFiles()); // initial view added to breadcrumbs
+        bc.add(new TableFsFiles().init()); // initial view added to breadcrumbs
         m.addItem(TableBooks.class, "Books");
         m.addItem(TableCategories.class, "Categories");
         m.addItem(TableAuthors.class, "Authors");

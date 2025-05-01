@@ -37,15 +37,14 @@ public abstract class ViewTable extends View {
         super(typeInfo, idPath, viewBits);
 
         this.tableBits = tableBits;
-
-        t.init(this);
-        p.init(this);
-
     }
 
     @Override
     public View init() throws Throwable {
         super.init();
+
+        t.init(this);
+        p.init(this);
 
         final List<Action> actions = actionsList();
         for (final Action a : actions) {
