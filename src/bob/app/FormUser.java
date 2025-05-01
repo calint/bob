@@ -149,6 +149,7 @@ public final class FormUser extends FormDbo {
         }
     }
 
+    /** Minimal `ViewTable` */
     public final static class CustomView extends ViewTable {
 
         private final static long serialVersionUID = 1;
