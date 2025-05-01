@@ -163,11 +163,6 @@ public final class FormUser extends FormDbo {
         }
 
         @Override
-        protected String idFrom(final Object obj) {
-            return Integer.toString(((DbObject) obj).id());
-        }
-
-        @Override
         protected void renderRowCells(xwriter x, Object obj) {
             final Game o = (Game) obj;
             x.td().p(o.getName());
