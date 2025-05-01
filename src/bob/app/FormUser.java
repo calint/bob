@@ -19,7 +19,6 @@ import bob.View;
 import bob.ViewTable;
 import db.Db;
 import db.DbObject;
-import db.DbTransaction;
 import db.test.Game;
 import db.test.User;
 
@@ -175,7 +174,8 @@ public final class FormUser extends FormDbo {
 
         @Override
         protected void renderRowCells(xwriter x, Object obj) {
-            x.td().p(((Game) obj).getName());
+            final Game o = (Game) obj;
+            x.td().p(o.getName());
         }
     }
 
