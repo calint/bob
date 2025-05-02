@@ -79,7 +79,7 @@ public final class InputRelAgg extends a {
         super.bubble_event(x, this, f); // display the form
     }
 
-    /** Callback "remove". */
+    /** Callback "delete". */
     public void x_d(final xwriter x, final String param) throws Throwable {
         final DbTransaction tn = Db.currentTransaction();
         final DbObject o = tn.get(objCls, objId); // ? idPath
