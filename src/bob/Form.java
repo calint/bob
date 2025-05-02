@@ -1,6 +1,7 @@
 //
 // reviewed: 2024-08-05
 //           2025-04-28
+//           2025-05-02
 //
 package bob;
 
@@ -19,19 +20,19 @@ public abstract class Form extends Elem {
     public final static int BIT_CLOSE = 4;
     public final static int BIT_CANCEL = 8;
 
-    /** Actions enabled on this form. */
+    /** Actions enabled on this form. See BITS_xxx. */
     protected final int enabledFormBits;
 
     /** Object actions container. */
     public Container oa;
 
-    /** Form "save and close", "save", "close" actions container */
+    /** Form "save and close", "save", "close", "cancel" actions container. */
     public Container fa;
 
-    /** The attached views of aggregated objects */
+    /** The attached views of aggregated objects. */
     public Tabs t;
 
-    /** Id that represents the resource this form is rendering */
+    /** Id that represents the object this form is rendering. */
     private String objectId;
 
     /** When select mode this interface will receive the created object id. */
@@ -51,16 +52,17 @@ public abstract class Form extends Elem {
      * @param objectId        String representing the object id. May be null if new.
      * @param initStr         Initial string for constructor to use. View passes the
      *                        query field as initial string.
-     * @param enabledFormBits Rendering of "save and close", "save", "close" and
+     * @param enabledFormBits Enable of "save and close", "save", "close" and
      *                        "cancel" actions. See `BIT_xxx`.
      */
     public Form(final IdPath idPath, final String objectId, final String initStr, final int enabledFormBits) {
         super(idPath);
 
         this.objectId = objectId;
-        isNewObject = objectId == null;
         this.initStr = initStr;
         this.enabledFormBits = enabledFormBits;
+        isNewObject = objectId == null;
+
         if ((enabledFormBits & BIT_SAVE_CLOSE) != 0) {
             fa.add(new Action("save and close", "sc"));
         }
@@ -79,7 +81,7 @@ public abstract class Form extends Elem {
      * Must be called after the form has been constructed to complete the
      * initialization. May be overridden to apply logic before and after
      * initializing actions and views list. Necessary for views and actions that
-     * need the object created at init.
+     * need the object created at `init()`.
      *
      * @return this form.
      */
@@ -214,13 +216,13 @@ public abstract class Form extends Elem {
     /**
      * Called to get actions list for for context.
      * 
-     * @return List of actions for this form.
+     * @return List of actions for this form or null.
      */
     protected List<Action> actionsList() {
         return null;
     }
 
-    /** @return List of views of aggregated objects. */
+    /** @return List of views of aggregated objects or null. */
     protected List<View> viewsList() {
         return null;
     }
@@ -229,11 +231,11 @@ public abstract class Form extends Elem {
     protected void save(final xwriter x) throws Throwable {
     }
 
-    /** Called when "cancel" action has been activated. */
+    /** Called at "cancel" action. */
     protected void cancel(final xwriter x) throws Throwable {
     }
 
-    /** Called when action is activated. */
+    /** Called when other action is activated. */
     protected void onAction(final xwriter x, final Action act) throws Throwable {
     }
 
