@@ -1,6 +1,7 @@
 //
 // reviewed: 2024-08-05
 //           2025-04-28
+//           2025-05-02
 //
 package bob;
 
@@ -9,6 +10,10 @@ import java.util.ArrayList;
 
 import b.a;
 
+/**
+ * Represents an element in bob framework containing an optional id path for
+ * navigation to parent object in context.
+ */
 public abstract class Elem extends a implements Titled {
 
     private final static long serialVersionUID = 1;
@@ -49,6 +54,8 @@ public abstract class Elem extends a implements Titled {
         private ArrayList<String> ids;
 
         /**
+         * Creates a copy of `idPath` and adds the `id` to it.
+         * 
          * @param idPth `IdPath` to extend. May be null.
          * @return New instance extended by id.
          */
@@ -85,11 +92,11 @@ public abstract class Elem extends a implements Titled {
         }
 
         protected void add(final IdPath pth) {
+            if (pth == null || pth.ids == null) {
+                return;
+            }
             if (ids == null) {
                 ids = new ArrayList<String>();
-            }
-            if (pth == null) {
-                return;
             }
             ids.addAll(pth.ids);
         }
