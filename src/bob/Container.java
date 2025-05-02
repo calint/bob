@@ -1,6 +1,7 @@
 //
 // reviewed: 2024-08-05
 //           2025-04-28
+//           2025-05-02
 //
 package bob;
 
@@ -17,10 +18,13 @@ public final class Container extends a {
 
     private final static long serialVersionUID = 1;
 
-    private final ArrayList<a> elements = new ArrayList<a>();
+    private ArrayList<a> elements;
 
     @Override
     public void to(final xwriter x) throws Throwable {
+        if (elements == null) {
+            return;
+        }
         final int n = elements.size();
         final int le = n - 1;
         for (int i = 0; i < n; i++) {
@@ -34,15 +38,24 @@ public final class Container extends a {
 
     public void add(final a e) {
         e.parent(this);
+        if (elements == null) {
+            elements = new ArrayList<a>();
+        }
         e.name(Integer.toString(elements.size()));
         elements.add(e);
     }
 
     public boolean isEmpty() {
+        if (elements == null) {
+            return true;
+        }
         return elements.isEmpty();
     }
 
     public void clear() {
+        if (elements == null) {
+            return;
+        }
         elements.clear();
     }
 
@@ -51,6 +64,9 @@ public final class Container extends a {
         final a e = super.child(nm);
         if (e != null) {
             return e;
+        }
+        if (elements == null) {
+            return null;
         }
         return elements.get(Integer.parseInt(nm));
     }
