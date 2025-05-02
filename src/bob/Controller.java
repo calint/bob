@@ -1,6 +1,7 @@
 //
 // reviewed: 2024-08-05
 //           2025-04-28
+//           2025-05-02
 //
 package bob;
 
@@ -12,33 +13,32 @@ import b.a;
 import b.req;
 import b.xwriter;
 
+/** Controls event flows to the shell. */
 public class Controller extends a {
 
     private final static long serialVersionUID = 1;
 
+    public Menu m;
+    public Breadcrumbs bc;
+    public a ae; // active element
     public a s; // serialized size
     public a sg; // serialized size, gziped
     public a si; // server info
-    public Breadcrumbs bc;
-    public a ae; // active element
-    public Menu m;
 
     public Controller() {
         updateSerializedSize();
         updateServerInfo();
     }
 
-    private void updateServerInfo() {
-        si.set(req.get().ip().getHostAddress());
-    }
-
     @Override
     public void to(final xwriter x) throws Throwable {
-        x.divh(m, "m").nl();
-        x.divh(bc, "bc").nl();
+        x.divh(m, "m").nl(); // menu
+        x.divh(bc, "bc").nl(); // breadcrumbs
         final a active_elem = bc.active();
         active_elem.replace(ae);
-        x.divh(ae, "ae").nl();
+        x.divh(ae, "ae").nl(); // active element
+
+        // info about size of object
         x.tago("div").attr("class", "ser").tagoe();
         x.p("serialized: ").span(s).p(" B,  gziped: ").span(sg).p(" B, server: ").span(si).spc().ax(this, "s",
                 "refresh");
@@ -51,6 +51,7 @@ public class Controller extends a {
             // event from the menu, `o` is a class that extends `b.a`
             @SuppressWarnings("unchecked")
             final a e = ((Class<? extends a>) o).getConstructor().newInstance();
+            // if instance of view or form complete initialization by calling init
             if (e instanceof View) {
                 ((View) e).init();
             } else if (e instanceof Form) {
@@ -67,7 +68,7 @@ public class Controller extends a {
         }
         if (from == bc) {
             // event from bread crumbs
-            final a e = ((Breadcrumbs) from).active();
+            final a e = bc.active();
             e.replace(ae); // replace active element
             x.xu(ae); // update active element
             x.xscroll_to_top();
@@ -77,7 +78,7 @@ public class Controller extends a {
             // event from a form
             if ("close".equals(o)) {
                 if (bc.elementCount() > 1) {
-                    bc.removeLast(); // remove last element in bread crumbs
+                    bc.pop(); // remove last element in bread crumbs
                     final a e = bc.active(); // get current element
                     e.replace(ae); // replace active element
                     x.xu(ae); // update active element
@@ -92,7 +93,7 @@ public class Controller extends a {
             }
         }
         if (from instanceof View && "close".equals(o)) {
-            bc.removeLast(); // remove last element in bread crumbs
+            bc.pop(); // remove last element in bread crumbs
             final a e = bc.active(); // get current element
             e.replace(ae); // replace active element
             x.xu(ae); // update active element
@@ -127,6 +128,10 @@ public class Controller extends a {
         final byte[] ba = serialize(this);
         s.set(Integer.toString(ba.length));
         sg.set(Integer.toString(gzip(ba).length));
+    }
+
+    private void updateServerInfo() {
+        si.set(req.get().ip().getHostAddress());
     }
 
     public static byte[] serialize(final Object o) {

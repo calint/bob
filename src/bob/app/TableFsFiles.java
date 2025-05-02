@@ -14,6 +14,7 @@ import b.path;
 import b.xwriter;
 import bob.Form;
 import bob.Util;
+import bob.View;
 import bob.ViewTable;
 
 /** Navigator of file system. */
@@ -126,8 +127,8 @@ public final class TableFsFiles extends ViewTable {
     protected void onRowClick(final xwriter x, final String id, final String cmd) throws Throwable {
         final path p = pth.get(id);
         if (p.isdir()) {
-            final TableFsFiles f = new TableFsFiles(p);
-            super.bubble_event(x, this, f);
+            final View view = new TableFsFiles(p).init();
+            super.bubble_event(x, this, view);
             return;
         }
         final Form f = new FormFsFile(p).init();

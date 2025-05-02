@@ -1,6 +1,7 @@
 //
 // reviewed: 2024-08-05
 //           2025-04-28
+//           2025-05-02
 //
 package bob;
 
@@ -34,9 +35,9 @@ public final class Breadcrumbs extends a {
             }
             if (i == lastElemIx) {
                 x.tag("em").p(nm).tage("em");
-                return;
+            } else {
+                x.ax(this, "clk " + i, nm);
             }
-            x.ax(this, "clk " + i, nm);
         }
     }
 
@@ -70,7 +71,7 @@ public final class Breadcrumbs extends a {
         return elements.get(Integer.parseInt(nm));
     }
 
-    public void removeLast() {
+    public void pop() {
         elements.remove(elements.size() - 1);
     }
 
