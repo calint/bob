@@ -1,6 +1,7 @@
 //
 // reviewed: 2024-08-05
 //           2025-04-28
+//           2025-05-02
 //
 package bob;
 
@@ -30,6 +31,7 @@ public final class Checkbox extends a {
         x.inp(this, "checkbox", null, null, str(), null, null, this, null);
     }
 
+    /** Default callback. */
     public void x_(final xwriter x, final String param) throws Throwable {
         bubble_event(x, this, on.equals(str()) ? "checked" : "unchecked");
     }

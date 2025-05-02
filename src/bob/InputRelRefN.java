@@ -1,6 +1,7 @@
 //
 // reviewed: 2024-08-05
 //           2025-04-28
+//           2025-05-02
 //
 package bob;
 
@@ -23,9 +24,9 @@ public final class InputRelRefN extends a {
 
     private final Class<? extends DbObject> objCls;
     private final String relationName;
+    private final LinkedHashSet<String> initialSelectedIds; // the initial ids from object
     private final Class<? extends View> selectViewClass; // the view to use when selecting
     private final Class<? extends Form> createFormCls; // the form used to create object
-    private final LinkedHashSet<String> initialSelectedIds; // the initial ids from object
     private final LinkedHashSet<String> selectedIds; // current selected ids
     private final String itemSeparator;
 
@@ -84,7 +85,7 @@ public final class InputRelRefN extends a {
         final Class<? extends DbObject> toCls = relation().getToClass();
         for (final String s : selectedIds) {
             final DbObject o = tn.get(toCls, s);
-            if (o == null) {
+            if (o == null) { // ? dangling reference
                 continue;
             }
             if (o instanceof Titled) {
@@ -131,7 +132,7 @@ public final class InputRelRefN extends a {
                 selectedIds.addAll(selected);
             }
         });
-        super.bubble_event(x, this, v); // display the table
+        super.bubble_event(x, this, v); // display the view
     }
 
     /** Callback "create". */

@@ -69,7 +69,7 @@ public final class InputRelAggN extends a {
             if (allowDelete) {
                 x.spc().ax(this, "d " + oid, "✖", "act");
             }
-            x.br().nl();
+            x.br();
         }
     }
 
