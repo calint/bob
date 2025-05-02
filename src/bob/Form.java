@@ -48,9 +48,9 @@ public abstract class Form extends Elem {
 
     /**
      * @param idPath          Path to parent of object in context or null if none.
-     * @param objectId        String representing the object id.
-     * @param initStr         Initial string for constructor to use. ViewTable
-     *                        passes the query field as initial string.
+     * @param objectId        String representing the object id. May be null if new.
+     * @param initStr         Initial string for constructor to use. View passes the
+     *                        query field as initial string.
      * @param enabledFormBits Rendering of "save and close", "save", "close" and
      *                        "cancel" actions. See `BIT_xxx`.
      */
