@@ -1,6 +1,7 @@
 //
 // reviewed: 2024-08-05
 //           2025-04-28
+//           2025-05-02
 //
 package bob;
 
@@ -46,16 +47,19 @@ public final class Tabs extends a {
                 return;
             }
             x.divo(this, "iat", null).tagoe();
+            // click callback
             x.ax(this, "c", str());
             x.div_().nl();
         }
 
+        /** Callback for click. */
         public void x_c(final xwriter x, final String param) throws Throwable {
             super.bubble_event(x);
         }
+
     }
 
-    final ArrayList<Tab> tabs = new ArrayList<Tab>();
+    final private ArrayList<Tab> tabs = new ArrayList<Tab>();
     public a ae; // active element
 
     public void add(final Tab t) {
@@ -98,6 +102,7 @@ public final class Tabs extends a {
             x.xu(this);
             return;
         }
+        // unknown event
         super.bubble_event(x, from, o);
     }
 
