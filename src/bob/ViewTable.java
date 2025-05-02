@@ -208,13 +208,13 @@ public abstract class ViewTable extends View {
 
     /** Callback for click on "select" when in select multi mode. */
     public final void x_sm(final xwriter x, final String s) throws Throwable {
-        getSelectReceiverMulti().onSelect(selectedIds());
+        selectReceiverMulti().onSelect(selectedIds());
         super.bubble_event(x, this, "close");
     }
 
     /** Callback for click on row in select single mode. */
     public final void x_ss(final xwriter x, final String s) throws Throwable {
-        getSelectReceiverSingle().onSelect(s);
+        selectReceiverSingle().onSelect(s);
         super.bubble_event(x, this, "close");
     }
 
@@ -242,11 +242,6 @@ public abstract class ViewTable extends View {
     }
 
     protected void renderHeaders(final xwriter x) {
-    }
-
-    @Override
-    protected String idFrom(Object obj) {
-        return null;
     }
 
     /**

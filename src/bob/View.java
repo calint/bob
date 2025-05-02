@@ -1,6 +1,7 @@
 //
 // reviewed: 2024-08-05
 //           2025-04-28
+//           2025-05-02
 //
 package bob;
 
@@ -12,21 +13,25 @@ import java.util.Set;
 import b.a;
 import b.xwriter;
 
+/**
+ * Represents a searchable view with some optional predefined actions and a
+ * query field.
+ */
 public abstract class View extends Elem {
 
     private final static long serialVersionUID = 1;
+
+    private final static TypeInfo defaultTypeInfo = new TypeInfo("object", "objects");
 
     public final static int BIT_CREATE = 1;
     public final static int BIT_DELETE = 2;
     public final static int BIT_SEARCH = 4;
     public final static int BIT_SELECT = 8;
 
-    private final static TypeInfo defaultTypeInfo = new TypeInfo("object", "objects");
-
-    /** The actions that are enabled in the view. */
+    /** The actions that are enabled in the view. See `BITS_xxx`. */
     protected final int enabledViewBits;
 
-    /** True if view renders for selection item(s) */
+    /** True if view renders for selection of item(s) */
     private boolean isSelectMode;
 
     /** True if view renders for selection of multiple items. */
@@ -45,7 +50,7 @@ public abstract class View extends Elem {
     public a q;
 
     /**
-     * @param ti     TypeInfo may be null and default "object"/"objects" is used.
+     * @param ti     If `TypeInfo` is null then default "object"/"objects" is used.
      * @param idPath May be null.
      */
     public View(final TypeInfo ti, final IdPath idPath, final int enabledBits) {
@@ -116,11 +121,11 @@ public abstract class View extends Elem {
         selectReceiverSingle = sr;
     }
 
-    public final SelectReceiverMulti getSelectReceiverMulti() {
+    public final SelectReceiverMulti selectReceiverMulti() {
         return selectReceiverMulti;
     }
 
-    public final SelectReceiverSingle getSelectReceiverSingle() {
+    public final SelectReceiverSingle selectReceiverSingle() {
         return selectReceiverSingle;
     }
 
@@ -128,7 +133,7 @@ public abstract class View extends Elem {
     // customize methods below
     //
 
-    /** @return Objects in this view */
+    /** @return Objects in this view. */
     protected abstract List<?> objectsList();
 
     /**
@@ -166,8 +171,12 @@ public abstract class View extends Elem {
     /**
      * Called to get the id from an object. Used to link views to other views or
      * forms.
+     * 
+     * @return Id as string usable in view or null if none.
      */
-    protected abstract String idFrom(Object obj);
+    protected String idFrom(Object obj) {
+        return null;
+    };
 
     protected abstract void onActionCreate(xwriter x, String initStr) throws Throwable;
 
