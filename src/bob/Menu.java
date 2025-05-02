@@ -1,6 +1,7 @@
 //
 // reviewed: 2024-08-05
 //           2025-04-28
+//           2025-05-02
 //
 package bob;
 
@@ -13,14 +14,15 @@ public final class Menu extends a {
 
     private final static long serialVersionUID = 1;
 
+    private final ArrayList<Item> items = new ArrayList<Item>();
     private int selectedIndex;
 
     private final static class Item extends a {
 
         private final static long serialVersionUID = 1;
 
-        Class<? extends a> cls;
-        String title;
+        final Class<? extends a> cls;
+        final String title;
 
         public Item(final Class<? extends a> cls, final String title) {
             this.cls = cls;
@@ -28,8 +30,6 @@ public final class Menu extends a {
         }
 
     }
-
-    private final ArrayList<Item> items = new ArrayList<Item>();
 
     @Override
     public void to(final xwriter x) throws Throwable {
