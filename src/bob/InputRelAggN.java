@@ -1,6 +1,7 @@
 //
 // reviewed: 2024-08-05
 //           2025-04-28
+//           2025-05-02
 //
 package bob;
 
@@ -14,11 +15,11 @@ public final class InputRelAggN extends a {
 
     private final static long serialVersionUID = 1;
 
-    private final Class<? extends Form> createFormCls;
+    private final Elem.IdPath idPath;
     private final Class<? extends DbObject> objCls;
     private final int objId;
     private final String relationName;
-    private final Elem.IdPath idPath;
+    private final Class<? extends Form> createFormCls;
     private final boolean allowDelete;
 
     /**
@@ -33,9 +34,9 @@ public final class InputRelAggN extends a {
             throw new RuntimeException(
                     "Element cannot be created with object being null. Try 'create at init' pattern to initiate the object before creating this element.");
         }
+        this.idPath = idPath;
         objCls = obj.getClass();
         objId = obj.id();
-        this.idPath = idPath;
         relationName = rel.getName();
         this.createFormCls = createFormCls;
         this.allowDelete = allowDelete;
@@ -66,10 +67,9 @@ public final class InputRelAggN extends a {
             final int oid = ro.id();
             x.ax(this, "e " + oid, txt);
             if (allowDelete) {
-                x.spc().ax(this, "d " + oid, "✖", "act").br().nl();
-            } else {
-                x.br().nl();
+                x.spc().ax(this, "d " + oid, "✖", "act");
             }
+            x.br().nl();
         }
     }
 

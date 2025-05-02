@@ -1,6 +1,7 @@
 //
 // reviewed: 2024-08-05
 //           2025-04-28
+//           2025-05-02
 //
 package bob;
 
@@ -15,11 +16,11 @@ public final class InputRelAgg extends a {
 
     private final static long serialVersionUID = 1;
 
-    private final Class<? extends Form> createFormCls;
+    private final Elem.IdPath idPath;
     private final Class<? extends DbObject> objCls;
     private final int objId;
     private final String relationName;
-    private final Elem.IdPath idPath;
+    private final Class<? extends Form> createFormCls;
     private final boolean allowDelete;
 
     /**

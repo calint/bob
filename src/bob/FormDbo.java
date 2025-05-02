@@ -62,7 +62,7 @@ public abstract class FormDbo extends Form {
     //
 
     @Override
-    public Form init() {
+    public Form init() throws Throwable {
         if (objectId() == null && isCreateObjectAtInit()) {
             final DbObject o = createObject();
             objectId(Integer.toString(o.id()));
@@ -725,7 +725,7 @@ public abstract class FormDbo extends Form {
 
     private SimpleDateFormat dateTimeFormat() {
         if (fmtDateTime == null) {
-            fmtDateTime = createDateFormat();
+            fmtDateTime = createDateTimeFormat();
         }
         return fmtDateTime;
     }

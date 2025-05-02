@@ -48,9 +48,10 @@ public final class FormUser extends FormDbo {
     }
 
     @Override
-    public Form init() {
+    public Form init() throws Throwable {
         super.init();
         embeddedView = new CustomView();
+        embeddedView.init();
         return this;
     }
 
@@ -74,10 +75,10 @@ public final class FormUser extends FormDbo {
 
     /** Attached views of aggregated objects. */
     @Override
-    protected List<View> viewsList() {
+    protected List<View> viewsList() throws Throwable {
         final ArrayList<View> ls = new ArrayList<View>();
-        ls.add(new TableUserFiles(extendIdPath(objectId())));
-        ls.add(new TableUserGames(extendIdPath(objectId())));
+        ls.add(new TableUserFiles(extendIdPath(objectId())).init());
+        ls.add(new TableUserGames(extendIdPath(objectId())).init());
         return ls;
     }
 

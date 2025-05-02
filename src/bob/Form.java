@@ -85,7 +85,7 @@ public abstract class Form extends Elem {
      *
      * @return this form.
      */
-    public Form init() {
+    public Form init() throws Throwable {
         final List<Action> actions = actionsList();
         if (actions != null) {
             for (final Action a : actions) {
@@ -223,11 +223,11 @@ public abstract class Form extends Elem {
     }
 
     /** @return List of views of aggregated objects or null. */
-    protected List<View> viewsList() {
+    protected List<View> viewsList() throws Throwable {
         return null;
     }
 
-    /** Called when object is saved. */
+    /** Called ihen object is saved. */
     protected void save(final xwriter x) throws Throwable {
     }
 
