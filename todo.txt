@@ -1,4 +1,5 @@
 [ ] FormDbo: id path including id, relation, ... for navigation to current object programmatically
+    and editing viewing using generic forms and views connected to object class
 
 step 1
 [ ] db: stream blob and clob to outputstream and from inputstream
