@@ -18,6 +18,10 @@
             "path": "/home/c/java/jdk1.5.0_22"
         },
         {
+            "name": "JavaSE-1.8",
+            "path": "/home/c/java/jdk8u432-b06"
+        },
+        {
             "name": "JavaSE-21",
             "path": "/home/c/java/jdk-21.0.5+11"
         },
